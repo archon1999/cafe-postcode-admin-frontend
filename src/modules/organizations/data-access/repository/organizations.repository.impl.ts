@@ -3,21 +3,6 @@ import { apiClient } from 'shared/api/http/apiClient';
 import type { OrganizationsRepository } from '../../domain';
 
 export const organizationsRepository: OrganizationsRepository = {
-  getBranches() {
-    return apiClient.getAdminBranches({ page: 1, pageSize: 500 }).then((response) => response.data);
-  },
-  getBranchById(id) {
-    return apiClient.getAdminBranchById(id);
-  },
-  createBranch(payload) {
-    return apiClient.createAdminBranch(payload);
-  },
-  updateBranch(id, payload) {
-    return apiClient.updateAdminBranch(id, payload);
-  },
-  deleteBranch(id) {
-    return apiClient.deleteAdminBranch(id);
-  },
   getCashDesks() {
     return apiClient.getAdminCashDesks({ page: 1, pageSize: 500 }).then((response) => response.data);
   },

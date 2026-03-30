@@ -3,9 +3,6 @@ import { apiClient } from 'shared/api/http/apiClient';
 import type { FloorRepository } from '../../domain';
 
 export const floorRepository: FloorRepository = {
-  getBranches() {
-    return apiClient.getAdminBranches({ page: 1, pageSize: 500 }).then((response) => response.data);
-  },
   getUsers() {
     return apiClient.getAdminUsers({ page: 1, pageSize: 500 }).then((response) => response.data);
   },

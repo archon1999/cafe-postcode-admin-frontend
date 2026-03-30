@@ -68,7 +68,7 @@ const TableSessionsListPage = () => {
     () =>
       (hallsQuery.data ?? []).map((hall) => ({
         value: hall.id,
-        label: formatHallDisplayName(hall.name, hall.level, tCommon),
+        label: formatHallDisplayName(hall.name),
       })),
     [hallsQuery.data, tCommon],
   );
@@ -97,14 +97,7 @@ const TableSessionsListPage = () => {
         headerName: t('fields.hall'),
         minWidth: 180,
         flex: 0.7,
-        valueGetter: (_v, row) => formatHallDisplayName(row.hallName, row.hallLevel, tCommon),
-      },
-      {
-        field: 'branchName',
-        headerName: t('fields.branch'),
-        minWidth: 160,
-        flex: 0.7,
-        valueGetter: (_v, row) => row.branchName || '-',
+        valueGetter: (_v, row) => formatHallDisplayName(row.hallName),
       },
       {
         field: 'openedByName',
@@ -153,7 +146,7 @@ const TableSessionsListPage = () => {
         ],
       },
     ],
-    [t],
+    [t, tCommon],
   );
 
   return (

@@ -116,7 +116,7 @@ const OrdersListPage = () => {
         headerName: t('fields.hall'),
         minWidth: 160,
         flex: 0.6,
-        valueGetter: (_v, row) => formatHallDisplayName(row.hallName, row.hallLevel, tCommon),
+        valueGetter: (_v, row) => formatHallDisplayName(row.hallName, undefined, tCommon),
       },
       {
         field: 'tableName',

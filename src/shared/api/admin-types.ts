@@ -1,6 +1,7 @@
 export type AdminPermission = {
   id: string;
   code: string;
+  scope: 'admin' | 'pos' | 'dashboard';
   name: string;
   description: string;
 };
@@ -8,11 +9,9 @@ export type AdminPermission = {
 export type AdminPermissionSummary = Pick<AdminPermission, 'id' | 'code' | 'name'>;
 export type AdminRoleSummary = {
   id: string;
-  code: string;
   name: string;
 };
 
-export type CatalogKind = 'dish' | 'drink' | 'service' | 'penalty';
 export type KitchenTicketStatus = 'new' | 'cooking' | 'done';
 export type KitchenTicketRouteMode = 'display' | 'printer' | 'both';
 export type AdminDeviceMode = 'admin' | 'waiter' | 'cashier' | 'kitchen_display' | 'owner_dashboard';
@@ -58,17 +57,12 @@ export type AdminHall = {
   id: string;
   name: string;
   description?: string;
-  branch?: string | null;
-  branchName?: string | null;
-  level?: number;
   gridColumns?: number;
   sortOrder?: number;
   isActive: boolean;
 };
 
 export type AdminHallPayload = {
-  branch: string;
-  level: number;
   name: string;
   description: string;
   gridColumns?: number;
@@ -136,7 +130,6 @@ export type AdminHallConstructorTable = {
 export type AdminHallConstructor = {
   hallId: string;
   hallName: string;
-  hallLevel?: number | null;
   gridColumns: number;
   tables: AdminHallConstructorTable[];
 };
@@ -160,11 +153,8 @@ export type AdminHallConstructorPayload = {
 
 export type AdminTableSession = {
   id: string;
-  branch: string;
-  branchName?: string | null;
   hall: string;
   hallName?: string | null;
-  hallLevel?: number | null;
   table: string;
   tableName?: string | null;
   openedBy?: string | null;
@@ -220,11 +210,6 @@ export type AdminCashDesk = {
   id: string;
   name: string;
   location: string;
-  branch?: string | null;
-  branchName?: string | null;
-  branchLegalName?: string | null;
-  branchTaxNumber?: string | null;
-  branchVatEnabled?: boolean;
   enabledPaymentMethods: AdminPaymentMethod[];
   fiscalProvider: string;
   receiptPrinterEnabled: boolean;
@@ -236,7 +221,6 @@ export type AdminCashDesk = {
 export type AdminCashDeskPayload = {
   name: string;
   location: string;
-  branch?: string | null;
   enabledPaymentMethods: AdminPaymentMethod[];
   fiscalProvider: string;
   receiptPrinterEnabled: boolean;
@@ -249,11 +233,8 @@ export type AdminDevice = {
   id: string;
   name: string;
   mode: AdminDeviceMode;
-  branch?: string | null;
-  branchName?: string | null;
   primaryHallId?: string | null;
   primaryHallName?: string | null;
-  primaryHallLevel?: number | null;
   allowedHallIds?: string[];
   isActive: boolean;
 };
@@ -261,7 +242,6 @@ export type AdminDevice = {
 export type AdminDevicePayload = {
   name: string;
   mode: AdminDeviceMode;
-  branch?: string | null;
   primaryHallId?: string | null;
   allowedHallIds?: string[];
   isActive: boolean;
@@ -272,11 +252,8 @@ export type AdminDistributionPoint = {
   name: string;
   kind: AdminDistributionPointKind;
   integrationChannel: string;
-  branch?: string | null;
-  branchName?: string | null;
   assignedHall?: string | null;
   assignedHallName?: string | null;
-  assignedHallLevel?: number | null;
   isActive: boolean;
 };
 
@@ -284,7 +261,6 @@ export type AdminDistributionPointPayload = {
   name: string;
   kind: AdminDistributionPointKind;
   integrationChannel: string;
-  branch?: string | null;
   assignedHall?: string | null;
   isActive: boolean;
 };
@@ -319,15 +295,12 @@ export type AdminPrepStation = {
   id: string;
   name: string;
   kind: 'kitchen' | 'bar' | 'other';
-  branch?: string | null;
-  branchName?: string | null;
   isActive: boolean;
 };
 
 export type AdminPrepStationPayload = {
   name: string;
   kind: 'kitchen' | 'bar' | 'other';
-  branch?: string | null;
   isActive: boolean;
 };
 
@@ -341,6 +314,7 @@ export type AdminRestaurant = {
   phone: string;
   address: string;
   currency: string;
+  authCode?: string;
   isActive: boolean;
   branches?: AdminBranch[];
 };
@@ -455,7 +429,6 @@ export type AdminKitchenTicket = {
   isPrinted: boolean;
   printedPayload: Record<string, unknown>;
   hallName: string;
-  hallLevel?: number | null;
   tableName: string;
   waiterName: string;
   items: AdminKitchenTicketItem[];
@@ -563,7 +536,6 @@ export type AdminOrder = {
   tableId?: string | null;
   tableName?: string | null;
   hallName?: string | null;
-  hallLevel?: number | null;
   distributionPoint?: string | null;
   distributionPointName?: string | null;
   openedBy?: string | null;
@@ -591,7 +563,6 @@ export type AdminOrder = {
 
 export type AdminRole = {
   id: string;
-  code: string;
   name: string;
   description: string;
   isSystem: boolean;
@@ -599,7 +570,6 @@ export type AdminRole = {
 };
 
 export type AdminRolePayload = {
-  code: string;
   name: string;
   description: string;
   permissionIds: string[];
@@ -607,11 +577,9 @@ export type AdminRolePayload = {
 
 export type CatalogCategory = {
   id: string;
-  branch: string;
   name: string;
   mxikCode: string;
   mxikName?: string;
-  kind: CatalogKind;
   sortOrder: number;
   isActive: boolean;
 };
@@ -620,7 +588,6 @@ export type CatalogCategoryPayload = {
   name: string;
   mxikCode: string;
   mxikName?: string;
-  kind: CatalogKind;
   sortOrder: number;
   isActive: boolean;
 };
@@ -634,7 +601,6 @@ export type AdminMxikLookupResult = {
 
 export type CatalogItem = {
   id: string;
-  branch: string;
   category?: string | null;
   categoryName?: string | null;
   prepStation?: string | null;
@@ -642,9 +608,7 @@ export type CatalogItem = {
   name: string;
   mxikCode?: string;
   mxikName?: string;
-  kind: CatalogKind;
   description: string;
-  sku: string;
   price: number;
   isActive: boolean;
   isStoplisted: boolean;
@@ -656,9 +620,7 @@ export type CatalogItemPayload = {
   name: string;
   mxikCode?: string;
   mxikName?: string;
-  kind: CatalogKind;
   description: string;
-  sku: string;
   price: number;
   isActive: boolean;
   isStoplisted: boolean;
@@ -669,8 +631,6 @@ export type AdminUser = {
   username: string;
   fullName: string;
   phone: string;
-  uiMode: 'admin' | 'pos';
-  actorType?: 'product_owner' | 'business_partner' | 'restaurant_admin' | 'restaurant_staff';
   isActive: boolean;
   restaurantAccessActive?: boolean;
   employmentStatus?: 'active' | 'inactive' | 'archived';
@@ -684,7 +644,6 @@ export type AdminUser = {
   role: AdminRole | null;
   businessPartnerId?: string | null;
   restaurantId?: string | null;
-  branchId?: string | null;
   hallSwitchPermission?: boolean;
   primaryHallId?: string | null;
   allowedHallIds?: string[];
@@ -697,7 +656,6 @@ export type AdminUserPayload = {
   username: string;
   fullName: string;
   phone: string;
-  uiMode: 'admin' | 'pos';
   isActive: boolean;
   employmentStatus?: 'active' | 'inactive' | 'archived';
   passportSeries?: string;
@@ -708,7 +666,6 @@ export type AdminUserPayload = {
   kpiPercent?: number | null;
   roleId: string;
   hallSwitchPermission?: boolean;
-  branchId?: string | null;
   primaryHallId?: string | null;
   allowedHallIds?: string[];
   password?: string;
@@ -745,7 +702,6 @@ export type AdminOpenChecksReportRow = {
   status: AdminOrderStatus;
   total: number;
   hallName?: string | null;
-  hallLevel?: number | null;
   tableName?: string | null;
   createdAt: string;
 };
@@ -803,10 +759,8 @@ export type AdminReportPeriodQueryParams = {
 };
 
 export type AdminUsersQueryParams = AdminListQueryParams & {
-  roleCodeIn?: string;
-  uiModeIn?: string;
-  isActive?: boolean;
-  includeArchived?: boolean;
+  roleIdIn?: string;
+  employmentStatusIn?: string;
 };
 
 export type AdminRolesQueryParams = AdminListQueryParams & {
@@ -815,7 +769,7 @@ export type AdminRolesQueryParams = AdminListQueryParams & {
 };
 
 export type AdminPermissionsQueryParams = AdminListQueryParams & {
-  categoryIn?: string;
+  scopeIn?: string;
   actionIn?: string;
 };
 
@@ -848,22 +802,15 @@ export type AdminReceiptsQueryParams = AdminListQueryParams & {
 };
 
 export type AdminCatalogCategoriesQueryParams = AdminListQueryParams & {
-  kindIn?: string;
   isActive?: boolean;
 };
 
 export type AdminCatalogItemsQueryParams = AdminListQueryParams & {
-  kindIn?: string;
   categoryIdIn?: string;
   isStoplisted?: boolean;
 };
 
-export type AdminBranchesQueryParams = AdminListQueryParams & {
-  isDefault?: boolean;
-};
-
 export type AdminHallsQueryParams = AdminListQueryParams & {
-  branchIdIn?: string;
   isActive?: boolean;
 };
 
@@ -879,18 +826,15 @@ export type AdminTableSessionsQueryParams = AdminListQueryParams & {
 };
 
 export type AdminCashDesksQueryParams = AdminListQueryParams & {
-  branchIdIn?: string;
   isActive?: boolean;
 };
 
 export type AdminDevicesQueryParams = AdminListQueryParams & {
-  branchIdIn?: string;
   modeIn?: string;
   isActive?: boolean;
 };
 
 export type AdminDistributionPointsQueryParams = AdminListQueryParams & {
-  branchIdIn?: string;
   kindIn?: string;
   isActive?: boolean;
 };
@@ -901,7 +845,6 @@ export type AdminFeatureConfigsQueryParams = AdminListQueryParams & {
 };
 
 export type AdminPrepStationsQueryParams = AdminListQueryParams & {
-  branchIdIn?: string;
   kindIn?: string;
   isActive?: boolean;
 };

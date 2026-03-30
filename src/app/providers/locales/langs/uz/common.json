@@ -12,6 +12,8 @@
     "user": "Foydalanuvchi",
     "username": "Foydalanuvchi nomi",
     "phone": "Telefon",
+    "yes": "Ha",
+    "no": "Yo'q",
     "loading": "Yuklanmoqda",
     "hallWithLevel": "{{name}} - {{level}} qavat"
   },

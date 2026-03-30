@@ -1,8 +1,5 @@
 export const organizationsKeys = {
   all: ['organizations'] as const,
-  branches: () => [...organizationsKeys.all, 'branches'] as const,
-  branchesList: (params: Record<string, unknown>) => [...organizationsKeys.branches(), 'list', params] as const,
-  branchDetail: (id: string) => [...organizationsKeys.all, 'branch', id] as const,
   cashDesks: () => [...organizationsKeys.all, 'cashDesks'] as const,
   cashDesksList: (params: Record<string, unknown>) => [...organizationsKeys.cashDesks(), 'list', params] as const,
   cashDeskDetail: (id: string) => [...organizationsKeys.all, 'cashDesk', id] as const,

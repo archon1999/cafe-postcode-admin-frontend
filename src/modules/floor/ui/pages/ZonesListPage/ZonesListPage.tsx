@@ -63,7 +63,7 @@ const ZonesListPage = () => {
     () =>
       (hallsQuery.data ?? []).map((hall) => ({
         value: hall.id,
-        label: formatHallDisplayName(hall.name, hall.level, tCommon),
+        label: formatHallDisplayName(hall.name),
       })),
     [hallsQuery.data, tCommon],
   );
@@ -92,8 +92,7 @@ const ZonesListPage = () => {
         headerName: t('fields.hall'),
         minWidth: 180,
         flex: 0.7,
-        valueGetter: (_v, row) =>
-          formatHallDisplayName(row.hallName, (row as { hallLevel?: number | null }).hallLevel, tCommon),
+        valueGetter: (_v, row) => formatHallDisplayName(row.hallName),
       },
       {
         field: 'isPrivate',

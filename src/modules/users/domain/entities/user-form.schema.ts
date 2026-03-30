@@ -15,7 +15,6 @@ export const userFormSchema = z
     fullName: z.string().min(1, { message: "To'liq ism talab qilinadi" }),
     phone: z.string().optional(),
     roleId: z.string().min(1, { message: 'Rol tanlanishi kerak' }),
-    uiMode: z.enum(['admin', 'pos']),
     isActive: z.boolean(),
     employmentStatus: z.enum(employmentStatuses),
     passportSeries: z.string().optional(),
@@ -34,7 +33,7 @@ export const userFormSchema = z
     pin: z.string().optional(),
   })
   .superRefine((value, context) => {
-    if (value.uiMode === 'pos' && value.pin && !/^\d{4}$/.test(value.pin)) {
+    if (value.pin && !/^\d{4}$/.test(value.pin)) {
       context.addIssue({
         code: z.ZodIssueCode.custom,
         path: ['pin'],
@@ -69,7 +68,6 @@ export const defaultUserFormValues: UserFormValues = {
   fullName: '',
   phone: '',
   roleId: '',
-  uiMode: 'admin',
   isActive: true,
   employmentStatus: 'active',
   passportSeries: '',
@@ -91,7 +89,6 @@ export function mapUserToFormValues(user: AdminUser): UserFormValues {
     fullName: user.fullName,
     phone: user.phone ?? '',
     roleId: user.role?.id ?? '',
-    uiMode: user.uiMode,
     isActive: user.isActive,
     employmentStatus: user.employmentStatus ?? (user.isActive ? 'active' : 'inactive'),
     passportSeries: user.passportSeries ?? '',
@@ -120,7 +117,6 @@ export function buildUserPayload(values: UserFormValues): AdminUserPayload {
     fullName: values.fullName.trim(),
     phone: values.phone?.trim() ?? '',
     roleId: values.roleId,
-    uiMode: values.uiMode,
     isActive: normalizedStatus === 'active',
     employmentStatus: normalizedStatus,
     passportSeries: values.passportSeries?.trim() || '',
@@ -133,7 +129,7 @@ export function buildUserPayload(values: UserFormValues): AdminUserPayload {
     ...(values.primaryHallId ? { primaryHallId: values.primaryHallId } : { primaryHallId: null }),
     allowedHallIds: values.allowedHallIds,
     ...(values.password ? { password: values.password } : {}),
-    ...(values.uiMode === 'pos' && values.pin ? { pin: values.pin } : {}),
+    ...(values.pin ? { pin: values.pin } : {}),
   };
 }
 
@@ -143,7 +139,6 @@ export function buildUserPayloadFromUser(
     Pick<
       AdminUserPayload,
       | 'isActive'
-      | 'uiMode'
       | 'password'
       | 'pin'
       | 'roleId'
@@ -170,7 +165,6 @@ export function buildUserPayloadFromUser(
     fullName: user.fullName,
     phone: user.phone ?? '',
     roleId: overrides?.roleId ?? user.role?.id ?? '',
-    uiMode: overrides?.uiMode ?? user.uiMode,
     isActive: nextEmploymentStatus === 'active',
     employmentStatus: nextEmploymentStatus,
     passportSeries: overrides?.passportSeries ?? user.passportSeries ?? '',
@@ -180,7 +174,6 @@ export function buildUserPayloadFromUser(
     baseAmount: overrides?.baseAmount ?? user.baseAmount ?? null,
     kpiPercent: overrides?.kpiPercent ?? user.kpiPercent ?? null,
     hallSwitchPermission: user.hallSwitchPermission ?? false,
-    ...(user.branchId ? { branchId: user.branchId } : {}),
     ...(user.primaryHallId ? { primaryHallId: user.primaryHallId } : { primaryHallId: null }),
     allowedHallIds: user.allowedHallIds ?? [],
   };
@@ -189,7 +182,7 @@ export function buildUserPayloadFromUser(
     payload.password = overrides.password;
   }
 
-  if ((overrides?.uiMode ?? user.uiMode) === 'pos' && overrides?.pin) {
+  if (overrides?.pin) {
     payload.pin = overrides.pin;
   }
 

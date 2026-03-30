@@ -189,7 +189,7 @@ const KitchenTicketsListPage = () => {
         headerName: t('fields.hall'),
         minWidth: 160,
         flex: 0.7,
-        valueGetter: (_value, row) => formatHallDisplayName(row.hallName, row.hallLevel, tCommon),
+        valueGetter: (_value, row) => formatHallDisplayName(row.hallName, undefined, tCommon),
       },
       {
         field: 'tableName',

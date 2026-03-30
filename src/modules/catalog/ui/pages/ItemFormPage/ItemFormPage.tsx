@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -37,11 +36,9 @@ const mxikOptionSchema = z
 
 const itemFormSchema = z.object({
   name: z.string().min(1, { message: 'Nomi talab qilinadi' }),
-  kind: z.enum(['dish', 'drink', 'service', 'penalty']),
   category: z.string().optional(),
   prepStation: z.string().optional(),
   description: z.string().optional(),
-  sku: z.string().optional(),
   mxik: mxikOptionSchema,
   price: z.preprocess(
     (value) => (value === '' || value === null || value === undefined ? 0 : value),
@@ -55,11 +52,9 @@ type ItemFormValues = z.infer<typeof itemFormSchema>;
 
 const defaultValues: ItemFormValues = {
   name: '',
-  kind: 'dish',
   category: '',
   prepStation: '',
   description: '',
-  sku: '',
   mxik: null,
   price: 0,
   isActive: true,
@@ -93,11 +88,9 @@ const ItemFormPage = () => {
 
     reset({
       name: itemQuery.data.name,
-      kind: itemQuery.data.kind,
       category: itemQuery.data.category ?? '',
       prepStation: itemQuery.data.prepStation ?? '',
       description: itemQuery.data.description ?? '',
-      sku: itemQuery.data.sku ?? '',
       mxik: buildMxikOption(itemQuery.data.mxikCode, itemQuery.data.mxikName),
       price: itemQuery.data.price ?? 0,
       isActive: itemQuery.data.isActive,
@@ -108,11 +101,9 @@ const ItemFormPage = () => {
   const onSubmit = handleSubmit(async (values) => {
     const payload = {
       name: values.name.trim(),
-      kind: values.kind,
       category: values.category || null,
       prepStation: values.prepStation || null,
       description: values.description?.trim() ?? '',
-      sku: values.sku?.trim() ?? '',
       mxikCode: values.mxik?.code ?? '',
       mxikName: values.mxik?.name ?? '',
       price: values.price,
@@ -162,12 +153,6 @@ const ItemFormPage = () => {
                 gap: 3,
               }}>
               <RHFTextField<ItemFormValues> name="name" label={t('fields.name')} />
-              <RHFSelect<ItemFormValues> name="kind" label={t('fields.kind')}>
-                <MenuItem value="dish">{t('kinds.dish')}</MenuItem>
-                <MenuItem value="drink">{t('kinds.drink')}</MenuItem>
-                <MenuItem value="service">{t('kinds.service')}</MenuItem>
-                <MenuItem value="penalty">{t('kinds.penalty')}</MenuItem>
-              </RHFSelect>
               <RHFSelect<ItemFormValues>
                 name="category"
                 label={t('fields.category')}
@@ -197,7 +182,6 @@ const ItemFormPage = () => {
                 placeholder={t('actions.searchMxik')}
               />
               <RHFSumCurrencyField<ItemFormValues> name="price" label={t('fields.price')} />
-              <RHFTextField<ItemFormValues> name="sku" label={t('fields.sku')} />
               <RHFTextField<ItemFormValues>
                 name="description"
                 label={t('fields.description')}

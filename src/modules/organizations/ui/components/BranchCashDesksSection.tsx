@@ -59,18 +59,10 @@ type Values = z.infer<typeof schema>;
 
 function BranchCashDeskDialog({
   open,
-  branchId,
-  branchSummary,
   item,
   onClose,
 }: {
   open: boolean;
-  branchId?: string | null;
-  branchSummary?: {
-    legalName?: string;
-    taxNumber?: string;
-    vatEnabled?: boolean;
-  } | null;
   item: AdminCashDesk | null;
   onClose: () => void;
 }) {
@@ -119,7 +111,6 @@ function BranchCashDeskDialog({
     const payload: AdminCashDeskPayload = {
       name: values.name.trim(),
       location: values.location.trim(),
-      branch: branchId ?? null,
       enabledPaymentMethods: values.enabledPaymentMethods,
       fiscalProvider: values.fiscalProvider.trim(),
       receiptPrinterEnabled: values.receiptPrinterEnabled,
@@ -143,23 +134,6 @@ function BranchCashDeskDialog({
         <DialogTitle>{isEditMode ? t('pages.cashDeskEdit.title') : t('pages.cashDeskCreate.title')}</DialogTitle>
         <DialogContent>
           <Stack spacing={3} sx={{ pt: 1 }}>
-            {branchSummary ? (
-              <Card variant="outlined" sx={{ p: 2 }}>
-                <Stack spacing={1}>
-                  <Typography variant="subtitle2">{t('sections.branchFiscalProfile')}</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {branchSummary.legalName || t('labels.notSelected')}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {t('fields.taxNumber')}: {branchSummary.taxNumber || t('labels.notSelected')}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {t('fields.vatEnabled')}:{' '}
-                    {branchSummary.vatEnabled ? t('labels.vatEnabled') : t('labels.vatDisabled')}
-                  </Typography>
-                </Stack>
-              </Card>
-            ) : null}
             <RHFTextField<Values> name="name" label={t('fields.name')} />
             <RHFTextField<Values> name="location" label={t('fields.location')} />
             <RHFMultiCheckbox<Values>
@@ -190,20 +164,12 @@ function BranchCashDeskDialog({
 }
 
 export function BranchCashDesksSection({
-  branchId,
-  branchSummary,
   defaultExpanded = false,
   title,
   description,
   actionLabel,
   searchPlaceholder,
 }: {
-  branchId?: string | null;
-  branchSummary?: {
-    legalName?: string;
-    taxNumber?: string;
-    vatEnabled?: boolean;
-  } | null;
   defaultExpanded?: boolean;
   title?: string;
   description?: string;
@@ -230,7 +196,6 @@ export function BranchCashDesksSection({
     page: paginationModel.page + 1,
     pageSize: paginationModel.pageSize,
     search: search || undefined,
-    branchIdIn: branchId || undefined,
     isActive: statuses.length === 1 ? statuses[0] === 'active' : undefined,
     ordering: getOrderingFromSortModel(sortModel),
   });
@@ -427,8 +392,6 @@ export function BranchCashDesksSection({
 
       <BranchCashDeskDialog
         open={dialogOpen}
-        branchId={branchId}
-        branchSummary={branchSummary}
         item={editingRow}
         onClose={() => {
           setDialogOpen(false);

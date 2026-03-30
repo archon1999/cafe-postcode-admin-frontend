@@ -1,6 +1,5 @@
 export const floorKeys = {
   all: ['floor'] as const,
-  branches: () => [...floorKeys.all, 'branches'] as const,
   users: () => [...floorKeys.all, 'users'] as const,
   halls: () => [...floorKeys.all, 'halls'] as const,
   hallsList: (params: Record<string, unknown>) => [...floorKeys.halls(), 'list', params] as const,

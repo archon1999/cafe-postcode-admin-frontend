@@ -39,7 +39,6 @@ export function AccountDrawer({ sx, ...other }: AccountDrawerProps) {
   const avatarFallback = displayName.charAt(0).toUpperCase() || '?';
   const roleLabel = getAdminRoleLabel(profile?.role, tUsers) ?? user?.roleLabel ?? '-';
   const permissions = profile?.permissionCodes ?? [];
-  const allowedHalls = profile?.allowedHallIds ?? [];
 
   return (
     <>
@@ -91,11 +90,6 @@ export function AccountDrawer({ sx, ...other }: AccountDrawerProps) {
                   {roleLabel}
                 </Label>
               )}
-              {user?.uiMode && (
-                <Label color="warning" variant="soft">
-                  {user.uiMode === 'admin' ? tUsers('uiMode.admin') : tUsers('uiMode.pos')}
-                </Label>
-              )}
               {typeof user?.isActive === 'boolean' && (
                 <Label color={user.isActive ? 'success' : 'error'} variant="soft">
                   {user.isActive ? t('status.active') : t('status.inactive')}
@@ -110,13 +104,6 @@ export function AccountDrawer({ sx, ...other }: AccountDrawerProps) {
                 <LabelRowWithIcon label={t('labels.username')} value={user.username} icon="solar:user-bold-duotone" />
               )}
               <LabelRowWithIcon label={tUsers('fields.role')} value={roleLabel} icon="solar:shield-user-bold-duotone" />
-              {user?.uiMode && (
-                <LabelRowWithIcon
-                  label={tUsers('fields.uiMode')}
-                  value={user.uiMode === 'admin' ? tUsers('uiMode.admin') : tUsers('uiMode.pos')}
-                  icon="solar:widget-4-bold-duotone"
-                />
-              )}
               {user?.phone && (
                 <LabelRowWithIcon label={t('labels.phone')} value={user.phone} icon="solar:phone-bold-duotone" />
               )}
@@ -129,26 +116,6 @@ export function AccountDrawer({ sx, ...other }: AccountDrawerProps) {
                 label={tUsers('fields.restaurantId')}
                 value={profile?.restaurantId ?? '-'}
                 icon="solar:shop-bold-duotone"
-              />
-              <LabelRowWithIcon
-                label={tUsers('fields.branchId')}
-                value={profile?.branchId ?? '-'}
-                icon="solar:buildings-bold-duotone"
-              />
-              <LabelRowWithIcon
-                label={tUsers('fields.primaryHallId')}
-                value={profile?.primaryHallId ?? '-'}
-                icon="solar:home-bold-duotone"
-              />
-              <LabelRowWithIcon
-                label={tUsers('fields.allowedHalls')}
-                value={allowedHalls.length ? allowedHalls.join(', ') : '-'}
-                icon="solar:structures-bold-duotone"
-              />
-              <LabelRowWithIcon
-                label={tUsers('fields.hallSwitchPermission')}
-                value={profile?.hallSwitchPermission ? t('status.active') : t('status.inactive')}
-                icon="solar:transfer-horizontal-bold-duotone"
               />
             </Stack>
           </Box>

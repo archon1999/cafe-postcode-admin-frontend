@@ -117,7 +117,7 @@ const TableSessionFormPage = () => {
                 helperText={hallsQuery.isLoading ? tCommon('labels.loading') : undefined}>
                 {(hallsQuery.data ?? []).map((hall) => (
                   <MenuItem key={hall.id} value={hall.id}>
-                    {formatHallDisplayName(hall.name, hall.level, tCommon)}
+                    {formatHallDisplayName(hall.name)}
                   </MenuItem>
                 ))}
               </RHFSelect>

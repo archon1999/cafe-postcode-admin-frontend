@@ -1,5 +1,4 @@
 import type {
-  AdminBranch,
   AdminDiningTable,
   AdminDiningTablePayload,
   AdminHallConstructor,
@@ -12,7 +11,6 @@ import type {
 } from 'shared/api/admin-types';
 
 export interface FloorRepository {
-  getBranches(): Promise<AdminBranch[]>;
   getUsers(): Promise<AdminUser[]>;
   getHalls(): Promise<AdminHall[]>;
   getHallById(id: string): Promise<AdminHall>;

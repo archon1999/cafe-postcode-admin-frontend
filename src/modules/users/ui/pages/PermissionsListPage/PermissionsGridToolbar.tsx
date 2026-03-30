@@ -16,13 +16,13 @@ type PermissionsGridToolbarProps = {
   search: string;
   onSearchChange: (value: string) => void;
   onClearSearch: () => void;
-  categories: string[];
-  onCategoriesChange: (values: string[]) => void;
-  onCategoriesApply: (values: string[]) => void;
+  scopes: string[];
+  onScopesChange: (values: string[]) => void;
+  onScopesApply: (values: string[]) => void;
   actions: string[];
   onActionsChange: (values: string[]) => void;
   onActionsApply: (values: string[]) => void;
-  categoryOptions: FilterOption[];
+  scopeOptions: FilterOption[];
   actionOptions: FilterOption[];
   columns: GridColDef[];
   columnVisibilityModel: GridColumnVisibilityModel;
@@ -34,13 +34,13 @@ export function PermissionsGridToolbar({
   search,
   onSearchChange,
   onClearSearch,
-  categories,
-  onCategoriesChange,
-  onCategoriesApply,
+  scopes,
+  onScopesChange,
+  onScopesApply,
   actions,
   onActionsChange,
   onActionsApply,
-  categoryOptions,
+  scopeOptions,
   actionOptions,
   columns,
   columnVisibilityModel,
@@ -66,13 +66,13 @@ export function PermissionsGridToolbar({
           />
 
           <FilterSelect
-            label={t('filters.category')}
-            value={categories}
-            options={categoryOptions}
-            onChange={onCategoriesChange}
-            onApply={onCategoriesApply}
+            label={t('filters.scope')}
+            value={scopes}
+            options={scopeOptions}
+            onChange={onScopesChange}
+            onApply={onScopesApply}
             emptyLabel={t('filters.all')}
-            testId="permissions-list-filter-category"
+            testId="permissions-list-filter-scope"
           />
 
           <FilterSelect

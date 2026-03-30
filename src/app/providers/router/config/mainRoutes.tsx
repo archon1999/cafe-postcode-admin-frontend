@@ -47,8 +47,6 @@ const CategoriesListPage = lazy(() => import('modules/catalog/ui/pages/Categorie
 const CategoryFormPage = lazy(() => import('modules/catalog/ui/pages/CategoryFormPage/CategoryFormPage'));
 const ItemsListPage = lazy(() => import('modules/catalog/ui/pages/ItemsListPage/ItemsListPage'));
 const ItemFormPage = lazy(() => import('modules/catalog/ui/pages/ItemFormPage/ItemFormPage'));
-const BranchesListPage = lazy(() => import('modules/organizations/ui/pages/BranchesListPage/BranchesListPage'));
-const BranchFormPage = lazy(() => import('modules/organizations/ui/pages/BranchFormPage/BranchFormPage'));
 const FeatureConfigFormPage = lazy(
   () => import('modules/organizations/ui/pages/FeatureConfigFormPage/FeatureConfigFormPage'),
 );
@@ -56,6 +54,21 @@ const RestaurantsListPage = lazy(
   () => import('modules/organizations/ui/pages/RestaurantsListPage/RestaurantsListPage'),
 );
 const MyRestaurantPage = lazy(() => import('modules/organizations/ui/pages/MyRestaurantPage/MyRestaurantPage'));
+const MyRestaurantGeneralPage = lazy(
+  () => import('modules/organizations/ui/pages/MyRestaurantGeneralPage/MyRestaurantGeneralPage'),
+);
+const MyRestaurantCashDesksPage = lazy(
+  () => import('modules/organizations/ui/pages/MyRestaurantCashDesksPage/MyRestaurantCashDesksPage'),
+);
+const MyRestaurantDevicesPage = lazy(
+  () => import('modules/organizations/ui/pages/MyRestaurantDevicesPage/MyRestaurantDevicesPage'),
+);
+const MyRestaurantPrepStationsPage = lazy(
+  () => import('modules/organizations/ui/pages/MyRestaurantPrepStationsPage/MyRestaurantPrepStationsPage'),
+);
+const MyRestaurantDistributionPointsPage = lazy(
+  () => import('modules/organizations/ui/pages/MyRestaurantDistributionPointsPage/MyRestaurantDistributionPointsPage'),
+);
 const RestaurantFormPage = lazy(() => import('modules/organizations/ui/pages/RestaurantFormPage/RestaurantFormPage'));
 const HallsListPage = lazy(() => import('modules/floor/ui/pages/HallsListPage/HallsListPage'));
 const HallFormPage = lazy(() => import('modules/floor/ui/pages/HallFormPage/HallFormPage'));
@@ -203,24 +216,32 @@ const mainChildren: RouteObject[] = [
     element: <ItemFormPage />,
   },
   {
-    path: RoutePath.organizationBranchList,
-    element: <BranchesListPage />,
-  },
-  {
-    path: RoutePath.organizationBranchCreate,
-    element: <BranchFormPage />,
-  },
-  {
-    path: RoutePath.organizationBranchEdit,
-    element: <BranchFormPage />,
-  },
-  {
     path: RoutePath.organizationRestaurantList,
     element: <RestaurantsListPage />,
   },
   {
     path: RoutePath.organizationMyRestaurant,
     element: <MyRestaurantPage />,
+  },
+  {
+    path: RoutePath.organizationMyRestaurantGeneral,
+    element: <MyRestaurantGeneralPage />,
+  },
+  {
+    path: RoutePath.organizationMyRestaurantCashDeskList,
+    element: <MyRestaurantCashDesksPage />,
+  },
+  {
+    path: RoutePath.organizationMyRestaurantDeviceList,
+    element: <MyRestaurantDevicesPage />,
+  },
+  {
+    path: RoutePath.organizationMyRestaurantPrepStationList,
+    element: <MyRestaurantPrepStationsPage />,
+  },
+  {
+    path: RoutePath.organizationMyRestaurantDistributionPointList,
+    element: <MyRestaurantDistributionPointsPage />,
   },
   {
     path: RoutePath.organizationRestaurantFeatureConfig,

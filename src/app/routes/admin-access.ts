@@ -2,10 +2,7 @@ import type { AdminSessionUser } from 'shared/api/admin-types';
 
 import { AppRoutesRoot, RoutePath, RouteRootPath } from './route-paths';
 
-export type AdminAccessSnapshot = Pick<
-  AdminSessionUser,
-  'actorType' | 'isSuperuser' | 'permissionCodes' | 'restaurantAccessActive'
->;
+export type AdminAccessSnapshot = Pick<AdminSessionUser, 'isSuperuser' | 'permissionCodes' | 'restaurantAccessActive'>;
 
 type PermissionCode = string;
 
@@ -23,7 +20,15 @@ const PAYMENT_PERMISSION_CODES: PermissionCode[] = ['payments.view', 'payments.m
 const KITCHEN_PERMISSION_CODES: PermissionCode[] = ['kitchen.view', 'kitchen.update', 'kitchen.manage'];
 const CATALOG_PERMISSION_CODES: PermissionCode[] = ['catalog.view', 'catalog.manage'];
 const FLOOR_PERMISSION_CODES: PermissionCode[] = ['hall.view', 'hall.manage', 'table.manage'];
-const MY_RESTAURANT_PERMISSION_CODES: PermissionCode[] = ['integrations.manage', 'cashdesk.manage'];
+const MY_RESTAURANT_GENERAL_PERMISSION_CODES: PermissionCode[] = [
+  'restaurants.view',
+  'restaurants.manage',
+  'integrations.manage',
+  'cashdesk.manage',
+];
+const MY_RESTAURANT_CASH_DESK_PERMISSION_CODES: PermissionCode[] = ['cashdesk.manage'];
+const MY_RESTAURANT_INTEGRATION_PERMISSION_CODES: PermissionCode[] = ['integrations.manage'];
+const SYSTEM_PERMISSION_CODES: PermissionCode[] = ['users.manage', 'permissions.view', 'roles.view'];
 
 const ADMIN_LANDING_CANDIDATES = [
   RoutePath.platformBusinessPartnerList,
@@ -37,23 +42,10 @@ const ADMIN_LANDING_CANDIDATES = [
   RoutePath.floorHallList,
   RoutePath.userList,
   RoutePath.roleList,
-  RoutePath.organizationBranchList,
 ] as const;
 
-function isProductOwner(snapshot?: AdminAccessSnapshot | null) {
-  return snapshot?.actorType === 'product_owner';
-}
-
-function isBusinessPartner(snapshot?: AdminAccessSnapshot | null) {
-  return snapshot?.actorType === 'business_partner';
-}
-
-function isRestaurantActor(snapshot?: AdminAccessSnapshot | null) {
-  return Boolean(snapshot?.isSuperuser) || (!isProductOwner(snapshot) && !isBusinessPartner(snapshot));
-}
-
 function hasActiveRestaurantAccess(snapshot?: AdminAccessSnapshot | null) {
-  return Boolean(snapshot?.isSuperuser) || (isRestaurantActor(snapshot) && snapshot?.restaurantAccessActive !== false);
+  return Boolean(snapshot?.isSuperuser) || snapshot?.restaurantAccessActive !== false;
 }
 
 function hasAnyPermission(snapshot: AdminAccessSnapshot | null | undefined, codes: PermissionCode[]) {
@@ -73,22 +65,15 @@ function matchesPrefix(pathname: string, prefix: string) {
 }
 
 export function canAccessBusinessPartners(snapshot?: AdminAccessSnapshot | null) {
-  return (
-    (Boolean(snapshot?.isSuperuser) || isProductOwner(snapshot)) && hasAnyPermission(snapshot, PARTNER_PERMISSION_CODES)
-  );
+  return hasAnyPermission(snapshot, PARTNER_PERMISSION_CODES);
 }
 
 export function canAccessTariffs(snapshot?: AdminAccessSnapshot | null) {
-  return (
-    (Boolean(snapshot?.isSuperuser) || isProductOwner(snapshot)) && hasAnyPermission(snapshot, TARIFF_PERMISSION_CODES)
-  );
+  return hasAnyPermission(snapshot, TARIFF_PERMISSION_CODES);
 }
 
 export function canAccessRestaurants(snapshot?: AdminAccessSnapshot | null) {
-  return (
-    (Boolean(snapshot?.isSuperuser) || isBusinessPartner(snapshot)) &&
-    hasAnyPermission(snapshot, RESTAURANT_PERMISSION_CODES)
-  );
+  return hasAnyPermission(snapshot, RESTAURANT_PERMISSION_CODES);
 }
 
 export function canAccessReports(snapshot?: AdminAccessSnapshot | null) {
@@ -120,28 +105,57 @@ export function canAccessUsers(snapshot?: AdminAccessSnapshot | null) {
 }
 
 export function canAccessRoles(snapshot?: AdminAccessSnapshot | null) {
-  return Boolean(snapshot?.isSuperuser);
+  return Boolean(snapshot?.isSuperuser) || hasAnyPermission(snapshot, ['roles.view']);
 }
 
 export function canAccessPermissions(snapshot?: AdminAccessSnapshot | null) {
-  return Boolean(snapshot?.isSuperuser);
+  return Boolean(snapshot?.isSuperuser) || hasAnyPermission(snapshot, ['permissions.view']);
 }
 
-export function canAccessBranches(snapshot?: AdminAccessSnapshot | null) {
-  return Boolean(snapshot?.isSuperuser);
-}
-
-export function canAccessFeatureConfigs(snapshot?: AdminAccessSnapshot | null) {
-  return Boolean(snapshot?.isSuperuser);
+export function canAccessFeatureConfigs(_snapshot?: AdminAccessSnapshot | null) {
+  return false;
 }
 
 export function canAccessMyRestaurant(snapshot?: AdminAccessSnapshot | null) {
   return (
-    !snapshot?.isSuperuser &&
-    hasActiveRestaurantAccess(snapshot) &&
-    hasAnyPermission(snapshot, MY_RESTAURANT_PERMISSION_CODES)
+    canAccessMyRestaurantGeneral(snapshot) ||
+    canAccessMyRestaurantCashDesks(snapshot) ||
+    canAccessMyRestaurantDevices(snapshot) ||
+    canAccessMyRestaurantPrepStations(snapshot) ||
+    canAccessMyRestaurantDistributionPoints(snapshot)
   );
 }
+
+export function canAccessSystem(snapshot?: AdminAccessSnapshot | null) {
+  return Boolean(snapshot?.isSuperuser) || hasAnyPermission(snapshot, SYSTEM_PERMISSION_CODES);
+}
+
+export function canAccessMyRestaurantGeneral(snapshot?: AdminAccessSnapshot | null) {
+  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, MY_RESTAURANT_GENERAL_PERMISSION_CODES);
+}
+
+export function canAccessMyRestaurantCashDesks(snapshot?: AdminAccessSnapshot | null) {
+  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, MY_RESTAURANT_CASH_DESK_PERMISSION_CODES);
+}
+
+export function canAccessMyRestaurantDevices(snapshot?: AdminAccessSnapshot | null) {
+  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, MY_RESTAURANT_INTEGRATION_PERMISSION_CODES);
+}
+
+export function canAccessMyRestaurantPrepStations(snapshot?: AdminAccessSnapshot | null) {
+  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, MY_RESTAURANT_INTEGRATION_PERMISSION_CODES);
+}
+
+export function canAccessMyRestaurantDistributionPoints(snapshot?: AdminAccessSnapshot | null) {
+  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, MY_RESTAURANT_INTEGRATION_PERMISSION_CODES);
+}
+
+const MY_RESTAURANT_LANDING_CANDIDATES = [
+  RoutePath.organizationMyRestaurantCashDeskList,
+  RoutePath.organizationMyRestaurantPrepStationList,
+  RoutePath.organizationMyRestaurantDeviceList,
+  RoutePath.organizationMyRestaurantDistributionPointList,
+] as const;
 
 export function canAccessAdminPath(pathname: string, snapshot?: AdminAccessSnapshot | null) {
   if (!pathname || pathname === RoutePath.main) {
@@ -156,16 +170,32 @@ export function canAccessAdminPath(pathname: string, snapshot?: AdminAccessSnaps
     return canAccessTariffs(snapshot);
   }
 
-  if (matchesPrefix(pathname, RoutePath.organizationBranchList)) {
-    return canAccessBranches(snapshot);
-  }
-
   if (matchesPrefix(pathname, RoutePath.organizationFeatureConfigList)) {
     return canAccessFeatureConfigs(snapshot);
   }
 
   if (pathname === RoutePath.organizationMyRestaurant) {
     return canAccessMyRestaurant(snapshot);
+  }
+
+  if (matchesPrefix(pathname, RoutePath.organizationMyRestaurantGeneral)) {
+    return canAccessMyRestaurantGeneral(snapshot);
+  }
+
+  if (matchesPrefix(pathname, RoutePath.organizationMyRestaurantCashDeskList)) {
+    return canAccessMyRestaurantCashDesks(snapshot);
+  }
+
+  if (matchesPrefix(pathname, RoutePath.organizationMyRestaurantDeviceList)) {
+    return canAccessMyRestaurantDevices(snapshot);
+  }
+
+  if (matchesPrefix(pathname, RoutePath.organizationMyRestaurantPrepStationList)) {
+    return canAccessMyRestaurantPrepStations(snapshot);
+  }
+
+  if (matchesPrefix(pathname, RoutePath.organizationMyRestaurantDistributionPointList)) {
+    return canAccessMyRestaurantDistributionPoints(snapshot);
   }
 
   if (
@@ -229,4 +259,8 @@ export function canAccessAdminPath(pathname: string, snapshot?: AdminAccessSnaps
 
 export function getDefaultAdminPath(snapshot?: AdminAccessSnapshot | null) {
   return ADMIN_LANDING_CANDIDATES.find((path) => canAccessAdminPath(path, snapshot)) ?? null;
+}
+
+export function getDefaultMyRestaurantPath(snapshot?: AdminAccessSnapshot | null) {
+  return MY_RESTAURANT_LANDING_CANDIDATES.find((path) => canAccessAdminPath(path, snapshot)) ?? null;
 }

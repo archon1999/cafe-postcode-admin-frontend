@@ -63,7 +63,6 @@ export function DashboardLayout({ sx, cssVars, children, slotProps, layoutQuery 
     slotProps?.nav?.data ??
     dashboardNavData(navTranslations.t, {
       isSuperuser: profile?.isSuperuser,
-      actorType: profile?.actorType,
       permissionCodes: profile?.permissionCodes,
       restaurantAccessActive: profile?.restaurantAccessActive,
     });
@@ -129,6 +128,7 @@ export function DashboardLayout({ sx, cssVars, children, slotProps, layoutQuery 
 
           {isNavHorizontal && (
             <Logo
+              isSingle={false}
               sx={{
                 display: 'none',
                 [theme.breakpoints.up(layoutQuery)]: { display: 'inline-flex' },

@@ -79,6 +79,46 @@ const TITLE_RULES: TitleRule[] = [
     resolve: (_params, t) => [t('organizations:pages.myRestaurant.title')],
   },
   {
+    route: AppRoutes.ORGANIZATION_MY_RESTAURANT_GENERAL,
+    namespaces: ['organizations'],
+    resolve: (_params, t) => [
+      t('organizations:pages.myRestaurant.title', { defaultValue: 'Mening restoranim' }),
+      t('organizations:pages.myRestaurantGeneral.title', { defaultValue: 'Umumiy' }),
+    ],
+  },
+  {
+    route: AppRoutes.ORGANIZATION_MY_RESTAURANT_CASH_DESK_LIST,
+    namespaces: ['organizations'],
+    resolve: (_params, t) => [
+      t('organizations:pages.myRestaurant.title', { defaultValue: 'Mening restoranim' }),
+      t('organizations:pages.cashDesks.title', { defaultValue: 'Kassalar' }),
+    ],
+  },
+  {
+    route: AppRoutes.ORGANIZATION_MY_RESTAURANT_DEVICE_LIST,
+    namespaces: ['organizations'],
+    resolve: (_params, t) => [
+      t('organizations:pages.myRestaurant.title', { defaultValue: 'Mening restoranim' }),
+      t('organizations:pages.devices.title', { defaultValue: 'Qurilmalar' }),
+    ],
+  },
+  {
+    route: AppRoutes.ORGANIZATION_MY_RESTAURANT_PREP_STATION_LIST,
+    namespaces: ['organizations'],
+    resolve: (_params, t) => [
+      t('organizations:pages.myRestaurant.title', { defaultValue: 'Mening restoranim' }),
+      t('organizations:pages.prepStations.title', { defaultValue: 'Tayyorlash stansiyalari' }),
+    ],
+  },
+  {
+    route: AppRoutes.ORGANIZATION_MY_RESTAURANT_DISTRIBUTION_POINT_LIST,
+    namespaces: ['organizations'],
+    resolve: (_params, t) => [
+      t('organizations:pages.myRestaurant.title', { defaultValue: 'Mening restoranim' }),
+      t('organizations:pages.distributionPoints.title', { defaultValue: 'Tarqatish nuqtalari' }),
+    ],
+  },
+  {
     route: AppRoutes.REPORTS,
     namespaces: ['reports'],
     resolve: (_params, t) => [t('reports:workspace.title'), getReportTitle(t, DEFAULT_REPORT_KEY)],

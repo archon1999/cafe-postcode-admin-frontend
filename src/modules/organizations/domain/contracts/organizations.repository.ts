@@ -1,6 +1,4 @@
 import type {
-  AdminBranch,
-  AdminBranchPayload,
   AdminCashDesk,
   AdminCashDeskPayload,
   AdminDevice,
@@ -17,11 +15,6 @@ import type {
 } from 'shared/api/admin-types';
 
 export interface OrganizationsRepository {
-  getBranches(): Promise<AdminBranch[]>;
-  getBranchById(id: string): Promise<AdminBranch>;
-  createBranch(payload: AdminBranchPayload): Promise<AdminBranch>;
-  updateBranch(id: string, payload: AdminBranchPayload): Promise<AdminBranch>;
-  deleteBranch(id: string): Promise<void>;
   getCashDesks(): Promise<AdminCashDesk[]>;
   getCashDeskById(id: string): Promise<AdminCashDesk>;
   createCashDesk(payload: AdminCashDeskPayload): Promise<AdminCashDesk>;

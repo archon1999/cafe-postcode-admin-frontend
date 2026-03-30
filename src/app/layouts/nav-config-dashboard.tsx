@@ -1,6 +1,6 @@
 import { type TFunction } from 'i18next';
 
-import { RoutePath, canAccessAdminPath, canAccessMyRestaurant, type AdminAccessSnapshot } from 'app/routes';
+import { RoutePath, canAccessAdminPath, canAccessSystem, type AdminAccessSnapshot } from 'app/routes';
 import { Iconify } from 'shared/ui/Iconify';
 import type { NavSectionProps } from 'shared/ui/NavSection';
 
@@ -20,6 +20,7 @@ const ICONS = {
   items: <Iconify icon="solar:archive-bold-duotone" width={20} />,
   floor: <Iconify icon="solar:map-point-rotate-bold-duotone" width={24} />,
   halls: <Iconify icon="solar:home-angle-bold-duotone" width={20} />,
+  zones: <Iconify icon="solar:box-bold-duotone" width={20} />,
   tableSessions: <Iconify icon="solar:calendar-search-bold-duotone" width={20} />,
   employees: <Iconify icon="solar:users-group-rounded-bold-duotone" width={24} />,
   users: <Iconify icon="solar:user-id-bold-duotone" width={20} />,
@@ -27,7 +28,12 @@ const ICONS = {
   permissions: <Iconify icon="solar:key-bold-duotone" width={20} />,
   organizations: <Iconify icon="solar:buildings-3-bold-duotone" width={24} />,
   restaurants: <Iconify icon="solar:city-bold-duotone" width={20} />,
-  myRestaurant: <Iconify icon="solar:buildings-bold-duotone" width={20} />,
+  restaurantManagement: <Iconify icon="solar:settings-bold-duotone" width={20} />,
+  cashDesks: <Iconify icon="solar:wallet-money-bold-duotone" width={20} />,
+  devices: <Iconify icon="solar:smartphone-2-bold-duotone" width={20} />,
+  prepStations: <Iconify icon="solar:chef-hat-bold-duotone" width={20} />,
+  distributionPoints: <Iconify icon="solar:shop-bold-duotone" width={20} />,
+  system: <Iconify icon="solar:settings-bold-duotone" width={24} />,
 };
 
 type NavOptions = AdminAccessSnapshot;
@@ -37,8 +43,14 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
   const canAccess = (path: string) => canAccessAdminPath(path, options);
 
   const sections: NavSectionProps['data'] = [];
+  const pushSection = (subheader: string | undefined, items: NavSectionProps['data'][number]['items']) => {
+    if (!items.length) {
+      return;
+    }
+    sections.push({ subheader, items });
+  };
 
-  const platformItems = [
+  const productOwnerItems = [
     canAccess(RoutePath.platformBusinessPartnerList)
       ? {
           title: t('businessPartners'),
@@ -53,7 +65,15 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
           icon: ICONS.tariffs,
         }
       : null,
-    isSuperuser && canAccess(RoutePath.organizationRestaurantList)
+  ].filter(Boolean) as NavSectionProps['data'][number]['items'];
+
+  pushSection(
+    isSuperuser ? t('productOwnerSection', { defaultValue: 'Mahsulot egasi' }) : undefined,
+    productOwnerItems,
+  );
+
+  const businessPartnerItems = [
+    canAccess(RoutePath.organizationRestaurantList)
       ? {
           title: t('restaurants'),
           path: RoutePath.organizationRestaurantList,
@@ -62,25 +82,10 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
       : null,
   ].filter(Boolean) as NavSectionProps['data'][number]['items'];
 
-  if (platformItems.length) {
-    sections.push({
-      subheader: t('platformSection'),
-      items: platformItems,
-    });
-  }
-
-  if (!isSuperuser && canAccess(RoutePath.organizationRestaurantList)) {
-    sections.push({
-      subheader: t('main'),
-      items: [
-        {
-          title: t('restaurants'),
-          path: RoutePath.organizationRestaurantList,
-          icon: ICONS.restaurants,
-        },
-      ],
-    });
-  }
+  pushSection(
+    isSuperuser ? t('businessPartnerSection', { defaultValue: 'Biznes hamkor' }) : undefined,
+    businessPartnerItems,
+  );
 
   const orderChildren = [
     canAccess(RoutePath.orderList)
@@ -141,6 +146,13 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
           icon: ICONS.halls,
         }
       : null,
+    canAccess(RoutePath.floorZoneList)
+      ? {
+          title: t('zones'),
+          path: RoutePath.floorZoneList,
+          icon: ICONS.zones,
+        }
+      : null,
     canAccess(RoutePath.floorTableSessionList)
       ? {
           title: t('tableSessions'),
@@ -150,31 +162,38 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
       : null,
   ].filter(Boolean) as NavSectionProps['data'][number]['items'];
 
-  const employeeChildren = [
-    canAccess(RoutePath.userList)
+  const myRestaurantChildren = [
+    canAccess(RoutePath.organizationMyRestaurantCashDeskList)
       ? {
-          title: t('users'),
-          path: RoutePath.userList,
-          icon: ICONS.users,
+          title: t('cashDesks'),
+          path: RoutePath.organizationMyRestaurantCashDeskList,
+          icon: ICONS.cashDesks,
         }
       : null,
-    canAccess(RoutePath.roleList)
+    canAccess(RoutePath.organizationMyRestaurantDeviceList)
       ? {
-          title: t('roles'),
-          path: RoutePath.roleList,
-          icon: ICONS.roles,
+          title: t('devices'),
+          path: RoutePath.organizationMyRestaurantDeviceList,
+          icon: ICONS.devices,
         }
       : null,
-    canAccess(RoutePath.permissionList)
+    canAccess(RoutePath.organizationMyRestaurantPrepStationList)
       ? {
-          title: t('permissions'),
-          path: RoutePath.permissionList,
-          icon: ICONS.permissions,
+          title: t('prepStations'),
+          path: RoutePath.organizationMyRestaurantPrepStationList,
+          icon: ICONS.prepStations,
+        }
+      : null,
+    canAccess(RoutePath.organizationMyRestaurantDistributionPointList)
+      ? {
+          title: t('distributionPoints'),
+          path: RoutePath.organizationMyRestaurantDistributionPointList,
+          icon: ICONS.distributionPoints,
         }
       : null,
   ].filter(Boolean) as NavSectionProps['data'][number]['items'];
 
-  const mainItems = [
+  const restaurantAdminItems = [
     canAccess(RoutePath.reports)
       ? {
           title: t('reports'),
@@ -214,31 +233,48 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
           children: floorChildren,
         }
       : null,
-    canAccessMyRestaurant(options)
+    myRestaurantChildren.length
       ? {
-          title: t('myRestaurant'),
-          path: RoutePath.organizationMyRestaurant,
-          icon: ICONS.myRestaurant,
+          title: t('restaurantManagement', { defaultValue: 'Restoran boshqaruvi' }),
+          path: myRestaurantChildren[0].path,
+          icon: ICONS.restaurantManagement,
+          children: myRestaurantChildren,
         }
       : null,
-    employeeChildren.length
+    canAccess(RoutePath.userList)
       ? {
           title: t('employees'),
-          path: employeeChildren[0].path,
+          path: RoutePath.userList,
           icon: ICONS.employees,
-          children: employeeChildren,
         }
       : null,
   ].filter(Boolean) as NavSectionProps['data'][number]['items'];
 
-  if (!mainItems.length) {
-    return sections;
-  }
+  pushSection(
+    isSuperuser ? t('restaurantAdminSection', { defaultValue: 'Restoran admini' }) : undefined,
+    restaurantAdminItems,
+  );
 
-  sections.push({
-    subheader: t('main'),
-    items: mainItems,
-  });
+  const systemItems = [
+    canAccess(RoutePath.roleList)
+      ? {
+          title: t('roles'),
+          path: RoutePath.roleList,
+          icon: ICONS.roles,
+        }
+      : null,
+    canAccess(RoutePath.permissionList)
+      ? {
+          title: t('permissions'),
+          path: RoutePath.permissionList,
+          icon: ICONS.permissions,
+        }
+      : null,
+  ].filter(Boolean) as NavSectionProps['data'][number]['items'];
+
+  if (isSuperuser || canAccessSystem(options)) {
+    pushSection(isSuperuser ? t('systemSection', { defaultValue: 'Tizim' }) : undefined, systemItems);
+  }
 
   return sections;
 };

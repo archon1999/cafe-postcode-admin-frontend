@@ -24,7 +24,7 @@ import { Iconify } from 'shared/ui/Iconify';
 import { RouterLink } from 'shared/ui/RouterLink';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 
-import { useDeleteHallMutation, useGetFloorBranchesQuery, useGetFloorHallsListQuery } from '../../../application';
+import { useDeleteHallMutation, useGetFloorHallsListQuery } from '../../../application';
 import { FloorGridToolbar } from '../../components/FloorGridToolbar';
 
 const DEFAULT_PAGINATION_MODEL: GridPaginationModel = { page: 0, pageSize: 10 };
@@ -35,15 +35,11 @@ const HallsListPage = () => {
   const { t, currentLang } = useTranslate('floor');
   const { t: tCommon } = useTranslate('common');
   const { disabled: isCreateDisabled } = useAdminCreateAccess(RoutePath.floorHallCreate);
-  const branchesQuery = useGetFloorBranchesQuery();
   const deleteMutation = useDeleteHallMutation();
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
-  const levelLabel =
-    currentLang.value === 'ru' ? 'Этаж' : currentLang.value === 'uz-Cyrl' ? 'Қават' : t('fields.level');
 
   const [paginationModel, setPaginationModel] = useState(DEFAULT_PAGINATION_MODEL);
   const [search, setSearch] = useState('');
-  const [branches, setBranches] = useState<string[]>([]);
   const [statuses, setStatuses] = useState<string[]>([]);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState(DEFAULT_COLUMN_VISIBILITY_MODEL);
   const [selectedRows, setSelectedRows] = useState<GridRowSelectionModel>(DEFAULT_SELECTION_MODEL);
@@ -53,15 +49,10 @@ const HallsListPage = () => {
     page: paginationModel.page + 1,
     pageSize: paginationModel.pageSize,
     search: search || undefined,
-    branchIdIn: branches.length ? branches.join(',') : undefined,
     isActive: statuses.length === 1 ? statuses[0] === 'active' : undefined,
     ordering: getOrderingFromSortModel(sortModel),
   });
 
-  const branchOptions = useMemo<FilterOption[]>(
-    () => (branchesQuery.data ?? []).map((branch) => ({ value: branch.id, label: branch.name })),
-    [branchesQuery.data],
-  );
   const statusOptions = useMemo<FilterOption[]>(
     () => [
       { value: 'active', label: tCommon('status.active') },
@@ -70,25 +61,11 @@ const HallsListPage = () => {
     [tCommon],
   );
 
-  const hasActiveFilters = Boolean(search || branches.length || statuses.length);
+  const hasActiveFilters = Boolean(search || statuses.length);
 
   const columns = useMemo<GridColDef<AdminHall>[]>(
     () => [
       { field: 'name', headerName: t('fields.name'), minWidth: 220, flex: 1 },
-      {
-        field: 'branchName',
-        headerName: t('fields.branch'),
-        minWidth: 180,
-        flex: 0.7,
-        valueGetter: (_value, row) => row.branchName || '-',
-      },
-      {
-        field: 'level',
-        headerName: levelLabel,
-        minWidth: 110,
-        flex: 0.35,
-        valueGetter: (_value, row) => row.level ?? 1,
-      },
       { field: 'description', headerName: t('fields.description'), minWidth: 220, flex: 1 },
       {
         field: 'sortOrder',
@@ -141,7 +118,7 @@ const HallsListPage = () => {
         ],
       },
     ],
-    [levelLabel, t, tCommon],
+    [t, tCommon],
   );
 
   return (
@@ -215,18 +192,6 @@ const HallsListPage = () => {
                   onSearchChange={setSearch}
                   onClearSearch={() => setSearch('')}
                   filters={[
-                    {
-                      label: t('filters.branch'),
-                      value: branches,
-                      options: branchOptions,
-                      onChange: setBranches,
-                      onApply: (values) => {
-                        setBranches(values);
-                        setPaginationModel((prev) => ({ ...prev, page: 0 }));
-                      },
-                      testId: 'halls-branch-filter',
-                      emptyLabel: t('filters.all'),
-                    },
                     {
                       label: t('filters.status'),
                       value: statuses,

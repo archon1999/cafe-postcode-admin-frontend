@@ -520,7 +520,7 @@ const HallConstructorPage = () => {
     return <LoadingScreen />;
   }
 
-  const hallDisplayName = formatHallDisplayName(query.data?.hallName, query.data?.hallLevel, tCommon);
+  const hallDisplayName = formatHallDisplayName(query.data?.hallName);
 
   return (
     <Content>

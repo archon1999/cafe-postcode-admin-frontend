@@ -11,10 +11,8 @@ export interface CurrentUser {
   photoURL: string | null;
   role: string | null;
   roleLabel?: string | null;
-  actorType?: string | null;
   username?: string;
   phone?: string | null;
-  uiMode?: string | null;
   isActive?: boolean;
   isSuperuser?: boolean;
   restaurantAccessActive?: boolean;
@@ -42,10 +40,8 @@ function mapProfileToUser(profile: AdminSessionUser): CurrentUser {
     photoURL: null,
     role: profile.role?.code ?? null,
     roleLabel: profile.role?.name ?? null,
-    actorType: profile.actorType ?? null,
     username: profile.username,
     phone: profile.phone,
-    uiMode: profile.uiMode,
     isActive: profile.isActive,
     isSuperuser: profile.isSuperuser,
     restaurantAccessActive: profile.restaurantAccessActive,

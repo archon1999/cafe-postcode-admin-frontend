@@ -59,12 +59,10 @@ type Values = z.infer<typeof schema>;
 
 function BranchDistributionPointDialog({
   open,
-  branchId,
   item,
   onClose,
 }: {
   open: boolean;
-  branchId?: string | null;
   item: AdminDistributionPoint | null;
   onClose: () => void;
 }) {
@@ -75,10 +73,7 @@ function BranchDistributionPointDialog({
   const createMutation = useCreateDistributionPointMutation();
   const updateMutation = useUpdateDistributionPointMutation(item?.id ?? '');
 
-  const hallOptions = useMemo(
-    () => (hallsQuery.data ?? []).filter((hall) => !branchId || hall.branch === branchId),
-    [branchId, hallsQuery.data],
-  );
+  const hallOptions = useMemo(() => hallsQuery.data ?? [], [hallsQuery.data]);
 
   const methods = useForm<Values>({
     resolver: zodResolver(schema),
@@ -100,7 +95,6 @@ function BranchDistributionPointDialog({
       name: values.name.trim(),
       kind: values.kind,
       integrationChannel: values.integrationChannel.trim(),
-      branch: branchId ?? null,
       assignedHall: values.assignedHall || null,
       isActive: values.isActive,
     };
@@ -138,7 +132,7 @@ function BranchDistributionPointDialog({
               <MenuItem value="">{t('labels.notSelected')}</MenuItem>
               {hallOptions.map((hall) => (
                 <MenuItem key={hall.id} value={hall.id}>
-                  {formatHallDisplayName(hall.name, hall.level, tCommon)}
+                  {formatHallDisplayName(hall.name, undefined, tCommon)}
                 </MenuItem>
               ))}
             </RHFSelect>
@@ -159,14 +153,12 @@ function BranchDistributionPointDialog({
 }
 
 export function BranchDistributionPointsSection({
-  branchId,
   defaultExpanded = false,
   title,
   description,
   actionLabel,
   searchPlaceholder,
 }: {
-  branchId?: string | null;
   defaultExpanded?: boolean;
   title?: string;
   description?: string;
@@ -193,7 +185,6 @@ export function BranchDistributionPointsSection({
     page: paginationModel.page + 1,
     pageSize: paginationModel.pageSize,
     search: search || undefined,
-    branchIdIn: branchId || undefined,
     kindIn: kinds.length ? kinds.join(',') : undefined,
     isActive: statuses.length === 1 ? statuses[0] === 'active' : undefined,
     ordering: getOrderingFromSortModel(sortModel),
@@ -229,7 +220,7 @@ export function BranchDistributionPointsSection({
         headerName: t('fields.assignedHall'),
         minWidth: 180,
         flex: 0.7,
-        valueGetter: (_value, row) => formatHallDisplayName(row.assignedHallName, row.assignedHallLevel, tCommon),
+        valueGetter: (_value, row) => formatHallDisplayName(row.assignedHallName, undefined, tCommon),
       },
       { field: 'integrationChannel', headerName: t('fields.integrationChannel'), minWidth: 180, flex: 0.8 },
       {
@@ -405,7 +396,6 @@ export function BranchDistributionPointsSection({
 
       <BranchDistributionPointDialog
         open={dialogOpen}
-        branchId={branchId}
         item={editingRow}
         onClose={() => {
           setDialogOpen(false);

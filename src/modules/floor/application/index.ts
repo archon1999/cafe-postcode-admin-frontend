@@ -14,7 +14,6 @@ export {
   useGetDiningTableByIdQuery,
   useGetDiningTablesListQuery,
   useGetDiningTablesQuery,
-  useGetFloorBranchesQuery,
   useGetHallConstructorQuery,
   useGetFloorHallsListQuery,
   useGetFloorHallsQuery,

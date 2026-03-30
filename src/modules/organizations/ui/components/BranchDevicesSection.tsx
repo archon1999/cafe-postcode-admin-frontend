@@ -59,12 +59,10 @@ type Values = z.infer<typeof schema>;
 
 function BranchDeviceDialog({
   open,
-  branchId,
   item,
   onClose,
 }: {
   open: boolean;
-  branchId?: string | null;
   item: AdminDevice | null;
   onClose: () => void;
 }) {
@@ -75,10 +73,7 @@ function BranchDeviceDialog({
   const createMutation = useCreateDeviceMutation();
   const updateMutation = useUpdateDeviceMutation(item?.id ?? '');
 
-  const hallOptions = useMemo(
-    () => (hallsQuery.data ?? []).filter((hall) => !branchId || hall.branch === branchId),
-    [branchId, hallsQuery.data],
-  );
+  const hallOptions = useMemo(() => hallsQuery.data ?? [], [hallsQuery.data]);
 
   const methods = useForm<Values>({
     resolver: zodResolver(schema),
@@ -106,7 +101,6 @@ function BranchDeviceDialog({
     const payload: AdminDevicePayload = {
       name: values.name.trim(),
       mode: values.mode,
-      branch: branchId ?? null,
       primaryHallId: values.primaryHallId || null,
       allowedHallIds: values.allowedHallIds,
       isActive: values.isActive,
@@ -142,7 +136,7 @@ function BranchDeviceDialog({
               <MenuItem value="">{t('labels.notSelected')}</MenuItem>
               {hallOptions.map((hall) => (
                 <MenuItem key={hall.id} value={hall.id}>
-                  {formatHallDisplayName(hall.name, hall.level, tCommon)}
+                  {formatHallDisplayName(hall.name, undefined, tCommon)}
                 </MenuItem>
               ))}
             </RHFSelect>
@@ -151,7 +145,7 @@ function BranchDeviceDialog({
               label={t('fields.allowedHalls')}
               options={hallOptions.map((hall) => ({
                 value: hall.id,
-                label: formatHallDisplayName(hall.name, hall.level, tCommon),
+                label: formatHallDisplayName(hall.name, undefined, tCommon),
               }))}
               checkbox
               chip
@@ -175,14 +169,12 @@ function BranchDeviceDialog({
 }
 
 export function BranchDevicesSection({
-  branchId,
   defaultExpanded = false,
   title,
   description,
   actionLabel,
   searchPlaceholder,
 }: {
-  branchId?: string | null;
   defaultExpanded?: boolean;
   title?: string;
   description?: string;
@@ -209,7 +201,6 @@ export function BranchDevicesSection({
     page: paginationModel.page + 1,
     pageSize: paginationModel.pageSize,
     search: search || undefined,
-    branchIdIn: branchId || undefined,
     modeIn: modes.length ? modes.join(',') : undefined,
     isActive: statuses.length === 1 ? statuses[0] === 'active' : undefined,
     ordering: getOrderingFromSortModel(sortModel),
@@ -242,7 +233,7 @@ export function BranchDevicesSection({
         headerName: t('fields.primaryHall'),
         minWidth: 180,
         flex: 0.7,
-        valueGetter: (_value, row) => formatHallDisplayName(row.primaryHallName, row.primaryHallLevel, tCommon),
+        valueGetter: (_value, row) => formatHallDisplayName(row.primaryHallName, undefined, tCommon),
       },
       {
         field: 'isActive',
@@ -417,7 +408,6 @@ export function BranchDevicesSection({
 
       <BranchDeviceDialog
         open={dialogOpen}
-        branchId={branchId}
         item={editingRow}
         onClose={() => {
           setDialogOpen(false);

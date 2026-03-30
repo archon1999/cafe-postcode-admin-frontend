@@ -2,20 +2,10 @@ import type { TFunction } from 'i18next';
 
 import type { AdminPermission } from 'shared/api/admin-types';
 
-const CATEGORY_TRANSLATION_KEYS: Record<string, string> = {
-  dashboard: 'permissionCategories.dashboard',
-  constructor: 'permissionCategories.constructor',
-  hall: 'permissionCategories.hall',
-  table: 'permissionCategories.table',
-  users: 'permissionCategories.users',
-  roles: 'permissionCategories.roles',
-  catalog: 'permissionCategories.catalog',
-  stoplist: 'permissionCategories.stoplist',
-  orders: 'permissionCategories.orders',
-  payments: 'permissionCategories.payments',
-  kitchen: 'permissionCategories.kitchen',
-  reports: 'permissionCategories.reports',
-  integrations: 'permissionCategories.integrations',
+const SCOPE_TRANSLATION_KEYS: Record<string, string> = {
+  admin: 'permissionScopes.admin',
+  pos: 'permissionScopes.pos',
+  dashboard: 'permissionScopes.dashboard',
 };
 
 const ACTION_TRANSLATION_KEYS: Record<string, string> = {
@@ -23,7 +13,27 @@ const ACTION_TRANSLATION_KEYS: Record<string, string> = {
   manage: 'permissionActions.manage',
   create: 'permissionActions.create',
   update: 'permissionActions.update',
+  activate: 'permissionActions.activate',
+  deactivate: 'permissionActions.deactivate',
+  reset_password: 'permissionActions.resetPassword',
+  open: 'permissionActions.open',
+  close: 'permissionActions.close',
+  refund: 'permissionActions.refund',
+  reprint: 'permissionActions.reprint',
 };
+
+const POS_PERMISSION_PREFIXES = [
+  'hall.',
+  'table.',
+  'orders.',
+  'payments.',
+  'cashshift.',
+  'payment.',
+  'receipt.',
+  'kitchen.',
+  'stoplist.',
+  'cashdesk.',
+] as const;
 
 function titleCase(value: string) {
   return value
@@ -42,16 +52,25 @@ function getTranslationOrUndefined(t: TFunction, key: string | undefined) {
   return translated === key ? undefined : translated;
 }
 
-export function getAdminPermissionCategory(code: string) {
-  return code.split('.')[0] ?? '';
+export function getAdminPermissionScope(code: string) {
+  if (code.startsWith('dashboard.')) {
+    return 'dashboard';
+  }
+
+  if (POS_PERMISSION_PREFIXES.some((prefix) => code.startsWith(prefix))) {
+    return 'pos';
+  }
+
+  return 'admin';
 }
 
 export function getAdminPermissionAction(code: string) {
-  return code.split('.')[1] ?? '';
+  const segments = code.split('.');
+  return segments[segments.length - 1] ?? '';
 }
 
-export function getAdminPermissionCategoryLabel(category: string, t: TFunction) {
-  return getTranslationOrUndefined(t, CATEGORY_TRANSLATION_KEYS[category]) ?? titleCase(category);
+export function getAdminPermissionScopeLabel(scope: string, t: TFunction) {
+  return getTranslationOrUndefined(t, SCOPE_TRANSLATION_KEYS[scope]) ?? titleCase(scope);
 }
 
 export function getAdminPermissionActionLabel(action: string, t: TFunction) {
@@ -59,16 +78,16 @@ export function getAdminPermissionActionLabel(action: string, t: TFunction) {
 }
 
 export function getAdminPermissionLabel(permission: Pick<AdminPermission, 'code' | 'name'> | string, t: TFunction) {
-  const code = typeof permission === 'string' ? permission : permission.code;
-  const category = getAdminPermissionCategory(code);
-  const action = getAdminPermissionAction(code);
-
-  if (category && action) {
-    return `${getAdminPermissionCategoryLabel(category, t)} / ${getAdminPermissionActionLabel(action, t)}`;
-  }
-
   if (typeof permission !== 'string' && permission.name) {
     return permission.name;
+  }
+
+  const code = typeof permission === 'string' ? permission : permission.code;
+  const scope = getAdminPermissionScope(code);
+  const action = getAdminPermissionAction(code);
+
+  if (scope && action) {
+    return `${getAdminPermissionScopeLabel(scope, t)} / ${getAdminPermissionActionLabel(action, t)}`;
   }
 
   return titleCase(code);

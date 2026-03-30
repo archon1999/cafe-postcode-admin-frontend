@@ -61,7 +61,7 @@ const UserFormPage = () => {
   });
 
   const { handleSubmit, reset, watch, setValue, formState } = methods;
-  const selectedUiMode = watch('uiMode');
+  const selectedRoleId = watch('roleId');
   const selectedSalaryType = watch('salaryType');
   const selectedEmploymentStatus = watch('employmentStatus');
   const selectedIsActive = watch('isActive');
@@ -69,18 +69,19 @@ const UserFormPage = () => {
   const selectedAllowedHallIds = watch('allowedHallIds');
   const roles = Array.isArray(rolesQuery.data) ? rolesQuery.data : [];
   const halls = Array.isArray(hallsQuery.data) ? hallsQuery.data : [];
+  const selectedRole = roles.find((role) => role.id === selectedRoleId) ?? null;
+  const hasPosAccessPermission = Boolean(selectedRole?.permissions.some((permission) => permission.scope === 'pos'));
+  const hasHallAccessPermission = Boolean(
+    selectedRole?.permissions.some((permission) =>
+      ['hall.view', 'hall.manage', 'table.manage'].includes(permission.code),
+    ),
+  );
 
   useEffect(() => {
     if (userQuery.data) {
       reset(mapUserToFormValues(userQuery.data));
     }
   }, [reset, userQuery.data]);
-
-  useEffect(() => {
-    if (selectedUiMode !== 'pos') {
-      setValue('pin', '');
-    }
-  }, [selectedUiMode, setValue]);
 
   useEffect(() => {
     if (selectedEmploymentStatus === 'archived') {
@@ -113,13 +114,37 @@ const UserFormPage = () => {
     }
   }, [selectedAllowedHallIds, selectedPrimaryHallId, setValue]);
 
+  useEffect(() => {
+    if (!hasHallAccessPermission) {
+      setValue('primaryHallId', '');
+      setValue('allowedHallIds', []);
+      setValue('hallSwitchPermission', false);
+    }
+  }, [hasHallAccessPermission, setValue]);
+
+  useEffect(() => {
+    if (!hasPosAccessPermission) {
+      setValue('pin', '');
+    }
+  }, [hasPosAccessPermission, setValue]);
+
   const hallOptions = halls.map((hall) => ({
     value: hall.id,
-    label: formatHallDisplayName(hall.name, hall.level, tCommon),
+    label: formatHallDisplayName(hall.name, undefined, tCommon),
   }));
 
   const onSubmit = handleSubmit(async (values) => {
     const payload = buildUserPayload(values);
+
+    if (!hasHallAccessPermission) {
+      payload.primaryHallId = null;
+      payload.allowedHallIds = [];
+      payload.hallSwitchPermission = false;
+    }
+
+    if (!hasPosAccessPermission) {
+      delete payload.pin;
+    }
 
     if (isEditMode && id) {
       const updatedUser = await updateUserMutation.mutateAsync(payload);
@@ -177,11 +202,6 @@ const UserFormPage = () => {
                   ))}
                 </RHFSelect>
 
-                <RHFSelect<UserFormValues> name="uiMode" label={t('fields.uiMode')}>
-                  <MenuItem value="admin">{t('uiMode.admin')}</MenuItem>
-                  <MenuItem value="pos">{t('uiMode.pos')}</MenuItem>
-                </RHFSelect>
-
                 <RHFTextField<UserFormValues>
                   name="password"
                   label={t('fields.password')}
@@ -189,7 +209,7 @@ const UserFormPage = () => {
                   helperText={isEditMode ? t('fields.passwordEditHint') : t('fields.passwordCreateHint')}
                 />
 
-                {selectedUiMode === 'pos' && (
+                {hasPosAccessPermission && (
                   <RHFTextField<UserFormValues>
                     name="pin"
                     label={t('fields.pin')}
@@ -216,27 +236,31 @@ const UserFormPage = () => {
                   <MenuItem value="archived">{t('status.archived')}</MenuItem>
                 </RHFSelect>
 
-                <RHFSelect<UserFormValues>
-                  name="primaryHallId"
-                  label={t('fields.primaryHall')}
-                  helperText={hallsQuery.isLoading ? tCommon('labels.loading') : t('fields.primaryHallHint')}>
-                  <MenuItem value="">{t('labels.notSelected')}</MenuItem>
-                  {halls.map((hall) => (
-                    <MenuItem key={hall.id} value={hall.id}>
-                      {formatHallDisplayName(hall.name, hall.level, tCommon)}
-                    </MenuItem>
-                  ))}
-                </RHFSelect>
+                {hasHallAccessPermission && (
+                  <>
+                    <RHFSelect<UserFormValues>
+                      name="primaryHallId"
+                      label={t('fields.primaryHall')}
+                      helperText={hallsQuery.isLoading ? tCommon('labels.loading') : t('fields.primaryHallHint')}>
+                      <MenuItem value="">{t('labels.notSelected')}</MenuItem>
+                      {halls.map((hall) => (
+                        <MenuItem key={hall.id} value={hall.id}>
+                          {formatHallDisplayName(hall.name, undefined, tCommon)}
+                        </MenuItem>
+                      ))}
+                    </RHFSelect>
 
-                <RHFMultiSelect<UserFormValues>
-                  name="allowedHallIds"
-                  label={t('fields.allowedHalls')}
-                  options={hallOptions}
-                  checkbox
-                  chip
-                  placeholder={t('labels.notSelected')}
-                  helperText={hallsQuery.isLoading ? tCommon('labels.loading') : t('fields.allowedHallsHint')}
-                />
+                    <RHFMultiSelect<UserFormValues>
+                      name="allowedHallIds"
+                      label={t('fields.allowedHalls')}
+                      options={hallOptions}
+                      checkbox
+                      chip
+                      placeholder={t('labels.notSelected')}
+                      helperText={hallsQuery.isLoading ? tCommon('labels.loading') : t('fields.allowedHallsHint')}
+                    />
+                  </>
+                )}
 
                 <RHFDatePicker<UserFormValues>
                   name="birthDate"
@@ -252,7 +276,9 @@ const UserFormPage = () => {
                   label={t('fields.statusToggle')}
                   disabled={selectedEmploymentStatus === 'archived'}
                 />
-                <RHFSwitch<UserFormValues> name="hallSwitchPermission" label={t('fields.hallSwitchPermission')} />
+                {hasHallAccessPermission && (
+                  <RHFSwitch<UserFormValues> name="hallSwitchPermission" label={t('fields.hallSwitchPermission')} />
+                )}
               </Stack>
             </Stack>
 

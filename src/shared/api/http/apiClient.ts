@@ -1,7 +1,4 @@
 import type {
-  AdminBranch,
-  AdminBranchesQueryParams,
-  AdminBranchPayload,
   AdminBusinessPartner,
   AdminBusinessPartnerPayload,
   AdminBusinessPartnersQueryParams,
@@ -168,10 +165,8 @@ export const apiClient = {
           page: params.page,
           pageSize: params.pageSize,
           search: params.search,
-          roleCodeIn: params.roleCodeIn,
-          uiModeIn: params.uiModeIn,
-          isActive: params.isActive,
-          includeArchived: params.includeArchived,
+          roleIdIn: params.roleIdIn,
+          employmentStatusIn: params.employmentStatusIn,
           ordering: params.ordering,
         },
       })
@@ -240,7 +235,7 @@ export const apiClient = {
           page: params.page,
           pageSize: params.pageSize,
           search: params.search,
-          categoryIn: params.categoryIn,
+          scopeIn: params.scopeIn,
           actionIn: params.actionIn,
           ordering: params.ordering,
         },
@@ -255,7 +250,6 @@ export const apiClient = {
           page: params?.page,
           pageSize: params?.pageSize,
           search: params?.search,
-          branchIdIn: params?.branchIdIn,
           isActive: params?.isActive,
           ordering: params?.ordering,
         },
@@ -362,38 +356,6 @@ export const apiClient = {
     return instance.delete<void>(`/api/v1/admin/floor/table-sessions/${id}/`).then((response) => response.data);
   },
 
-  getAdminBranches(params?: AdminBranchesQueryParams) {
-    return instance
-      .get<AdminPaginatedResponse<AdminBranch>>('/api/v1/admin/constructor/branches/', {
-        params: {
-          page: params?.page,
-          pageSize: params?.pageSize,
-          search: params?.search,
-          isDefault: params?.isDefault,
-          ordering: params?.ordering,
-        },
-      })
-      .then((response) => response.data);
-  },
-
-  getAdminBranchById(id: string) {
-    return instance.get<AdminBranch>(`/api/v1/admin/constructor/branches/${id}/`).then((response) => response.data);
-  },
-
-  createAdminBranch(payload: AdminBranchPayload) {
-    return instance.post<AdminBranch>('/api/v1/admin/constructor/branches/', payload).then((response) => response.data);
-  },
-
-  updateAdminBranch(id: string, payload: AdminBranchPayload) {
-    return instance
-      .put<AdminBranch>(`/api/v1/admin/constructor/branches/${id}/`, payload)
-      .then((response) => response.data);
-  },
-
-  deleteAdminBranch(id: string) {
-    return instance.delete<void>(`/api/v1/admin/constructor/branches/${id}/`).then((response) => response.data);
-  },
-
   getAdminPrepStations(params?: AdminPrepStationsQueryParams) {
     return instance
       .get<AdminPaginatedResponse<AdminPrepStation>>('/api/v1/admin/constructor/prep-stations/', {
@@ -401,7 +363,6 @@ export const apiClient = {
           page: params?.page,
           pageSize: params?.pageSize,
           search: params?.search,
-          branchIdIn: params?.branchIdIn,
           kindIn: params?.kindIn,
           isActive: params?.isActive,
           ordering: params?.ordering,
@@ -439,7 +400,6 @@ export const apiClient = {
           page: params?.page,
           pageSize: params?.pageSize,
           search: params?.search,
-          branchIdIn: params?.branchIdIn,
           isActive: params?.isActive,
           ordering: params?.ordering,
         },
@@ -474,7 +434,6 @@ export const apiClient = {
           page: params?.page,
           pageSize: params?.pageSize,
           search: params?.search,
-          branchIdIn: params?.branchIdIn,
           modeIn: params?.modeIn,
           isActive: params?.isActive,
           ordering: params?.ordering,
@@ -508,7 +467,6 @@ export const apiClient = {
           page: params?.page,
           pageSize: params?.pageSize,
           search: params?.search,
-          branchIdIn: params?.branchIdIn,
           kindIn: params?.kindIn,
           isActive: params?.isActive,
           ordering: params?.ordering,
@@ -842,7 +800,6 @@ export const apiClient = {
           page: params?.page,
           pageSize: params?.pageSize,
           search: params?.search,
-          kindIn: params?.kindIn,
           isActive: params?.isActive,
           ordering: params?.ordering,
         },
@@ -877,7 +834,6 @@ export const apiClient = {
           page: params?.page,
           pageSize: params?.pageSize,
           search: params?.search,
-          kindIn: params?.kindIn,
           categoryIdIn: params?.categoryIdIn,
           isStoplisted: params?.isStoplisted,
           ordering: params?.ordering,

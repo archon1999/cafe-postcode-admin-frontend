@@ -5,12 +5,10 @@ import { StorageService } from 'shared/lib/storage';
 
 type PersistedAdminScope = {
   selectedRestaurantId: string | null;
-  selectedBranchId: string | null;
 };
 
 interface AdminScopeState extends PersistedAdminScope {
   setSelectedRestaurantId: (restaurantId: string | null) => void;
-  setSelectedBranchId: (branchId: string | null) => void;
   clearScope: () => void;
 }
 
@@ -18,7 +16,6 @@ const persistedScope = StorageService.getItem<PersistedAdminScope>(AUTH_STORAGE_
 
 const defaultScope: PersistedAdminScope = {
   selectedRestaurantId: persistedScope?.selectedRestaurantId ?? null,
-  selectedBranchId: null,
 };
 
 function persistScope(scope: PersistedAdminScope) {
@@ -29,7 +26,6 @@ function persistScope(scope: PersistedAdminScope) {
 
   StorageService.setItem(AUTH_STORAGE_KEYS.ADMIN_SCOPE, {
     selectedRestaurantId: scope.selectedRestaurantId,
-    selectedBranchId: null,
   });
 }
 
@@ -37,23 +33,12 @@ export const useAdminScopeStore = create<AdminScopeState>((set, get) => ({
   ...defaultScope,
   setSelectedRestaurantId: (restaurantId) => {
     const selectedRestaurantId = restaurantId ?? null;
-    const selectedBranchId = null;
-
-    persistScope({ selectedRestaurantId, selectedBranchId });
-    set({ selectedRestaurantId, selectedBranchId });
-  },
-  setSelectedBranchId: (branchId) => {
-    const nextScope = {
-      selectedRestaurantId: get().selectedRestaurantId,
-      selectedBranchId: branchId ?? null,
-    };
-
-    persistScope(nextScope);
-    set({ ...nextScope, selectedBranchId: null });
+    persistScope({ selectedRestaurantId });
+    set({ selectedRestaurantId });
   },
   clearScope: () => {
     StorageService.removeItem(AUTH_STORAGE_KEYS.ADMIN_SCOPE);
-    set({ selectedRestaurantId: null, selectedBranchId: null });
+    set({ selectedRestaurantId: null });
   },
 }));
 

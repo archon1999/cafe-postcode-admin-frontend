@@ -49,10 +49,8 @@ export function UsersGrid() {
   const router = useRouter();
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_PAGINATION_MODEL);
   const [search, setSearch] = useState('');
-  const [roleCodes, setRoleCodes] = useState<string[]>([]);
-  const [uiModes, setUiModes] = useState<string[]>([]);
+  const [roleIds, setRoleIds] = useState<string[]>([]);
   const [statuses, setStatuses] = useState<string[]>([]);
-  const [showArchived, setShowArchived] = useState(false);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(
     DEFAULT_COLUMN_VISIBILITY_MODEL,
   );
@@ -64,21 +62,19 @@ export function UsersGrid() {
     page: paginationModel.page + 1,
     pageSize: paginationModel.pageSize,
     search: search || undefined,
-    roleCodeIn: roleCodes.length ? roleCodes.join(',') : undefined,
-    uiModeIn: uiModes.length ? uiModes.join(',') : undefined,
-    isActive: statuses.length === 1 ? statuses[0] === 'active' : undefined,
-    includeArchived: showArchived || undefined,
+    roleIdIn: roleIds.length ? roleIds.join(',') : undefined,
+    employmentStatusIn: statuses.length ? statuses.join(',') : undefined,
     ordering: getOrderingFromSortModel(sortModel),
   });
   const toggleUserStatusMutation = useToggleUserActiveMutation();
   const archiveUserMutation = useArchiveUserMutation();
-  const hasActiveFilters = Boolean(search || roleCodes.length || uiModes.length || statuses.length || showArchived);
+  const hasActiveFilters = Boolean(search || roleIds.length || statuses.length);
 
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
   const roleOptions = useMemo<FilterOption[]>(
     () =>
       (rolesQuery.data ?? []).map((role) => ({
-        value: role.code,
+        value: role.id,
         label: getAdminRoleLabel(role, t) ?? role.name,
       })),
     [rolesQuery.data, t],
@@ -107,20 +103,6 @@ export function UsersGrid() {
         minWidth: 190,
         flex: 1,
         valueGetter: (_, row) => getAdminRoleLabel(row.role, t) ?? t('labels.withoutRole'),
-      },
-      {
-        field: 'uiMode',
-        headerName: t('fields.uiMode'),
-        minWidth: 140,
-        sortable: false,
-        renderCell: ({ row }) => (
-          <Chip
-            size="small"
-            label={row.uiMode === 'admin' ? t('uiMode.admin') : t('uiMode.pos')}
-            color={row.uiMode === 'admin' ? 'info' : 'warning'}
-            variant="soft"
-          />
-        ),
       },
       {
         field: 'employmentStatus',
@@ -227,13 +209,8 @@ export function UsersGrid() {
     setPaginationModel((prev) => ({ ...prev, page: 0 }));
   };
 
-  const handleRoleCodesApply = (values: string[]) => {
-    setRoleCodes(values);
-    setPaginationModel((prev) => ({ ...prev, page: 0 }));
-  };
-
-  const handleUiModesApply = (values: string[]) => {
-    setUiModes(values);
+  const handleRoleIdsApply = (values: string[]) => {
+    setRoleIds(values);
     setPaginationModel((prev) => ({ ...prev, page: 0 }));
   };
 
@@ -293,20 +270,12 @@ export function UsersGrid() {
               search={search}
               onSearchChange={handleSearchChange}
               onClearSearch={handleClearSearch}
-              roleCodes={roleCodes}
-              onRoleCodesChange={setRoleCodes}
-              onRoleCodesApply={handleRoleCodesApply}
-              uiModes={uiModes}
-              onUiModesChange={setUiModes}
-              onUiModesApply={handleUiModesApply}
+              roleIds={roleIds}
+              onRoleIdsChange={setRoleIds}
+              onRoleIdsApply={handleRoleIdsApply}
               statuses={statuses}
               onStatusesChange={setStatuses}
               onStatusesApply={handleStatusesApply}
-              showArchived={showArchived}
-              onShowArchivedChange={(value) => {
-                setShowArchived(value);
-                setPaginationModel((prev) => ({ ...prev, page: 0 }));
-              }}
               roleOptions={roleOptions}
               columns={columns}
               columnVisibilityModel={columnVisibilityModel}

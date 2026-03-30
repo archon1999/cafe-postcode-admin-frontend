@@ -19,9 +19,9 @@ import type { FilterOption } from 'shared/ui/Filters';
 import {
   getAdminPermissionAction,
   getAdminPermissionActionLabel,
-  getAdminPermissionCategory,
-  getAdminPermissionCategoryLabel,
   getAdminPermissionLabel,
+  getAdminPermissionScope,
+  getAdminPermissionScopeLabel,
 } from 'shared/utils/admin-permission';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 
@@ -42,7 +42,7 @@ const PermissionsListPage = () => {
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_PAGINATION_MODEL);
   const [search, setSearch] = useState('');
-  const [categories, setCategories] = useState<string[]>([]);
+  const [scopes, setScopes] = useState<string[]>([]);
   const [actions, setActions] = useState<string[]>([]);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(
     DEFAULT_COLUMN_VISIBILITY_MODEL,
@@ -53,22 +53,24 @@ const PermissionsListPage = () => {
     page: paginationModel.page + 1,
     pageSize: paginationModel.pageSize,
     search: search || undefined,
-    categoryIn: categories.length ? categories.join(',') : undefined,
+    scopeIn: scopes.length ? scopes.join(',') : undefined,
     actionIn: actions.length ? actions.join(',') : undefined,
     ordering: getOrderingFromSortModel(sortModel),
   });
   const permissionsOptionsQuery = useGetPermissionsQuery();
 
-  const categoryOptions = useMemo<FilterOption[]>(() => {
-    const categoriesSet = new Set(
-      (permissionsOptionsQuery.data ?? []).map((permission) => getAdminPermissionCategory(permission.code)),
+  const scopeOptions = useMemo<FilterOption[]>(() => {
+    const scopesSet = new Set(
+      (permissionsOptionsQuery.data ?? []).map(
+        (permission) => permission.scope ?? getAdminPermissionScope(permission.code),
+      ),
     );
 
-    return Array.from(categoriesSet)
+    return Array.from(scopesSet)
       .filter(Boolean)
-      .map((category) => ({
-        value: category,
-        label: getAdminPermissionCategoryLabel(category, t),
+      .map((scope) => ({
+        value: scope,
+        label: getAdminPermissionScopeLabel(scope, t),
       }))
       .sort((left, right) => left.label.localeCompare(right.label));
   }, [permissionsOptionsQuery.data, t]);
@@ -86,7 +88,7 @@ const PermissionsListPage = () => {
       }))
       .sort((left, right) => left.label.localeCompare(right.label));
   }, [permissionsOptionsQuery.data, t]);
-  const hasActiveFilters = Boolean(search || categories.length || actions.length);
+  const hasActiveFilters = Boolean(search || scopes.length || actions.length);
 
   const columns = useMemo<GridColDef<AdminPermission>[]>(
     () => [
@@ -104,11 +106,11 @@ const PermissionsListPage = () => {
         flex: 0.9,
       },
       {
-        field: 'category',
-        headerName: t('fields.category'),
-        minWidth: 180,
+        field: 'scope',
+        headerName: t('fields.scope'),
+        minWidth: 170,
         flex: 0.7,
-        valueGetter: (_value, row) => getAdminPermissionCategoryLabel(getAdminPermissionCategory(row.code), t),
+        valueGetter: (_value, row) => getAdminPermissionScopeLabel(row.scope ?? getAdminPermissionScope(row.code), t),
       },
       {
         field: 'action',
@@ -156,8 +158,8 @@ const PermissionsListPage = () => {
     setPaginationModel((prev) => ({ ...prev, page: 0 }));
   };
 
-  const handleCategoriesApply = (values: string[]) => {
-    setCategories(values);
+  const handleScopesApply = (values: string[]) => {
+    setScopes(values);
     setPaginationModel((prev) => ({ ...prev, page: 0 }));
   };
 
@@ -221,13 +223,13 @@ const PermissionsListPage = () => {
                   search={search}
                   onSearchChange={handleSearchChange}
                   onClearSearch={handleClearSearch}
-                  categories={categories}
-                  onCategoriesChange={setCategories}
-                  onCategoriesApply={handleCategoriesApply}
+                  scopes={scopes}
+                  onScopesChange={setScopes}
+                  onScopesApply={handleScopesApply}
                   actions={actions}
                   onActionsChange={setActions}
                   onActionsApply={handleActionsApply}
-                  categoryOptions={categoryOptions}
+                  scopeOptions={scopeOptions}
                   actionOptions={actionOptions}
                   columns={columns}
                   columnVisibilityModel={columnVisibilityModel}

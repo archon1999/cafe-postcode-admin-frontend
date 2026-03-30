@@ -25,7 +25,8 @@
     "restaurants": { "title": "Restoranlar" },
     "restaurantCreate": { "title": "Yangi restoran" },
     "restaurantEdit": { "title": "Restoranni tahrirlash" },
-    "myRestaurant": { "title": "Mening restoranim" }
+    "myRestaurant": { "title": "Mening restoranim" },
+    "myRestaurantGeneral": { "title": "Umumiy" }
   },
   "fields": {
     "name": "Nomi",

@@ -54,12 +54,10 @@ type Values = z.infer<typeof schema>;
 
 function BranchPrepStationDialog({
   open,
-  branchId,
   item,
   onClose,
 }: {
   open: boolean;
-  branchId?: string | null;
   item: AdminPrepStation | null;
   onClose: () => void;
 }) {
@@ -85,7 +83,6 @@ function BranchPrepStationDialog({
     const payload: AdminPrepStationPayload = {
       name: values.name.trim(),
       kind: values.kind,
-      branch: branchId ?? null,
       isActive: values.isActive,
     };
 
@@ -129,14 +126,12 @@ function BranchPrepStationDialog({
 }
 
 export function BranchPrepStationsSection({
-  branchId,
   defaultExpanded = false,
   title,
   description,
   actionLabel,
   searchPlaceholder,
 }: {
-  branchId?: string | null;
   defaultExpanded?: boolean;
   title?: string;
   description?: string;
@@ -163,7 +158,6 @@ export function BranchPrepStationsSection({
     page: paginationModel.page + 1,
     pageSize: paginationModel.pageSize,
     search: search || undefined,
-    branchIdIn: branchId || undefined,
     kindIn: kinds.length ? kinds.join(',') : undefined,
     isActive: statuses.length === 1 ? statuses[0] === 'active' : undefined,
     ordering: getOrderingFromSortModel(sortModel),
@@ -364,7 +358,6 @@ export function BranchPrepStationsSection({
 
       <BranchPrepStationDialog
         open={dialogOpen}
-        branchId={branchId}
         item={editingRow}
         onClose={() => {
           setDialogOpen(false);

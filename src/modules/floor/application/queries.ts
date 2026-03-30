@@ -1,7 +1,6 @@
 import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
 
 import type {
-  AdminBranch,
   AdminDiningTable,
   AdminDiningTablesQueryParams,
   AdminHallConstructor,
@@ -17,14 +16,6 @@ import { apiClient } from 'shared/api/http/apiClient';
 import { floorRepository } from '../data-access';
 
 import { floorKeys } from './keys';
-
-export function useGetFloorBranchesQuery(options?: Omit<UseQueryOptions<AdminBranch[]>, 'queryFn' | 'queryKey'>) {
-  return useQuery({
-    queryKey: floorKeys.branches(),
-    queryFn: () => floorRepository.getBranches(),
-    ...options,
-  });
-}
 
 export function useGetUsersForFloorQuery(options?: Omit<UseQueryOptions<AdminUser[]>, 'queryFn' | 'queryKey'>) {
   return useQuery({

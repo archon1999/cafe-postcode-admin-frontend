@@ -68,7 +68,7 @@ const LayoutObjectsListPage = () => {
     () =>
       (hallsQuery.data ?? []).map((hall) => ({
         value: hall.id,
-        label: formatHallDisplayName(hall.name, hall.level, tCommon),
+        label: formatHallDisplayName(hall.name),
       })),
     [hallsQuery.data, tCommon],
   );
@@ -93,8 +93,7 @@ const LayoutObjectsListPage = () => {
         headerName: t('fields.hall'),
         minWidth: 160,
         flex: 0.7,
-        valueGetter: (_v, row) =>
-          formatHallDisplayName(row.hallName, (row as { hallLevel?: number | null }).hallLevel, tCommon),
+        valueGetter: (_v, row) => formatHallDisplayName(row.hallName),
       },
       {
         field: 'zoneName',
@@ -143,7 +142,7 @@ const LayoutObjectsListPage = () => {
         ],
       },
     ],
-    [t],
+    [t, tCommon],
   );
 
   return (

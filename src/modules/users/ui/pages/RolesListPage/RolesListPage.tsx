@@ -99,12 +99,6 @@ const RolesListPage = () => {
         valueGetter: (_value, row) => getAdminRoleLabel(row, t) ?? row.name,
       },
       {
-        field: 'code',
-        headerName: t('fields.code'),
-        minWidth: 180,
-        flex: 0.8,
-      },
-      {
         field: 'isSystem',
         headerName: t('fields.type'),
         minWidth: 150,

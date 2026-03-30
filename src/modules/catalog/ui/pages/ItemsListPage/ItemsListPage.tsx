@@ -45,7 +45,6 @@ const ItemsListPage = () => {
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_PAGINATION_MODEL);
   const [search, setSearch] = useState('');
-  const [kinds, setKinds] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [stoplistStatuses, setStoplistStatuses] = useState<string[]>([]);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(
@@ -58,22 +57,11 @@ const ItemsListPage = () => {
     page: paginationModel.page + 1,
     pageSize: paginationModel.pageSize,
     search: search || undefined,
-    kindIn: kinds.length ? kinds.join(',') : undefined,
     categoryIdIn: categories.length ? categories.join(',') : undefined,
     isStoplisted: stoplistStatuses.length === 1 ? stoplistStatuses[0] === 'stoplisted' : undefined,
     ordering: getOrderingFromSortModel(sortModel),
   });
   const categoriesQuery = useGetCatalogCategoriesQuery();
-
-  const kindOptions = useMemo<FilterOption[]>(
-    () => [
-      { value: 'dish', label: t('kinds.dish') },
-      { value: 'drink', label: t('kinds.drink') },
-      { value: 'service', label: t('kinds.service') },
-      { value: 'penalty', label: t('kinds.penalty') },
-    ],
-    [t],
-  );
 
   const categoryOptions = useMemo<FilterOption[]>(() => {
     return (categoriesQuery.data ?? []).map((category) => ({ value: category.id, label: category.name }));
@@ -87,7 +75,7 @@ const ItemsListPage = () => {
     [t],
   );
 
-  const hasActiveFilters = Boolean(search || kinds.length || categories.length || stoplistStatuses.length);
+  const hasActiveFilters = Boolean(search || categories.length || stoplistStatuses.length);
 
   const columns = useMemo<GridColDef<CatalogItem>[]>(
     () => [
@@ -107,13 +95,6 @@ const ItemsListPage = () => {
         valueGetter: (_v, row) => row.mxikName || '-',
       },
       {
-        field: 'kind',
-        headerName: t('fields.kind'),
-        minWidth: 140,
-        flex: 0.6,
-        valueGetter: (_value, row) => t(`kinds.${row.kind}`),
-      },
-      {
         field: 'categoryName',
         headerName: t('fields.category'),
         minWidth: 180,
@@ -127,7 +108,6 @@ const ItemsListPage = () => {
         flex: 0.8,
         valueGetter: (_value, row) => row.prepStationName || '-',
       },
-      { field: 'sku', headerName: t('fields.sku'), minWidth: 120, flex: 0.5, valueGetter: (_v, row) => row.sku || '-' },
       {
         field: 'isActive',
         headerName: t('fields.status'),
@@ -273,18 +253,6 @@ const ItemsListPage = () => {
                   onSearchChange={handleSearchChange}
                   onClearSearch={() => handleSearchChange('')}
                   filters={[
-                    {
-                      label: t('filters.kind'),
-                      value: kinds,
-                      options: kindOptions,
-                      onChange: setKinds,
-                      onApply: (values) => {
-                        setKinds(values);
-                        setPaginationModel((prev) => ({ ...prev, page: 0 }));
-                      },
-                      testId: 'catalog-items-kind-filter',
-                      emptyLabel: t('filters.all'),
-                    },
                     {
                       label: t('filters.category'),
                       value: categories,

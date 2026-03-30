@@ -31,7 +31,7 @@ export function AuthSplitHeaderSection({ slotProps, slots, layoutQuery = 'md', s
     ),
     leftArea: (
       <>
-        <Logo />
+        <Logo isSingle={false} />
       </>
     ),
     rightArea: (

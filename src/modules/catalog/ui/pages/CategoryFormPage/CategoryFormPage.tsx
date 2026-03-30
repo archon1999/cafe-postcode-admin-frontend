@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -13,7 +12,7 @@ import { RoutePath } from 'app/routes';
 import { useParams, useRedirectOnNotFound, useRouter } from 'shared/hooks/router';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { FormActions } from 'shared/ui/FormActions';
-import { Form, RHFSelect, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
+import { Form, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 
 import {
@@ -36,7 +35,6 @@ const mxikOptionSchema = z
 const categoryFormSchema = z.object({
   name: z.string().min(1, { message: 'Nomi talab qilinadi' }),
   mxik: mxikOptionSchema,
-  kind: z.enum(['dish', 'drink', 'service', 'penalty']),
   sortOrder: z.coerce.number().int().min(0),
   isActive: z.boolean(),
 });
@@ -46,7 +44,6 @@ type CategoryFormValues = z.infer<typeof categoryFormSchema>;
 const defaultValues: CategoryFormValues = {
   name: '',
   mxik: null,
-  kind: 'dish',
   sortOrder: 0,
   isActive: true,
 };
@@ -76,7 +73,6 @@ const CategoryFormPage = () => {
     reset({
       name: categoryQuery.data.name,
       mxik: buildMxikOption(categoryQuery.data.mxikCode, categoryQuery.data.mxikName),
-      kind: categoryQuery.data.kind,
       sortOrder: categoryQuery.data.sortOrder,
       isActive: categoryQuery.data.isActive,
     });
@@ -91,7 +87,6 @@ const CategoryFormPage = () => {
       name: values.name.trim(),
       mxikCode: values.mxik.code,
       mxikName: values.mxik.name ?? '',
-      kind: values.kind,
       sortOrder: values.sortOrder,
       isActive: values.isActive,
     };
@@ -145,12 +140,6 @@ const CategoryFormPage = () => {
                 placeholder={t('actions.searchMxik')}
                 required
               />
-              <RHFSelect<CategoryFormValues> name="kind" label={t('fields.kind')}>
-                <MenuItem value="dish">{t('kinds.dish')}</MenuItem>
-                <MenuItem value="drink">{t('kinds.drink')}</MenuItem>
-                <MenuItem value="service">{t('kinds.service')}</MenuItem>
-                <MenuItem value="penalty">{t('kinds.penalty')}</MenuItem>
-              </RHFSelect>
               <RHFTextField<CategoryFormValues> name="sortOrder" label={t('fields.sortOrder')} type="number" />
             </Box>
 

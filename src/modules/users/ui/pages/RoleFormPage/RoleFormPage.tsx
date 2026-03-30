@@ -24,7 +24,6 @@ import {
 } from '../../../application';
 
 const roleFormSchema = z.object({
-  code: z.string().min(1, { message: 'Kod talab qilinadi' }),
   name: z.string().min(1, { message: 'Nomi talab qilinadi' }),
   description: z.string().optional(),
   permissionIds: z.array(z.string()).default([]),
@@ -33,7 +32,6 @@ const roleFormSchema = z.object({
 type RoleFormValues = z.infer<typeof roleFormSchema>;
 
 const defaultValues: RoleFormValues = {
-  code: '',
   name: '',
   description: '',
   permissionIds: [],
@@ -64,7 +62,6 @@ const RoleFormPage = () => {
     if (!roleQuery.data) return;
 
     reset({
-      code: roleQuery.data.code,
       name: roleQuery.data.name,
       description: roleQuery.data.description ?? '',
       permissionIds: roleQuery.data.permissions.map((permission) => permission.id),
@@ -78,7 +75,6 @@ const RoleFormPage = () => {
 
   const onSubmit = handleSubmit(async (values) => {
     const payload = {
-      code: values.code.trim(),
       name: values.name.trim(),
       description: values.description?.trim() ?? '',
       permissionIds: values.permissionIds,
@@ -125,7 +121,6 @@ const RoleFormPage = () => {
                 gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
                 gap: 3,
               }}>
-              <RHFTextField<RoleFormValues> name="code" label={t('fields.code')} />
               <RHFTextField<RoleFormValues> name="name" label={t('fields.name')} />
               <RHFTextField<RoleFormValues> name="description" label={t('fields.description')} multiline rows={4} />
               <RHFMultiSelect<RoleFormValues>

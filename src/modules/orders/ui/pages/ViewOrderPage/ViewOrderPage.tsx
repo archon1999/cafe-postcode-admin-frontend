@@ -62,7 +62,7 @@ const ViewOrderPage = () => {
               />
               <LabelRowWithIcon
                 label={t('fields.hall')}
-                value={formatHallDisplayName(order.hallName, order.hallLevel, tCommon)}
+                value={formatHallDisplayName(order.hallName, undefined, tCommon)}
                 icon="solar:home-bold-duotone"
               />
               <LabelRowWithIcon

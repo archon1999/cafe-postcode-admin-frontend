@@ -240,7 +240,6 @@ export function ReportsTableSection({
     {
       page: 1,
       pageSize: 100,
-      uiModeIn: 'pos',
       isActive: true,
     },
     { enabled: report.key === 'shifts' },
@@ -269,7 +268,7 @@ export function ReportsTableSection({
     () =>
       (hallsQuery.data ?? []).map((hall) => ({
         value: hall.id,
-        label: formatHallDisplayName(hall.name, hall.level, tCommon),
+        label: formatHallDisplayName(hall.name, undefined, tCommon),
       })),
     [hallsQuery.data, tCommon],
   );
@@ -354,8 +353,7 @@ export function ReportsTableSection({
             headerName: t('reports.openChecks.fields.hallName'),
             minWidth: 180,
             flex: 0.7,
-            valueGetter: (_value, row: AdminOpenChecksReportRow) =>
-              formatHallDisplayName(row.hallName, row.hallLevel, tCommon),
+            valueGetter: (_value, row: AdminOpenChecksReportRow) => formatHallDisplayName(row.hallName, undefined, tCommon),
           },
           {
             field: 'tableName',

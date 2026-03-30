@@ -1,8 +1,8 @@
 {
   "pages": {
     "list": {
-      "title": "Пользователи",
-      "description": "Управляйте admin- и POS-пользователями."
+      "title": "Сотрудники",
+      "description": "Управляйте пользователями admin и POS."
     },
     "roles": {
       "title": "Роли"
@@ -14,48 +14,44 @@
       "title": "Редактирование роли"
     },
     "permissions": {
-      "title": "Права"
+      "title": "Разрешения"
     },
     "create": {
-      "title": "Создание пользователя",
-      "description": "Создайте нового пользователя с основными данными."
+      "title": "Новый сотрудник",
+      "description": "Создайте нового сотрудника с основными данными."
     },
     "edit": {
-      "title": "Редактирование пользователя",
-      "description": "Обновите статус и основные данные пользователя."
+      "title": "Редактирование сотрудника",
+      "description": "Обновите статус и данные сотрудника."
     }
   },
   "fields": {
-    "username": "Имя пользователя",
+    "username": "Логин",
     "fullName": "Полное имя",
-    "permission": "Право",
+    "permission": "Разрешение",
     "phone": "Телефон",
     "phonePlaceholder": "+998 90 123 45 67",
     "role": "Роль",
-    "uiMode": "Режим интерфейса",
     "status": "Статус",
     "statusToggle": "Активен",
-    "code": "Код",
+    "code": "Технический код",
     "name": "Название",
     "type": "Тип",
-    "category": "Раздел",
+    "scope": "Раздел",
     "action": "Действие",
     "description": "Описание",
-    "permissionsCount": "Количество прав",
-    "hallSwitchPermission": "Разрешение на смену зала",
+    "permissionsCount": "Количество разрешений",
+    "hallSwitchPermission": "Разрешить смену зала",
     "primaryHall": "Основной зал",
-    "primaryHallHint": "Необязательно. Выберите основной зал для пользователя.",
+    "primaryHallHint": "Необязательно. Выберите основной зал для сотрудника.",
     "password": "Пароль",
-    "passwordCreateHint": "Необязательно. Если заполнить, пользователю будет установлен пароль.",
+    "passwordCreateHint": "Необязательно. Если указать, пользователю будет задан пароль.",
     "passwordEditHint": "Если оставить пустым, текущий пароль не изменится.",
     "pin": "PIN-код",
-    "pinHint": "Только для POS-пользователя. 4-значный PIN.",
-    "permissions": "Права",
-    "restaurantId": "ID ресторана",
-    "branchId": "ID филиала",
-    "primaryHallId": "ID основного зала",
+    "pinHint": "4-значный PIN-код для POS-пользователя.",
+    "permissions": "Разрешения",
     "allowedHalls": "Разрешенные залы",
-    "allowedHallsHint": "При необходимости привяжите пользователя к нескольким залам.",
+    "allowedHallsHint": "При необходимости назначьте сотруднику несколько залов.",
     "passportSeries": "Серия паспорта",
     "pnfl": "ПНФЛ",
     "birthDate": "Дата рождения",
@@ -65,10 +61,6 @@
     "baseAmount": "Базовая сумма",
     "kpiPercent": "Процент KPI"
   },
-  "uiMode": {
-    "admin": "Admin",
-    "pos": "POS"
-  },
   "status": {
     "active": "Активный",
     "inactive": "Неактивный",
@@ -76,7 +68,7 @@
   },
   "salaryType": {
     "hourly": "Почасовая",
-    "daily": "Поденная",
+    "daily": "Дневная",
     "kpi": "По KPI"
   },
   "labels": {
@@ -84,75 +76,80 @@
     "notSelected": "Не выбрано",
     "system": "Системная",
     "custom": "Пользовательская",
-    "morePermissions": "Больше прав"
+    "morePermissions": "Еще разрешения"
   },
   "filters": {
     "all": "Все",
     "search": "Поиск",
-    "searchPlaceholder": "Ищите по имени пользователя, имени или телефону",
-    "searchRolesPlaceholder": "Ищите по названию роли, коду или праву",
-    "searchPermissionsPlaceholder": "Ищите по коду, описанию или праву",
+    "searchPlaceholder": "Ищите по логину, имени или телефону",
+    "searchRolesPlaceholder": "Ищите по названию роли, описанию или разрешению",
+    "searchPermissionsPlaceholder": "Ищите по коду, названию или описанию",
     "clearSearch": "Очистить поиск",
     "role": "Роль",
-    "permission": "Право",
+    "permission": "Разрешение",
     "type": "Тип",
-    "category": "Раздел",
+    "scope": "Раздел",
     "action": "Действие",
-    "uiMode": "Режим интерфейса",
     "status": "Статус",
-    "showArchived": "Показывать архив"
+    "showArchived": "Показывать архивные"
   },
   "sections": {
-    "account": "Вход и основные данные",
+    "account": "Доступ и основные данные",
     "assignment": "Статус работы и привязка к залу",
-    "payroll": "Работа и оплата"
+    "payroll": "Труд и оплата"
   },
-  "permissionCategories": {
-    "dashboard": "Панель управления",
-    "constructor": "Конструктор",
-    "hall": "Залы",
-    "table": "Столы",
-    "users": "Сотрудники",
-    "roles": "Роли",
-    "catalog": "Меню",
-    "stoplist": "Стоп-лист",
-    "orders": "Заказы",
-    "payments": "Платежи",
-    "kitchen": "Кухня",
-    "reports": "Отчеты",
-    "integrations": "Интеграции"
+  "permissionScopes": {
+    "admin": "Admin",
+    "pos": "POS",
+    "dashboard": "Dashboard"
   },
   "permissionActions": {
     "view": "Просмотр",
     "manage": "Управление",
     "create": "Создание",
-    "update": "Обновление"
+    "update": "Обновление",
+    "activate": "Активация",
+    "deactivate": "Деактивация",
+    "resetPassword": "Сброс пароля",
+    "open": "Открытие",
+    "close": "Закрытие",
+    "refund": "Возврат",
+    "reprint": "Повторная печать"
   },
   "roles": {
-    "admin": "Администратор",
-    "owner": "Владелец",
+    "productOwner": "Владелец продукта",
+    "businessPartner": "Бизнес-партнер",
+    "restaurantAdmin": "Администратор ресторана",
     "manager": "Менеджер",
     "waiter": "Официант",
     "cashier": "Кассир",
     "chef": "Повар",
-    "barman": "Бармен",
-    "universalOperator": "Универсальный оператор"
+    "barman": "Бармен"
   },
   "actions": {
-    "create": "Новый пользователь",
+    "create": "Новый сотрудник",
     "edit": "Редактировать",
     "save": "Сохранить",
-    "archive": "Архивировать"
+    "archive": "Архивировать",
+    "delete": "Удалить",
+    "roleCreate": "Новая роль",
+    "roleCreateSubmit": "Сохранить роль"
+  },
+  "dialogs": {
+    "deleteRole": {
+      "title": "Удаление роли",
+      "description": "Роль \"{{name}}\" будет удалена. Продолжить?"
+    }
   },
   "empty": {
     "users": {
       "noData": {
-        "title": "Пользователей пока нет",
-        "description": "После добавления первого пользователя список появится здесь."
+        "title": "Сотрудников пока нет",
+        "description": "После добавления первого сотрудника список появится здесь."
       },
       "noResults": {
-        "title": "Пользователи не найдены",
-        "description": "Измените поиск или фильтры и попробуйте снова."
+        "title": "Сотрудники не найдены",
+        "description": "Измените поиск или фильтр и попробуйте снова."
       }
     },
     "roles": {
@@ -167,12 +164,12 @@
     },
     "permissions": {
       "noData": {
-        "title": "Прав пока нет",
-        "description": "Когда права появятся, они будут отображаться здесь."
+        "title": "Разрешений пока нет",
+        "description": "Когда разрешения появятся, они будут показаны здесь."
       },
       "noResults": {
-        "title": "Права не найдены",
-        "description": "Поиск или фильтры не дали результатов."
+        "title": "Разрешения не найдены",
+        "description": "Поиск или фильтры не дали совпадений."
       }
     }
   }

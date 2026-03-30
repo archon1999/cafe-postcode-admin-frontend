@@ -78,7 +78,7 @@ const ViewKitchenTicketPage = () => {
               />
               <LabelRowWithIcon
                 label={t('fields.hall')}
-                value={formatHallDisplayName(ticket.hallName, ticket.hallLevel, tCommon)}
+                value={formatHallDisplayName(ticket.hallName, undefined, tCommon)}
                 icon="solar:home-bold-duotone"
               />
               <LabelRowWithIcon

@@ -1,8 +1,6 @@
 import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
 
 import type {
-  AdminBranch,
-  AdminBranchesQueryParams,
   AdminCashDesk,
   AdminCashDesksQueryParams,
   AdminDevice,
@@ -23,37 +21,6 @@ import { apiClient } from 'shared/api/http/apiClient';
 import { organizationsRepository } from '../data-access';
 
 import { organizationsKeys } from './keys';
-
-export function useGetBranchesQuery(options?: Omit<UseQueryOptions<AdminBranch[]>, 'queryFn' | 'queryKey'>) {
-  return useQuery({
-    queryKey: organizationsKeys.branches(),
-    queryFn: () => organizationsRepository.getBranches(),
-    ...options,
-  });
-}
-
-export function useGetBranchesListQuery(
-  params: AdminBranchesQueryParams,
-  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminBranch>>, 'queryFn' | 'queryKey'>,
-) {
-  return useQuery({
-    queryKey: organizationsKeys.branchesList(params),
-    queryFn: () => apiClient.getAdminBranches(params),
-    ...options,
-  });
-}
-
-export function useGetBranchByIdQuery(
-  id: string,
-  options?: Omit<UseQueryOptions<AdminBranch>, 'queryFn' | 'queryKey'>,
-) {
-  return useQuery({
-    queryKey: organizationsKeys.branchDetail(id),
-    queryFn: () => organizationsRepository.getBranchById(id),
-    enabled: Boolean(id),
-    ...options,
-  });
-}
 
 export function useGetCashDesksQuery(options?: Omit<UseQueryOptions<AdminCashDesk[]>, 'queryFn' | 'queryKey'>) {
   return useQuery({

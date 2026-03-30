@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import type {
-  AdminBranchPayload,
   AdminCashDeskPayload,
   AdminDevicePayload,
   AdminDistributionPointPayload,
@@ -16,36 +15,6 @@ import { organizationsKeys } from './keys';
 
 function invalidateQueryKeys(queryClient: ReturnType<typeof useQueryClient>, keys: ReadonlyArray<readonly unknown[]>) {
   return Promise.all(keys.map((queryKey) => queryClient.invalidateQueries({ queryKey })));
-}
-
-export function useCreateBranchMutation() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (payload: AdminBranchPayload) => organizationsRepository.createBranch(payload),
-    onSuccess: async () => {
-      await invalidateQueryKeys(queryClient, [organizationsKeys.branches()]);
-    },
-  });
-}
-
-export function useUpdateBranchMutation(id: string) {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (payload: AdminBranchPayload) => organizationsRepository.updateBranch(id, payload),
-    onSuccess: async () => {
-      await invalidateQueryKeys(queryClient, [organizationsKeys.branches(), organizationsKeys.branchDetail(id)]);
-    },
-  });
-}
-
-export function useDeleteBranchMutation() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (id: string) => organizationsRepository.deleteBranch(id),
-    onSuccess: async () => {
-      await invalidateQueryKeys(queryClient, [organizationsKeys.branches()]);
-    },
-  });
 }
 
 export function useCreateCashDeskMutation() {
