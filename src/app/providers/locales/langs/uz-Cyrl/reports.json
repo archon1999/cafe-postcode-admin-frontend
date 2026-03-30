@@ -1,0 +1,137 @@
+{
+  "workspace": {
+    "title": "Ҳисоботлар",
+    "listTitle": "Ҳисоботлар рўйхати",
+    "listDescription": "Савдо, буюртма ва ходимлар бўйича асосий кўрсаткичларни бир жойда кузатинг.",
+    "lastUpdated": "Охирги янгиланиш: {{value}}",
+    "awaitingData": "Маълумот янгиланмоқда"
+  },
+  "period": {
+    "day": "Кунлик",
+    "month": "Ойлик",
+    "year": "Йиллик"
+  },
+  "actions": {
+    "refresh": "Янгилаш",
+    "exportExcel": "Excel юклаб олиш"
+  },
+  "labels": {
+    "summary": "KPI",
+    "table": "Жадвал"
+  },
+  "filters": {
+    "all": "Барчаси",
+    "periodType": "Давр",
+    "date": "Сана",
+    "month": "Ой",
+    "year": "Йил",
+    "paymentMethod": "Тўлов усули",
+    "status": "Ҳолат",
+    "hall": "Зал",
+    "category": "Категория",
+    "search": "Қидирув",
+    "clearSearch": "Қидирувни тозалаш",
+    "searchPlaceholder": "Жадвал бўйича қидиринг",
+    "searchSalesPlaceholder": "Тўлов усули бўйича қидиринг",
+    "searchOpenChecksPlaceholder": "Буюртма, зал ёки стол бўйича қидиринг",
+    "searchTopItemsPlaceholder": "Маҳсулот ёки категория бўйича қидиринг",
+    "searchTopStaffPlaceholder": "Ходим бўйича қидиринг",
+    "searchPaymentBreakdownPlaceholder": "Тўлов усули бўйича қидиринг"
+  },
+  "paymentMethods": {
+    "cash": "Нақд",
+    "card": "Карта",
+    "mixed": "Аралаш"
+  },
+  "statuses": {
+    "open": "Очиқ",
+    "submitted": "Юборилган",
+    "ready": "Тайёр",
+    "closed": "Ёпилган",
+    "cancelled": "Бекор қилинган"
+  },
+  "reports": {
+    "summary": {
+      "title": "Умумий маълумотлар",
+      "description": "Танланган давр бўйича асосий кўрсаткичлар.",
+      "metrics": {
+        "salesTotal": "Савдо суммаси",
+        "ordersCount": "Буюртмалар сони",
+        "averageCheck": "Ўртача чек",
+        "openChecks": "Очиқ чеклар",
+        "activeTables": "Фаол столлар"
+      }
+    },
+    "sales": {
+      "title": "Сотувлар",
+      "description": "Тўлов усуллари кесимида транзакциялар сони ва тушум.",
+      "fields": {
+        "method": "Усул",
+        "count": "Сони",
+        "total": "Жами"
+      }
+    },
+    "openChecks": {
+      "title": "Очиқ чеклар",
+      "description": "Ҳозир очиқ турган буюртмалар ва уларнинг жойлашуви.",
+      "fields": {
+        "orderNumber": "Буюртма",
+        "status": "Ҳолат",
+        "hallName": "Зал",
+        "tableName": "Стол",
+        "total": "Жами",
+        "createdAt": "Яратилган вақти"
+      }
+    },
+    "topItems": {
+      "title": "Энг кўп сотилган маҳсулотлар",
+      "description": "Энг кўп сотилган маҳсулотлар ва уларнинг тушуми.",
+      "fields": {
+        "catalogItemName": "Маҳсулот",
+        "categoryName": "Категория",
+        "quantity": "Миқдор",
+        "revenue": "Тушум"
+      }
+    },
+    "topStaff": {
+      "title": "Энг фаол ходимлар",
+      "description": "Ходимлар кесимида буюртма сони ва савдо ҳажми.",
+      "fields": {
+        "staffName": "Ходим",
+        "orderCount": "Буюртмалар",
+        "totalSales": "Жами савдо"
+      }
+    },
+    "paymentBreakdown": {
+      "title": "Тўлов таркиби",
+      "description": "Тўлов усуллари бўйича умумий таркиб ва ҳажм.",
+      "fields": {
+        "method": "Усул",
+        "count": "Сони",
+        "total": "Жами"
+      }
+    }
+  },
+  "empty": {
+    "sales": {
+      "noData": { "title": "Сотувлар йўқ", "description": "Танланган даврда ҳали сотув маълумотлари мавжуд эмас." },
+      "noResults": { "title": "Сотувлар топилмади", "description": "Қидирув ёки фильтр бўйича мос натижа топилмади." }
+    },
+    "openChecks": {
+      "noData": { "title": "Очиқ чеклар йўқ", "description": "Танланган даврда очиқ буюртмалар мавжуд эмас." },
+      "noResults": { "title": "Очиқ чеклар топилмади", "description": "Танланган фильтрлар бўйича мос буюртма топилмади." }
+    },
+    "topItems": {
+      "noData": { "title": "Маҳсулотлар бўйича маълумот йўқ", "description": "Танланган даврда сотилган маҳсулотлар топилмади." },
+      "noResults": { "title": "Маҳсулотлар топилмади", "description": "Қидирув ёки категория бўйича мос маҳсулот топилмади." }
+    },
+    "topStaff": {
+      "noData": { "title": "Ходимлар бўйича маълумот йўқ", "description": "Танланган даврда ходимлар статистикаси ҳали шаклланмаган." },
+      "noResults": { "title": "Ходим топилмади", "description": "Қидирув бўйича мос ходим топилмади." }
+    },
+    "paymentBreakdown": {
+      "noData": { "title": "Тўлов маълумотлари йўқ", "description": "Танланган даврда тўловлар қайд этилмаган." },
+      "noResults": { "title": "Тўлов таркиби топилмади", "description": "Танланган фильтр бўйича мос тўловлар топилмади." }
+    }
+  }
+}

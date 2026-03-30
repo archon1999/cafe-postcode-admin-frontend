@@ -1,0 +1,102 @@
+{
+  "pages": {
+    "categories": {
+      "title": "Категории меню"
+    },
+    "categoryCreate": {
+      "title": "Новая категория"
+    },
+    "categoryEdit": {
+      "title": "Редактирование категории"
+    },
+    "items": {
+      "title": "Позиции меню"
+    },
+    "itemCreate": {
+      "title": "Новый товар"
+    },
+    "itemEdit": {
+      "title": "Редактирование товара"
+    }
+  },
+  "fields": {
+    "name": "Название",
+    "kind": "Тип",
+    "sortOrder": "Порядок",
+    "status": "Статус",
+    "category": "Категория",
+    "prepStation": "Станция приготовления",
+    "sku": "SKU",
+    "stoplist": "Стоп-лист",
+    "description": "Описание",
+    "price": "Цена",
+    "mxikCode": "Код ИКПУ/MXИК",
+    "mxikName": "Наименование ИКПУ/MXИК"
+  },
+  "filters": {
+    "all": "Все",
+    "search": "Поиск",
+    "clearSearch": "Очистить поиск",
+    "searchCategoriesPlaceholder": "Ищите по названию категории или коду ИКПУ/MXИК",
+    "searchItemsPlaceholder": "Ищите по товару, ИКПУ/MXИК, категории или SKU",
+    "kind": "Тип",
+    "status": "Статус",
+    "category": "Категория",
+    "stoplist": "Стоп-лист"
+  },
+  "labels": {
+    "stoplisted": "В стоп-листе",
+    "available": "Доступно",
+    "mxikRequired": "Для категории код ИКПУ/MXИК обязателен.",
+    "mxikOptional": "Для товара код ИКПУ/MXИК необязателен.",
+    "mxikLoading": "Идет поиск ИКПУ/MXИК...",
+    "mxikNotFound": "ИКПУ/MXИК не найден"
+  },
+  "kinds": {
+    "dish": "Блюдо",
+    "drink": "Напиток",
+    "service": "Услуга",
+    "penalty": "Штраф"
+  },
+  "actions": {
+    "create": "Создать",
+    "save": "Сохранить",
+    "edit": "Редактировать",
+    "delete": "Удалить",
+    "createCategory": "Новая категория",
+    "createItem": "Новый товар",
+    "searchMxik": "Найти по ИКПУ/MXИК"
+  },
+  "dialogs": {
+    "deleteCategory": {
+      "title": "Удалить категорию",
+      "description": "Категория \"{{name}}\" будет удалена. Продолжить?"
+    },
+    "deleteItem": {
+      "title": "Удалить товар",
+      "description": "Товар \"{{name}}\" будет удален. Продолжить?"
+    }
+  },
+  "empty": {
+    "categories": {
+      "noData": {
+        "title": "Категорий пока нет",
+        "description": "После добавления категории появятся в этой таблице."
+      },
+      "noResults": {
+        "title": "Категории не найдены",
+        "description": "Поиск или фильтры не дали результатов."
+      }
+    },
+    "items": {
+      "noData": {
+        "title": "Товаров пока нет",
+        "description": "После создания товары появятся в этом списке."
+      },
+      "noResults": {
+        "title": "Товары не найдены",
+        "description": "По выбранным фильтрам товары не найдены."
+      }
+    }
+  }
+}

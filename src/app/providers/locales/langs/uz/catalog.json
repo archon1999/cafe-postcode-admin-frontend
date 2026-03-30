@@ -1,0 +1,102 @@
+{
+  "pages": {
+    "categories": {
+      "title": "Menyu kategoriyalari"
+    },
+    "categoryCreate": {
+      "title": "Yangi kategoriya"
+    },
+    "categoryEdit": {
+      "title": "Kategoriyani tahrirlash"
+    },
+    "items": {
+      "title": "Menyu mahsulotlari"
+    },
+    "itemCreate": {
+      "title": "Yangi mahsulot"
+    },
+    "itemEdit": {
+      "title": "Mahsulotni tahrirlash"
+    }
+  },
+  "fields": {
+    "name": "Nomi",
+    "kind": "Turi",
+    "sortOrder": "Tartib",
+    "status": "Holat",
+    "category": "Kategoriya",
+    "prepStation": "Tayyorlash stansiyasi",
+    "sku": "SKU",
+    "stoplist": "Stop-list",
+    "description": "Tavsif",
+    "price": "Narx",
+    "mxikCode": "MXIK kodi",
+    "mxikName": "MXIK nomi"
+  },
+  "filters": {
+    "all": "Barchasi",
+    "search": "Qidiruv",
+    "clearSearch": "Qidiruvni tozalash",
+    "searchCategoriesPlaceholder": "Kategoriya nomi yoki MXIK kodi bo'yicha qidiring",
+    "searchItemsPlaceholder": "Mahsulot, MXIK, kategoriya yoki SKU bo'yicha qidiring",
+    "kind": "Turi",
+    "status": "Holat",
+    "category": "Kategoriya",
+    "stoplist": "Stop-list"
+  },
+  "labels": {
+    "stoplisted": "Stop-listda",
+    "available": "Mavjud",
+    "mxikRequired": "Kategoriya uchun MXIK kodi majburiy.",
+    "mxikOptional": "Mahsulot uchun MXIK kodi ixtiyoriy.",
+    "mxikLoading": "MXIK qidirilmoqda...",
+    "mxikNotFound": "MXIK topilmadi"
+  },
+  "kinds": {
+    "dish": "Taom",
+    "drink": "Ichimlik",
+    "service": "Xizmat",
+    "penalty": "Jarima"
+  },
+  "actions": {
+    "create": "Yaratish",
+    "save": "Saqlash",
+    "edit": "Tahrirlash",
+    "delete": "O'chirish",
+    "createCategory": "Yangi kategoriya",
+    "createItem": "Yangi mahsulot",
+    "searchMxik": "MXIK bo'yicha qidiring"
+  },
+  "dialogs": {
+    "deleteCategory": {
+      "title": "Kategoriyani o'chirish",
+      "description": "\"{{name}}\" kategoriyasi o'chiriladi. Davom etilsinmi?"
+    },
+    "deleteItem": {
+      "title": "Mahsulotni o'chirish",
+      "description": "\"{{name}}\" mahsuloti o'chiriladi. Davom etilsinmi?"
+    }
+  },
+  "empty": {
+    "categories": {
+      "noData": {
+        "title": "Kategoriyalar hali yo'q",
+        "description": "Kategoriyalar qo'shilgandan keyin ular shu jadvalda chiqadi."
+      },
+      "noResults": {
+        "title": "Kategoriyalar topilmadi",
+        "description": "Qidiruv yoki filterlarga mos kategoriya topilmadi."
+      }
+    },
+    "items": {
+      "noData": {
+        "title": "Mahsulotlar hali yo'q",
+        "description": "Mahsulotlar yaratilgandan keyin ular shu jadvalda chiqadi."
+      },
+      "noResults": {
+        "title": "Mahsulotlar topilmadi",
+        "description": "Tanlangan filterlar bo'yicha mahsulot topilmadi."
+      }
+    }
+  }
+}

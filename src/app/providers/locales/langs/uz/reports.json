@@ -1,0 +1,204 @@
+{
+  "workspace": {
+    "title": "Hisobotlar",
+    "listTitle": "Hisobotlar ro'yxati",
+    "listDescription": "Savdo, buyurtma va xodimlar bo'yicha asosiy ko'rsatkichlarni bir joyda kuzating.",
+    "lastUpdated": "Oxirgi yangilanish: {{value}}",
+    "awaitingData": "Ma'lumot yangilanmoqda"
+  },
+  "period": {
+    "day": "Kunlik",
+    "month": "Oylik",
+    "year": "Yillik"
+  },
+  "actions": {
+    "refresh": "Yangilash",
+    "exportExcel": "Excel yuklab olish"
+  },
+  "labels": {
+    "summary": "KPI",
+    "table": "Jadval"
+  },
+  "filters": {
+    "all": "Barchasi",
+    "periodType": "Davr",
+    "date": "Sana",
+    "month": "Oy",
+    "year": "Yil",
+    "paymentMethod": "To'lov usuli",
+    "status": "Holat",
+    "hall": "Zal",
+    "category": "Kategoriya",
+    "cashDesk": "Kassa",
+    "cashier": "Kassir",
+    "differenceOnly": "Farqi bor",
+    "onlyDifferences": "Faqat farqli smenalar",
+    "search": "Qidiruv",
+    "clearSearch": "Qidiruvni tozalash",
+    "searchPlaceholder": "Jadval bo'yicha qidiring",
+    "searchSalesPlaceholder": "To'lov usuli bo'yicha qidiring",
+    "searchOpenChecksPlaceholder": "Buyurtma, zal yoki stol bo'yicha qidiring",
+    "searchTopItemsPlaceholder": "Mahsulot yoki kategoriya bo'yicha qidiring",
+    "searchTopStaffPlaceholder": "Xodim bo'yicha qidiring",
+    "searchPaymentBreakdownPlaceholder": "To'lov usuli bo'yicha qidiring",
+    "searchShiftsPlaceholder": "Kassir yoki kassa bo'yicha qidiring"
+  },
+  "paymentMethods": {
+    "cash": "Naqd",
+    "card": "Karta",
+    "qr": "QR",
+    "mixed": "Aralash"
+  },
+  "statuses": {
+    "open": "Ochiq",
+    "submitted": "Yuborilgan",
+    "ready": "Tayyor",
+    "closed": "Yopilgan",
+    "cancelled": "Bekor qilingan"
+  },
+  "reports": {
+    "summary": {
+      "title": "Umumiy ma'lumotlar",
+      "description": "Tanlangan davr bo'yicha asosiy ko'rsatkichlar.",
+      "metrics": {
+        "salesTotal": "Savdo summasi",
+        "ordersCount": "Buyurtmalar soni",
+        "averageCheck": "O'rtacha chek",
+        "openChecks": "Ochiq cheklar",
+        "activeTables": "Faol stollar"
+      }
+    },
+    "sales": {
+      "title": "Sotuvlar",
+      "description": "To'lov usullari kesimida tranzaksiyalar soni va tushum.",
+      "fields": {
+        "method": "Usul",
+        "count": "Soni",
+        "total": "Jami"
+      }
+    },
+    "openChecks": {
+      "title": "Ochiq cheklar",
+      "description": "Hozir ochiq turgan buyurtmalar va ularning joylashuvi.",
+      "fields": {
+        "orderNumber": "Buyurtma",
+        "status": "Holat",
+        "hallName": "Zal",
+        "tableName": "Stol",
+        "total": "Jami",
+        "createdAt": "Yaratilgan vaqti"
+      }
+    },
+    "topItems": {
+      "title": "Eng ko'p sotilgan mahsulotlar",
+      "description": "Eng ko'p sotilgan mahsulotlar va ularning tushumi.",
+      "fields": {
+        "catalogItemName": "Mahsulot",
+        "categoryName": "Kategoriya",
+        "quantity": "Miqdor",
+        "revenue": "Tushum"
+      }
+    },
+    "topStaff": {
+      "title": "Eng faol xodimlar",
+      "description": "Xodimlar kesimida buyurtma soni va savdo hajmi.",
+      "fields": {
+        "staffName": "Xodim",
+        "orderCount": "Buyurtmalar",
+        "totalSales": "Jami savdo"
+      }
+    },
+    "paymentBreakdown": {
+      "title": "To'lov tarkibi",
+      "description": "To'lov usullari bo'yicha umumiy tarkib va hajm.",
+      "fields": {
+        "method": "Usul",
+        "count": "Soni",
+        "total": "Jami"
+      }
+    },
+    "shifts": {
+      "title": "Smenalar",
+      "description": "Kassir smenalari, tushumlar va farqlar bo'yicha hisobot.",
+      "fields": {
+        "cashierName": "Kassir",
+        "cashDeskName": "Kassa",
+        "status": "Holat",
+        "openedAt": "Ochilgan vaqt",
+        "closedAt": "Yopilgan vaqt",
+        "openingCashAmount": "Boshlang'ich naqd",
+        "expectedClosingCashAmount": "Kutilgan naqd",
+        "actualClosingCashAmount": "Amaldagi naqd",
+        "cashDifferenceAmount": "Farq",
+        "cashTotal": "Naqd tushum",
+        "cardTotal": "Karta tushum",
+        "qrTotal": "QR tushum",
+        "refundTotal": "Qaytarilgan summa",
+        "receiptCount": "Cheklar soni",
+        "reprintCount": "Qayta chiqarishlar"
+      }
+    }
+  },
+  "empty": {
+    "sales": {
+      "noData": {
+        "title": "Sotuvlar yo'q",
+        "description": "Tanlangan davrda hali sotuv ma'lumotlari mavjud emas."
+      },
+      "noResults": {
+        "title": "Sotuvlar topilmadi",
+        "description": "Qidiruv yoki filter bo'yicha mos natija topilmadi."
+      }
+    },
+    "openChecks": {
+      "noData": {
+        "title": "Ochiq cheklar yo'q",
+        "description": "Tanlangan davrda ochiq buyurtmalar mavjud emas."
+      },
+      "noResults": {
+        "title": "Ochiq cheklar topilmadi",
+        "description": "Tanlangan filterlar bo'yicha mos buyurtma topilmadi."
+      }
+    },
+    "topItems": {
+      "noData": {
+        "title": "Mahsulotlar bo'yicha ma'lumot yo'q",
+        "description": "Tanlangan davrda sotilgan mahsulotlar topilmadi."
+      },
+      "noResults": {
+        "title": "Mahsulotlar topilmadi",
+        "description": "Qidiruv yoki kategoriya bo'yicha mos mahsulot topilmadi."
+      }
+    },
+    "topStaff": {
+      "noData": {
+        "title": "Xodimlar bo'yicha ma'lumot yo'q",
+        "description": "Tanlangan davrda xodimlar statistikasi hali shakllanmagan."
+      },
+      "noResults": {
+        "title": "Xodim topilmadi",
+        "description": "Qidiruv bo'yicha mos xodim topilmadi."
+      }
+    },
+    "paymentBreakdown": {
+      "noData": {
+        "title": "To'lov ma'lumotlari yo'q",
+        "description": "Tanlangan davrda to'lovlar qayd etilmagan."
+      },
+      "noResults": {
+        "title": "To'lov tarkibi topilmadi",
+        "description": "Tanlangan filter bo'yicha mos to'lovlar topilmadi."
+      }
+    },
+    "shifts": {
+      "noData": {
+        "title": "Smenalar topilmadi",
+        "description": "Tanlangan davrda kassir smenalari hali mavjud emas."
+      },
+      "noResults": {
+        "title": "Smena topilmadi",
+        "description": "Qidiruv yoki filter bo'yicha mos smena topilmadi."
+      }
+    }
+  }
+}

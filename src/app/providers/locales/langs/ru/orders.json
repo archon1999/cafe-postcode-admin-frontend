@@ -1,0 +1,139 @@
+{
+  "pages": {
+    "orders": { "title": "Заказы" },
+    "orderDetail": { "title": "Заказ #{{orderNumber}}" },
+    "orderItems": { "title": "Товары в заказе" },
+    "orderItemNoteDetail": { "title": "Заметка к товару" },
+    "orderItemNotes": { "title": "Заметки к товарам" },
+    "payments": { "title": "Платежи" },
+    "paymentDetail": { "title": "Платёж #{{orderNumber}}" },
+    "receipts": { "title": "Чеки" },
+    "receiptDetail": { "title": "Чек #{{orderNumber}}" }
+  },
+  "sections": {
+    "items": "Товары в заказе",
+    "payments": "Платежи",
+    "receipts": "Чеки",
+    "note": "Примечание",
+    "itemNote": "Заметка к товару",
+    "orderItemNotes": "Заметки к товарам",
+    "providerPayload": "Технические данные (JSON)",
+    "receiptPayload": "Данные чека (JSON)"
+  },
+  "fields": {
+    "amount": "Сумма",
+    "cashDesk": "Касса",
+    "cashier": "Кассир",
+    "channel": "Канал",
+    "closedAt": "Время закрытия",
+    "createdAt": "Время создания",
+    "createdBy": "Создал",
+    "externalRef": "Внешний референс",
+    "hall": "Зал",
+    "item": "Товар",
+    "itemsCount": "Количество товаров",
+    "kind": "Тип",
+    "lineTotal": "Итого",
+    "method": "Способ",
+    "noteBody": "Текст заметки",
+    "notesCount": "Количество заметок",
+    "openedBy": "Открыл",
+    "orderNumber": "Заказ",
+    "paidAt": "Время оплаты",
+    "paymentAmount": "Сумма платежа",
+    "paymentMethod": "Способ оплаты",
+    "prepStation": "Станция приготовления",
+    "provider": "Провайдер",
+    "quantity": "Количество",
+    "receivedBy": "Принял",
+    "serviceFee": "Сервисный сбор",
+    "status": "Статус",
+    "subtotal": "Промежуточный итог",
+    "table": "Стол",
+    "total": "Итого",
+    "unitPrice": "Цена за единицу",
+    "updatedAt": "Время обновления"
+  },
+  "filters": {
+    "all": "Все",
+    "channel": "Канал",
+    "clearSearch": "Очистить поиск",
+    "kind": "Тип",
+    "method": "Способ",
+    "search": "Поиск",
+    "searchOrderItemNotesPlaceholder": "Ищите по заказу, столу или заметке",
+    "searchOrderItemsPlaceholder": "Ищите по заказу, товару или станции приготовления",
+    "searchOrdersPlaceholder": "Ищите по заказу, залу, столу или сотруднику",
+    "searchPaymentsPlaceholder": "Ищите по заказу, кассе или референсу",
+    "searchReceiptsPlaceholder": "Ищите по заказу или провайдеру",
+    "status": "Статус"
+  },
+  "statuses": {
+    "cancelled": "Отменён",
+    "closed": "Закрыт",
+    "open": "Открыт",
+    "ready": "Готов",
+    "submitted": "Отправлен"
+  },
+  "channels": {
+    "delivery": "Доставка",
+    "hall": "В зале",
+    "online": "Онлайн",
+    "takeaway": "С собой"
+  },
+  "orderItemStatuses": {
+    "cancelled": "Отменён",
+    "cooking": "Готовится",
+    "done": "Готов",
+    "new": "Новый",
+    "served": "Подан"
+  },
+  "paymentStatuses": {
+    "failed": "Ошибка",
+    "pending": "Ожидается",
+    "succeeded": "Успешно"
+  },
+  "paymentMethods": {
+    "card": "Карта",
+    "cash": "Наличные",
+    "mixed": "Смешанный"
+  },
+  "receiptKinds": {
+    "fiscal": "Фискальный чек",
+    "prebill": "Предчек",
+    "refund": "Чек возврата"
+  },
+  "receiptStatuses": {
+    "created": "Создан",
+    "failed": "Ошибка",
+    "sent": "Отправлен"
+  },
+  "labels": {
+    "noItems": "Для заказа нет товаров.",
+    "noOrderItemNotes": "Для этого товара нет заметок.",
+    "noPayments": "Для заказа нет платежей.",
+    "noReceipts": "Для заказа нет чеков."
+  },
+  "empty": {
+    "orders": {
+      "noData": { "title": "Заказов пока нет", "description": "Когда появятся заказы, они будут показаны в этой таблице." },
+      "noResults": { "title": "Заказы не найдены", "description": "По текущему поиску или фильтрам ничего не найдено." }
+    },
+    "orderItems": {
+      "noData": { "title": "Товаров в заказах пока нет", "description": "Когда появятся товары, они будут показаны в этой таблице." },
+      "noResults": { "title": "Товары не найдены", "description": "По текущим фильтрам ничего не найдено." }
+    },
+    "orderItemNotes": {
+      "noData": { "title": "Заметок к товарам пока нет", "description": "Когда появятся заметки, они будут показаны в этой таблице." },
+      "noResults": { "title": "Заметки не найдены", "description": "По текущему поиску ничего не найдено." }
+    },
+    "payments": {
+      "noData": { "title": "Платежей пока нет", "description": "Когда появятся платежи, они будут показаны в этой таблице." },
+      "noResults": { "title": "Платежи не найдены", "description": "По текущему поиску или фильтрам ничего не найдено." }
+    },
+    "receipts": {
+      "noData": { "title": "Чеков пока нет", "description": "Когда появятся чеки, они будут показаны в этой таблице." },
+      "noResults": { "title": "Чеки не найдены", "description": "По текущему поиску или фильтрам ничего не найдено." }
+    }
+  }
+}

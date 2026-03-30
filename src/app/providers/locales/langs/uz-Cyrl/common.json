@@ -1,0 +1,63 @@
+{
+  "actions": {
+    "title": "Амаллар",
+    "cancel": "Бекор қилиш",
+    "back": "Орқага",
+    "logout": "Чиқиш",
+    "clear": "Тозалаш"
+  },
+  "labels": {
+    "details": "Тафсилотлар",
+    "notFound": "Топилмади",
+    "user": "Фойдаланувчи",
+    "username": "Фойдаланувчи номи",
+    "phone": "Телефон",
+    "loading": "Юкланмоқда",
+    "hallWithLevel": "{{name}} - {{level}} қават"
+  },
+  "status": {
+    "active": "Фаол",
+    "inactive": "Нофаол"
+  },
+  "messages": {
+    "rolesRequired": "Фойдаланувчи яратиш учун камида битта роль мавжуд бўлиши керак."
+  },
+  "auth": {
+    "infoAlert": "Админ панелга кириш учун admin аккаунтидан фойдаланинг.",
+    "needHelp": "Ёрдам керакми?"
+  },
+  "empty": {
+    "noData": "Маълумот топилмади",
+    "imageAlt": "Бўш ҳолат тасвири"
+  },
+  "filters": {
+    "resultsFound": "та натижа топилди"
+  },
+  "search": {
+    "title": "Ҳеч нарса топилмади",
+    "results": "<strong>{{query}}</strong> бўйича натижа топилмади.",
+    "suggestion": "Қидирув сўзини ўзгартириб қайта уриниб кўринг.",
+    "enterKeywords": "Қидирувни бошлаш учун калит сўз киритинг."
+  },
+  "upload": {
+    "actions": {
+      "removeAll": "Барчасини олиб ташлаш",
+      "upload": "Юклаш",
+      "uploading": "Юкланмоқда..."
+    },
+    "placeholder": {
+      "titleSingle": "Файл юклаш",
+      "titleMultiple": "Файлларни юклаш",
+      "descriptionSingle": "<span>Файлни шу ерга ташланг</span> ёки қурилмадан танланг.",
+      "descriptionMultiple": "<span>Файлларни шу ерга ташланг</span> ёки қурилмадан танланг."
+    }
+  },
+  "currency": {
+    "som": "сўм"
+  },
+  "notFound": {
+    "title": "Саҳифа топилмади",
+    "description": "Сўралган саҳифа мавжуд эмас ёки кўчирилган.",
+    "action": "Бош саҳифага қайтиш"
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "pages": {
+    "businessPartners": { "title": "Biznes hamkorlar" },
+    "businessPartnerCreate": { "title": "Yangi biznes hamkor" },
+    "businessPartnerEdit": { "title": "Biznes hamkorni tahrirlash" },
+    "tariffs": { "title": "Tariflar" },
+    "tariffCreate": { "title": "Yangi tarif" },
+    "tariffEdit": { "title": "Tarifni tahrirlash" }
+  },
+  "fields": {
+    "inn": "INN",
+    "companyName": "Kompaniya nomi",
+    "legalName": "Yuridik nom",
+    "directorName": "Direktor",
+    "phone": "Telefon",
+    "email": "Email",
+    "address": "Manzil",
+    "status": "Holat",
+    "name": "Nomi",
+    "classification": "Tasnifi",
+    "description": "Tavsif",
+    "monthlyPrice": "Oylik narx",
+    "yearlyPrice": "Yillik narx",
+    "permissions": "Ruxsatlar",
+    "allowedRoles": "Ruxsat etilgan rollar",
+    "operationalSettings": "Operatsion sozlamalar (JSON)",
+    "customTariff": "Custom tarif",
+    "tariff": "Tarif",
+    "startsOn": "Boshlanish sanasi",
+    "username": "Username",
+    "password": "Password"
+  },
+  "filters": {
+    "search": "Qidiruv",
+    "clearSearch": "Qidiruvni tozalash",
+    "status": "Holat",
+    "all": "Barchasi",
+    "searchBusinessPartnersPlaceholder": "Kompaniya, INN yoki telefon bo'yicha qidiring",
+    "searchTariffsPlaceholder": "Tarif nomi yoki tasnifi bo'yicha qidiring"
+  },
+  "labels": {
+    "notSelected": "Tanlanmagan"
+  },
+  "classifications": {
+    "basic": "Boshlang'ich",
+    "standard": "Standart",
+    "premium": "Premium",
+    "custom": "Custom"
+  },
+  "actions": {
+    "create": "Yaratish",
+    "save": "Saqlash",
+    "edit": "Tahrirlash",
+    "activate": "Aktivlashtirish",
+    "deactivate": "Deaktivlashtirish",
+    "resetPassword": "Parolni yangilash",
+    "createBusinessPartner": "Yangi biznes hamkor",
+    "createTariff": "Yangi tarif",
+    "cancel": "Bekor qilish",
+    "close": "Yopish"
+  },
+  "dialogs": {
+    "deactivatePartner": {
+      "title": "Biznes hamkorni deaktivlashtirish",
+      "description": "\"{{name}}\" biznes hamkorni deaktivlashtirmoqchimisiz?"
+    },
+    "partnerCredentials": {
+      "title": "Biznes hamkor kredensiallari",
+      "description": "Login va parol faqat bir marta ko'rsatiladi. Xavfsiz joyga yozib oling.",
+      "resetDescription": "Yangi parol faqat bir marta ko'rsatiladi. Xavfsiz joyga yozib oling."
+    },
+    "deactivateRestaurant": {
+      "title": "Restoranni deaktivlashtirish",
+      "description": "\"{{name}}\" restoranni deaktivlashtirmoqchimisiz?"
+    },
+    "restaurantCredentials": {
+      "title": "Restoran admini kredensiallari",
+      "description": "Login va parol faqat bir marta ko'rsatiladi. Xavfsiz joyga yozib oling.",
+      "resetDescription": "Yangi parol faqat bir marta ko'rsatiladi. Xavfsiz joyga yozib oling."
+    },
+    "activateRestaurant": {
+      "title": "Restoranni aktivlashtirish"
+    }
+  },
+  "validation": {
+    "invalidJson": "JSON noto'g'ri formatda."
+  },
+  "empty": {
+    "businessPartners": {
+      "noData": {
+        "title": "Biznes hamkorlar hali yo'q",
+        "description": "Birinchi biznes hamkor yaratilgach shu yerda ko'rinadi."
+      },
+      "noResults": {
+        "title": "Biznes hamkor topilmadi",
+        "description": "Qidiruv yoki filterlarni o'zgartirib qayta urinib ko'ring."
+      }
+    },
+    "tariffs": {
+      "noData": {
+        "title": "Tariflar hali yo'q",
+        "description": "Tarif yaratilgandan keyin u shu yerda ko'rinadi."
+      },
+      "noResults": {
+        "title": "Tarif topilmadi",
+        "description": "Tanlangan filterlar bo'yicha mos tarif topilmadi."
+      }
+    }
+  }
+}

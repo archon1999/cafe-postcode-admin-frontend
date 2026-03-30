@@ -1,0 +1,179 @@
+{
+  "pages": {
+    "list": {
+      "title": "Фойдаланувчилар",
+      "description": "Admin ва POS фойдаланувчиларини бошқаринг."
+    },
+    "roles": {
+      "title": "Роллар"
+    },
+    "roleCreate": {
+      "title": "Янги рол"
+    },
+    "roleEdit": {
+      "title": "Ролни таҳрирлаш"
+    },
+    "permissions": {
+      "title": "Рухсатлар"
+    },
+    "create": {
+      "title": "Фойдаланувчи яратиш",
+      "description": "Янги фойдаланувчини асосий маълумотлар билан яратинг."
+    },
+    "edit": {
+      "title": "Фойдаланувчини таҳрирлаш",
+      "description": "Фойдаланувчи ҳолати ва асосий маълумотларини янгиланг."
+    }
+  },
+  "fields": {
+    "username": "Фойдаланувчи номи",
+    "fullName": "Тўлиқ исм",
+    "permission": "Рухсат",
+    "phone": "Телефон",
+    "phonePlaceholder": "+998 90 123 45 67",
+    "role": "Рол",
+    "uiMode": "Интерфейс режими",
+    "status": "Ҳолат",
+    "statusToggle": "Фаол",
+    "code": "Код",
+    "name": "Номи",
+    "type": "Тури",
+    "category": "Бўлим",
+    "action": "Амал",
+    "description": "Тавсиф",
+    "permissionsCount": "Рухсатлар сони",
+    "hallSwitchPermission": "Зал алмаштириш рухсати",
+    "primaryHall": "Асосий зал",
+    "primaryHallHint": "Ихтиёрий. Фойдаланувчи учун асосий зални танланг.",
+    "password": "Парол",
+    "passwordCreateHint": "Ихтиёрий. Киритилса, фойдаланувчи учун парол ўрнатилади.",
+    "passwordEditHint": "Бўш қолдирилса, жорий парол ўзгармайди.",
+    "pin": "PIN-код",
+    "pinHint": "Фақат POS фойдаланувчи учун 4 хонали PIN.",
+    "permissions": "Рухсатлар",
+    "restaurantId": "Ресторан ID",
+    "branchId": "Филиал ID",
+    "primaryHallId": "Асосий зал ID",
+    "allowedHalls": "Рухсат этилган заллар",
+    "allowedHallsHint": "Керак бўлса фойдаланувчига бир нечта зал бириктиринг.",
+    "passportSeries": "Паспорт серияси",
+    "pnfl": "ПНФЛ",
+    "birthDate": "Туғилган сана",
+    "birthDateHint": "Ихтиёрий. Ходим туғилган санасини киритинг.",
+    "employmentStatus": "Иш ҳолати",
+    "salaryType": "Маош тури",
+    "baseAmount": "Асосий сумма",
+    "kpiPercent": "KPI фоизи"
+  },
+  "uiMode": {
+    "admin": "Admin",
+    "pos": "POS"
+  },
+  "status": {
+    "active": "Фаол",
+    "inactive": "Нофаол",
+    "archived": "Архивланган"
+  },
+  "salaryType": {
+    "hourly": "Соатбай",
+    "daily": "Кунбай",
+    "kpi": "KPI бўйича"
+  },
+  "labels": {
+    "withoutRole": "Рол бириктирилмаган",
+    "notSelected": "Танланмаган",
+    "system": "Тизимли",
+    "custom": "Махсус",
+    "morePermissions": "Кўпроқ рухсатлар"
+  },
+  "filters": {
+    "all": "Барчаси",
+    "search": "Қидирув",
+    "searchPlaceholder": "Фойдаланувчи номи, исм ёки телефон бўйича қидиринг",
+    "searchRolesPlaceholder": "Рол номи, код ёки рухсат бўйича қидиринг",
+    "searchPermissionsPlaceholder": "Код, тавсиф ёки рухсат бўйича қидиринг",
+    "clearSearch": "Қидирувни тозалаш",
+    "role": "Рол",
+    "permission": "Рухсат",
+    "type": "Тури",
+    "category": "Бўлим",
+    "action": "Амал",
+    "uiMode": "Интерфейс режими",
+    "status": "Ҳолат",
+    "showArchived": "Архивдагиларни кўрсатиш"
+  },
+  "sections": {
+    "account": "Кириш ва асосий маълумотлар",
+    "assignment": "Иш ҳолати ва зал бириктириш",
+    "payroll": "Меҳнат ва маош"
+  },
+  "permissionCategories": {
+    "dashboard": "Бошқарув панели",
+    "constructor": "Конструктор",
+    "hall": "Заллар",
+    "table": "Столлар",
+    "users": "Ходимлар",
+    "roles": "Роллар",
+    "catalog": "Меню",
+    "stoplist": "Стоп-лист",
+    "orders": "Буюртмалар",
+    "payments": "Тўловлар",
+    "kitchen": "Ошхона",
+    "reports": "Ҳисоботлар",
+    "integrations": "Интеграциялар"
+  },
+  "permissionActions": {
+    "view": "Кўриш",
+    "manage": "Бошқариш",
+    "create": "Яратиш",
+    "update": "Янгилаш"
+  },
+  "roles": {
+    "admin": "Администратор",
+    "owner": "Эга",
+    "manager": "Менежер",
+    "waiter": "Официант",
+    "cashier": "Кассир",
+    "chef": "Ошпаз",
+    "barman": "Бармен",
+    "universalOperator": "Универсал оператор"
+  },
+  "actions": {
+    "create": "Янги фойдаланувчи",
+    "edit": "Таҳрирлаш",
+    "save": "Сақлаш",
+    "archive": "Архивлаш"
+  },
+  "empty": {
+    "users": {
+      "noData": {
+        "title": "Фойдаланувчилар ҳали йўқ",
+        "description": "Биринчи фойдаланувчини қўшсангиз, рўйхат шу ерда кўринади."
+      },
+      "noResults": {
+        "title": "Фойдаланувчилар топилмади",
+        "description": "Қидирув ёки филтрларни ўзгартириб қайта уриниб кўринг."
+      }
+    },
+    "roles": {
+      "noData": {
+        "title": "Роллар ҳали йўқ",
+        "description": "Роллар яратилгандан кейин улар шу жадвалда чиқади."
+      },
+      "noResults": {
+        "title": "Роллар топилмади",
+        "description": "Танланган филтрлар бўйича ҳеч нарса топилмади."
+      }
+    },
+    "permissions": {
+      "noData": {
+        "title": "Рухсатлар ҳали йўқ",
+        "description": "Рухсатлар мавжуд бўлганда улар шу ерда кўринади."
+      },
+      "noResults": {
+        "title": "Рухсатлар топилмади",
+        "description": "Қидирув ёки филтр натижасида мос рухсат топилмади."
+      }
+    }
+  }
+}

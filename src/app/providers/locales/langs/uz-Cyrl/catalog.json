@@ -1,0 +1,102 @@
+{
+  "pages": {
+    "categories": {
+      "title": "Меню категориялари"
+    },
+    "categoryCreate": {
+      "title": "Янги категория"
+    },
+    "categoryEdit": {
+      "title": "Категорияни таҳрирлаш"
+    },
+    "items": {
+      "title": "Меню маҳсулотлари"
+    },
+    "itemCreate": {
+      "title": "Янги маҳсулот"
+    },
+    "itemEdit": {
+      "title": "Маҳсулотни таҳрирлаш"
+    }
+  },
+  "fields": {
+    "name": "Номи",
+    "kind": "Тури",
+    "sortOrder": "Тартиб",
+    "status": "Ҳолат",
+    "category": "Категория",
+    "prepStation": "Тайёрлаш станцияси",
+    "sku": "SKU",
+    "stoplist": "Стоп-лист",
+    "description": "Тавсиф",
+    "price": "Нарх",
+    "mxikCode": "MXИК коди",
+    "mxikName": "MXИК номи"
+  },
+  "filters": {
+    "all": "Барчаси",
+    "search": "Қидирув",
+    "clearSearch": "Қидирувни тозалаш",
+    "searchCategoriesPlaceholder": "Категория номи ёки MXИК коди бўйича қидиринг",
+    "searchItemsPlaceholder": "Маҳсулот, MXИК, категория ёки SKU бўйича қидиринг",
+    "kind": "Тури",
+    "status": "Ҳолат",
+    "category": "Категория",
+    "stoplist": "Стоп-лист"
+  },
+  "labels": {
+    "stoplisted": "Стоп-листда",
+    "available": "Мавжуд",
+    "mxikRequired": "Категория учун MXИК коди мажбурий.",
+    "mxikOptional": "Маҳсулот учун MXИК коди ихтиёрий.",
+    "mxikLoading": "MXИК қидирилмоқда...",
+    "mxikNotFound": "MXИК топилмади"
+  },
+  "kinds": {
+    "dish": "Таом",
+    "drink": "Ичимлик",
+    "service": "Хизмат",
+    "penalty": "Жарима"
+  },
+  "actions": {
+    "create": "Яратиш",
+    "save": "Сақлаш",
+    "edit": "Таҳрирлаш",
+    "delete": "Ўчириш",
+    "createCategory": "Янги категория",
+    "createItem": "Янги маҳсулот",
+    "searchMxik": "MXИК бўйича қидиринг"
+  },
+  "dialogs": {
+    "deleteCategory": {
+      "title": "Категорияни ўчириш",
+      "description": "\"{{name}}\" категорияси ўчирилади. Давом этилсинми?"
+    },
+    "deleteItem": {
+      "title": "Маҳсулотни ўчириш",
+      "description": "\"{{name}}\" маҳсулоти ўчирилади. Давом этилсинми?"
+    }
+  },
+  "empty": {
+    "categories": {
+      "noData": {
+        "title": "Категориялар ҳали йўқ",
+        "description": "Категориялар қўшилгандан кейин улар шу жадвалда чиқади."
+      },
+      "noResults": {
+        "title": "Категориялар топилмади",
+        "description": "Қидирув ёки фильтрларга мос категория топилмади."
+      }
+    },
+    "items": {
+      "noData": {
+        "title": "Маҳсулотлар ҳали йўқ",
+        "description": "Маҳсулотлар яратилгандан кейин улар шу жадвалда чиқади."
+      },
+      "noResults": {
+        "title": "Маҳсулотлар топилмади",
+        "description": "Танланган фильтрлар бўйича маҳсулот топилмади."
+      }
+    }
+  }
+}

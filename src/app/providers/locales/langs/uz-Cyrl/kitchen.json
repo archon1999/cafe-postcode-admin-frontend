@@ -1,0 +1,61 @@
+{
+  "pages": {
+    "list": { "title": "Ошхона буюртмалари" },
+    "view": { "title": "Ошхона буюртмаси #{{orderNumber}}" }
+  },
+  "sections": {
+    "items": "Маҳсулотлар",
+    "printedPayload": "Техник маълумот (JSON)"
+  },
+  "fields": {
+    "orderNumber": "Буюртма рақами",
+    "prepStation": "Тайёрлаш станцияси",
+    "status": "Ҳолат",
+    "routedVia": "Юбориш канали",
+    "printed": "Чоп этилган",
+    "hall": "Зал",
+    "table": "Стол",
+    "waiter": "Ходим",
+    "itemsCount": "Маҳсулотлар сони",
+    "createdAt": "Яратилган вақти",
+    "completedAt": "Тугалланган вақти",
+    "itemStatus": "Маҳсулот ҳолати",
+    "quantity": "Миқдор",
+    "unitPrice": "Нарх",
+    "lineTotal": "Жами",
+    "note": "Изоҳ"
+  },
+  "filters": {
+    "all": "Барчаси",
+    "search": "Қидирув",
+    "clearSearch": "Қидирувни тозалаш",
+    "searchPlaceholder": "Буюртма, стол, зал ёки ходим бўйича қидиринг",
+    "status": "Ҳолат",
+    "prepStation": "Тайёрлаш станцияси",
+    "routedVia": "Юбориш канали",
+    "printed": "Чоп этилган"
+  },
+  "status": {
+    "new": "Янги",
+    "cooking": "Тайёрланмоқда",
+    "done": "Тайёр"
+  },
+  "routedVia": {
+    "display": "Экран",
+    "printer": "Принтер",
+    "both": "Экран ва принтер"
+  },
+  "printed": {
+    "printed": "Ҳа",
+    "notPrinted": "Йўқ"
+  },
+  "labels": {
+    "noItems": "Бу буюртма учун маҳсулот топилмади."
+  },
+  "empty": {
+    "kitchenTickets": {
+      "noData": { "title": "Ошхона буюртмалари ҳали йўқ", "description": "Янги ошхона буюртмалари пайдо бўлгандан кейин улар шу жадвалда кўринади." },
+      "noResults": { "title": "Ошхона буюртмалари топилмади", "description": "Қидирув ёки фильтрлар бўйича мос натижа топилмади." }
+    }
+  }
+}

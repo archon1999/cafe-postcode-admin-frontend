@@ -1,0 +1,197 @@
+{
+  "pages": {
+    "orders": {
+      "title": "Buyurtmalar"
+    },
+    "orderDetail": {
+      "title": "Buyurtma #{{orderNumber}}"
+    },
+    "orderItems": {
+      "title": "Buyurtmadagi mahsulotlar"
+    },
+    "orderItemNoteDetail": {
+      "title": "Mahsulot izohi"
+    },
+    "orderItemNotes": {
+      "title": "Mahsulot izohlari"
+    },
+    "payments": {
+      "title": "To'lovlar"
+    },
+    "paymentDetail": {
+      "title": "To'lov #{{orderNumber}}"
+    },
+    "receipts": {
+      "title": "Cheklar"
+    },
+    "receiptDetail": {
+      "title": "Chek #{{orderNumber}}"
+    }
+  },
+  "sections": {
+    "items": "Buyurtmadagi mahsulotlar",
+    "payments": "To'lovlar",
+    "receipts": "Cheklar",
+    "note": "Izoh",
+    "itemNote": "Mahsulot izohi",
+    "orderItemNotes": "Mahsulot izohlari",
+    "providerPayload": "Texnik ma'lumot (JSON)",
+    "receiptPayload": "Chek ma'lumoti (JSON)"
+  },
+  "fields": {
+    "amount": "Summa",
+    "cashDesk": "Kassa",
+    "cashShift": "Smena",
+    "cashier": "Kassir",
+    "channel": "Kanal",
+    "closedAt": "Yopilgan vaqti",
+    "createdAt": "Yaratilgan vaqti",
+    "createdBy": "Yaratgan xodim",
+    "externalRef": "Tashqi referens",
+    "hall": "Zal",
+    "item": "Mahsulot",
+    "itemsCount": "Mahsulotlar soni",
+    "kind": "Turi",
+    "lineTotal": "Jami",
+    "method": "Usul",
+    "noteBody": "Izoh matni",
+    "notesCount": "Izohlar soni",
+    "openedBy": "Ochgan xodim",
+    "orderNumber": "Buyurtma",
+    "paidAt": "To'langan vaqti",
+    "paymentAmount": "To'lov summasi",
+    "paymentMethod": "To'lov usuli",
+    "prepStation": "Tayyorlash stansiyasi",
+    "provider": "Provayder",
+    "quantity": "Miqdor",
+    "receivedBy": "Qabul qilgan xodim",
+    "refundsTotal": "Qaytarilgan summa",
+    "isRefunded": "Qaytarilgan",
+    "reprintCount": "Qayta chiqarishlar soni",
+    "lastReprintedAt": "Oxirgi qayta chiqarilgan vaqt",
+    "serviceFee": "Xizmat haqi",
+    "status": "Holat",
+    "subtotal": "Oraliq summa",
+    "table": "Stol",
+    "total": "Jami summa",
+    "unitPrice": "Birlik narxi",
+    "updatedAt": "Yangilangan vaqti"
+  },
+  "filters": {
+    "all": "Barchasi",
+    "channel": "Kanal",
+    "clearSearch": "Qidiruvni tozalash",
+    "kind": "Turi",
+    "method": "Usul",
+    "search": "Qidiruv",
+    "searchOrderItemNotesPlaceholder": "Buyurtma, stol yoki izoh bo'yicha qidiring",
+    "searchOrderItemsPlaceholder": "Buyurtma, mahsulot yoki tayyorlash stansiyasi bo'yicha qidiring",
+    "searchOrdersPlaceholder": "Buyurtma, zal, stol yoki xodim bo'yicha qidiring",
+    "searchPaymentsPlaceholder": "Buyurtma, kassa yoki referens bo'yicha qidiring",
+    "searchReceiptsPlaceholder": "Buyurtma yoki provayder bo'yicha qidiring",
+    "status": "Holat"
+  },
+  "statuses": {
+    "cancelled": "Bekor qilingan",
+    "closed": "Yopilgan",
+    "open": "Ochiq",
+    "ready": "Tayyor",
+    "submitted": "Yuborilgan"
+  },
+  "channels": {
+    "delivery": "Yetkazib berish",
+    "hall": "Zalda",
+    "online": "Onlayn",
+    "takeaway": "Olib ketish"
+  },
+  "orderItemStatuses": {
+    "cancelled": "Bekor qilingan",
+    "cooking": "Tayyorlanmoqda",
+    "done": "Tayyor",
+    "new": "Yangi",
+    "served": "Yetkazilgan"
+  },
+  "paymentStatuses": {
+    "failed": "Xato",
+    "pending": "Kutilmoqda",
+    "succeeded": "Muvaffaqiyatli"
+  },
+  "paymentMethods": {
+    "card": "Karta",
+    "cash": "Naqd",
+    "qr": "QR",
+    "mixed": "Aralash"
+  },
+  "receiptKinds": {
+    "fiscal": "Fiskal chek",
+    "prebill": "Oldindan chek",
+    "refund": "Qaytarish cheki"
+  },
+  "receiptStatuses": {
+    "created": "Yaratilgan",
+    "failed": "Xato",
+    "sent": "Yuborilgan"
+  },
+  "labels": {
+    "noItems": "Bu buyurtma uchun mahsulot topilmadi.",
+    "noOrderItemNotes": "Bu mahsulot uchun izoh topilmadi.",
+    "noPayments": "Bu buyurtma uchun to'lov topilmadi.",
+    "noReceipts": "Bu buyurtma uchun chek topilmadi.",
+    "yes": "Ha",
+    "no": "Yo'q",
+    "refunded": "Qaytarilgan",
+    "notRefunded": "Qaytarilmagan"
+  },
+  "empty": {
+    "orders": {
+      "noData": {
+        "title": "Buyurtmalar hali yo'q",
+        "description": "Buyurtmalar yaratilgandan keyin ular shu jadvalda ko'rinadi."
+      },
+      "noResults": {
+        "title": "Buyurtmalar topilmadi",
+        "description": "Qidiruv yoki filterlar bo'yicha mos buyurtma topilmadi."
+      }
+    },
+    "orderItems": {
+      "noData": {
+        "title": "Buyurtmadagi mahsulotlar hali yo'q",
+        "description": "Mahsulotlar yaratilgandan keyin ular shu jadvalda ko'rinadi."
+      },
+      "noResults": {
+        "title": "Mahsulotlar topilmadi",
+        "description": "Tanlangan filterlar bo'yicha mos mahsulot topilmadi."
+      }
+    },
+    "orderItemNotes": {
+      "noData": {
+        "title": "Mahsulot izohlari hali yo'q",
+        "description": "Izohlar yaratilgandan keyin ular shu jadvalda ko'rinadi."
+      },
+      "noResults": {
+        "title": "Mahsulot izohlari topilmadi",
+        "description": "Qidiruv bo'yicha mos izoh topilmadi."
+      }
+    },
+    "payments": {
+      "noData": {
+        "title": "To'lovlar hali yo'q",
+        "description": "To'lovlar paydo bo'lgandan keyin ular shu jadvalda ko'rinadi."
+      },
+      "noResults": {
+        "title": "To'lovlar topilmadi",
+        "description": "Qidiruv yoki filterlar bo'yicha mos to'lov topilmadi."
+      }
+    },
+    "receipts": {
+      "noData": {
+        "title": "Cheklar hali yo'q",
+        "description": "Cheklar yaratilgandan keyin ular shu jadvalda ko'rinadi."
+      },
+      "noResults": {
+        "title": "Cheklar topilmadi",
+        "description": "Qidiruv yoki filterlar bo'yicha mos chek topilmadi."
+      }
+    }
+  }
+}

@@ -1,0 +1,179 @@
+{
+  "pages": {
+    "halls": { "title": "Zallar" },
+    "hallCreate": { "title": "Yangi zal" },
+    "hallEdit": { "title": "Zalni tahrirlash" },
+    "hallConstructor": { "title": "Zal konstruktori" },
+    "zones": { "title": "Zonalar va kabinalar" },
+    "zoneCreate": { "title": "Yangi zona yoki kabina" },
+    "zoneEdit": { "title": "Zona yoki kabinani tahrirlash" },
+    "diningTables": { "title": "Stollar" },
+    "diningTableCreate": { "title": "Yangi stol" },
+    "diningTableEdit": { "title": "Stolni tahrirlash" },
+    "layoutObjects": { "title": "Joylashuv obyektlari" },
+    "layoutObjectCreate": { "title": "Yangi joylashuv obyekti" },
+    "layoutObjectEdit": { "title": "Joylashuv obyektini tahrirlash" },
+    "layoutTemplates": { "title": "Joylashuv shablonlari" },
+    "layoutTemplateCreate": { "title": "Yangi joylashuv shabloni" },
+    "layoutTemplateEdit": { "title": "Joylashuv shablonini tahrirlash" },
+    "tableSessions": { "title": "Stol sessiyalari" },
+    "tableSessionCreate": { "title": "Yangi stol sessiyasi" },
+    "tableSessionEdit": { "title": "Stol sessiyasini tahrirlash" }
+  },
+  "fields": {
+    "name": "Nomi",
+    "description": "Tavsif",
+    "branch": "Filial",
+    "level": "Qavat",
+    "hall": "Zal",
+    "zone": "Zona yoki kabina",
+    "table": "Stol",
+    "status": "Holat",
+    "sortOrder": "Tartib",
+    "isPrivate": "Yopiq zona yoki kabina",
+    "isActive": "Faol",
+    "tableNumber": "Stol raqami",
+    "seatCount": "O'rinlar soni",
+    "shape": "Shakli",
+    "shapeVariant": "Stol varianti",
+    "positionX": "X koordinata",
+    "positionY": "Y koordinata",
+    "width": "Kenglik",
+    "height": "Balandlik",
+    "gridColumns": "Grid ustunlari",
+    "rotation": "Burilish",
+    "kind": "Turi",
+    "label": "Yorliq",
+    "payload": "Texnik ma'lumot (JSON)",
+    "default": "Asosiy",
+    "privacy": "Maxfiylik",
+    "openedBy": "Sessiyani ochgan",
+    "assignedWaiter": "Biriktirilgan ofitsiant",
+    "guestCount": "Mehmonlar soni",
+    "note": "Izoh"
+  },
+  "filters": {
+    "all": "Barchasi",
+    "search": "Qidiruv",
+    "clearSearch": "Qidiruvni tozalash",
+    "branch": "Filial",
+    "hall": "Zal",
+    "status": "Holat",
+    "shape": "Shakl",
+    "kind": "Tur",
+    "default": "Shablon turi",
+    "privacy": "Maxfiylik",
+    "searchHallsPlaceholder": "Zal nomi yoki filial bo'yicha qidiring",
+    "searchZonesPlaceholder": "Zona nomi yoki zal bo'yicha qidiring",
+    "searchDiningTablesPlaceholder": "Stol nomi, raqami yoki zal bo'yicha qidiring",
+    "searchLayoutObjectsPlaceholder": "Obyekt yorlig'i, turi, zal yoki zona bo'yicha qidiring",
+    "searchLayoutTemplatesPlaceholder": "Shablon nomi yoki tavsifi bo'yicha qidiring",
+    "searchTableSessionsPlaceholder": "Stol, zal, ofitsiant yoki izoh bo'yicha qidiring"
+  },
+  "labels": {
+    "notSelected": "Tanlanmagan",
+    "defaultTemplate": "Asosiy shablon",
+    "regularTemplate": "Oddiy shablon",
+    "private": "Yopiq",
+    "shared": "Umumiy",
+    "constructorHint": "Stollarni grid bo'yicha joylashtiring, cho'zing va variantini tanlang.",
+    "inspector": "Stol inspektori",
+    "inspectorHint": "Tanlangan stol parametrlarini shu yerda o'zgartiring.",
+    "noTableSelected": "Parametrlarni ko'rish uchun stol tanlang."
+  },
+  "tableShapes": {
+    "square": "Kvadrat",
+    "rectangle": "To'rtburchak",
+    "round": "Dumaloq",
+    "oval": "Oval"
+  },
+  "tableShapeVariants": {
+    "seat2_horizontal": "2 o'rinli gorizontal",
+    "seat2_vertical": "2 o'rinli vertikal",
+    "seat3_triangle": "3 o'rinli uchburchak",
+    "seat4_square": "4 o'rinli kvadrat",
+    "seat4_horizontal": "4 o'rinli gorizontal",
+    "seat4_vertical": "4 o'rinli vertikal",
+    "seat5_horizontal": "5 o'rinli gorizontal",
+    "seat5_vertical": "5 o'rinli vertikal",
+    "seat6_horizontal": "6 o'rinli gorizontal",
+    "seat6_vertical": "6 o'rinli vertikal"
+  },
+  "tableStatuses": {
+    "available": "Bo'sh",
+    "occupied": "Band",
+    "reserved": "Band qilingan",
+    "blocked": "Bloklangan"
+  },
+  "layoutObjectKinds": {
+    "table": "Stol",
+    "bar": "Bar",
+    "cash_desk": "Kassa",
+    "door": "Eshik",
+    "wall": "Devor",
+    "decor": "Dekor",
+    "label": "Yorliq"
+  },
+  "tableSessionStatuses": {
+    "open": "Ochiq",
+    "pending_payment": "To'lov kutilmoqda",
+    "closed": "Yopilgan",
+    "merged": "Birlashtirilgan"
+  },
+  "actions": {
+    "title": "Amallar",
+    "create": "Yaratish",
+    "save": "Saqlash",
+    "cancel": "Bekor qilish",
+    "edit": "Tahrirlash",
+    "delete": "O'chirish",
+    "constructor": "Konstruktor",
+    "addTable": "Yangi stol",
+    "createHall": "Yangi zal",
+    "createZone": "Yangi zona",
+    "createDiningTable": "Yangi stol",
+    "createLayoutObject": "Yangi obyekt",
+    "createLayoutTemplate": "Yangi shablon",
+    "createTableSession": "Yangi sessiya"
+  },
+  "dialogs": {
+    "deleteHall": { "title": "Zalni o'chirish", "description": "\"{{name}}\" zalini o'chirmoqchimisiz?" },
+    "deleteZone": { "title": "Zona yoki kabinani o'chirish", "description": "\"{{name}}\" obyektini o'chirmoqchimisiz?" },
+    "deleteDiningTable": { "title": "Stolni o'chirish", "description": "\"{{name}}\" stolini o'chirmoqchimisiz?" },
+    "deleteLayoutObject": { "title": "Joylashuv obyektini o'chirish", "description": "\"{{name}}\" obyektini o'chirmoqchimisiz?" },
+    "deleteLayoutTemplate": { "title": "Joylashuv shablonini o'chirish", "description": "\"{{name}}\" shablonini o'chirmoqchimisiz?" },
+    "deleteTableSession": { "title": "Stol sessiyasini o'chirish", "description": "\"{{name}}\" sessiyasini o'chirmoqchimisiz?" },
+    "unsavedChanges": { "confirm": "Saqlanmagan o'zgarishlar bor. Sahifadan chiqishni xohlaysizmi?" }
+  },
+  "messages": {
+    "gridColumnsTooSmall": "Grid ustunlari soni mavjud stollar uchun juda kichik.",
+    "tableOverlap": "Stollar bir-birining ustiga tushib qoldi.",
+    "constructorSaved": "Zal konstruktori saqlandi."
+  },
+  "empty": {
+    "halls": {
+      "noData": { "title": "Zallar hali yo'q", "description": "Yangi zal yaratilgandan keyin u shu yerda ko'rinadi." },
+      "noResults": { "title": "Zal topilmadi", "description": "Qidiruv yoki filterlarga mos zal topilmadi." }
+    },
+    "zones": {
+      "noData": { "title": "Zonalar hali yo'q", "description": "Yangi zona yoki kabina qo'shilgandan keyin u shu yerda ko'rinadi." },
+      "noResults": { "title": "Zona topilmadi", "description": "Tanlangan filterlar bo'yicha zona yoki kabina topilmadi." }
+    },
+    "diningTables": {
+      "noData": { "title": "Stollar hali yo'q", "description": "Stollar qo'shilgandan keyin ular shu jadvalda ko'rinadi." },
+      "noResults": { "title": "Stol topilmadi", "description": "Qidiruv yoki filterlarga mos stol topilmadi." }
+    },
+    "layoutObjects": {
+      "noData": { "title": "Joylashuv obyektlari hali yo'q", "description": "Yangi obyekt yaratilgandan keyin u shu yerda ko'rinadi." },
+      "noResults": { "title": "Joylashuv obyekti topilmadi", "description": "Tanlangan filterlar bo'yicha obyekt topilmadi." }
+    },
+    "layoutTemplates": {
+      "noData": { "title": "Joylashuv shablonlari hali yo'q", "description": "Shablon qo'shilgandan keyin u shu yerda ko'rinadi." },
+      "noResults": { "title": "Joylashuv shabloni topilmadi", "description": "Qidiruv yoki filterlarga mos shablon topilmadi." }
+    },
+    "tableSessions": {
+      "noData": { "title": "Stol sessiyalari hali yo'q", "description": "Yangi sessiya ochilgandan keyin u shu yerda ko'rinadi." },
+      "noResults": { "title": "Sessiya topilmadi", "description": "Qidiruv yoki filterlarga mos stol sessiyasi topilmadi." }
+    }
+  }
+}

@@ -1,0 +1,137 @@
+{
+  "workspace": {
+    "title": "Отчёты",
+    "listTitle": "Список отчётов",
+    "listDescription": "Следите за ключевыми показателями продаж, заказов и сотрудников в одном месте.",
+    "lastUpdated": "Последнее обновление: {{value}}",
+    "awaitingData": "Данные обновляются"
+  },
+  "period": {
+    "day": "За день",
+    "month": "За месяц",
+    "year": "За год"
+  },
+  "actions": {
+    "refresh": "Обновить",
+    "exportExcel": "Скачать Excel"
+  },
+  "labels": {
+    "summary": "KPI",
+    "table": "Таблица"
+  },
+  "filters": {
+    "all": "Все",
+    "periodType": "Период",
+    "date": "Дата",
+    "month": "Месяц",
+    "year": "Год",
+    "paymentMethod": "Способ оплаты",
+    "status": "Статус",
+    "hall": "Зал",
+    "category": "Категория",
+    "search": "Поиск",
+    "clearSearch": "Очистить поиск",
+    "searchPlaceholder": "Ищите по таблице",
+    "searchSalesPlaceholder": "Ищите по способу оплаты",
+    "searchOpenChecksPlaceholder": "Ищите по заказу, залу или столу",
+    "searchTopItemsPlaceholder": "Ищите по товару или категории",
+    "searchTopStaffPlaceholder": "Ищите по сотруднику",
+    "searchPaymentBreakdownPlaceholder": "Ищите по способу оплаты"
+  },
+  "paymentMethods": {
+    "cash": "Наличные",
+    "card": "Карта",
+    "mixed": "Смешанный"
+  },
+  "statuses": {
+    "open": "Открыт",
+    "submitted": "Отправлен",
+    "ready": "Готов",
+    "closed": "Закрыт",
+    "cancelled": "Отменён"
+  },
+  "reports": {
+    "summary": {
+      "title": "Общие показатели",
+      "description": "Основные показатели за выбранный период.",
+      "metrics": {
+        "salesTotal": "Сумма продаж",
+        "ordersCount": "Количество заказов",
+        "averageCheck": "Средний чек",
+        "openChecks": "Открытые чеки",
+        "activeTables": "Активные столы"
+      }
+    },
+    "sales": {
+      "title": "Продажи",
+      "description": "Количество транзакций и выручка по способам оплаты.",
+      "fields": {
+        "method": "Способ",
+        "count": "Количество",
+        "total": "Итого"
+      }
+    },
+    "openChecks": {
+      "title": "Открытые чеки",
+      "description": "Открытые заказы и их расположение.",
+      "fields": {
+        "orderNumber": "Заказ",
+        "status": "Статус",
+        "hallName": "Зал",
+        "tableName": "Стол",
+        "total": "Итого",
+        "createdAt": "Время создания"
+      }
+    },
+    "topItems": {
+      "title": "Самые продаваемые товары",
+      "description": "Самые продаваемые товары и их выручка.",
+      "fields": {
+        "catalogItemName": "Товар",
+        "categoryName": "Категория",
+        "quantity": "Количество",
+        "revenue": "Выручка"
+      }
+    },
+    "topStaff": {
+      "title": "Самые активные сотрудники",
+      "description": "Количество заказов и объём продаж по сотрудникам.",
+      "fields": {
+        "staffName": "Сотрудник",
+        "orderCount": "Заказы",
+        "totalSales": "Общие продажи"
+      }
+    },
+    "paymentBreakdown": {
+      "title": "Структура оплат",
+      "description": "Общий объём и структура по способам оплаты.",
+      "fields": {
+        "method": "Способ",
+        "count": "Количество",
+        "total": "Итого"
+      }
+    }
+  },
+  "empty": {
+    "sales": {
+      "noData": { "title": "Продаж нет", "description": "За выбранный период данные о продажах отсутствуют." },
+      "noResults": { "title": "Продажи не найдены", "description": "Поиск или фильтры не дали результатов." }
+    },
+    "openChecks": {
+      "noData": { "title": "Открытых чеков нет", "description": "За выбранный период открытых заказов нет." },
+      "noResults": { "title": "Открытые чеки не найдены", "description": "По выбранным фильтрам заказы не найдены." }
+    },
+    "topItems": {
+      "noData": { "title": "Нет данных по товарам", "description": "За выбранный период проданные товары не найдены." },
+      "noResults": { "title": "Товары не найдены", "description": "Поиск или категория не дали результатов." }
+    },
+    "topStaff": {
+      "noData": { "title": "Нет данных по сотрудникам", "description": "За выбранный период статистика по сотрудникам ещё не сформирована." },
+      "noResults": { "title": "Сотрудник не найден", "description": "Поиск не дал результатов." }
+    },
+    "paymentBreakdown": {
+      "noData": { "title": "Нет данных по оплатам", "description": "За выбранный период платежи не зафиксированы." },
+      "noResults": { "title": "Структура оплат не найдена", "description": "По выбранному фильтру подходящих платежей не найдено." }
+    }
+  }
+}

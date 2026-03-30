@@ -1,0 +1,110 @@
+{
+  "pages": {
+    "businessPartners": { "title": "Бизнес-партнеры" },
+    "businessPartnerCreate": { "title": "Новый бизнес-партнер" },
+    "businessPartnerEdit": { "title": "Редактирование бизнес-партнера" },
+    "tariffs": { "title": "Тарифы" },
+    "tariffCreate": { "title": "Новый тариф" },
+    "tariffEdit": { "title": "Редактирование тарифа" }
+  },
+  "fields": {
+    "inn": "ИНН",
+    "companyName": "Название компании",
+    "legalName": "Юридическое название",
+    "directorName": "Директор",
+    "phone": "Телефон",
+    "email": "Email",
+    "address": "Адрес",
+    "status": "Статус",
+    "name": "Название",
+    "classification": "Классификация",
+    "description": "Описание",
+    "monthlyPrice": "Месячная цена",
+    "yearlyPrice": "Годовая цена",
+    "permissions": "Разрешения",
+    "allowedRoles": "Доступные роли",
+    "operationalSettings": "Операционные настройки (JSON)",
+    "customTariff": "Кастомный тариф",
+    "tariff": "Тариф",
+    "startsOn": "Дата начала",
+    "username": "Username",
+    "password": "Password"
+  },
+  "filters": {
+    "search": "Поиск",
+    "clearSearch": "Очистить поиск",
+    "status": "Статус",
+    "all": "Все",
+    "searchBusinessPartnersPlaceholder": "Ищите по компании, ИНН или телефону",
+    "searchTariffsPlaceholder": "Ищите по названию или классификации тарифа"
+  },
+  "labels": {
+    "notSelected": "Не выбрано"
+  },
+  "classifications": {
+    "basic": "Базовый",
+    "standard": "Стандарт",
+    "premium": "Премиум",
+    "custom": "Кастомный"
+  },
+  "actions": {
+    "create": "Создать",
+    "save": "Сохранить",
+    "edit": "Редактировать",
+    "activate": "Активировать",
+    "deactivate": "Деактивировать",
+    "resetPassword": "Сбросить пароль",
+    "createBusinessPartner": "Новый бизнес-партнер",
+    "createTariff": "Новый тариф",
+    "cancel": "Отмена",
+    "close": "Закрыть"
+  },
+  "dialogs": {
+    "deactivatePartner": {
+      "title": "Деактивация бизнес-партнера",
+      "description": "Деактивировать бизнес-партнера \"{{name}}\"?"
+    },
+    "partnerCredentials": {
+      "title": "Учетные данные бизнес-партнера",
+      "description": "Логин и пароль показываются только один раз. Сохраните их в безопасном месте.",
+      "resetDescription": "Новый пароль показывается только один раз. Сохраните его в безопасном месте."
+    },
+    "deactivateRestaurant": {
+      "title": "Деактивация ресторана",
+      "description": "Деактивировать ресторан \"{{name}}\"?"
+    },
+    "restaurantCredentials": {
+      "title": "Учетные данные администратора ресторана",
+      "description": "Логин и пароль показываются только один раз. Сохраните их в безопасном месте.",
+      "resetDescription": "Новый пароль показывается только один раз. Сохраните его в безопасном месте."
+    },
+    "activateRestaurant": {
+      "title": "Активация ресторана"
+    }
+  },
+  "validation": {
+    "invalidJson": "Некорректный JSON."
+  },
+  "empty": {
+    "businessPartners": {
+      "noData": {
+        "title": "Бизнес-партнеров пока нет",
+        "description": "После создания первого бизнес-партнера он появится здесь."
+      },
+      "noResults": {
+        "title": "Бизнес-партнер не найден",
+        "description": "Измените поиск или фильтры и попробуйте снова."
+      }
+    },
+    "tariffs": {
+      "noData": {
+        "title": "Тарифов пока нет",
+        "description": "После создания тарифа он появится здесь."
+      },
+      "noResults": {
+        "title": "Тариф не найден",
+        "description": "По выбранным фильтрам подходящий тариф не найден."
+      }
+    }
+  }
+}

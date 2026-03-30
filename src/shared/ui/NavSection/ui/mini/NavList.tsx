@@ -1,0 +1,140 @@
+import { useTheme } from '@mui/material/styles';
+import { usePopoverHover } from 'minimal-shared/hooks';
+import { isExternalLink } from 'minimal-shared/utils';
+import { useCallback, useEffect } from 'react';
+
+import { usePathname } from 'shared/hooks/router';
+
+import type { NavListProps, NavSubListProps } from '../../model/types.ts';
+import { navSectionClasses } from '../../styles';
+import { isNavItemActive } from '../../utils/is-nav-item-active.ts';
+import { NavDropdown, NavDropdownPaper, NavLi, NavUl } from '../common';
+
+import { NavItem } from './NavItem.tsx';
+
+export function NavList({
+  data,
+  depth,
+  render,
+  cssVars,
+  slotProps,
+  checkPermissions,
+  enabledRootRedirect,
+}: NavListProps) {
+  const theme = useTheme();
+
+  const pathname = usePathname();
+
+  const isActive = isNavItemActive(pathname, data);
+
+  const { open, onOpen, onClose, anchorEl, elementRef: navItemRef } = usePopoverHover<HTMLButtonElement>();
+
+  const isRtl = theme.direction === 'rtl';
+  const id = open ? `${data.title}-popover` : undefined;
+
+  useEffect(() => {
+    if (open) {
+      onClose();
+    }
+  }, [pathname]);
+
+  const handleOpenMenu = useCallback(() => {
+    if (data.children) {
+      onOpen();
+    }
+  }, [data.children, onOpen]);
+
+  const renderNavItem = () => (
+    <NavItem
+      ref={navItemRef}
+      aria-describedby={id}
+      path={data.path}
+      icon={data.icon}
+      info={data.info}
+      title={data.title}
+      caption={data.caption}
+      data-testid={data['data-testid']}
+      active={isActive}
+      open={open}
+      disabled={data.disabled}
+      depth={depth}
+      render={render}
+      hasChild={!!data.children}
+      externalLink={isExternalLink(data.path)}
+      enabledRootRedirect={enabledRootRedirect}
+      slotProps={depth === 1 ? slotProps?.rootItem : slotProps?.subItem}
+      onMouseEnter={handleOpenMenu}
+      onMouseLeave={onClose}
+    />
+  );
+
+  const renderDropdown = () =>
+    !!data.children && (
+      <NavDropdown
+        disableScrollLock
+        aria-hidden={!open}
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        anchorOrigin={{ vertical: 'center', horizontal: isRtl ? 'left' : 'right' }}
+        transformOrigin={{ vertical: 'center', horizontal: isRtl ? 'right' : 'left' }}
+        slotProps={{
+          paper: {
+            onMouseEnter: handleOpenMenu,
+            onMouseLeave: onClose,
+            className: navSectionClasses.dropdown.root,
+          },
+        }}
+        sx={{ ...cssVars }}>
+        <NavDropdownPaper className={navSectionClasses.dropdown.paper} sx={slotProps?.dropdown?.paper}>
+          <NavSubList
+            data={data.children}
+            depth={depth}
+            render={render}
+            cssVars={cssVars}
+            slotProps={slotProps}
+            checkPermissions={checkPermissions}
+            enabledRootRedirect={enabledRootRedirect}
+          />
+        </NavDropdownPaper>
+      </NavDropdown>
+    );
+
+  if (data.allowedRoles && checkPermissions && checkPermissions(data.allowedRoles)) {
+    return null;
+  }
+
+  return (
+    <NavLi disabled={data.disabled}>
+      {renderNavItem()}
+      {renderDropdown()}
+    </NavLi>
+  );
+}
+
+function NavSubList({
+  data,
+  render,
+  cssVars,
+  depth = 0,
+  slotProps,
+  checkPermissions,
+  enabledRootRedirect,
+}: NavSubListProps) {
+  return (
+    <NavUl sx={{ gap: 0.5 }}>
+      {data.map((list) => (
+        <NavList
+          key={list.title}
+          data={list}
+          render={render}
+          depth={depth + 1}
+          cssVars={cssVars}
+          slotProps={slotProps}
+          checkPermissions={checkPermissions}
+          enabledRootRedirect={enabledRootRedirect}
+        />
+      ))}
+    </NavUl>
+  );
+}

@@ -1,0 +1,71 @@
+{
+  "pages": {
+    "list": {
+      "title": "Oshxona buyurtmalari"
+    },
+    "view": {
+      "title": "Oshxona buyurtmasi #{{orderNumber}}"
+    }
+  },
+  "sections": {
+    "items": "Mahsulotlar",
+    "printedPayload": "Texnik ma'lumot (JSON)"
+  },
+  "fields": {
+    "orderNumber": "Buyurtma raqami",
+    "prepStation": "Tayyorlash stansiyasi",
+    "status": "Holat",
+    "routedVia": "Yuborish kanali",
+    "printed": "Chop etilgan",
+    "hall": "Zal",
+    "table": "Stol",
+    "waiter": "Xodim",
+    "itemsCount": "Mahsulotlar soni",
+    "createdAt": "Yaratilgan vaqti",
+    "completedAt": "Tugallangan vaqti",
+    "itemStatus": "Mahsulot holati",
+    "quantity": "Miqdor",
+    "unitPrice": "Narx",
+    "lineTotal": "Jami",
+    "note": "Izoh"
+  },
+  "filters": {
+    "all": "Barchasi",
+    "search": "Qidiruv",
+    "clearSearch": "Qidiruvni tozalash",
+    "searchPlaceholder": "Buyurtma, stol, zal yoki xodim bo'yicha qidiring",
+    "status": "Holat",
+    "prepStation": "Tayyorlash stansiyasi",
+    "routedVia": "Yuborish kanali",
+    "printed": "Chop etilgan"
+  },
+  "status": {
+    "new": "Yangi",
+    "cooking": "Tayyorlanmoqda",
+    "done": "Tayyor"
+  },
+  "routedVia": {
+    "display": "Ekran",
+    "printer": "Printer",
+    "both": "Ekran va printer"
+  },
+  "printed": {
+    "printed": "Ha",
+    "notPrinted": "Yo'q"
+  },
+  "labels": {
+    "noItems": "Bu buyurtma uchun mahsulot topilmadi."
+  },
+  "empty": {
+    "kitchenTickets": {
+      "noData": {
+        "title": "Oshxona buyurtmalari hali yo'q",
+        "description": "Yangi oshxona buyurtmalari paydo bo'lgandan keyin ular shu jadvalda ko'rinadi."
+      },
+      "noResults": {
+        "title": "Oshxona buyurtmalari topilmadi",
+        "description": "Qidiruv yoki filterlar bo'yicha mos natija topilmadi."
+      }
+    }
+  }
+}

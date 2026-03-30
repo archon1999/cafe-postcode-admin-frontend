@@ -1,0 +1,61 @@
+{
+  "pages": {
+    "list": { "title": "Кухонные заказы" },
+    "view": { "title": "Кухонный заказ #{{orderNumber}}" }
+  },
+  "sections": {
+    "items": "Товары",
+    "printedPayload": "Технические данные (JSON)"
+  },
+  "fields": {
+    "orderNumber": "Номер заказа",
+    "prepStation": "Станция приготовления",
+    "status": "Статус",
+    "routedVia": "Канал отправки",
+    "printed": "Напечатан",
+    "hall": "Зал",
+    "table": "Стол",
+    "waiter": "Сотрудник",
+    "itemsCount": "Количество товаров",
+    "createdAt": "Время создания",
+    "completedAt": "Время завершения",
+    "itemStatus": "Статус товара",
+    "quantity": "Количество",
+    "unitPrice": "Цена",
+    "lineTotal": "Итого",
+    "note": "Примечание"
+  },
+  "filters": {
+    "all": "Все",
+    "search": "Поиск",
+    "clearSearch": "Очистить поиск",
+    "searchPlaceholder": "Ищите по заказу, столу, залу или сотруднику",
+    "status": "Статус",
+    "prepStation": "Станция приготовления",
+    "routedVia": "Канал отправки",
+    "printed": "Напечатан"
+  },
+  "status": {
+    "new": "Новый",
+    "cooking": "Готовится",
+    "done": "Готов"
+  },
+  "routedVia": {
+    "display": "Экран",
+    "printer": "Принтер",
+    "both": "Экран и принтер"
+  },
+  "printed": {
+    "printed": "Да",
+    "notPrinted": "Нет"
+  },
+  "labels": {
+    "noItems": "Для этого заказа товары не найдены."
+  },
+  "empty": {
+    "kitchenTickets": {
+      "noData": { "title": "Кухонных заказов пока нет", "description": "Когда появятся новые кухонные заказы, они будут показаны в этой таблице." },
+      "noResults": { "title": "Кухонные заказы не найдены", "description": "По текущему поиску или фильтрам ничего не найдено." }
+    }
+  }
+}

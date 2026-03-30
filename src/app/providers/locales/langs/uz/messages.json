@@ -1,0 +1,11 @@
+{
+  "languageSwitch": {
+    "loading": "Til almashtirilmoqda...",
+    "success": "Til yangilandi",
+    "error": "Tilni almashtirib bo'lmadi"
+  },
+  "errorBoundary": {
+    "unexpected": "Kutilmagan xatolik yuz berdi",
+    "unknown": "Noma'lum xatolik yuz berdi"
+  }
+}

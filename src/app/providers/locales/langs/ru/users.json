@@ -1,0 +1,179 @@
+{
+  "pages": {
+    "list": {
+      "title": "Пользователи",
+      "description": "Управляйте admin- и POS-пользователями."
+    },
+    "roles": {
+      "title": "Роли"
+    },
+    "roleCreate": {
+      "title": "Новая роль"
+    },
+    "roleEdit": {
+      "title": "Редактирование роли"
+    },
+    "permissions": {
+      "title": "Права"
+    },
+    "create": {
+      "title": "Создание пользователя",
+      "description": "Создайте нового пользователя с основными данными."
+    },
+    "edit": {
+      "title": "Редактирование пользователя",
+      "description": "Обновите статус и основные данные пользователя."
+    }
+  },
+  "fields": {
+    "username": "Имя пользователя",
+    "fullName": "Полное имя",
+    "permission": "Право",
+    "phone": "Телефон",
+    "phonePlaceholder": "+998 90 123 45 67",
+    "role": "Роль",
+    "uiMode": "Режим интерфейса",
+    "status": "Статус",
+    "statusToggle": "Активен",
+    "code": "Код",
+    "name": "Название",
+    "type": "Тип",
+    "category": "Раздел",
+    "action": "Действие",
+    "description": "Описание",
+    "permissionsCount": "Количество прав",
+    "hallSwitchPermission": "Разрешение на смену зала",
+    "primaryHall": "Основной зал",
+    "primaryHallHint": "Необязательно. Выберите основной зал для пользователя.",
+    "password": "Пароль",
+    "passwordCreateHint": "Необязательно. Если заполнить, пользователю будет установлен пароль.",
+    "passwordEditHint": "Если оставить пустым, текущий пароль не изменится.",
+    "pin": "PIN-код",
+    "pinHint": "Только для POS-пользователя. 4-значный PIN.",
+    "permissions": "Права",
+    "restaurantId": "ID ресторана",
+    "branchId": "ID филиала",
+    "primaryHallId": "ID основного зала",
+    "allowedHalls": "Разрешенные залы",
+    "allowedHallsHint": "При необходимости привяжите пользователя к нескольким залам.",
+    "passportSeries": "Серия паспорта",
+    "pnfl": "ПНФЛ",
+    "birthDate": "Дата рождения",
+    "birthDateHint": "Необязательно. Укажите дату рождения сотрудника.",
+    "employmentStatus": "Статус занятости",
+    "salaryType": "Тип оплаты",
+    "baseAmount": "Базовая сумма",
+    "kpiPercent": "Процент KPI"
+  },
+  "uiMode": {
+    "admin": "Admin",
+    "pos": "POS"
+  },
+  "status": {
+    "active": "Активный",
+    "inactive": "Неактивный",
+    "archived": "Архивный"
+  },
+  "salaryType": {
+    "hourly": "Почасовая",
+    "daily": "Поденная",
+    "kpi": "По KPI"
+  },
+  "labels": {
+    "withoutRole": "Роль не назначена",
+    "notSelected": "Не выбрано",
+    "system": "Системная",
+    "custom": "Пользовательская",
+    "morePermissions": "Больше прав"
+  },
+  "filters": {
+    "all": "Все",
+    "search": "Поиск",
+    "searchPlaceholder": "Ищите по имени пользователя, имени или телефону",
+    "searchRolesPlaceholder": "Ищите по названию роли, коду или праву",
+    "searchPermissionsPlaceholder": "Ищите по коду, описанию или праву",
+    "clearSearch": "Очистить поиск",
+    "role": "Роль",
+    "permission": "Право",
+    "type": "Тип",
+    "category": "Раздел",
+    "action": "Действие",
+    "uiMode": "Режим интерфейса",
+    "status": "Статус",
+    "showArchived": "Показывать архив"
+  },
+  "sections": {
+    "account": "Вход и основные данные",
+    "assignment": "Статус работы и привязка к залу",
+    "payroll": "Работа и оплата"
+  },
+  "permissionCategories": {
+    "dashboard": "Панель управления",
+    "constructor": "Конструктор",
+    "hall": "Залы",
+    "table": "Столы",
+    "users": "Сотрудники",
+    "roles": "Роли",
+    "catalog": "Меню",
+    "stoplist": "Стоп-лист",
+    "orders": "Заказы",
+    "payments": "Платежи",
+    "kitchen": "Кухня",
+    "reports": "Отчеты",
+    "integrations": "Интеграции"
+  },
+  "permissionActions": {
+    "view": "Просмотр",
+    "manage": "Управление",
+    "create": "Создание",
+    "update": "Обновление"
+  },
+  "roles": {
+    "admin": "Администратор",
+    "owner": "Владелец",
+    "manager": "Менеджер",
+    "waiter": "Официант",
+    "cashier": "Кассир",
+    "chef": "Повар",
+    "barman": "Бармен",
+    "universalOperator": "Универсальный оператор"
+  },
+  "actions": {
+    "create": "Новый пользователь",
+    "edit": "Редактировать",
+    "save": "Сохранить",
+    "archive": "Архивировать"
+  },
+  "empty": {
+    "users": {
+      "noData": {
+        "title": "Пользователей пока нет",
+        "description": "После добавления первого пользователя список появится здесь."
+      },
+      "noResults": {
+        "title": "Пользователи не найдены",
+        "description": "Измените поиск или фильтры и попробуйте снова."
+      }
+    },
+    "roles": {
+      "noData": {
+        "title": "Ролей пока нет",
+        "description": "После создания ролей они появятся в этой таблице."
+      },
+      "noResults": {
+        "title": "Роли не найдены",
+        "description": "По выбранным фильтрам ничего не найдено."
+      }
+    },
+    "permissions": {
+      "noData": {
+        "title": "Прав пока нет",
+        "description": "Когда права появятся, они будут отображаться здесь."
+      },
+      "noResults": {
+        "title": "Права не найдены",
+        "description": "Поиск или фильтры не дали результатов."
+      }
+    }
+  }
+}

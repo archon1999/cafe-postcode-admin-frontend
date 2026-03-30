@@ -1,0 +1,110 @@
+{
+  "pages": {
+    "businessPartners": { "title": "Бизнес ҳамкорлар" },
+    "businessPartnerCreate": { "title": "Янги бизнес ҳамкор" },
+    "businessPartnerEdit": { "title": "Бизнес ҳамкорни таҳрирлаш" },
+    "tariffs": { "title": "Тарифлар" },
+    "tariffCreate": { "title": "Янги тариф" },
+    "tariffEdit": { "title": "Тарифни таҳрирлаш" }
+  },
+  "fields": {
+    "inn": "ИНН",
+    "companyName": "Компания номи",
+    "legalName": "Юридик ном",
+    "directorName": "Директор",
+    "phone": "Телефон",
+    "email": "Email",
+    "address": "Манзил",
+    "status": "Ҳолат",
+    "name": "Номи",
+    "classification": "Таснифи",
+    "description": "Тавсиф",
+    "monthlyPrice": "Ойлик нарх",
+    "yearlyPrice": "Йиллик нарх",
+    "permissions": "Рухсатлар",
+    "allowedRoles": "Рухсат этилган роллар",
+    "operationalSettings": "Операцион созламалар (JSON)",
+    "customTariff": "Custom тариф",
+    "tariff": "Тариф",
+    "startsOn": "Бошланиш санаси",
+    "username": "Username",
+    "password": "Password"
+  },
+  "filters": {
+    "search": "Қидирув",
+    "clearSearch": "Қидирувни тозалаш",
+    "status": "Ҳолат",
+    "all": "Барчаси",
+    "searchBusinessPartnersPlaceholder": "Компания, ИНН ёки телефон бўйича қидиринг",
+    "searchTariffsPlaceholder": "Тариф номи ёки таснифи бўйича қидиринг"
+  },
+  "labels": {
+    "notSelected": "Танланмаган"
+  },
+  "classifications": {
+    "basic": "Бошланғич",
+    "standard": "Стандарт",
+    "premium": "Премиум",
+    "custom": "Custom"
+  },
+  "actions": {
+    "create": "Яратиш",
+    "save": "Сақлаш",
+    "edit": "Таҳрирлаш",
+    "activate": "Активлаштириш",
+    "deactivate": "Деактивлаштириш",
+    "resetPassword": "Паролни янгилаш",
+    "createBusinessPartner": "Янги бизнес ҳамкор",
+    "createTariff": "Янги тариф",
+    "cancel": "Бекор қилиш",
+    "close": "Ёпиш"
+  },
+  "dialogs": {
+    "deactivatePartner": {
+      "title": "Бизнес ҳамкорни деактивлаштириш",
+      "description": "\"{{name}}\" бизнес ҳамкорни деактивлаштирмоқчимисиз?"
+    },
+    "partnerCredentials": {
+      "title": "Бизнес ҳамкор креденциаллари",
+      "description": "Логин ва пароль фақат бир марта кўрсатилади. Хавфсиз жойга ёзиб олинг.",
+      "resetDescription": "Янги пароль фақат бир марта кўрсатилади. Хавфсиз жойга ёзиб олинг."
+    },
+    "deactivateRestaurant": {
+      "title": "Ресторанни деактивлаштириш",
+      "description": "\"{{name}}\" ресторанни деактивлаштирмоқчимисиз?"
+    },
+    "restaurantCredentials": {
+      "title": "Ресторан админи креденциаллари",
+      "description": "Логин ва пароль фақат бир марта кўрсатилади. Хавфсиз жойга ёзиб олинг.",
+      "resetDescription": "Янги пароль фақат бир марта кўрсатилади. Хавфсиз жойга ёзиб олинг."
+    },
+    "activateRestaurant": {
+      "title": "Ресторанни активлаштириш"
+    }
+  },
+  "validation": {
+    "invalidJson": "JSON нотўғри форматда."
+  },
+  "empty": {
+    "businessPartners": {
+      "noData": {
+        "title": "Бизнес ҳамкорлар ҳали йўқ",
+        "description": "Биринчи бизнес ҳамкор яратилгандан кейин шу ерда кўринади."
+      },
+      "noResults": {
+        "title": "Бизнес ҳамкор топилмади",
+        "description": "Қидирув ёки фильтрларни ўзгартириб қайта уриниб кўринг."
+      }
+    },
+    "tariffs": {
+      "noData": {
+        "title": "Тарифлар ҳали йўқ",
+        "description": "Тариф яратилгандан кейин у шу ерда кўринади."
+      },
+      "noResults": {
+        "title": "Тариф топилмади",
+        "description": "Танланган фильтрлар бўйича мос тариф топилмади."
+      }
+    }
+  }
+}

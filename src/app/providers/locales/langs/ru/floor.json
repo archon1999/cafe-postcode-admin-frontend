@@ -1,0 +1,178 @@
+{
+  "pages": {
+    "halls": { "title": "Залы" },
+    "hallCreate": { "title": "Новый зал" },
+    "hallEdit": { "title": "Редактирование зала" },
+    "hallConstructor": { "title": "Конструктор зала" },
+    "zones": { "title": "Зоны и кабины" },
+    "zoneCreate": { "title": "Новая зона или кабина" },
+    "zoneEdit": { "title": "Редактирование зоны или кабины" },
+    "diningTables": { "title": "Столы" },
+    "diningTableCreate": { "title": "Новый стол" },
+    "diningTableEdit": { "title": "Редактирование стола" },
+    "layoutObjects": { "title": "Объекты размещения" },
+    "layoutObjectCreate": { "title": "Новый объект размещения" },
+    "layoutObjectEdit": { "title": "Редактирование объекта размещения" },
+    "layoutTemplates": { "title": "Шаблоны размещения" },
+    "layoutTemplateCreate": { "title": "Новый шаблон размещения" },
+    "layoutTemplateEdit": { "title": "Редактирование шаблона размещения" },
+    "tableSessions": { "title": "Сессии столов" },
+    "tableSessionCreate": { "title": "Новая сессия стола" },
+    "tableSessionEdit": { "title": "Редактирование сессии стола" }
+  },
+  "fields": {
+    "name": "Название",
+    "description": "Описание",
+    "branch": "Филиал",
+    "hall": "Зал",
+    "zone": "Зона или кабина",
+    "table": "Стол",
+    "status": "Статус",
+    "sortOrder": "Порядок",
+    "isPrivate": "Приватная зона или кабина",
+    "isActive": "Активный",
+    "tableNumber": "Номер стола",
+    "seatCount": "Количество мест",
+    "shape": "Форма",
+    "shapeVariant": "Вариант стола",
+    "positionX": "Координата X",
+    "positionY": "Координата Y",
+    "width": "Ширина",
+    "height": "Высота",
+    "gridColumns": "Колонки сетки",
+    "rotation": "Поворот",
+    "kind": "Тип",
+    "label": "Подпись",
+    "payload": "Технические данные (JSON)",
+    "default": "Основной",
+    "privacy": "Приватность",
+    "openedBy": "Открыл сессию",
+    "assignedWaiter": "Назначенный официант",
+    "guestCount": "Количество гостей",
+    "note": "Примечание"
+  },
+  "filters": {
+    "all": "Все",
+    "search": "Поиск",
+    "clearSearch": "Очистить поиск",
+    "branch": "Филиал",
+    "hall": "Зал",
+    "status": "Статус",
+    "shape": "Форма",
+    "kind": "Тип",
+    "default": "Тип шаблона",
+    "privacy": "Приватность",
+    "searchHallsPlaceholder": "Ищите по названию зала или филиалу",
+    "searchZonesPlaceholder": "Ищите по названию зоны или залу",
+    "searchDiningTablesPlaceholder": "Ищите по названию стола, номеру или залу",
+    "searchLayoutObjectsPlaceholder": "Ищите по подписи объекта, типу, залу или зоне",
+    "searchLayoutTemplatesPlaceholder": "Ищите по названию шаблона или описанию",
+    "searchTableSessionsPlaceholder": "Ищите по столу, залу, официанту или примечанию"
+  },
+  "labels": {
+    "notSelected": "Не выбрано",
+    "defaultTemplate": "Основной шаблон",
+    "regularTemplate": "Обычный шаблон",
+    "private": "Приватный",
+    "shared": "Общий",
+    "constructorHint": "Размещайте столы по сетке, растягивайте их и выбирайте вариант.",
+    "inspector": "Инспектор стола",
+    "inspectorHint": "Изменяйте параметры выбранного стола здесь.",
+    "noTableSelected": "Выберите стол, чтобы увидеть параметры."
+  },
+  "tableShapes": {
+    "square": "Квадрат",
+    "rectangle": "Прямоугольник",
+    "round": "Круглый",
+    "oval": "Овальный"
+  },
+  "tableShapeVariants": {
+    "seat2_horizontal": "2 места, горизонтально",
+    "seat2_vertical": "2 места, вертикально",
+    "seat3_triangle": "3 места, треугольник",
+    "seat4_square": "4 места, квадрат",
+    "seat4_horizontal": "4 места, горизонтально",
+    "seat4_vertical": "4 места, вертикально",
+    "seat5_horizontal": "5 мест, горизонтально",
+    "seat5_vertical": "5 мест, вертикально",
+    "seat6_horizontal": "6 мест, горизонтально",
+    "seat6_vertical": "6 мест, вертикально"
+  },
+  "tableStatuses": {
+    "available": "Свободен",
+    "occupied": "Занят",
+    "reserved": "Зарезервирован",
+    "blocked": "Заблокирован"
+  },
+  "layoutObjectKinds": {
+    "table": "Стол",
+    "bar": "Бар",
+    "cash_desk": "Касса",
+    "door": "Дверь",
+    "wall": "Стена",
+    "decor": "Декор",
+    "label": "Подпись"
+  },
+  "tableSessionStatuses": {
+    "open": "Открыта",
+    "pending_payment": "Ожидает оплаты",
+    "closed": "Закрыта",
+    "merged": "Объединена"
+  },
+  "actions": {
+    "title": "Действия",
+    "create": "Создать",
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "edit": "Редактировать",
+    "delete": "Удалить",
+    "constructor": "Конструктор",
+    "addTable": "Новый стол",
+    "createHall": "Новый зал",
+    "createZone": "Новая зона",
+    "createDiningTable": "Новый стол",
+    "createLayoutObject": "Новый объект",
+    "createLayoutTemplate": "Новый шаблон",
+    "createTableSession": "Новая сессия"
+  },
+  "dialogs": {
+    "deleteHall": { "title": "Удалить зал", "description": "Удалить зал \"{{name}}\"?" },
+    "deleteZone": { "title": "Удалить зону или кабину", "description": "Удалить объект \"{{name}}\"?" },
+    "deleteDiningTable": { "title": "Удалить стол", "description": "Удалить стол \"{{name}}\"?" },
+    "deleteLayoutObject": { "title": "Удалить объект размещения", "description": "Удалить объект \"{{name}}\"?" },
+    "deleteLayoutTemplate": { "title": "Удалить шаблон размещения", "description": "Удалить шаблон \"{{name}}\"?" },
+    "deleteTableSession": { "title": "Удалить сессию стола", "description": "Удалить сессию \"{{name}}\"?" },
+    "unsavedChanges": { "confirm": "Есть несохранённые изменения. Выйти со страницы?" }
+  },
+  "messages": {
+    "gridColumnsTooSmall": "Количество колонок сетки слишком мало для текущих столов.",
+    "tableOverlap": "Столы пересекаются друг с другом.",
+    "constructorSaved": "Конструктор зала сохранён."
+  },
+  "empty": {
+    "halls": {
+      "noData": { "title": "Залов пока нет", "description": "После создания новый зал появится здесь." },
+      "noResults": { "title": "Зал не найден", "description": "Поиск или фильтры не дали результатов." }
+    },
+    "zones": {
+      "noData": { "title": "Зон пока нет", "description": "После добавления новой зоны или кабины она появится здесь." },
+      "noResults": { "title": "Зона не найдена", "description": "По выбранным фильтрам зона или кабина не найдены." }
+    },
+    "diningTables": {
+      "noData": { "title": "Столов пока нет", "description": "После добавления столов они появятся в этой таблице." },
+      "noResults": { "title": "Стол не найден", "description": "Поиск или фильтры не дали результатов." }
+    },
+    "layoutObjects": {
+      "noData": { "title": "Объектов размещения пока нет", "description": "После создания нового объекта он появится здесь." },
+      "noResults": { "title": "Объект не найден", "description": "По выбранным фильтрам объект не найден." }
+    },
+    "layoutTemplates": {
+      "noData": { "title": "Шаблонов размещения пока нет", "description": "После добавления шаблона он появится здесь." },
+      "noResults": { "title": "Шаблон не найден", "description": "Поиск или фильтры не дали результатов." }
+    },
+    "tableSessions": {
+      "noData": { "title": "Сессий столов пока нет", "description": "После открытия новой сессии она появится здесь." },
+      "noResults": { "title": "Сессия не найдена", "description": "Поиск или фильтры не дали результатов." }
+    }
+  }
+}

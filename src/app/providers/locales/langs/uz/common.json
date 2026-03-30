@@ -1,0 +1,63 @@
+{
+  "actions": {
+    "title": "Amallar",
+    "cancel": "Bekor qilish",
+    "back": "Ortga",
+    "logout": "Chiqish",
+    "clear": "Tozalash"
+  },
+  "labels": {
+    "details": "Tafsilotlar",
+    "notFound": "Topilmadi",
+    "user": "Foydalanuvchi",
+    "username": "Foydalanuvchi nomi",
+    "phone": "Telefon",
+    "loading": "Yuklanmoqda",
+    "hallWithLevel": "{{name}} - {{level}} qavat"
+  },
+  "status": {
+    "active": "Faol",
+    "inactive": "Nofaol"
+  },
+  "messages": {
+    "rolesRequired": "Foydalanuvchi yaratish uchun kamida bitta rol mavjud bo'lishi kerak."
+  },
+  "auth": {
+    "infoAlert": "Admin panelga kirish uchun admin akkauntidan foydalaning.",
+    "needHelp": "Yordam kerakmi?"
+  },
+  "empty": {
+    "noData": "Ma'lumot topilmadi",
+    "imageAlt": "Bo'sh holat tasviri"
+  },
+  "filters": {
+    "resultsFound": "ta natija topildi"
+  },
+  "search": {
+    "title": "Hech narsa topilmadi",
+    "results": "<strong>{{query}}</strong> bo'yicha natija topilmadi.",
+    "suggestion": "Qidiruv so'zini o'zgartirib qayta urinib ko'ring.",
+    "enterKeywords": "Qidiruvni boshlash uchun kalit so'z kiriting."
+  },
+  "upload": {
+    "actions": {
+      "removeAll": "Barchasini olib tashlash",
+      "upload": "Yuklash",
+      "uploading": "Yuklanmoqda..."
+    },
+    "placeholder": {
+      "titleSingle": "Fayl yuklash",
+      "titleMultiple": "Fayllarni yuklash",
+      "descriptionSingle": "<span>Faylni shu yerga tashlang</span> yoki qurilmadan tanlang.",
+      "descriptionMultiple": "<span>Fayllarni shu yerga tashlang</span> yoki qurilmadan tanlang."
+    }
+  },
+  "currency": {
+    "som": "so'm"
+  },
+  "notFound": {
+    "title": "Sahifa topilmadi",
+    "description": "So'ralgan sahifa mavjud emas yoki ko'chirilgan.",
+    "action": "Bosh sahifaga qaytish"
+  }
+}

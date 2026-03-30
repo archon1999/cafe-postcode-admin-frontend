@@ -1,0 +1,179 @@
+{
+  "pages": {
+    "list": {
+      "title": "Foydalanuvchilar",
+      "description": "Admin va POS foydalanuvchilarini boshqaring."
+    },
+    "roles": {
+      "title": "Rollar"
+    },
+    "roleCreate": {
+      "title": "Yangi rol"
+    },
+    "roleEdit": {
+      "title": "Rolni tahrirlash"
+    },
+    "permissions": {
+      "title": "Ruxsatlar"
+    },
+    "create": {
+      "title": "Foydalanuvchi yaratish",
+      "description": "Yangi foydalanuvchini asosiy ma'lumotlar bilan yarating."
+    },
+    "edit": {
+      "title": "Foydalanuvchini tahrirlash",
+      "description": "Foydalanuvchi holati va asosiy ma'lumotlarini yangilang."
+    }
+  },
+  "fields": {
+    "username": "Foydalanuvchi nomi",
+    "fullName": "To'liq ism",
+    "permission": "Ruxsat",
+    "phone": "Telefon",
+    "phonePlaceholder": "+998 90 123 45 67",
+    "role": "Rol",
+    "uiMode": "Interfeys rejimi",
+    "status": "Holat",
+    "statusToggle": "Faol",
+    "code": "Kod",
+    "name": "Nomi",
+    "type": "Turi",
+    "category": "Bo'lim",
+    "action": "Amal",
+    "description": "Tavsif",
+    "permissionsCount": "Ruxsatlar soni",
+    "hallSwitchPermission": "Zal almashtirish ruxsati",
+    "primaryHall": "Asosiy zal",
+    "primaryHallHint": "Ixtiyoriy. Foydalanuvchi uchun asosiy zalni tanlang.",
+    "password": "Parol",
+    "passwordCreateHint": "Ixtiyoriy. Kiritilsa, foydalanuvchi uchun parol o'rnatiladi.",
+    "passwordEditHint": "Bo'sh qoldirilsa, joriy parol o'zgarmaydi.",
+    "pin": "PIN-kod",
+    "pinHint": "Faqat POS foydalanuvchi uchun 4 xonali PIN.",
+    "permissions": "Ruxsatlar",
+    "restaurantId": "Restoran ID",
+    "branchId": "Filial ID",
+    "primaryHallId": "Asosiy zal ID",
+    "allowedHalls": "Ruxsat etilgan zallar",
+    "allowedHallsHint": "Kerak bo'lsa foydalanuvchiga bir nechta zal biriktiring.",
+    "passportSeries": "Pasport seriyasi",
+    "pnfl": "PNFL",
+    "birthDate": "Tug'ilgan sana",
+    "birthDateHint": "Ixtiyoriy. Xodim tug'ilgan sanasini kiriting.",
+    "employmentStatus": "Ish holati",
+    "salaryType": "Maosh turi",
+    "baseAmount": "Asosiy summa",
+    "kpiPercent": "KPI foizi"
+  },
+  "uiMode": {
+    "admin": "Admin",
+    "pos": "POS"
+  },
+  "status": {
+    "active": "Faol",
+    "inactive": "Nofaol",
+    "archived": "Arxivlangan"
+  },
+  "salaryType": {
+    "hourly": "Soatbay",
+    "daily": "Kunbay",
+    "kpi": "KPI bo'yicha"
+  },
+  "labels": {
+    "withoutRole": "Rol biriktirilmagan",
+    "notSelected": "Tanlanmagan",
+    "system": "Tizimli",
+    "custom": "Maxsus",
+    "morePermissions": "Ko'proq ruxsatlar"
+  },
+  "filters": {
+    "all": "Barchasi",
+    "search": "Qidiruv",
+    "searchPlaceholder": "Foydalanuvchi nomi, ism yoki telefon bo'yicha qidiring",
+    "searchRolesPlaceholder": "Rol nomi, kod yoki ruxsat bo'yicha qidiring",
+    "searchPermissionsPlaceholder": "Kod, tavsif yoki ruxsat bo'yicha qidiring",
+    "clearSearch": "Qidiruvni tozalash",
+    "role": "Rol",
+    "permission": "Ruxsat",
+    "type": "Turi",
+    "category": "Bo'lim",
+    "action": "Amal",
+    "uiMode": "Interfeys rejimi",
+    "status": "Holat",
+    "showArchived": "Arxivdagilarni ko'rsatish"
+  },
+  "sections": {
+    "account": "Kirish va asosiy ma'lumotlar",
+    "assignment": "Ish holati va zal biriktirish",
+    "payroll": "Mehnat va maosh"
+  },
+  "permissionCategories": {
+    "dashboard": "Boshqaruv paneli",
+    "constructor": "Konstruktor",
+    "hall": "Zallar",
+    "table": "Stollar",
+    "users": "Xodimlar",
+    "roles": "Rollar",
+    "catalog": "Menyu",
+    "stoplist": "Stop-list",
+    "orders": "Buyurtmalar",
+    "payments": "To'lovlar",
+    "kitchen": "Oshxona",
+    "reports": "Hisobotlar",
+    "integrations": "Integratsiyalar"
+  },
+  "permissionActions": {
+    "view": "Ko'rish",
+    "manage": "Boshqarish",
+    "create": "Yaratish",
+    "update": "Yangilash"
+  },
+  "roles": {
+    "admin": "Administrator",
+    "owner": "Ega",
+    "manager": "Menejer",
+    "waiter": "Ofitsiant",
+    "cashier": "Kassir",
+    "chef": "Oshpaz",
+    "barman": "Barmen",
+    "universalOperator": "Universal operator"
+  },
+  "actions": {
+    "create": "Yangi foydalanuvchi",
+    "edit": "Tahrirlash",
+    "save": "Saqlash",
+    "archive": "Arxivlash"
+  },
+  "empty": {
+    "users": {
+      "noData": {
+        "title": "Foydalanuvchilar hali yo'q",
+        "description": "Birinchi foydalanuvchini qo'shsangiz, ro'yxat shu yerda ko'rinadi."
+      },
+      "noResults": {
+        "title": "Foydalanuvchilar topilmadi",
+        "description": "Qidiruv yoki filterlarni o'zgartirib qayta urinib ko'ring."
+      }
+    },
+    "roles": {
+      "noData": {
+        "title": "Rollar hali yo'q",
+        "description": "Rollar yaratilgandan keyin ular shu jadvalda chiqadi."
+      },
+      "noResults": {
+        "title": "Rollar topilmadi",
+        "description": "Tanlangan filterlar bo'yicha hech narsa topilmadi."
+      }
+    },
+    "permissions": {
+      "noData": {
+        "title": "Ruxsatlar hali yo'q",
+        "description": "Ruxsatlar mavjud bo'lganda ular shu yerda ko'rinadi."
+      },
+      "noResults": {
+        "title": "Ruxsatlar topilmadi",
+        "description": "Qidiruv yoki filter natijasida mos ruxsat topilmadi."
+      }
+    }
+  }
+}
