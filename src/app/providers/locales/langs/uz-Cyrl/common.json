@@ -14,8 +14,7 @@
     "phone": "Телефон",
     "yes": "Ҳа",
     "no": "Йўқ",
-    "loading": "Юкланмоқда",
-    "hallWithLevel": "{{name}} - {{level}} қават"
+    "loading": "Юкланмоқда"
   },
   "status": {
     "active": "Фаол",

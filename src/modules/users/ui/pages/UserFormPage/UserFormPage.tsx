@@ -209,6 +209,12 @@ const UserFormPage = () => {
                   helperText={isEditMode ? t('fields.passwordEditHint') : t('fields.passwordCreateHint')}
                 />
 
+                <RHFSelect<UserFormValues> name="employmentStatus" label={t('fields.employmentStatus')}>
+                  <MenuItem value="active">{t('status.active')}</MenuItem>
+                  <MenuItem value="inactive">{t('status.inactive')}</MenuItem>
+                  <MenuItem value="archived">{t('status.archived')}</MenuItem>
+                </RHFSelect>
+
                 {hasPosAccessPermission && (
                   <RHFTextField<UserFormValues>
                     name="pin"
@@ -217,27 +223,36 @@ const UserFormPage = () => {
                     inputProps={{ inputMode: 'numeric', maxLength: 4 }}
                   />
                 )}
+
+                <RHFDatePicker<UserFormValues>
+                  name="birthDate"
+                  label={t('fields.birthDate')}
+                  slotProps={{ textField: { helperText: t('fields.birthDateHint') } }}
+                  outputFormat="YYYY-MM-DD"
+                />
               </Box>
+
+              <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
+                <RHFSwitch<UserFormValues>
+                  name="isActive"
+                  label={t('fields.statusToggle')}
+                  disabled={selectedEmploymentStatus === 'archived'}
+                />
+              </Stack>
             </Stack>
 
-            <Divider />
+            {hasHallAccessPermission && (
+              <>
+                <Divider />
 
-            <Stack spacing={2}>
-              <Typography variant="h6">{t('sections.assignment')}</Typography>
-              <Box
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
-                  gap: 3,
-                }}>
-                <RHFSelect<UserFormValues> name="employmentStatus" label={t('fields.employmentStatus')}>
-                  <MenuItem value="active">{t('status.active')}</MenuItem>
-                  <MenuItem value="inactive">{t('status.inactive')}</MenuItem>
-                  <MenuItem value="archived">{t('status.archived')}</MenuItem>
-                </RHFSelect>
-
-                {hasHallAccessPermission && (
-                  <>
+                <Stack spacing={2}>
+                  <Typography variant="h6">{t('sections.assignment')}</Typography>
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
+                      gap: 3,
+                    }}>
                     <RHFSelect<UserFormValues>
                       name="primaryHallId"
                       label={t('fields.primaryHall')}
@@ -259,28 +274,14 @@ const UserFormPage = () => {
                       placeholder={t('labels.notSelected')}
                       helperText={hallsQuery.isLoading ? tCommon('labels.loading') : t('fields.allowedHallsHint')}
                     />
-                  </>
-                )}
+                  </Box>
 
-                <RHFDatePicker<UserFormValues>
-                  name="birthDate"
-                  label={t('fields.birthDate')}
-                  slotProps={{ textField: { helperText: t('fields.birthDateHint') } }}
-                  outputFormat="YYYY-MM-DD"
-                />
-              </Box>
-
-              <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
-                <RHFSwitch<UserFormValues>
-                  name="isActive"
-                  label={t('fields.statusToggle')}
-                  disabled={selectedEmploymentStatus === 'archived'}
-                />
-                {hasHallAccessPermission && (
-                  <RHFSwitch<UserFormValues> name="hallSwitchPermission" label={t('fields.hallSwitchPermission')} />
-                )}
-              </Stack>
-            </Stack>
+                  <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
+                    <RHFSwitch<UserFormValues> name="hallSwitchPermission" label={t('fields.hallSwitchPermission')} />
+                  </Stack>
+                </Stack>
+              </>
+            )}
 
             <Divider />
 

@@ -95,7 +95,7 @@
   },
   "sections": {
     "account": "Kirish va asosiy ma'lumotlar",
-    "assignment": "Ish holati va zalga biriktirish",
+    "assignment": "Zalga biriktirish",
     "payroll": "Mehnat va maosh"
   },
   "permissionScopes": {

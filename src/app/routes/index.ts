@@ -2,7 +2,6 @@ export { AppRoutes, AppRoutesRoot, RoutePath, RouteRootPath, RouterPathHelper } 
 export { getPath } from './get-path';
 export {
   canAccessAdminPath,
-  canAccessBranches,
   canAccessBusinessPartners,
   canAccessCatalog,
   canAccessFeatureConfigs,

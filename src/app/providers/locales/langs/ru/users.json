@@ -95,7 +95,7 @@
   },
   "sections": {
     "account": "Доступ и основные данные",
-    "assignment": "Статус работы и привязка к залу",
+    "assignment": "Привязка к залу",
     "payroll": "Труд и оплата"
   },
   "permissionScopes": {
