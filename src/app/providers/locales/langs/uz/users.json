@@ -119,16 +119,6 @@
     "refund": "Qaytarish",
     "reprint": "Qayta chop etish"
   },
-  "roles": {
-    "productOwner": "Mahsulot egasi",
-    "businessPartner": "Biznes hamkor",
-    "restaurantAdmin": "Restoran admini",
-    "manager": "Menejer",
-    "waiter": "Ofitsiant",
-    "cashier": "Kassir",
-    "chef": "Oshpaz",
-    "barman": "Barmen"
-  },
   "actions": {
     "create": "Yangi xodim",
     "edit": "Tahrirlash",

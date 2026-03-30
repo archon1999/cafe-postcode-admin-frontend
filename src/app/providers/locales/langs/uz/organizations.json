@@ -165,16 +165,6 @@
     "cashier": "Kassa",
     "owner_dashboard": "Rahbar paneli"
   },
-  "featureRoles": {
-    "admin": "Administrator",
-    "owner": "Ega",
-    "manager": "Menejer",
-    "waiter": "Ofitsiant",
-    "cashier": "Kassir",
-    "chef": "Oshpaz",
-    "barman": "Barmen",
-    "universal_operator": "Universal operator"
-  },
   "presetSection": {
     "title": "Tayyor presetlar",
     "description": "Kerakli biznes turini tanlang, keyin xohlasangiz sozlamalarni qo'lda o'zgartiring.",

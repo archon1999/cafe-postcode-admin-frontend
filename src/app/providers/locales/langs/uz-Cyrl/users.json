@@ -119,16 +119,6 @@
     "refund": "Қайтариш",
     "reprint": "Қайта чоп этиш"
   },
-  "roles": {
-    "productOwner": "Маҳсулот эгаси",
-    "businessPartner": "Бизнес ҳамкор",
-    "restaurantAdmin": "Ресторан админи",
-    "manager": "Менежер",
-    "waiter": "Официант",
-    "cashier": "Кассир",
-    "chef": "Ошпаз",
-    "barman": "Бармен"
-  },
   "actions": {
     "create": "Янги ходим",
     "edit": "Таҳрирлаш",

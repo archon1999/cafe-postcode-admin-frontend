@@ -24,7 +24,6 @@ import {
   RHFTextField,
 } from 'shared/ui/HookForm';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
-import { getAdminRoleLabel } from 'shared/utils/admin-role';
 import { formatHallDisplayName } from 'shared/utils/format-hall-display';
 
 import {
@@ -190,7 +189,7 @@ const UserFormPage = () => {
                   helperText={rolesQuery.isLoading ? tCommon('labels.loading') : undefined}>
                   {roles.map((role) => (
                     <MenuItem key={role.id} value={role.id}>
-                      {getAdminRoleLabel(role, t) ?? role.name}
+                      {role.name}
                     </MenuItem>
                   ))}
                 </RHFSelect>

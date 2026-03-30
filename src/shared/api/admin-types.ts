@@ -9,6 +9,7 @@ export type AdminPermission = {
 export type AdminPermissionSummary = Pick<AdminPermission, 'id' | 'code' | 'name'>;
 export type AdminRoleSummary = {
   id: string;
+  code?: string;
   name: string;
 };
 
@@ -277,6 +278,7 @@ export type AdminFeatureConfig = {
   kitchenMode: AdminFeatureKitchenMode;
   enabledModules: string[];
   enabledRoles: string[];
+  enabledRoleDetails?: AdminRoleSummary[];
 };
 
 export type AdminFeatureConfigPayload = {
@@ -563,6 +565,7 @@ export type AdminOrder = {
 
 export type AdminRole = {
   id: string;
+  code: string;
   name: string;
   description: string;
   isSystem: boolean;
@@ -580,6 +583,8 @@ export type CatalogCategory = {
   name: string;
   mxikCode: string;
   mxikName?: string;
+  imageUrl?: string | null;
+  imageSource?: 'mxik-cache' | 'manual' | null;
   sortOrder: number;
   isActive: boolean;
 };
@@ -807,6 +812,7 @@ export type AdminCatalogCategoriesQueryParams = AdminListQueryParams & {
 
 export type AdminCatalogItemsQueryParams = AdminListQueryParams & {
   categoryIdIn?: string;
+  isActive?: boolean;
   isStoplisted?: boolean;
 };
 

@@ -13,6 +13,7 @@ import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath, canAccessMyRestaurant, canAccessRestaurants } from 'app/routes';
 import { useCurrentUser } from 'modules/auth/domain/services/current-user';
+import { useGetRolesQuery } from 'modules/users/application';
 import { useParams, useRedirectOnNotFound, useRouter } from 'shared/hooks/router';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { FormActions } from 'shared/ui/FormActions';
@@ -47,16 +48,6 @@ const ROLE_OPTIONS = [
   'barman',
   'universal_operator',
 ] as const;
-const ROLE_LABELS = {
-  admin: 'Administrator',
-  owner: 'Ega',
-  manager: 'Menejer',
-  waiter: 'Ofitsiant',
-  cashier: 'Kassir',
-  chef: 'Oshpaz',
-  barman: 'Barmen',
-  universal_operator: 'Universal operator',
-} as const;
 
 const DEFAULT_VALUES: Values = {
   hallEnabled: true,
@@ -91,6 +82,7 @@ const FeatureConfigFormPage = () => {
   const query = useGetRestaurantFeatureConfigQuery(restaurantId ?? '', {
     enabled: Boolean(restaurantId) && canAccessFeatureConfig,
   });
+  const rolesQuery = useGetRolesQuery({ enabled: canAccessFeatureConfig });
   const upsertMutation = useUpsertRestaurantFeatureConfigMutation(restaurantId ?? '');
 
   useRedirectOnNotFound(query.error, Boolean(restaurantId));
@@ -132,6 +124,7 @@ const FeatureConfigFormPage = () => {
   const filteredRoles = enabledRoles.filter((role) =>
     availableRoleOptions.includes(role as (typeof ROLE_OPTIONS)[number]),
   );
+  const rolesByCode = new Map((rolesQuery.data ?? []).map((role) => [role.code, role.name]));
 
   useEffect(() => {
     if (!query.data) {
@@ -347,7 +340,7 @@ const FeatureConfigFormPage = () => {
                 helperText={enabledRolesHelperText}
                 options={availableRoleOptions.map((role) => ({
                   value: role,
-                  label: t(`featureRoles.${role}`, { defaultValue: ROLE_LABELS[role] }),
+                  label: rolesByCode.get(role) ?? role,
                 }))}
                 sx={{ gridColumn: { lg: '1 / -1' } }}
               />

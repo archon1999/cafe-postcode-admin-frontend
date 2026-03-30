@@ -18,7 +18,6 @@ import { useRouter } from 'shared/hooks/router';
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState, withDetailLink } from 'shared/ui/CustomDataGrid';
 import { type FilterOption } from 'shared/ui/Filters';
 import { Iconify } from 'shared/ui/Iconify';
-import { getAdminRoleLabel } from 'shared/utils/admin-role';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 
 import {
@@ -75,7 +74,7 @@ export function UsersGrid() {
     () =>
       (rolesQuery.data ?? []).map((role) => ({
         value: role.id,
-        label: getAdminRoleLabel(role, t) ?? role.name,
+        label: role.name,
       })),
     [rolesQuery.data, t],
   );
@@ -102,7 +101,7 @@ export function UsersGrid() {
         headerName: t('fields.role'),
         minWidth: 190,
         flex: 1,
-        valueGetter: (_, row) => getAdminRoleLabel(row.role, t) ?? t('labels.withoutRole'),
+        valueGetter: (_, row) => row.role?.name ?? t('labels.withoutRole'),
       },
       {
         field: 'employmentStatus',

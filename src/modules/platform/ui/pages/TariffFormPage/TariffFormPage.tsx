@@ -18,7 +18,6 @@ import { FormActions } from 'shared/ui/FormActions';
 import { Form, RHFMultiSelect, RHFSelect, RHFSumCurrencyField, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 import { getAdminPermissionLabel } from 'shared/utils/admin-permission';
-import { getAdminRoleLabel } from 'shared/utils/admin-role';
 
 import { useCreateTariffMutation, useGetTariffByIdQuery, useUpdateTariffMutation } from '../../../application';
 
@@ -103,7 +102,7 @@ const TariffFormPage = () => {
         .filter((role) => role.isSystem)
         .map((role) => ({
           value: role.id,
-          label: getAdminRoleLabel(role, t) ?? role.name,
+          label: role.name,
         })),
     [rolesQuery.data, t],
   );

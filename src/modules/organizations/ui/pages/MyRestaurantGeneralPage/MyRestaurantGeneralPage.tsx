@@ -47,6 +47,10 @@ const MyRestaurantGeneralPage = () => {
     () => featureConfigQuery.data?.enabledRoles ?? [],
     [featureConfigQuery.data?.enabledRoles],
   );
+  const enabledRoleDetails = useMemo(
+    () => featureConfigQuery.data?.enabledRoleDetails ?? [],
+    [featureConfigQuery.data?.enabledRoleDetails],
+  );
 
   if (profile && (!canManageMyRestaurant || !restaurantId)) {
     return null;
@@ -208,13 +212,8 @@ const MyRestaurantGeneralPage = () => {
                   </Typography>
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                     {enabledRoles.length ? (
-                      enabledRoles.map((roleCode) => (
-                        <Chip
-                          key={roleCode}
-                          size="small"
-                          variant="outlined"
-                          label={t(`featureRoles.${roleCode}`, { defaultValue: roleCode })}
-                        />
+                      (enabledRoleDetails.length ? enabledRoleDetails : enabledRoles.map((roleCode) => ({ id: roleCode, name: roleCode }))).map((role) => (
+                        <Chip key={role.id} size="small" variant="outlined" label={role.name} />
                       ))
                     ) : (
                       <Typography variant="body2" color="text.secondary">

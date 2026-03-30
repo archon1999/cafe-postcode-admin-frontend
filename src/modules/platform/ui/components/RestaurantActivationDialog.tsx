@@ -14,7 +14,6 @@ import { useTranslate } from 'app/providers/locales';
 import type { AdminRestaurantActivationPayload, AdminTariff } from 'shared/api/admin-types';
 import { Form, RHFDatePicker, RHFMultiSelect, RHFSelect, RHFSumCurrencyField, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
 import { getAdminPermissionLabel } from 'shared/utils/admin-permission';
-import { getAdminRoleLabel } from 'shared/utils/admin-role';
 import { toTashkentCalendarDayjs } from 'shared/utils/dayjs';
 
 import { useGetPermissionsQuery, useGetRolesQuery } from 'modules/users/application';
@@ -111,7 +110,7 @@ export function RestaurantActivationDialog({
         .filter((role) => role.isSystem)
         .map((role) => ({
           value: role.id,
-          label: getAdminRoleLabel(role, t) ?? role.name,
+          label: role.name,
         })),
     [rolesQuery.data, t],
   );

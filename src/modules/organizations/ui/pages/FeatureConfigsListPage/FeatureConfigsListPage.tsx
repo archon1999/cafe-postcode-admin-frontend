@@ -113,9 +113,11 @@ const FeatureConfigsListPage = () => {
         minWidth: 220,
         flex: 1,
         renderCell: ({ row }) =>
-          row.enabledRoles
+          (row.enabledRoleDetails?.length
+            ? row.enabledRoleDetails.map((role) => role.name)
+            : row.enabledRoles
+          )
             .slice(0, 3)
-            .map((role) => t(`featureRoles.${role}`))
             .join(', ') || '-',
       },
       {

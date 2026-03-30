@@ -21,7 +21,6 @@ import { Iconify, type IconifyName } from 'shared/ui/Iconify';
 import { Label } from 'shared/ui/Label';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 import { RouterLink } from 'shared/ui/RouterLink';
-import { getAdminRoleLabel } from 'shared/utils/admin-role';
 import { formatHallDisplayName } from 'shared/utils/format-hall-display';
 import { formatMoney } from 'shared/utils/format-money';
 
@@ -195,7 +194,7 @@ const ViewUserPage = () => {
   const yesLabel = tCommon('labels.yes', { defaultValue: 'Ha' });
   const noLabel = tCommon('labels.no', { defaultValue: "Yo'q" });
   const currentStatus = user.employmentStatus ?? (user.isActive ? 'active' : 'inactive');
-  const roleLabel = getAdminRoleLabel(user.role, t) ?? t('labels.withoutRole');
+  const roleLabel = user.role?.name ?? t('labels.withoutRole');
   const primaryHall = (hallsQuery.data ?? []).find((hall) => hall.id === user.primaryHallId);
   const primaryHallName = primaryHall
     ? formatHallDisplayName(primaryHall.name, undefined, tCommon)

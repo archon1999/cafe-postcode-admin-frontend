@@ -22,7 +22,6 @@ import type { FilterOption } from 'shared/ui/Filters';
 import { Iconify } from 'shared/ui/Iconify';
 import { RouterLink } from 'shared/ui/RouterLink';
 import { getAdminPermissionLabel } from 'shared/utils/admin-permission';
-import { getAdminRoleLabel } from 'shared/utils/admin-role';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 
 import { useDeleteRoleMutation, useGetPermissionsQuery, useGetRolesListQuery } from '../../../application';
@@ -96,7 +95,7 @@ const RolesListPage = () => {
         headerName: t('fields.role'),
         minWidth: 220,
         flex: 1,
-        valueGetter: (_value, row) => getAdminRoleLabel(row, t) ?? row.name,
+        valueGetter: (_value, row) => row.name,
       },
       {
         field: 'isSystem',

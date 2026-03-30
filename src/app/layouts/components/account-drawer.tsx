@@ -14,7 +14,6 @@ import { Iconify } from 'shared/ui/Iconify';
 import { Label } from 'shared/ui/Label';
 import { LabelRowWithIcon } from 'shared/ui/LabelRowWithIcon/LabelRowWithIcon';
 import { Scrollbar } from 'shared/ui/Scrollbar';
-import { getAdminRoleLabel } from 'shared/utils/admin-role';
 
 import { AccountButton } from './account-button';
 import { SignOutButton } from './sign-out-button';
@@ -37,7 +36,7 @@ export function AccountDrawer({ sx, ...other }: AccountDrawerProps) {
   const displayName = user?.displayName ?? t('labels.user');
   const photoURL = user?.photoURL ?? '';
   const avatarFallback = displayName.charAt(0).toUpperCase() || '?';
-  const roleLabel = getAdminRoleLabel(profile?.role, tUsers) ?? user?.roleLabel ?? '-';
+  const roleLabel = profile?.role?.name ?? user?.roleLabel ?? '-';
   const permissions = profile?.permissionCodes ?? [];
 
   return (

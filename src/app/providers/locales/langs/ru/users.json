@@ -119,16 +119,6 @@
     "refund": "Возврат",
     "reprint": "Повторная печать"
   },
-  "roles": {
-    "productOwner": "Владелец продукта",
-    "businessPartner": "Бизнес-партнер",
-    "restaurantAdmin": "Администратор ресторана",
-    "manager": "Менеджер",
-    "waiter": "Официант",
-    "cashier": "Кассир",
-    "chef": "Повар",
-    "barman": "Бармен"
-  },
   "actions": {
     "create": "Новый сотрудник",
     "edit": "Редактировать",
