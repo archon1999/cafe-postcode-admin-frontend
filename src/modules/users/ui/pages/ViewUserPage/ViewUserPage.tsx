@@ -258,7 +258,7 @@ const ViewUserPage = () => {
   return (
     <Content>
       <CustomBreadcrumbs
-        heading={user.fullName}
+        heading={t('pages.view.title', { defaultValue: 'Xodim tavsilotlari' })}
         links={[{ name: t('pages.list.title'), href: RoutePath.userList }, { name: user.fullName }]}
         action={
           <Button
@@ -338,7 +338,7 @@ const ViewUserPage = () => {
                 </Grid>
 
                 <Grid size={{ xs: 12, md: 6 }}>
-                  <Box sx={{ p: 2.5, borderLeft: { md: 1 }, borderColor: 'divider', borderTop: { xs: 1, md: 0 } }}>
+                  <Box sx={{ p: 2.5 }}>
                     <Typography variant="subtitle1" sx={{ mb: 2 }}>
                       {t('sections.assignment')}
                     </Typography>

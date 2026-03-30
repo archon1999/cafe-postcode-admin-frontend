@@ -23,6 +23,9 @@
     "edit": {
       "title": "Xodimni tahrirlash",
       "description": "Xodimning holati va ma'lumotlarini yangilang."
+    },
+    "view": {
+      "title": "Xodim tavsilotlari"
     }
   },
   "fields": {

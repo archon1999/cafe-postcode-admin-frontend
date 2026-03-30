@@ -64,7 +64,6 @@ const UserFormPage = () => {
   const selectedRoleId = watch('roleId');
   const selectedSalaryType = watch('salaryType');
   const selectedEmploymentStatus = watch('employmentStatus');
-  const selectedIsActive = watch('isActive');
   const selectedPrimaryHallId = watch('primaryHallId');
   const selectedAllowedHallIds = watch('allowedHallIds');
   const roles = Array.isArray(rolesQuery.data) ? rolesQuery.data : [];
@@ -91,12 +90,6 @@ const UserFormPage = () => {
 
     setValue('isActive', selectedEmploymentStatus === 'active');
   }, [selectedEmploymentStatus, setValue]);
-
-  useEffect(() => {
-    if (selectedEmploymentStatus !== 'archived') {
-      setValue('employmentStatus', selectedIsActive ? 'active' : 'inactive');
-    }
-  }, [selectedIsActive, selectedEmploymentStatus, setValue]);
 
   useEffect(() => {
     if (selectedSalaryType !== 'kpi') {
@@ -232,13 +225,6 @@ const UserFormPage = () => {
                 />
               </Box>
 
-              <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
-                <RHFSwitch<UserFormValues>
-                  name="isActive"
-                  label={t('fields.statusToggle')}
-                  disabled={selectedEmploymentStatus === 'archived'}
-                />
-              </Stack>
             </Stack>
 
             {hasHallAccessPermission && (
