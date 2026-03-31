@@ -1,34 +1,115 @@
-import type { AdminSessionUser } from 'shared/api/admin-types';
+import type { AdminSessionUser } from "shared/api/admin-types";
 
-import { AppRoutesRoot, RoutePath, RouteRootPath } from './route-paths';
+import { AppRoutesRoot, RoutePath, RouteRootPath } from "./route-paths";
 
-export type AdminAccessSnapshot = Pick<AdminSessionUser, 'isSuperuser' | 'permissionCodes' | 'restaurantAccessActive'>;
+export type AdminAccessSnapshot = Pick<AdminSessionUser, "isSuperuser" | "permissionCodes" | "restaurantAccessActive">;
 
 type PermissionCode = string;
 
-const PARTNER_PERMISSION_CODES: PermissionCode[] = ['partners.view', 'partners.manage'];
-const TARIFF_PERMISSION_CODES: PermissionCode[] = ['tariffs.view', 'tariffs.manage'];
+const BUSINESS_PARTNER_PERMISSION_CODES: PermissionCode[] = [
+  "business_partners.list",
+  "business_partners.view",
+  "business_partners.create",
+  "business_partners.update",
+  "business_partners.activate",
+  "business_partners.deactivate",
+  "business_partners.reset_password",
+];
+const TARIFF_PERMISSION_CODES: PermissionCode[] = ["tariffs.list", "tariffs.view", "tariffs.create", "tariffs.update"];
 const RESTAURANT_PERMISSION_CODES: PermissionCode[] = [
-  'restaurants.view',
-  'restaurants.manage',
-  'restaurants.activate',
-  'restaurants.deactivate',
-  'restaurants.reset_password',
+  "restaurants.list",
+  "restaurants.view",
+  "restaurants.create",
+  "restaurants.update",
+  "restaurants.delete",
+  "restaurants.activate",
+  "restaurants.deactivate",
+  "restaurants.reset_password",
 ];
-const ORDER_PERMISSION_CODES: PermissionCode[] = ['orders.view', 'orders.manage'];
-const PAYMENT_PERMISSION_CODES: PermissionCode[] = ['payments.view', 'payments.manage', 'payments.create'];
-const KITCHEN_PERMISSION_CODES: PermissionCode[] = ['kitchen.view', 'kitchen.update', 'kitchen.manage'];
-const CATALOG_PERMISSION_CODES: PermissionCode[] = ['catalog.view', 'catalog.manage'];
-const FLOOR_PERMISSION_CODES: PermissionCode[] = ['hall.view', 'hall.manage', 'table.manage'];
+const REPORT_PERMISSION_CODES: PermissionCode[] = [
+  "reports.summary.view",
+  "reports.sales.view",
+  "reports.open_checks.view",
+  "reports.top_items.view",
+  "reports.top_staff.view",
+  "reports.payment_breakdown.view",
+  "reports.shifts.view",
+];
+const ORDER_PERMISSION_CODES: PermissionCode[] = [
+  "orders.list",
+  "orders.view",
+  "order_items.list",
+  "order_items.view",
+  "order_item_notes.list",
+  "order_item_notes.view",
+];
+const PAYMENT_PERMISSION_CODES: PermissionCode[] = ["payments.list", "payments.view", "receipts.list", "receipts.view"];
+const KITCHEN_PERMISSION_CODES: PermissionCode[] = ["kitchen_tickets.list", "kitchen_tickets.view"];
+const CATALOG_PERMISSION_CODES: PermissionCode[] = [
+  "catalog_categories.list",
+  "catalog_categories.view",
+  "catalog_categories.create",
+  "catalog_categories.update",
+  "catalog_items.list",
+  "catalog_items.view",
+  "catalog_items.create",
+  "catalog_items.update",
+];
+const FLOOR_PERMISSION_CODES: PermissionCode[] = [
+  "halls.list",
+  "halls.view",
+  "halls.create",
+  "halls.update",
+  "zones.list",
+  "zones.view",
+  "zones.create",
+  "zones.update",
+  "tables.list",
+  "tables.view",
+  "tables.create",
+  "tables.update",
+  "table_sessions.list",
+  "table_sessions.view",
+  "table_sessions.create",
+  "table_sessions.update",
+  "halls.update_layout",
+];
 const MY_RESTAURANT_GENERAL_PERMISSION_CODES: PermissionCode[] = [
-  'restaurants.view',
-  'restaurants.manage',
-  'integrations.manage',
-  'cashdesk.manage',
+  "restaurant_settings.view",
+  "restaurant_settings.update",
+  "restaurant_feature_configs.view",
+  "restaurant_feature_configs.update",
 ];
-const MY_RESTAURANT_CASH_DESK_PERMISSION_CODES: PermissionCode[] = ['cashdesk.manage'];
-const MY_RESTAURANT_INTEGRATION_PERMISSION_CODES: PermissionCode[] = ['integrations.manage'];
-const SYSTEM_PERMISSION_CODES: PermissionCode[] = ['users.manage', 'permissions.view', 'roles.view'];
+const MY_RESTAURANT_CASH_DESK_PERMISSION_CODES: PermissionCode[] = [
+  "cash_desks.list",
+  "cash_desks.view",
+  "cash_desks.create",
+  "cash_desks.update",
+];
+const MY_RESTAURANT_DEVICE_PERMISSION_CODES: PermissionCode[] = ["devices.list", "devices.view", "devices.create", "devices.update"];
+const MY_RESTAURANT_PREP_STATION_PERMISSION_CODES: PermissionCode[] = [
+  "prep_stations.list",
+  "prep_stations.view",
+  "prep_stations.create",
+  "prep_stations.update",
+];
+const MY_RESTAURANT_DISTRIBUTION_POINT_PERMISSION_CODES: PermissionCode[] = [
+  "distribution_points.list",
+  "distribution_points.view",
+  "distribution_points.create",
+  "distribution_points.update",
+];
+const SYSTEM_PERMISSION_CODES: PermissionCode[] = [
+  "users.list",
+  "users.view",
+  "users.create",
+  "users.update",
+  "roles.list",
+  "roles.view",
+  "roles.create",
+  "roles.update",
+  "permissions.list",
+];
 
 const ADMIN_LANDING_CANDIDATES = [
   RoutePath.platformBusinessPartnerList,
@@ -65,7 +146,7 @@ function matchesPrefix(pathname: string, prefix: string) {
 }
 
 export function canAccessBusinessPartners(snapshot?: AdminAccessSnapshot | null) {
-  return hasAnyPermission(snapshot, PARTNER_PERMISSION_CODES);
+  return hasAnyPermission(snapshot, BUSINESS_PARTNER_PERMISSION_CODES);
 }
 
 export function canAccessTariffs(snapshot?: AdminAccessSnapshot | null) {
@@ -77,7 +158,7 @@ export function canAccessRestaurants(snapshot?: AdminAccessSnapshot | null) {
 }
 
 export function canAccessReports(snapshot?: AdminAccessSnapshot | null) {
-  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, ['reports.view']);
+  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, REPORT_PERMISSION_CODES);
 }
 
 export function canAccessOrders(snapshot?: AdminAccessSnapshot | null) {
@@ -101,15 +182,15 @@ export function canAccessFloor(snapshot?: AdminAccessSnapshot | null) {
 }
 
 export function canAccessUsers(snapshot?: AdminAccessSnapshot | null) {
-  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, ['users.manage']);
+  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, ["users.list", "users.view", "users.create", "users.update"]);
 }
 
 export function canAccessRoles(snapshot?: AdminAccessSnapshot | null) {
-  return Boolean(snapshot?.isSuperuser) || hasAnyPermission(snapshot, ['roles.view']);
+  return Boolean(snapshot?.isSuperuser) || hasAnyPermission(snapshot, ["roles.list", "roles.view", "roles.create", "roles.update"]);
 }
 
 export function canAccessPermissions(snapshot?: AdminAccessSnapshot | null) {
-  return Boolean(snapshot?.isSuperuser) || hasAnyPermission(snapshot, ['permissions.view']);
+  return Boolean(snapshot?.isSuperuser) || hasAnyPermission(snapshot, ["permissions.list"]);
 }
 
 export function canAccessFeatureConfigs(_snapshot?: AdminAccessSnapshot | null) {
@@ -139,18 +220,19 @@ export function canAccessMyRestaurantCashDesks(snapshot?: AdminAccessSnapshot | 
 }
 
 export function canAccessMyRestaurantDevices(snapshot?: AdminAccessSnapshot | null) {
-  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, MY_RESTAURANT_INTEGRATION_PERMISSION_CODES);
+  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, MY_RESTAURANT_DEVICE_PERMISSION_CODES);
 }
 
 export function canAccessMyRestaurantPrepStations(snapshot?: AdminAccessSnapshot | null) {
-  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, MY_RESTAURANT_INTEGRATION_PERMISSION_CODES);
+  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, MY_RESTAURANT_PREP_STATION_PERMISSION_CODES);
 }
 
 export function canAccessMyRestaurantDistributionPoints(snapshot?: AdminAccessSnapshot | null) {
-  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, MY_RESTAURANT_INTEGRATION_PERMISSION_CODES);
+  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, MY_RESTAURANT_DISTRIBUTION_POINT_PERMISSION_CODES);
 }
 
 const MY_RESTAURANT_LANDING_CANDIDATES = [
+  RoutePath.organizationMyRestaurantGeneral,
   RoutePath.organizationMyRestaurantCashDeskList,
   RoutePath.organizationMyRestaurantPrepStationList,
   RoutePath.organizationMyRestaurantDeviceList,
@@ -198,11 +280,14 @@ export function canAccessAdminPath(pathname: string, snapshot?: AdminAccessSnaps
     return canAccessMyRestaurantDistributionPoints(snapshot);
   }
 
+  if (pathname.includes("/restaurants/") && pathname.endsWith("/feature-config")) {
+    return canAccessMyRestaurantGeneral(snapshot) || canAccessRestaurants(snapshot);
+  }
+
   if (
     pathname !== RoutePath.organizationRestaurantList &&
     pathname !== RoutePath.organizationRestaurantCreate &&
-    (matchesPrefix(pathname, `${RouteRootPath[AppRoutesRoot.ORGANIZATIONS]}/restaurants/`) ||
-      matchesPrefix(pathname, `${RouteRootPath[AppRoutesRoot.ORGANIZATIONS]}/restaurants`))
+    matchesPrefix(pathname, `${RouteRootPath[AppRoutesRoot.ORGANIZATIONS]}/restaurants`)
   ) {
     return canAccessRestaurants(snapshot) || canAccessMyRestaurant(snapshot);
   }
