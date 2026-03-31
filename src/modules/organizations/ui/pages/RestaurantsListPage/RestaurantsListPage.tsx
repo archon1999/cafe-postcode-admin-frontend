@@ -134,13 +134,6 @@ const RestaurantsListPage = () => {
           />,
           <CustomGridActionsCellItem
             actionKind="view"
-            key="feature-config"
-            label={t('actions.manageFeatureConfig', { defaultValue: 'POS konfiguratsiyasi' })}
-            icon={<Iconify icon="solar:settings-bold" />}
-            href={RouterPathHelper.organizationRestaurantFeatureConfig(params.row.id)}
-          />,
-          <CustomGridActionsCellItem
-            actionKind="view"
             key="reset-password"
             label={tPlatform('actions.resetPassword')}
             icon={<Iconify icon="solar:refresh-bold" />}

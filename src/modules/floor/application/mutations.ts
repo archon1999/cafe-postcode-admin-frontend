@@ -5,6 +5,7 @@ import type {
   AdminHallConstructorPayload,
   AdminHallPayload,
   AdminTableSessionPayload,
+  AdminZoneOrCabinPayload,
 } from 'shared/api/admin-types';
 
 import { floorRepository } from '../data-access';
@@ -50,6 +51,31 @@ export function useDeleteHallMutation() {
   return useMutation({
     mutationFn: (id: string) => floorRepository.deleteHall(id),
     onSuccess: async () => invalidateQueryKeys(queryClient, [floorKeys.halls()]),
+  });
+}
+
+export function useCreateZoneMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: AdminZoneOrCabinPayload) => floorRepository.createZone(payload),
+    onSuccess: async () => invalidateQueryKeys(queryClient, [floorKeys.zones(), floorKeys.halls()]),
+  });
+}
+
+export function useUpdateZoneMutation(id: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: AdminZoneOrCabinPayload) => floorRepository.updateZone(id, payload),
+    onSuccess: async () =>
+      invalidateQueryKeys(queryClient, [floorKeys.zones(), floorKeys.zoneDetail(id), floorKeys.halls()]),
+  });
+}
+
+export function useDeleteZoneMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => floorRepository.deleteZone(id),
+    onSuccess: async () => invalidateQueryKeys(queryClient, [floorKeys.zones(), floorKeys.halls()]),
   });
 }
 

@@ -8,6 +8,8 @@ import type {
   AdminTableSession,
   AdminTableSessionPayload,
   AdminUser,
+  AdminZoneOrCabin,
+  AdminZoneOrCabinPayload,
 } from 'shared/api/admin-types';
 
 export interface FloorRepository {
@@ -15,10 +17,15 @@ export interface FloorRepository {
   getHalls(): Promise<AdminHall[]>;
   getHallById(id: string): Promise<AdminHall>;
   getHallConstructor(id: string): Promise<AdminHallConstructor>;
+  getZones(): Promise<AdminZoneOrCabin[]>;
+  getZoneById(id: string): Promise<AdminZoneOrCabin>;
   createHall(payload: AdminHallPayload): Promise<AdminHall>;
   updateHall(id: string, payload: AdminHallPayload): Promise<AdminHall>;
   updateHallConstructor(id: string, payload: AdminHallConstructorPayload): Promise<AdminHallConstructor>;
   deleteHall(id: string): Promise<void>;
+  createZone(payload: AdminZoneOrCabinPayload): Promise<AdminZoneOrCabin>;
+  updateZone(id: string, payload: AdminZoneOrCabinPayload): Promise<AdminZoneOrCabin>;
+  deleteZone(id: string): Promise<void>;
   getDiningTables(): Promise<AdminDiningTable[]>;
   getDiningTableById(id: string): Promise<AdminDiningTable>;
   createDiningTable(payload: AdminDiningTablePayload): Promise<AdminDiningTable>;

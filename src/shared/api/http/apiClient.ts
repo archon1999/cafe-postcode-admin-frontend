@@ -78,6 +78,9 @@ import type {
   AdminUser,
   AdminUserPayload,
   AdminUsersQueryParams,
+  AdminZoneOrCabin,
+  AdminZoneOrCabinPayload,
+  AdminZonesQueryParams,
   CatalogCategory,
   AdminCatalogCategoriesQueryParams,
   CatalogCategoryPayload,
@@ -165,8 +168,8 @@ export const apiClient = {
           page: params.page,
           pageSize: params.pageSize,
           search: params.search,
-          roleIdIn: params.roleIdIn,
-          employmentStatusIn: params.employmentStatusIn,
+          role_id_in: params.roleIdIn,
+          employment_status_in: params.employmentStatusIn,
           ordering: params.ordering,
         },
       })
@@ -198,8 +201,8 @@ export const apiClient = {
           page: params.page,
           pageSize: params.pageSize,
           search: params.search,
-          typeIn: params.typeIn,
-          permissionCodeIn: params.permissionCodeIn,
+          type_in: params.typeIn,
+          permission_code_in: params.permissionCodeIn,
           ordering: params.ordering,
         },
       })
@@ -235,8 +238,8 @@ export const apiClient = {
           page: params.page,
           pageSize: params.pageSize,
           search: params.search,
-          scopeIn: params.scopeIn,
-          actionIn: params.actionIn,
+          scope_in: params.scopeIn,
+          action_in: params.actionIn,
           ordering: params.ordering,
         },
       })
@@ -265,6 +268,38 @@ export const apiClient = {
     return instance
       .get<AdminHallConstructor>(`/api/v1/admin/floor/halls/${id}/constructor/`)
       .then((response) => response.data);
+  },
+
+  getAdminZones(params?: AdminZonesQueryParams) {
+    return instance
+      .get<AdminPaginatedResponse<AdminZoneOrCabin>>('/api/v1/admin/floor/zones/', {
+        params: {
+          page: params?.page,
+          pageSize: params?.pageSize,
+          search: params?.search,
+          hall_id_in: params?.hallIdIn,
+          is_private: params?.isPrivate,
+          is_active: params?.isActive,
+          ordering: params?.ordering,
+        },
+      })
+      .then((response) => response.data);
+  },
+
+  getAdminZoneById(id: string) {
+    return instance.get<AdminZoneOrCabin>(`/api/v1/admin/floor/zones/${id}/`).then((response) => response.data);
+  },
+
+  createAdminZone(payload: AdminZoneOrCabinPayload) {
+    return instance.post<AdminZoneOrCabin>('/api/v1/admin/floor/zones/', payload).then((response) => response.data);
+  },
+
+  updateAdminZone(id: string, payload: AdminZoneOrCabinPayload) {
+    return instance.put<AdminZoneOrCabin>(`/api/v1/admin/floor/zones/${id}/`, payload).then((response) => response.data);
+  },
+
+  deleteAdminZone(id: string) {
+    return instance.delete<void>(`/api/v1/admin/floor/zones/${id}/`).then((response) => response.data);
   },
 
   createAdminHall(payload: AdminHallPayload) {
@@ -835,6 +870,7 @@ export const apiClient = {
           pageSize: params?.pageSize,
           search: params?.search,
           categoryIdIn: params?.categoryIdIn,
+          isActive: params?.isActive,
           isStoplisted: params?.isStoplisted,
           ordering: params?.ordering,
         },

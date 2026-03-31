@@ -71,6 +71,24 @@ export type AdminHallPayload = {
   isActive: boolean;
 };
 
+export type AdminZoneOrCabin = {
+  id: string;
+  hall: string;
+  hallName?: string | null;
+  name: string;
+  isPrivate: boolean;
+  sortOrder: number;
+  isActive: boolean;
+};
+
+export type AdminZoneOrCabinPayload = {
+  hall: string;
+  name: string;
+  isPrivate: boolean;
+  sortOrder: number;
+  isActive: boolean;
+};
+
 export type AdminActiveTableSessionSummary = {
   id: string;
   guestCount: number;
@@ -817,6 +835,12 @@ export type AdminCatalogItemsQueryParams = AdminListQueryParams & {
 };
 
 export type AdminHallsQueryParams = AdminListQueryParams & {
+  isActive?: boolean;
+};
+
+export type AdminZonesQueryParams = AdminListQueryParams & {
+  hallIdIn?: string;
+  isPrivate?: boolean;
   isActive?: boolean;
 };
 

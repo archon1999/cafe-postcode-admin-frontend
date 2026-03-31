@@ -3,7 +3,7 @@ import IconButton from '@mui/material/IconButton';
 import Popover from '@mui/material/Popover';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 import type { AdminPermission } from 'shared/api/admin-types';
 import { Iconify } from 'shared/ui/Iconify';
@@ -18,7 +18,6 @@ type PermissionPreviewProps = {
 
 export function PermissionPreview({ permissions, t, maxVisible = 3 }: PermissionPreviewProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const closeTimerRef = useRef<number | null>(null);
 
   const permissionLabels = permissions.map((permission) => ({
     code: permission.code,
@@ -26,18 +25,7 @@ export function PermissionPreview({ permissions, t, maxVisible = 3 }: Permission
   }));
   const visiblePermissions = permissionLabels.slice(0, maxVisible);
   const hiddenPermissions = permissionLabels.slice(maxVisible);
-
-  const clearCloseTimer = () => {
-    if (closeTimerRef.current) {
-      window.clearTimeout(closeTimerRef.current);
-      closeTimerRef.current = null;
-    }
-  };
-
-  const scheduleClose = () => {
-    clearCloseTimer();
-    closeTimerRef.current = window.setTimeout(() => setAnchorEl(null), 100);
-  };
+  const previewText = visiblePermissions.map((permission) => permission.label).join(', ');
 
   if (!permissions.length) {
     return (
@@ -48,60 +36,64 @@ export function PermissionPreview({ permissions, t, maxVisible = 3 }: Permission
   }
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, minWidth: 0 }}>
-      <Stack direction="row" spacing={0.75} sx={{ minWidth: 0, flexWrap: 'nowrap', overflow: 'hidden' }}>
-        {visiblePermissions.map((permission) => (
-          <Label
-            key={permission.code}
-            color="default"
-            variant="soft"
-            sx={{ whiteSpace: 'nowrap', maxWidth: 160 }}
-            title={permission.label}>
-            {permission.label}
-          </Label>
-        ))}
-      </Stack>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0, width: '100%' }}>
+      <Box sx={{ minWidth: 0, flex: 1 }}>
+        <Typography variant="caption" color="text.secondary" noWrap>
+          {`${t('fields.permissions')}: ${permissions.length}`}
+        </Typography>
+
+        <Typography
+          variant="body2"
+          title={previewText}
+          sx={{
+            minWidth: 0,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            fontWeight: 500,
+          }}>
+          {previewText}
+        </Typography>
+      </Box>
 
       {hiddenPermissions.length > 0 && (
-        <>
-          <IconButton
-            size="small"
-            onMouseEnter={(event) => {
-              clearCloseTimer();
-              setAnchorEl(event.currentTarget);
-            }}
-            onMouseLeave={scheduleClose}
-            aria-label={t('labels.morePermissions')}>
-            <Iconify icon="solar:menu-dots-bold" width={18} />
-          </IconButton>
-
-          <Popover
-            open={Boolean(anchorEl)}
-            anchorEl={anchorEl}
-            onClose={() => setAnchorEl(null)}
-            disableRestoreFocus
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-            slotProps={{
-              paper: {
-                onMouseEnter: clearCloseTimer,
-                onMouseLeave: scheduleClose,
-                sx: {
-                  p: 1.5,
-                  minWidth: 280,
-                },
-              },
-            }}>
-            <Stack spacing={1}>
-              {permissionLabels.map((permission) => (
-                <Typography key={permission.code} variant="body2">
-                  {permission.label}
-                </Typography>
-              ))}
-            </Stack>
-          </Popover>
-        </>
+        <Label color="info" variant="soft" sx={{ flexShrink: 0 }}>
+          +{hiddenPermissions.length}
+        </Label>
       )}
+
+      <IconButton
+        size="small"
+        onClick={(event) => setAnchorEl(anchorEl ? null : event.currentTarget)}
+        aria-label={t('fields.permissions')}
+        sx={{ flexShrink: 0 }}>
+        <Iconify icon="solar:list-bold" width={16} />
+      </IconButton>
+
+      <Popover
+        open={Boolean(anchorEl)}
+        anchorEl={anchorEl}
+        onClose={() => setAnchorEl(null)}
+        disableRestoreFocus
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        slotProps={{
+          paper: {
+            sx: {
+              p: 1.5,
+              minWidth: 320,
+              maxWidth: 420,
+            },
+          },
+        }}>
+        <Stack spacing={1}>
+          {permissionLabels.map((permission) => (
+            <Typography key={permission.code} variant="body2">
+              {permission.label}
+            </Typography>
+          ))}
+        </Stack>
+      </Popover>
     </Box>
   );
 }

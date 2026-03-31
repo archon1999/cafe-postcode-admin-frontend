@@ -10,6 +10,8 @@ import type {
   AdminTableSession,
   AdminTableSessionsQueryParams,
   AdminUser,
+  AdminZoneOrCabin,
+  AdminZonesQueryParams,
 } from 'shared/api/admin-types';
 import { apiClient } from 'shared/api/http/apiClient';
 
@@ -60,6 +62,37 @@ export function useGetHallConstructorQuery(
   return useQuery({
     queryKey: floorKeys.hallConstructor(id),
     queryFn: () => floorRepository.getHallConstructor(id),
+    enabled: Boolean(id),
+    ...options,
+  });
+}
+
+export function useGetZonesQuery(options?: Omit<UseQueryOptions<AdminZoneOrCabin[]>, 'queryFn' | 'queryKey'>) {
+  return useQuery({
+    queryKey: floorKeys.zones(),
+    queryFn: () => floorRepository.getZones(),
+    ...options,
+  });
+}
+
+export function useGetZonesListQuery(
+  params: AdminZonesQueryParams,
+  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminZoneOrCabin>>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: floorKeys.zonesList(params),
+    queryFn: () => apiClient.getAdminZones(params),
+    ...options,
+  });
+}
+
+export function useGetZoneByIdQuery(
+  id: string,
+  options?: Omit<UseQueryOptions<AdminZoneOrCabin>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: floorKeys.zoneDetail(id),
+    queryFn: () => floorRepository.getZoneById(id),
     enabled: Boolean(id),
     ...options,
   });

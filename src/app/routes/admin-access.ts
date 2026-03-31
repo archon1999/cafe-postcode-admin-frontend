@@ -38,7 +38,7 @@ const ADMIN_LANDING_CANDIDATES = [
   RoutePath.orderList,
   RoutePath.paymentList,
   RoutePath.kitchenTicketList,
-  RoutePath.catalogItemList,
+  RoutePath.catalogBrowser,
   RoutePath.floorHallList,
   RoutePath.userList,
   RoutePath.roleList,

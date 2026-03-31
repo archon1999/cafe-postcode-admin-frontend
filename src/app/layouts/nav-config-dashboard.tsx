@@ -16,6 +16,7 @@ const ICONS = {
   kitchen: <Iconify icon="solar:chef-hat-bold-duotone" width={24} />,
   kitchenTickets: <Iconify icon="solar:ticket-bold-duotone" width={20} />,
   catalog: <Iconify icon="solar:widget-4-bold-duotone" width={24} />,
+  browser: <Iconify icon="solar:widget-2-bold-duotone" width={20} />,
   categories: <Iconify icon="solar:tag-horizontal-bold-duotone" width={20} />,
   items: <Iconify icon="solar:archive-bold-duotone" width={20} />,
   floor: <Iconify icon="solar:map-point-rotate-bold-duotone" width={24} />,
@@ -122,6 +123,13 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
     : [];
 
   const catalogChildren = [
+    canAccess(RoutePath.catalogBrowser)
+      ? {
+          title: t('browser', { defaultValue: 'Katalog' }),
+          path: RoutePath.catalogBrowser,
+          icon: ICONS.browser,
+        }
+      : null,
     canAccess(RoutePath.catalogCategoryList)
       ? {
           title: t('categories'),

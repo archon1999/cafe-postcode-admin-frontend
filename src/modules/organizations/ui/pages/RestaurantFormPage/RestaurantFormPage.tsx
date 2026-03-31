@@ -57,7 +57,7 @@ const RestaurantFormPage = () => {
       taxNumber: '',
       phone: '',
       address: '',
-      isActive: true,
+      isActive: false,
     },
   });
 
@@ -86,7 +86,7 @@ const RestaurantFormPage = () => {
       taxNumber: values.taxNumber.trim(),
       phone: values.phone.trim(),
       address: values.address.trim(),
-      isActive: values.isActive,
+      isActive: isEditMode ? values.isActive : false,
     };
 
     if (isEditMode && id) {
@@ -136,7 +136,7 @@ const RestaurantFormPage = () => {
                 sx={{ gridColumn: { lg: '1 / -1' } }}
               />
             </Box>
-            <RHFSwitch<Values> name="isActive" label={t('fields.status')} />
+            {isEditMode ? <RHFSwitch<Values> name="isActive" label={t('fields.status')} /> : null}
             <FormActions
               isSubmitting={methods.formState.isSubmitting}
               submitLabel={isEditMode ? t('actions.save') : t('actions.create')}

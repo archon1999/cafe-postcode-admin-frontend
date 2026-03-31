@@ -1,10 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -21,7 +19,6 @@ import { Form, RHFMultiSelect, RHFSelect, RHFSwitch } from 'shared/ui/HookForm';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 
 import { useGetRestaurantFeatureConfigQuery, useUpsertRestaurantFeatureConfigMutation } from '../../../application';
-import { FEATURE_CONFIG_PRESETS } from '../../lib/feature-config-presets';
 import { getFeatureKitchenModeTranslationKey, getFeatureOrderEntryModeTranslationKey } from '../../lib/presenters';
 
 const schema = z.object({
@@ -185,22 +182,6 @@ const FeatureConfigFormPage = () => {
     push(backPath);
   });
 
-  const applyPreset = (presetKey: (typeof FEATURE_CONFIG_PRESETS)[number]['key']) => {
-    const preset = FEATURE_CONFIG_PRESETS.find((item) => item.key === presetKey);
-
-    if (!preset) {
-      return;
-    }
-
-    const presetValues = { ...preset.values };
-    delete presetValues.enabledModules;
-
-    methods.reset({
-      ...methods.getValues(),
-      ...presetValues,
-    });
-  };
-
   if (profile && !canAccessFeatureConfig) {
     return null;
   }
@@ -248,65 +229,6 @@ const FeatureConfigFormPage = () => {
       <Card sx={{ p: 3 }}>
         <Form methods={methods} onSubmit={onSubmit}>
           <Stack spacing={3}>
-            <Stack spacing={1.5}>
-              <Typography variant="h6">{t('presetSection.title', { defaultValue: 'Tayyor presetlar' })}</Typography>
-              <Typography variant="body2" color="text.secondary">
-                {t('presetSection.description', {
-                  defaultValue: "Kerakli biznes turini tanlang, keyin xohlasangiz qo'lda sozlamalarni o'zgartiring.",
-                })}
-              </Typography>
-              <Box
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))', xl: 'repeat(3, minmax(0, 1fr))' },
-                  gap: 2,
-                }}>
-                {FEATURE_CONFIG_PRESETS.map((preset) => (
-                  <Card
-                    key={preset.key}
-                    variant="outlined"
-                    sx={(theme) => ({
-                      p: 2,
-                      borderRadius: 2,
-                      borderColor: theme.palette.divider,
-                      backgroundColor: theme.palette.background.paper,
-                    })}>
-                    <Stack spacing={2} sx={{ height: '100%' }}>
-                      <Stack spacing={0.75}>
-                        <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                          {t(`presets.${preset.key}.title`, {
-                            defaultValue:
-                              preset.key === 'full_service'
-                                ? "To'liq restoran"
-                                : preset.key === 'fast_food'
-                                  ? 'Tezkor ovqatlanish'
-                                  : 'Oshxonaga printer bilan',
-                          })}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {t(`presets.${preset.key}.description`, {
-                            defaultValue:
-                              preset.key === 'full_service'
-                                ? 'Zal, oshxona va kassa bilan ishlaydigan oddiy restoranlar uchun.'
-                                : preset.key === 'fast_food'
-                                  ? 'Zalsiz, faqat menyu va kassada ishlaydigan nuqtalar uchun.'
-                                  : 'Zal va kassa bor, buyurtma oshxonaga printer orqali ketadigan restoranlar uchun.',
-                          })}
-                        </Typography>
-                      </Stack>
-
-                      <Button
-                        variant="outlined"
-                        onClick={() => applyPreset(preset.key)}
-                        sx={{ mt: 'auto', alignSelf: 'flex-start' }}>
-                        {t('presetSection.apply', { defaultValue: "Presetni qo'llash" })}
-                      </Button>
-                    </Stack>
-                  </Card>
-                ))}
-              </Box>
-            </Stack>
-
             <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: 'repeat(2, minmax(0, 1fr))' }, gap: 3 }}>
               <RHFSelect<Values>
                 name="orderEntryMode"

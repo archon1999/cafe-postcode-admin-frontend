@@ -143,6 +143,17 @@ const TITLE_RULES: TitleRule[] = [
     namespaces: ['users', 'common'],
     resolve: ({ id }, t) => [t('users:pages.list.title'), toEntityIdTitle(t, id)],
   },
+  { route: AppRoutes.FLOOR_ZONE_LIST, namespaces: ['floor'], resolve: (_params, t) => [t('floor:pages.zones.title')] },
+  {
+    route: AppRoutes.FLOOR_ZONE_CREATE,
+    namespaces: ['floor'],
+    resolve: (_params, t) => [t('floor:pages.zones.title'), t('floor:pages.zoneCreate.title')],
+  },
+  {
+    route: AppRoutes.FLOOR_ZONE_EDIT,
+    namespaces: ['floor', 'common'],
+    resolve: ({ id }, t) => [t('floor:pages.zones.title'), toEntityIdTitle(t, id), t('floor:pages.zoneEdit.title')],
+  },
   { route: AppRoutes.NOTFOUND, namespaces: ['common'], resolve: (_params, t) => [t('common:labels.notFound')] },
 ];
 

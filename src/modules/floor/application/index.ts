@@ -2,13 +2,16 @@ export {
   useCreateDiningTableMutation,
   useCreateHallMutation,
   useCreateTableSessionMutation,
+  useCreateZoneMutation,
   useDeleteDiningTableMutation,
   useDeleteHallMutation,
   useDeleteTableSessionMutation,
+  useDeleteZoneMutation,
   useUpdateDiningTableMutation,
   useUpdateHallMutation,
   useUpdateHallConstructorMutation,
   useUpdateTableSessionMutation,
+  useUpdateZoneMutation,
 } from './mutations';
 export {
   useGetDiningTableByIdQuery,
@@ -22,4 +25,7 @@ export {
   useGetTableSessionsListQuery,
   useGetTableSessionsQuery,
   useGetUsersForFloorQuery,
+  useGetZoneByIdQuery,
+  useGetZonesListQuery,
+  useGetZonesQuery,
 } from './queries';

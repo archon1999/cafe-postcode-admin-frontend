@@ -15,6 +15,12 @@ export const floorRepository: FloorRepository = {
   getHallConstructor(id) {
     return apiClient.getAdminHallConstructor(id);
   },
+  getZones() {
+    return apiClient.getAdminZones({ page: 1, pageSize: 500 }).then((response) => response.data);
+  },
+  getZoneById(id) {
+    return apiClient.getAdminZoneById(id);
+  },
   createHall(payload) {
     return apiClient.createAdminHall(payload);
   },
@@ -26,6 +32,15 @@ export const floorRepository: FloorRepository = {
   },
   deleteHall(id) {
     return apiClient.deleteAdminHall(id);
+  },
+  createZone(payload) {
+    return apiClient.createAdminZone(payload);
+  },
+  updateZone(id, payload) {
+    return apiClient.updateAdminZone(id, payload);
+  },
+  deleteZone(id) {
+    return apiClient.deleteAdminZone(id);
   },
   getDiningTables() {
     return apiClient.getAdminDiningTables({ page: 1, pageSize: 500 }).then((response) => response.data);

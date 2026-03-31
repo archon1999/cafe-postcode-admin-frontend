@@ -44,12 +44,10 @@ const ViewKitchenTicketPage = lazy(
   () => import('modules/kitchen/ui/pages/ViewKitchenTicketPage/ViewKitchenTicketPage'),
 );
 const CategoriesListPage = lazy(() => import('modules/catalog/ui/pages/CategoriesListPage/CategoriesListPage'));
+const CatalogBrowserPage = lazy(() => import('modules/catalog/ui/pages/CatalogBrowserPage/CatalogBrowserPage'));
 const CategoryFormPage = lazy(() => import('modules/catalog/ui/pages/CategoryFormPage/CategoryFormPage'));
 const ItemsListPage = lazy(() => import('modules/catalog/ui/pages/ItemsListPage/ItemsListPage'));
 const ItemFormPage = lazy(() => import('modules/catalog/ui/pages/ItemFormPage/ItemFormPage'));
-const FeatureConfigFormPage = lazy(
-  () => import('modules/organizations/ui/pages/FeatureConfigFormPage/FeatureConfigFormPage'),
-);
 const RestaurantsListPage = lazy(
   () => import('modules/organizations/ui/pages/RestaurantsListPage/RestaurantsListPage'),
 );
@@ -73,6 +71,8 @@ const RestaurantFormPage = lazy(() => import('modules/organizations/ui/pages/Res
 const HallsListPage = lazy(() => import('modules/floor/ui/pages/HallsListPage/HallsListPage'));
 const HallFormPage = lazy(() => import('modules/floor/ui/pages/HallFormPage/HallFormPage'));
 const HallConstructorPage = lazy(() => import('modules/floor/ui/pages/HallConstructorPage/HallConstructorPage'));
+const ZonesListPage = lazy(() => import('modules/floor/ui/pages/ZonesListPage/ZonesListPage'));
+const ZoneFormPage = lazy(() => import('modules/floor/ui/pages/ZoneFormPage/ZoneFormPage'));
 const TableSessionsListPage = lazy(() => import('modules/floor/ui/pages/TableSessionsListPage/TableSessionsListPage'));
 const TableSessionFormPage = lazy(() => import('modules/floor/ui/pages/TableSessionFormPage/TableSessionFormPage'));
 
@@ -196,6 +196,10 @@ const mainChildren: RouteObject[] = [
     element: <CategoriesListPage />,
   },
   {
+    path: RoutePath.catalogBrowser,
+    element: <CatalogBrowserPage />,
+  },
+  {
     path: RoutePath.catalogCategoryCreate,
     element: <CategoryFormPage />,
   },
@@ -244,10 +248,6 @@ const mainChildren: RouteObject[] = [
     element: <MyRestaurantDistributionPointsPage />,
   },
   {
-    path: RoutePath.organizationRestaurantFeatureConfig,
-    element: <FeatureConfigFormPage />,
-  },
-  {
     path: RoutePath.organizationRestaurantCreate,
     element: <RestaurantFormPage />,
   },
@@ -270,6 +270,18 @@ const mainChildren: RouteObject[] = [
   {
     path: RoutePath.floorHallConstructor,
     element: <HallConstructorPage />,
+  },
+  {
+    path: RoutePath.floorZoneList,
+    element: <ZonesListPage />,
+  },
+  {
+    path: RoutePath.floorZoneCreate,
+    element: <ZoneFormPage />,
+  },
+  {
+    path: RoutePath.floorZoneEdit,
+    element: <ZoneFormPage />,
   },
   {
     path: RoutePath.floorTableSessionList,
