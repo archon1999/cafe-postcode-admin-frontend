@@ -36,10 +36,36 @@ export function useGetUserByIdQuery(id: string, options?: Omit<UseQueryOptions<A
   });
 }
 
-export function useGetRolesQuery(options?: Omit<UseQueryOptions<AdminRole[]>, 'queryFn' | 'queryKey'>) {
+export function useGetEmployeesQuery(
+  params: AdminUsersQueryParams,
+  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminUser>>, 'queryFn' | 'queryKey'>,
+) {
   return useQuery({
-    queryKey: usersKeys.roles(),
-    queryFn: () => usersRepository.getRoles(),
+    queryKey: usersKeys.employeeList(params),
+    queryFn: () => usersRepository.getEmployeeList(params),
+    ...options,
+  });
+}
+
+export function useGetEmployeeByIdQuery(
+  id: string,
+  options?: Omit<UseQueryOptions<AdminUser>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: usersKeys.employeeDetail(id),
+    queryFn: () => usersRepository.getEmployeeById(id),
+    enabled: Boolean(id),
+    ...options,
+  });
+}
+
+export function useGetRolesQuery(
+  surface: 'user' | 'employee' = 'user',
+  options?: Omit<UseQueryOptions<AdminRole[]>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: usersKeys.roles(surface),
+    queryFn: () => (surface === 'employee' ? usersRepository.getEmployeeRoles() : usersRepository.getRoles()),
     ...options,
   });
 }

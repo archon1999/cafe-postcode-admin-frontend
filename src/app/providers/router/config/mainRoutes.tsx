@@ -10,6 +10,7 @@ import { LoadingScreen } from 'shared/ui/LoadingScreen';
 import { ProtectedRoute } from '../guards/ProtectedRoute';
 
 const UsersListPage = lazy(() => import('modules/users/ui/pages/UsersListPage/UsersListPage'));
+const EmployeesListPage = lazy(() => import('modules/users/ui/pages/EmployeesListPage/EmployeesListPage'));
 const DashboardHomePage = lazy(() => import('modules/platform/ui/pages/DashboardHomePage/DashboardHomePage'));
 const BusinessPartnersListPage = lazy(
   () => import('modules/platform/ui/pages/BusinessPartnersListPage/BusinessPartnersListPage'),
@@ -23,7 +24,9 @@ const RolesListPage = lazy(() => import('modules/users/ui/pages/RolesListPage/Ro
 const RoleFormPage = lazy(() => import('modules/users/ui/pages/RoleFormPage/RoleFormPage'));
 const PermissionsListPage = lazy(() => import('modules/users/ui/pages/PermissionsListPage/PermissionsListPage'));
 const UserFormPage = lazy(() => import('modules/users/ui/pages/UserFormPage/UserFormPage'));
+const EmployeeFormPage = lazy(() => import('modules/users/ui/pages/EmployeeFormPage/EmployeeFormPage'));
 const ViewUserPage = lazy(() => import('modules/users/ui/pages/ViewUserPage/ViewUserPage'));
+const ViewEmployeePage = lazy(() => import('modules/users/ui/pages/ViewEmployeePage/ViewEmployeePage'));
 const OrdersListPage = lazy(() => import('modules/orders/ui/pages/OrdersListPage/OrdersListPage'));
 const ViewOrderPage = lazy(() => import('modules/orders/ui/pages/ViewOrderPage/ViewOrderPage'));
 const OrderItemsListPage = lazy(() => import('modules/orders/ui/pages/OrderItemsListPage/OrderItemsListPage'));
@@ -118,6 +121,10 @@ const mainChildren: RouteObject[] = [
   {
     path: RoutePath.userList,
     element: <UsersListPage />,
+  },
+  {
+    path: RoutePath.employeeList,
+    element: <EmployeesListPage />,
   },
   {
     path: RoutePath.roleList,
@@ -300,12 +307,24 @@ const mainChildren: RouteObject[] = [
     element: <UserFormPage />,
   },
   {
+    path: RoutePath.employeeCreate,
+    element: <EmployeeFormPage />,
+  },
+  {
     path: RoutePath.userView,
     element: <ViewUserPage />,
   },
   {
+    path: RoutePath.employeeView,
+    element: <ViewEmployeePage />,
+  },
+  {
     path: RoutePath.userEdit,
     element: <UserFormPage />,
+  },
+  {
+    path: RoutePath.employeeEdit,
+    element: <EmployeeFormPage />,
   },
 ];
 

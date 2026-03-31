@@ -13,7 +13,10 @@ import {
 import { FilterSelect, type FilterOption } from 'shared/ui/Filters';
 import { TableSearchInput } from 'shared/ui/TableSearchInput';
 
+import type { UserManagementSurface } from '../../../domain';
+
 type UsersGridToolbarProps = {
+  surface?: UserManagementSurface;
   search: string;
   onSearchChange: (value: string) => void;
   onClearSearch: () => void;
@@ -37,6 +40,7 @@ const STATUS_OPTIONS: FilterOption[] = [
 ];
 
 export function UsersGridToolbar({
+  surface = 'user',
   search,
   onSearchChange,
   onClearSearch,
@@ -70,7 +74,7 @@ export function UsersGridToolbar({
           <TableSearchInput
             size="small"
             label={t('filters.search')}
-            placeholder={t('filters.searchPlaceholder')}
+            placeholder={surface === 'employee' ? t('filters.employeeSearchPlaceholder') : t('filters.searchPlaceholder')}
             value={search}
             onChange={onSearchChange}
             onClear={onClearSearch}

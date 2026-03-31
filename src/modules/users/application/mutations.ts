@@ -30,6 +30,29 @@ export function useUpdateUserMutation(id: string) {
   });
 }
 
+export function useCreateEmployeeMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: AdminUserPayload) => usersRepository.createEmployee(payload),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: usersKeys.employees });
+    },
+  });
+}
+
+export function useUpdateEmployeeMutation(id: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: AdminUserPayload) => usersRepository.updateEmployee(id, payload),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: usersKeys.employees });
+      await queryClient.invalidateQueries({ queryKey: usersKeys.employeeDetail(id) });
+    },
+  });
+}
+
 export function useToggleUserActiveMutation() {
   const queryClient = useQueryClient();
 
@@ -52,6 +75,35 @@ export function useArchiveUserMutation() {
     onSuccess: async (_data, user) => {
       await queryClient.invalidateQueries({ queryKey: usersKeys.all });
       await queryClient.invalidateQueries({ queryKey: usersKeys.detail(user.id) });
+    },
+  });
+}
+
+export function useToggleEmployeeActiveMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ user, isActive }: { user: AdminUser; isActive: boolean }) =>
+      usersRepository.updateEmployee(user.id, buildUserPayloadFromUser(user, { isActive }, 'employee')),
+    onSuccess: async (_, variables) => {
+      await queryClient.invalidateQueries({ queryKey: usersKeys.employees });
+      await queryClient.invalidateQueries({ queryKey: usersKeys.employeeDetail(variables.user.id) });
+    },
+  });
+}
+
+export function useArchiveEmployeeMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (user: AdminUser) =>
+      usersRepository.updateEmployee(
+        user.id,
+        buildUserPayloadFromUser(user, { isActive: false, employmentStatus: 'archived' }, 'employee'),
+      ),
+    onSuccess: async (_data, user) => {
+      await queryClient.invalidateQueries({ queryKey: usersKeys.employees });
+      await queryClient.invalidateQueries({ queryKey: usersKeys.employeeDetail(user.id) });
     },
   });
 }

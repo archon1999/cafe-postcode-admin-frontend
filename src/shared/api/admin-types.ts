@@ -676,7 +676,7 @@ export type AdminUser = {
 export type AdminSessionUser = AdminUser;
 
 export type AdminUserPayload = {
-  username: string;
+  username?: string;
   fullName: string;
   phone: string;
   isActive: boolean;
@@ -785,6 +785,8 @@ export type AdminUsersQueryParams = AdminListQueryParams & {
   roleIdIn?: string;
   employmentStatusIn?: string;
 };
+
+export type AdminEmployeesQueryParams = AdminUsersQueryParams;
 
 export type AdminRolesQueryParams = AdminListQueryParams & {
   typeIn?: string;

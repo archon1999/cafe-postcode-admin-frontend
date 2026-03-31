@@ -2,6 +2,8 @@ import { z } from 'zod';
 
 import type { AdminUser, AdminUserPayload } from 'shared/api/admin-types';
 
+import type { UserManagementSurface } from './user.types';
+
 const employmentStatuses = ['active', 'inactive', 'archived'] as const;
 const salaryTypes = ['hourly', 'daily', 'kpi'] as const;
 const nullableNumberField = z.preprocess(
@@ -9,9 +11,13 @@ const nullableNumberField = z.preprocess(
   z.number().nullable().optional(),
 );
 
-export const userFormSchema = z
+function createUserFormSchema(surface: UserManagementSurface) {
+  return z
   .object({
-    username: z.string().min(1, { message: 'Username talab qilinadi' }),
+    username:
+      surface === 'user'
+        ? z.string().min(1, { message: 'Username talab qilinadi' })
+        : z.string().optional().default(''),
     fullName: z.string().min(1, { message: "To'liq ism talab qilinadi" }),
     phone: z.string().optional(),
     roleId: z.string().min(1, { message: 'Rol tanlanishi kerak' }),
@@ -60,6 +66,10 @@ export const userFormSchema = z
       });
     }
   });
+}
+
+export const userFormSchema = createUserFormSchema('user');
+export const getUserFormSchema = (surface: UserManagementSurface) => createUserFormSchema(surface);
 
 export type UserFormValues = z.infer<typeof userFormSchema>;
 
@@ -105,7 +115,7 @@ export function mapUserToFormValues(user: AdminUser): UserFormValues {
   };
 }
 
-export function buildUserPayload(values: UserFormValues): AdminUserPayload {
+export function buildUserPayload(values: UserFormValues, surface: UserManagementSurface = 'user'): AdminUserPayload {
   const normalizedStatus = values.employmentStatus === 'archived'
     ? 'archived'
     : values.isActive
@@ -113,7 +123,6 @@ export function buildUserPayload(values: UserFormValues): AdminUserPayload {
       : 'inactive';
 
   return {
-    username: values.username.trim(),
     fullName: values.fullName.trim(),
     phone: values.phone?.trim() ?? '',
     roleId: values.roleId,
@@ -131,6 +140,12 @@ export function buildUserPayload(values: UserFormValues): AdminUserPayload {
     ...(values.password ? { password: values.password } : {}),
     ...(values.pin ? { pin: values.pin } : {}),
   };
+
+  if (surface === 'user') {
+    payload.username = values.username.trim();
+  }
+
+  return payload;
 }
 
 export function buildUserPayloadFromUser(
@@ -151,6 +166,7 @@ export function buildUserPayloadFromUser(
       | 'kpiPercent'
     >
   >,
+  surface: UserManagementSurface = 'user',
 ): AdminUserPayload {
   const nextEmploymentStatus =
     overrides?.employmentStatus ??
@@ -161,7 +177,6 @@ export function buildUserPayloadFromUser(
       : user.employmentStatus ?? (user.isActive ? 'active' : 'inactive'));
 
   const payload: AdminUserPayload = {
-    username: user.username,
     fullName: user.fullName,
     phone: user.phone ?? '',
     roleId: overrides?.roleId ?? user.role?.id ?? '',
@@ -177,6 +192,10 @@ export function buildUserPayloadFromUser(
     ...(user.primaryHallId ? { primaryHallId: user.primaryHallId } : { primaryHallId: null }),
     allowedHallIds: user.allowedHallIds ?? [],
   };
+
+  if (surface === 'user') {
+    payload.username = user.username;
+  }
 
   if (overrides?.password) {
     payload.password = overrides.password;

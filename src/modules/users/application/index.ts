@@ -1,13 +1,19 @@
 export {
+  useArchiveEmployeeMutation,
   useArchiveUserMutation,
+  useCreateEmployeeMutation,
   useCreateRoleMutation,
   useCreateUserMutation,
   useDeleteRoleMutation,
+  useToggleEmployeeActiveMutation,
   useToggleUserActiveMutation,
+  useUpdateEmployeeMutation,
   useUpdateRoleMutation,
   useUpdateUserMutation,
 } from './mutations';
 export {
+  useGetEmployeeByIdQuery,
+  useGetEmployeesQuery,
   useGetHallsQuery,
   useGetPermissionsQuery,
   useGetPermissionsListQuery,

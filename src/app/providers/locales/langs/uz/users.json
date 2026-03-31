@@ -1,8 +1,12 @@
 {
   "pages": {
     "list": {
+      "title": "Foydalanuvchilar",
+      "description": "Tizimga login va parol bilan kiradigan foydalanuvchilarni boshqaring."
+    },
+    "employeeList": {
       "title": "Xodimlar",
-      "description": "Admin va POS foydalanuvchilarini boshqaring."
+      "description": "Restoran xodimlarini PIN va rol bo'yicha boshqaring."
     },
     "roles": {
       "title": "Rollar"
@@ -17,14 +21,25 @@
       "title": "Ruxsatlar"
     },
     "create": {
-      "title": "Yangi xodim",
-      "description": "Yangi xodimni asosiy ma'lumotlari bilan yarating."
+      "title": "Yangi foydalanuvchi",
+      "description": "Yangi foydalanuvchini login va asosiy ma'lumotlari bilan yarating."
     },
     "edit": {
+      "title": "Foydalanuvchini tahrirlash",
+      "description": "Foydalanuvchining holati va ma'lumotlarini yangilang."
+    },
+    "view": {
+      "title": "Foydalanuvchi tavsilotlari"
+    },
+    "employeeCreate": {
+      "title": "Yangi xodim",
+      "description": "Restoran xodimini PIN va rol bilan yarating."
+    },
+    "employeeEdit": {
       "title": "Xodimni tahrirlash",
       "description": "Xodimning holati va ma'lumotlarini yangilang."
     },
-    "view": {
+    "employeeView": {
       "title": "Xodim tavsilotlari"
     }
   },
@@ -51,7 +66,7 @@
     "passwordCreateHint": "Ixtiyoriy. Kiritilsa, foydalanuvchi uchun parol o'rnatiladi.",
     "passwordEditHint": "Bo'sh qoldirilsa, joriy parol o'zgarmaydi.",
     "pin": "PIN-kod",
-    "pinHint": "POS foydalanuvchi uchun 4 xonali PIN-kod.",
+    "pinHint": "POS xodimi uchun 4 xonali PIN-kod.",
     "permissions": "Ruxsatlar",
     "allowedHalls": "Ruxsat etilgan zallar",
     "allowedHallsHint": "Kerak bo'lsa xodimga bir nechta zal biriktiring.",
@@ -85,6 +100,7 @@
     "all": "Barchasi",
     "search": "Qidiruv",
     "searchPlaceholder": "Login, ism yoki telefon bo'yicha qidiring",
+    "employeeSearchPlaceholder": "Ism yoki telefon bo'yicha qidiring",
     "searchRolesPlaceholder": "Rol nomi, tavsif yoki ruxsat bo'yicha qidiring",
     "searchPermissionsPlaceholder": "Kod, nom yoki tavsif bo'yicha qidiring",
     "clearSearch": "Qidiruvni tozalash",
@@ -120,7 +136,8 @@
     "reprint": "Qayta chop etish"
   },
   "actions": {
-    "create": "Yangi xodim",
+    "create": "Yangi foydalanuvchi",
+    "createEmployee": "Yangi xodim",
     "edit": "Tahrirlash",
     "save": "Saqlash",
     "archive": "Arxivlash",
@@ -136,6 +153,16 @@
   },
   "empty": {
     "users": {
+      "noData": {
+        "title": "Foydalanuvchilar hali yo'q",
+        "description": "Birinchi foydalanuvchi qo'shilgach, ro'yxat shu yerda ko'rinadi."
+      },
+      "noResults": {
+        "title": "Foydalanuvchilar topilmadi",
+        "description": "Qidiruv yoki filterni o'zgartirib qayta urinib ko'ring."
+      }
+    },
+    "employees": {
       "noData": {
         "title": "Xodimlar hali yo'q",
         "description": "Birinchi xodim qo'shilgach, ro'yxat shu yerda ko'rinadi."

@@ -24,7 +24,8 @@ import { RouterLink } from 'shared/ui/RouterLink';
 import { formatHallDisplayName } from 'shared/utils/format-hall-display';
 import { formatMoney } from 'shared/utils/format-money';
 
-import { useGetHallsQuery, useGetUserByIdQuery } from '../../../application';
+import { useGetEmployeeByIdQuery, useGetHallsQuery, useGetUserByIdQuery } from '../../../application';
+import type { UserManagementSurface } from '../../../domain';
 
 type UserEntry = {
   label: string;
@@ -169,12 +170,19 @@ function SummaryChip({
   );
 }
 
-const ViewUserPage = () => {
+type ViewUserPageProps = {
+  surface?: UserManagementSurface;
+};
+
+const ViewUserPage = ({ surface = 'user' }: ViewUserPageProps) => {
   const { t } = useTranslate('users');
   const { t: tCommon } = useTranslate('common');
   const { id } = useParams<{ id: string }>();
 
-  const userQuery = useGetUserByIdQuery(id ?? '');
+  const isEmployeeSurface = surface === 'employee';
+  const systemUserQuery = useGetUserByIdQuery(id ?? '', { enabled: Boolean(id) && !isEmployeeSurface });
+  const employeeUserQuery = useGetEmployeeByIdQuery(id ?? '', { enabled: Boolean(id) && isEmployeeSurface });
+  const userQuery = isEmployeeSurface ? employeeUserQuery : systemUserQuery;
   const hallsQuery = useGetHallsQuery();
 
   if (userQuery.isLoading) {
@@ -213,12 +221,14 @@ const ViewUserPage = () => {
     user.restaurantAccessActive === undefined ? null : user.restaurantAccessActive ? yesLabel : noLabel;
 
   const accountEntries: UserEntry[] = [
-    { label: t('fields.username'), value: user.username, icon: 'solar:user-bold-duotone' },
     { label: t('fields.fullName'), value: user.fullName, icon: 'solar:card-bold-duotone' },
     { label: t('fields.phone'), value: user.phone, icon: 'solar:phone-bold-duotone' },
     { label: t('fields.role'), value: roleLabel, icon: 'solar:shield-user-bold-duotone' },
     { label: t('fields.employmentStatus'), value: t(`status.${currentStatus}`), icon: 'solar:user-check-bold-duotone' },
   ];
+  if (!isEmployeeSurface) {
+    accountEntries.unshift({ label: t('fields.username'), value: user.username, icon: 'solar:user-bold-duotone' });
+  }
 
   const hallEntries: UserEntry[] = [
     { label: t('fields.primaryHall'), value: primaryHallName, icon: 'solar:home-2-bold-duotone' },
@@ -257,12 +267,22 @@ const ViewUserPage = () => {
   return (
     <Content>
       <CustomBreadcrumbs
-        heading={t('pages.view.title', { defaultValue: 'Xodim tavsilotlari' })}
-        links={[{ name: t('pages.list.title'), href: RoutePath.userList }, { name: user.fullName }]}
+        heading={
+          isEmployeeSurface
+            ? t('pages.employeeView.title', { defaultValue: 'Xodim tavsilotlari' })
+            : t('pages.view.title', { defaultValue: 'Foydalanuvchi tavsilotlari' })
+        }
+        links={[
+          {
+            name: isEmployeeSurface ? t('pages.employeeList.title') : t('pages.list.title'),
+            href: isEmployeeSurface ? RoutePath.employeeList : RoutePath.userList,
+          },
+          { name: user.fullName },
+        ]}
         action={
           <Button
             component={RouterLink}
-            href={RouterPathHelper.userEdit(user.id)}
+            href={isEmployeeSurface ? RouterPathHelper.employeeEdit(user.id) : RouterPathHelper.userEdit(user.id)}
             variant="contained"
             color="black"
             startIcon={<Iconify icon="solar:pen-bold" />}
@@ -298,7 +318,7 @@ const ViewUserPage = () => {
                 </Stack>
 
                 <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
-                  <SummaryChip title={t('fields.username')}>@{user.username}</SummaryChip>
+                  {isEmployeeSurface ? null : <SummaryChip title={t('fields.username')}>@{user.username}</SummaryChip>}
                   <SummaryChip title={t('fields.role')}>{roleLabel}</SummaryChip>
                   {user.isSuperuser ? <SummaryChip title={t('labels.system')}>{t('labels.system')}</SummaryChip> : null}
                 </Stack>

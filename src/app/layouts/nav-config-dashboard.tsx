@@ -249,10 +249,10 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
           children: myRestaurantChildren,
         }
       : null,
-    canAccess(RoutePath.userList)
+    canAccess(RoutePath.employeeList)
       ? {
           title: t('employees'),
-          path: RoutePath.userList,
+          path: RoutePath.employeeList,
           icon: ICONS.employees,
         }
       : null,
@@ -264,6 +264,13 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
   );
 
   const systemItems = [
+    canAccess(RoutePath.userList)
+      ? {
+          title: t('users'),
+          path: RoutePath.userList,
+          icon: ICONS.users,
+        }
+      : null,
     canAccess(RoutePath.roleList)
       ? {
           title: t('roles'),

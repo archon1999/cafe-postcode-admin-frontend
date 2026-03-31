@@ -3,8 +3,8 @@ export {
   buildUserPayload,
   buildUserPayloadFromUser,
   defaultUserFormValues,
+  getUserFormSchema,
   mapUserToFormValues,
-  userFormSchema,
   type UserFormValues,
 } from './entities/user-form.schema';
-export type { UserModeOption } from './entities/user.types';
+export type { UserManagementSurface, UserModeOption } from './entities/user.types';

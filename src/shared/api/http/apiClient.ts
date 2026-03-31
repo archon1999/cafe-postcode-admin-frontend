@@ -188,9 +188,42 @@ export const apiClient = {
     return instance.put<AdminUser>(`/api/v1/admin/users/${id}/`, payload).then((response) => response.data);
   },
 
+  getAdminEmployees(params: AdminUsersQueryParams) {
+    return instance
+      .get<AdminPaginatedResponse<AdminUser>>('/api/v1/admin/employees/', {
+        params: {
+          page: params.page,
+          pageSize: params.pageSize,
+          search: params.search,
+          role_id_in: params.roleIdIn,
+          employment_status_in: params.employmentStatusIn,
+          ordering: params.ordering,
+        },
+      })
+      .then((response) => response.data);
+  },
+
+  getAdminEmployeeById(id: string) {
+    return instance.get<AdminUser>(`/api/v1/admin/employees/${id}/`).then((response) => response.data);
+  },
+
+  createAdminEmployee(payload: AdminUserPayload) {
+    return instance.post<AdminUser>('/api/v1/admin/employees/', payload).then((response) => response.data);
+  },
+
+  updateAdminEmployee(id: string, payload: AdminUserPayload) {
+    return instance.put<AdminUser>(`/api/v1/admin/employees/${id}/`, payload).then((response) => response.data);
+  },
+
   getAdminRoles() {
     return instance
       .get<AdminCollectionResponse<AdminRole> | AdminRole[]>('/api/v1/admin/users/roles/')
+      .then((response) => extractCollectionData(response.data));
+  },
+
+  getAdminEmployeeRoles() {
+    return instance
+      .get<AdminCollectionResponse<AdminRole> | AdminRole[]>('/api/v1/admin/employees/roles/')
       .then((response) => extractCollectionData(response.data));
   },
 

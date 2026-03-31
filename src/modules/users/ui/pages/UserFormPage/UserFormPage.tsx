@@ -5,7 +5,7 @@ import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { Content } from 'app/layouts/Dashboard';
@@ -28,34 +28,49 @@ import { formatHallDisplayName } from 'shared/utils/format-hall-display';
 
 import {
   useCreateUserMutation,
+  useCreateEmployeeMutation,
   useGetHallsQuery,
   useGetRolesQuery,
+  useGetEmployeeByIdQuery,
   useGetUserByIdQuery,
+  useUpdateEmployeeMutation,
   useUpdateUserMutation,
 } from '../../../application';
 import {
   buildUserPayload,
   defaultUserFormValues,
+  getUserFormSchema,
   mapUserToFormValues,
-  userFormSchema,
+  type UserManagementSurface,
   type UserFormValues,
 } from '../../../domain';
 
-const UserFormPage = () => {
+type UserFormPageProps = {
+  surface?: UserManagementSurface;
+};
+
+const UserFormPage = ({ surface = 'user' }: UserFormPageProps) => {
   const { t } = useTranslate('users');
   const { t: tCommon } = useTranslate('common');
   const { id } = useParams<{ id: string }>();
   const { push } = useRouter();
   const isEditMode = Boolean(id);
+  const isEmployeeSurface = surface === 'employee';
+  const formSchema = useMemo(() => getUserFormSchema(surface), [surface]);
+  const listPath = isEmployeeSurface ? RoutePath.employeeList : RoutePath.userList;
 
-  const rolesQuery = useGetRolesQuery();
+  const rolesQuery = useGetRolesQuery(surface);
   const hallsQuery = useGetHallsQuery();
-  const userQuery = useGetUserByIdQuery(id ?? '', { enabled: isEditMode });
+  const systemUserQuery = useGetUserByIdQuery(id ?? '', { enabled: isEditMode && !isEmployeeSurface });
+  const employeeUserQuery = useGetEmployeeByIdQuery(id ?? '', { enabled: isEditMode && isEmployeeSurface });
+  const userQuery = isEmployeeSurface ? employeeUserQuery : systemUserQuery;
   const createUserMutation = useCreateUserMutation();
   const updateUserMutation = useUpdateUserMutation(id ?? '');
+  const createEmployeeMutation = useCreateEmployeeMutation();
+  const updateEmployeeMutation = useUpdateEmployeeMutation(id ?? '');
 
   const methods = useForm<UserFormValues>({
-    resolver: zodResolver(userFormSchema),
+    resolver: zodResolver(formSchema),
     defaultValues: defaultUserFormValues,
   });
 
@@ -126,7 +141,7 @@ const UserFormPage = () => {
   }));
 
   const onSubmit = handleSubmit(async (values) => {
-    const payload = buildUserPayload(values);
+    const payload = buildUserPayload(values, surface);
 
     if (!hasHallAccessPermission) {
       payload.primaryHallId = null;
@@ -139,13 +154,17 @@ const UserFormPage = () => {
     }
 
     if (isEditMode && id) {
-      const updatedUser = await updateUserMutation.mutateAsync(payload);
-      push(RouterPathHelper.userView(updatedUser.id));
+      const updatedUser = isEmployeeSurface
+        ? await updateEmployeeMutation.mutateAsync(payload)
+        : await updateUserMutation.mutateAsync(payload);
+      push(isEmployeeSurface ? RouterPathHelper.employeeView(updatedUser.id) : RouterPathHelper.userView(updatedUser.id));
       return;
     }
 
-    const createdUser = await createUserMutation.mutateAsync(payload);
-    push(RouterPathHelper.userView(createdUser.id));
+    const createdUser = isEmployeeSurface
+      ? await createEmployeeMutation.mutateAsync(payload)
+      : await createUserMutation.mutateAsync(payload);
+    push(isEmployeeSurface ? RouterPathHelper.employeeView(createdUser.id) : RouterPathHelper.userView(createdUser.id));
   });
 
   if (isEditMode && userQuery.isLoading) {
@@ -155,10 +174,26 @@ const UserFormPage = () => {
   return (
     <Content>
       <CustomBreadcrumbs
-        heading={isEditMode ? t('pages.edit.title') : t('pages.create.title')}
+        heading={
+          isEmployeeSurface
+            ? isEditMode
+              ? t('pages.employeeEdit.title')
+              : t('pages.employeeCreate.title')
+            : isEditMode
+              ? t('pages.edit.title')
+              : t('pages.create.title')
+        }
         links={[
-          { name: t('pages.list.title'), href: RoutePath.userList },
-          { name: isEditMode ? t('pages.edit.title') : t('pages.create.title') },
+          { name: isEmployeeSurface ? t('pages.employeeList.title') : t('pages.list.title'), href: listPath },
+          {
+            name: isEmployeeSurface
+              ? isEditMode
+                ? t('pages.employeeEdit.title')
+                : t('pages.employeeCreate.title')
+              : isEditMode
+                ? t('pages.edit.title')
+                : t('pages.create.title'),
+          },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />
@@ -174,7 +209,7 @@ const UserFormPage = () => {
                   gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
                   gap: 3,
                 }}>
-                <RHFTextField<UserFormValues> name="username" label={t('fields.username')} />
+                {isEmployeeSurface ? null : <RHFTextField<UserFormValues> name="username" label={t('fields.username')} />}
                 <RHFTextField<UserFormValues> name="fullName" label={t('fields.fullName')} />
                 <RHFPhoneInput<UserFormValues>
                   name="phone"
@@ -194,12 +229,14 @@ const UserFormPage = () => {
                   ))}
                 </RHFSelect>
 
-                <RHFTextField<UserFormValues>
-                  name="password"
-                  label={t('fields.password')}
-                  type="password"
-                  helperText={isEditMode ? t('fields.passwordEditHint') : t('fields.passwordCreateHint')}
-                />
+                {isEmployeeSurface ? null : (
+                  <RHFTextField<UserFormValues>
+                    name="password"
+                    label={t('fields.password')}
+                    type="password"
+                    helperText={isEditMode ? t('fields.passwordEditHint') : t('fields.passwordCreateHint')}
+                  />
+                )}
 
                 <RHFSelect<UserFormValues> name="employmentStatus" label={t('fields.employmentStatus')}>
                   <MenuItem value="active">{t('status.active')}</MenuItem>
@@ -310,8 +347,16 @@ const UserFormPage = () => {
 
             <FormActions
               isSubmitting={formState.isSubmitting}
-              submitLabel={isEditMode ? t('actions.save') : t('actions.create')}
-              onCancel={() => push(isEditMode && id ? RouterPathHelper.userView(id) : RoutePath.userList)}
+              submitLabel={isEditMode ? t('actions.save') : isEmployeeSurface ? t('actions.createEmployee') : t('actions.create')}
+              onCancel={() =>
+                push(
+                  isEditMode && id
+                    ? isEmployeeSurface
+                      ? RouterPathHelper.employeeView(id)
+                      : RouterPathHelper.userView(id)
+                    : listPath,
+                )
+              }
               disableSubmit={rolesQuery.isLoading || roles.length === 0}
             />
           </Stack>

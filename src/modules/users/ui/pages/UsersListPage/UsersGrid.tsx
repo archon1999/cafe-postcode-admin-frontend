@@ -21,11 +21,15 @@ import { Iconify } from 'shared/ui/Iconify';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 
 import {
+  useArchiveEmployeeMutation,
   useArchiveUserMutation,
+  useGetEmployeesQuery,
   useGetRolesQuery,
   useGetUsersQuery,
+  useToggleEmployeeActiveMutation,
   useToggleUserActiveMutation,
 } from '../../../application';
+import type { UserManagementSurface } from '../../../domain';
 
 import { UsersGridToolbar } from './UsersGridToolbar';
 
@@ -42,7 +46,11 @@ function getEmploymentStatusChipColor(status?: AdminUser['employmentStatus']) {
   return 'success';
 }
 
-export function UsersGrid() {
+type UsersGridProps = {
+  surface?: UserManagementSurface;
+};
+
+export function UsersGrid({ surface = 'user' }: UsersGridProps) {
   const { t, currentLang } = useTranslate('users');
   const { t: tCommon } = useTranslate('common');
   const router = useRouter();
@@ -56,17 +64,21 @@ export function UsersGrid() {
   const [selectedRows, setSelectedRows] = useState<GridRowSelectionModel>(DEFAULT_SELECTION_MODEL);
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
 
-  const rolesQuery = useGetRolesQuery();
-  const usersQuery = useGetUsersQuery({
+  const rolesQuery = useGetRolesQuery(surface);
+  const queryParams = {
     page: paginationModel.page + 1,
     pageSize: paginationModel.pageSize,
     search: search || undefined,
     roleIdIn: roleIds.length ? roleIds.join(',') : undefined,
     employmentStatusIn: statuses.length ? statuses.join(',') : undefined,
     ordering: getOrderingFromSortModel(sortModel),
-  });
-  const toggleUserStatusMutation = useToggleUserActiveMutation();
-  const archiveUserMutation = useArchiveUserMutation();
+  };
+  const usersListQuery = useGetUsersQuery(queryParams, { enabled: surface === 'user' });
+  const employeesListQuery = useGetEmployeesQuery(queryParams, { enabled: surface === 'employee' });
+  const usersQuery = surface === 'employee' ? employeesListQuery : usersListQuery;
+  const toggleUserStatusMutation =
+    surface === 'employee' ? useToggleEmployeeActiveMutation() : useToggleUserActiveMutation();
+  const archiveUserMutation = surface === 'employee' ? useArchiveEmployeeMutation() : useArchiveUserMutation();
   const hasActiveFilters = Boolean(search || roleIds.length || statuses.length);
 
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
@@ -76,26 +88,47 @@ export function UsersGrid() {
         value: role.id,
         label: role.name,
       })),
-    [rolesQuery.data, t],
+    [rolesQuery.data],
   );
+
+  const viewHref = (id: string) => (surface === 'employee' ? RouterPathHelper.employeeView(id) : RouterPathHelper.userView(id));
+  const editHref = (id: string) => (surface === 'employee' ? RouterPathHelper.employeeEdit(id) : RouterPathHelper.userEdit(id));
 
   const columns = useMemo<GridColDef<AdminUser>[]>(
     () => [
-      withDetailLink(
-        {
-          field: 'username',
-          headerName: t('fields.username'),
-          minWidth: 180,
-          flex: 0.95,
-        },
-        (row) => RouterPathHelper.userView(row.id),
-      ),
-      {
-        field: 'fullName',
-        headerName: t('fields.fullName'),
-        minWidth: 220,
-        flex: 1.2,
-      },
+      ...(surface === 'employee'
+        ? []
+        : [
+            withDetailLink(
+              {
+                field: 'username',
+                headerName: t('fields.username'),
+                minWidth: 180,
+                flex: 0.95,
+              },
+              (row) => viewHref(row.id),
+            ),
+          ]),
+      ...(surface === 'employee'
+        ? [
+            withDetailLink(
+              {
+                field: 'fullName',
+                headerName: t('fields.fullName'),
+                minWidth: 220,
+                flex: 1.2,
+              },
+              (row) => viewHref(row.id),
+            ),
+          ]
+        : [
+            {
+              field: 'fullName',
+              headerName: t('fields.fullName'),
+              minWidth: 220,
+              flex: 1.2,
+            },
+          ]),
       {
         field: 'role',
         headerName: t('fields.role'),
@@ -154,14 +187,14 @@ export function UsersGrid() {
               key="view"
               label={tCommon('labels.details')}
               icon={<Iconify icon="solar:eye-bold" />}
-              href={RouterPathHelper.userView(params.row.id)}
+              href={viewHref(params.row.id)}
             />,
             <CustomGridActionsCellItem
               actionKind="edit"
               key="edit"
               label={t('actions.edit')}
               icon={<Iconify icon="solar:pen-bold" />}
-              href={RouterPathHelper.userEdit(params.row.id)}
+              href={editHref(params.row.id)}
             />,
           ];
 
@@ -181,21 +214,23 @@ export function UsersGrid() {
         },
       },
     ],
-    [archiveUserMutation, t, tCommon, toggleUserStatusMutation],
+    [archiveUserMutation, editHref, surface, t, tCommon, toggleUserStatusMutation, viewHref],
   );
 
   const emptyStateMessages = useMemo(
     () => ({
       noData: {
-        title: t('empty.users.noData.title'),
-        description: t('empty.users.noData.description'),
+        title: t(surface === 'employee' ? 'empty.employees.noData.title' : 'empty.users.noData.title'),
+        description: t(surface === 'employee' ? 'empty.employees.noData.description' : 'empty.users.noData.description'),
       },
       noResults: {
-        title: t('empty.users.noResults.title'),
-        description: t('empty.users.noResults.description'),
+        title: t(surface === 'employee' ? 'empty.employees.noResults.title' : 'empty.users.noResults.title'),
+        description: t(
+          surface === 'employee' ? 'empty.employees.noResults.description' : 'empty.users.noResults.description',
+        ),
       },
     }),
-    [t],
+    [surface, t],
   );
 
   const handleSearchChange = (value: string) => {
@@ -248,7 +283,7 @@ export function UsersGrid() {
         onColumnVisibilityModelChange={setColumnVisibilityModel}
         disableRowSelectionOnClick
         disableColumnFilter
-        onRowClick={(params) => router.push(RouterPathHelper.userView(params.row.id))}
+        onRowClick={(params) => router.push(viewHref(params.row.id))}
         slots={{
           noRowsOverlay: () => (
             <DataGridEmptyState
@@ -266,6 +301,7 @@ export function UsersGrid() {
           ),
           toolbar: () => (
             <UsersGridToolbar
+              surface={surface}
               search={search}
               onSearchChange={handleSearchChange}
               onClearSearch={handleClearSearch}

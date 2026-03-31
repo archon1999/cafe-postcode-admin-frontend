@@ -99,6 +99,12 @@ const MY_RESTAURANT_DISTRIBUTION_POINT_PERMISSION_CODES: PermissionCode[] = [
   "distribution_points.create",
   "distribution_points.update",
 ];
+const EMPLOYEE_PERMISSION_CODES: PermissionCode[] = [
+  "employees.list",
+  "employees.view",
+  "employees.create",
+  "employees.update",
+];
 const SYSTEM_PERMISSION_CODES: PermissionCode[] = [
   "users.list",
   "users.view",
@@ -121,6 +127,7 @@ const ADMIN_LANDING_CANDIDATES = [
   RoutePath.kitchenTicketList,
   RoutePath.catalogBrowser,
   RoutePath.floorHallList,
+  RoutePath.employeeList,
   RoutePath.userList,
   RoutePath.roleList,
 ] as const;
@@ -182,7 +189,11 @@ export function canAccessFloor(snapshot?: AdminAccessSnapshot | null) {
 }
 
 export function canAccessUsers(snapshot?: AdminAccessSnapshot | null) {
-  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, ["users.list", "users.view", "users.create", "users.update"]);
+  return hasAnyPermission(snapshot, ["users.list", "users.view", "users.create", "users.update"]);
+}
+
+export function canAccessEmployees(snapshot?: AdminAccessSnapshot | null) {
+  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, EMPLOYEE_PERMISSION_CODES);
 }
 
 export function canAccessRoles(snapshot?: AdminAccessSnapshot | null) {
@@ -337,6 +348,10 @@ export function canAccessAdminPath(pathname: string, snapshot?: AdminAccessSnaps
 
   if (matchesPrefix(pathname, RouteRootPath[AppRoutesRoot.USERS])) {
     return canAccessUsers(snapshot);
+  }
+
+  if (matchesPrefix(pathname, RouteRootPath[AppRoutesRoot.EMPLOYEES])) {
+    return canAccessEmployees(snapshot);
   }
 
   return true;

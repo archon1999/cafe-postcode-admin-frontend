@@ -20,6 +20,26 @@ export const usersRepository: UsersRepository = {
     return apiClient.updateAdminUser(id, payload);
   },
 
+  getEmployeeRoles() {
+    return apiClient.getAdminEmployeeRoles();
+  },
+
+  getEmployeeList(params: AdminUsersQueryParams) {
+    return apiClient.getAdminEmployees(params);
+  },
+
+  getEmployeeById(id: string) {
+    return apiClient.getAdminEmployeeById(id);
+  },
+
+  createEmployee(payload: AdminUserPayload) {
+    return apiClient.createAdminEmployee(payload);
+  },
+
+  updateEmployee(id: string, payload: AdminUserPayload) {
+    return apiClient.updateAdminEmployee(id, payload);
+  },
+
   getRoles() {
     return apiClient.getAdminRoles();
   },

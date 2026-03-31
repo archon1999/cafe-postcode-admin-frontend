@@ -73,6 +73,7 @@ const TITLE_RULES: TitleRule[] = [
     ],
   },
   { route: AppRoutes.USER_LIST, namespaces: ['users'], resolve: (_params, t) => [t('users:pages.list.title')] },
+  { route: AppRoutes.EMPLOYEE_LIST, namespaces: ['users'], resolve: (_params, t) => [t('users:pages.employeeList.title')] },
   {
     route: AppRoutes.ORGANIZATION_MY_RESTAURANT,
     namespaces: ['organizations'],
@@ -134,14 +135,29 @@ const TITLE_RULES: TitleRule[] = [
     resolve: (_params, t) => [t('users:pages.list.title'), t('users:actions.create')],
   },
   {
+    route: AppRoutes.EMPLOYEE_CREATE,
+    namespaces: ['users'],
+    resolve: (_params, t) => [t('users:pages.employeeList.title'), t('users:actions.createEmployee')],
+  },
+  {
     route: AppRoutes.USER_EDIT,
     namespaces: ['users', 'common'],
     resolve: ({ id }, t) => [t('users:pages.list.title'), toEntityIdTitle(t, id), t('users:actions.edit')],
   },
   {
+    route: AppRoutes.EMPLOYEE_EDIT,
+    namespaces: ['users', 'common'],
+    resolve: ({ id }, t) => [t('users:pages.employeeList.title'), toEntityIdTitle(t, id), t('users:actions.edit')],
+  },
+  {
     route: AppRoutes.USER_VIEW,
     namespaces: ['users', 'common'],
     resolve: ({ id }, t) => [t('users:pages.list.title'), toEntityIdTitle(t, id)],
+  },
+  {
+    route: AppRoutes.EMPLOYEE_VIEW,
+    namespaces: ['users', 'common'],
+    resolve: ({ id }, t) => [t('users:pages.employeeList.title'), toEntityIdTitle(t, id)],
   },
   { route: AppRoutes.FLOOR_ZONE_LIST, namespaces: ['floor'], resolve: (_params, t) => [t('floor:pages.zones.title')] },
   {
