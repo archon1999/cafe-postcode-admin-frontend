@@ -1,6 +1,7 @@
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
+import Chip from '@mui/material/Chip';
 import type { SxProps, Theme } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -19,7 +20,6 @@ type PermissionSelectOption = AdminPermission & {
 type PermissionsSelectProps<T extends FieldValues = FieldValues> = {
   name: FieldPath<T>;
   label?: string;
-  placeholder?: string;
   helperText?: ReactNode;
   enabled?: boolean;
   disabled?: boolean;
@@ -37,13 +37,13 @@ function getPermissionPrefix(code: string) {
 export function PermissionsSelect<T extends FieldValues = FieldValues>({
   name,
   label,
-  placeholder,
   helperText,
   enabled = true,
   disabled,
   sx,
 }: PermissionsSelectProps<T>) {
   const { t } = useTranslate('common');
+  const { t: tUsers } = useTranslate('users');
   const { control } = useFormContext<T>();
   const permissionsQuery = useGetPermissionsQuery({ enabled });
 
@@ -89,6 +89,31 @@ export function PermissionsSelect<T extends FieldValues = FieldValues>({
             onChange={(_event, newValue) => field.onChange(newValue.map((option) => option.id))}
             onBlur={field.onBlur}
             noOptionsText={permissionsQuery.isLoading ? t('labels.loading') : t('labels.noData')}
+            renderTags={(value, getTagProps) => {
+              if (value.length >= 6) {
+                return [
+                  <Chip
+                    key="permissions-count"
+                    size="small"
+                    variant="soft"
+                    label={tUsers('labels.permissionsSelectedCount', {
+                      count: value.length,
+                      defaultValue: `${value.length} ta ruxsat tanlangan`,
+                    })}
+                  />,
+                ];
+              }
+
+              return value.map((option, index) => (
+                <Chip
+                  {...getTagProps({ index })}
+                  key={option.id}
+                  size="small"
+                  variant="soft"
+                  label={option.description || option.name || option.code}
+                />
+              ));
+            }}
             renderOption={(props, option, { selected }) => (
               <Box component="li" {...props} sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
                 <Checkbox size="small" disableRipple checked={selected} sx={{ mt: 0.25, p: 0.5 }} />
@@ -104,7 +129,6 @@ export function PermissionsSelect<T extends FieldValues = FieldValues>({
               <TextField
                 {...params}
                 label={label}
-                placeholder={placeholder}
                 error={!!error}
                 helperText={error?.message ?? (permissionsQuery.isLoading ? t('labels.loading') : helperText)}
                 inputProps={{

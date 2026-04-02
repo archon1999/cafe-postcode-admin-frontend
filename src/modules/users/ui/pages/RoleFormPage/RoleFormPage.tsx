@@ -111,11 +111,7 @@ const RoleFormPage = () => {
               }}>
               <RHFTextField<RoleFormValues> name="name" label={t('fields.name')} />
               <RHFTextField<RoleFormValues> name="description" label={t('fields.description')} multiline rows={4} />
-              <PermissionsSelect<RoleFormValues>
-                name="permissionIds"
-                label={t('fields.permissions')}
-                placeholder={t('labels.notSelected')}
-              />
+              <PermissionsSelect<RoleFormValues> name="permissionIds" label={t('fields.permissions')} />
             </Box>
 
             <FormActions

@@ -170,7 +170,6 @@ const TariffFormPage = () => {
               <PermissionsSelect<Values>
                 name="permissionIds"
                 label={t('fields.permissions')}
-                placeholder={t('labels.notSelected')}
                 enabled={canManagePlatform}
               />
               <RHFMultiSelect<Values>
