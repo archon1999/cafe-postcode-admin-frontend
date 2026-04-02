@@ -1,10 +1,6 @@
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
-import type {
-  GridColDef,
-  GridRowSelectionModel,
-  GridSortModel,
-} from '@mui/x-data-grid';
+import type { GridColDef, GridRowSelectionModel, GridSortModel } from '@mui/x-data-grid';
 import { gridClasses } from '@mui/x-data-grid';
 import { useCallback, useMemo, useState } from 'react';
 
