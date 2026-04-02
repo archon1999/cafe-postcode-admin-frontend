@@ -279,4 +279,4 @@ export const ReceiptsGrid = () => {
       />
     </Card>
   );
-}
+};

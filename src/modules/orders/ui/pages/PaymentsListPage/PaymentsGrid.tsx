@@ -303,4 +303,4 @@ export const PaymentsGrid = () => {
       />
     </Card>
   );
-}
+};

@@ -1,9 +1,7 @@
-import { useTranslate } from 'app/providers/locales';
-import {
-  DataGridFiltersToolbar,
-  type DataGridToolbarFilter,
-} from 'shared/ui/CustomDataGrid';
 import type { GridColDef, GridColumnVisibilityModel } from '@mui/x-data-grid';
+
+import { useTranslate } from 'app/providers/locales';
+import { DataGridFiltersToolbar, type DataGridToolbarFilter } from 'shared/ui/CustomDataGrid';
 
 type PermissionsGridToolbarProps = {
   search: string;

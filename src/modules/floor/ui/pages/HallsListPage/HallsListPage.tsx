@@ -28,8 +28,8 @@ import { RouterLink } from 'shared/ui/RouterLink';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 
 import { useDeleteHallMutation, useGetFloorHallsListQuery } from '../../../application';
-import { HallDialog } from '../../components/HallDialog/HallDialog';
 import { FloorGridToolbar } from '../../components/FloorGridToolbar';
+import { HallDialog } from '../../components/HallDialog/HallDialog';
 
 const DEFAULT_PAGINATION_MODEL: GridPaginationModel = { page: 0, pageSize: 10 };
 const DEFAULT_COLUMN_VISIBILITY_MODEL: GridColumnVisibilityModel = {};
@@ -82,7 +82,9 @@ const HallsListPage = () => {
         flex: 1,
         sortable: false,
         valueGetter: (_value, row) => row.zoneOrCabin?.name ?? t('labels.notSelected'),
-        renderCell: ({ row }) => <Chip size="small" variant="soft" label={row.zoneOrCabin?.name ?? t('labels.notSelected')} />,
+        renderCell: ({ row }) => (
+          <Chip size="small" variant="soft" label={row.zoneOrCabin?.name ?? t('labels.notSelected')} />
+        ),
       },
       {
         field: 'sortOrder',
@@ -213,10 +215,10 @@ const HallsListPage = () => {
                   onClearSearch={() => setSearch('')}
                   filters={[
                     {
+                      id: 'statuses',
                       label: t('filters.status'),
                       value: statuses,
                       options: statusOptions,
-                      onChange: setStatuses,
                       onApply: (values) => {
                         setStatuses(values);
                         setPaginationModel((prev) => ({ ...prev, page: 0 }));

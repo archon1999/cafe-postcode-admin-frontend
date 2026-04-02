@@ -15,7 +15,12 @@ import { useTranslate } from 'app/providers/locales';
 import { useRedirectOnNotFound } from 'shared/hooks/router';
 import { Form, RHFSelect, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
 
-import { useCreateHallMutation, useGetHallByIdQuery, useGetZonesQuery, useUpdateHallMutation } from '../../../application';
+import {
+  useCreateHallMutation,
+  useGetHallByIdQuery,
+  useGetZonesQuery,
+  useUpdateHallMutation,
+} from '../../../application';
 
 const schema = z.object({
   name: z.string().min(1),
@@ -109,10 +114,7 @@ export function HallDialog({ open, hallId, onClose }: { open: boolean; hallId?: 
               <RHFTextField<Values> name="name" label={t('fields.name')} />
               <RHFTextField<Values> name="sortOrder" label={t('fields.sortOrder')} type="number" />
               <RHFTextField<Values> name="description" label={t('fields.description')} multiline rows={3} />
-              <RHFSelect<Values>
-                name="zoneOrCabinId"
-                label={t('fields.zone')}
-              >
+              <RHFSelect<Values> name="zoneOrCabinId" label={t('fields.zone')}>
                 <MenuItem value="">{t('labels.notSelected')}</MenuItem>
                 {zoneOptions.map((zone) => (
                   <MenuItem key={zone.value} value={zone.value}>

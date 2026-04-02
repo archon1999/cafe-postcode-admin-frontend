@@ -1,8 +1,6 @@
-import {
-  DataGridFiltersToolbar,
-  type DataGridToolbarFilter,
-} from 'shared/ui/CustomDataGrid';
 import type { GridColDef, GridColumnVisibilityModel } from '@mui/x-data-grid';
+
+import { DataGridFiltersToolbar, type DataGridToolbarFilter } from 'shared/ui/CustomDataGrid';
 
 type FloorGridToolbarProps = {
   searchLabel: string;

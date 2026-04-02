@@ -1,9 +1,7 @@
-import { useTranslate } from 'app/providers/locales';
-import {
-  DataGridFiltersToolbar,
-  type DataGridToolbarFilter,
-} from 'shared/ui/CustomDataGrid';
 import type { GridColDef, GridColumnVisibilityModel } from '@mui/x-data-grid';
+
+import { useTranslate } from 'app/providers/locales';
+import { DataGridFiltersToolbar, type DataGridToolbarFilter } from 'shared/ui/CustomDataGrid';
 
 import { USER_EMPLOYMENT_STATUS_VALUES, type UserManagementSurface } from '../../../domain';
 
@@ -66,7 +64,9 @@ export function UsersGridToolbar({
   return (
     <DataGridFiltersToolbar
       searchLabel={t('filters.search')}
-      searchPlaceholder={surface === 'employee' ? t('filters.employeeSearchPlaceholder') : t('filters.searchPlaceholder')}
+      searchPlaceholder={
+        surface === 'employee' ? t('filters.employeeSearchPlaceholder') : t('filters.searchPlaceholder')
+      }
       clearSearchLabel={t('filters.clearSearch')}
       search={search}
       onSearchChange={onSearchChange}
