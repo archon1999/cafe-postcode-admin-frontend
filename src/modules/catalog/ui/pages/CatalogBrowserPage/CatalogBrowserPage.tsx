@@ -1,37 +1,32 @@
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import ButtonBase from '@mui/material/ButtonBase';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
-import Divider from '@mui/material/Divider';
+import Dialog from '@mui/material/Dialog';
 import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
 import LinearProgress from '@mui/material/LinearProgress';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import { useDeferredValue, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { useAdminCreateAccess } from 'app/layouts/components/admin-scope-access';
 import { ListPageBody, ListPageContent } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
-import { RoutePath, RouterPathHelper } from 'app/routes';
+import { RoutePath } from 'app/routes';
 import type { CatalogCategory, CatalogItem } from 'shared/api/admin-types';
-import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { EmptyContent } from 'shared/ui/EmptyContent';
 import { Iconify } from 'shared/ui/Iconify';
-import { RouterLink } from 'shared/ui/RouterLink';
 import { formatMoney } from 'shared/utils/format-money';
 
 import { useGetCatalogCategoriesListQuery, useGetCatalogItemsListQuery } from '../../../application';
+import { CatalogCategoryFormDialog } from '../../components/CatalogCategoryForm';
+import { CatalogItemFormDialog } from '../../components/CatalogItemForm';
 
 const CATEGORY_PAGE_SIZE = 500;
 const ITEM_PAGE_SIZE = 500;
-
-type ItemStatusFilter = 'all' | 'active' | 'inactive';
-type StoplistFilter = 'all' | 'available' | 'stoplisted';
 
 type CategoryCardProps = {
   category: CatalogCategory;
@@ -41,10 +36,10 @@ type CategoryCardProps = {
 
 type ItemCardProps = {
   item: CatalogItem;
+  onEdit: (item: CatalogItem) => void;
 };
 
 function CategoryCard({ category, isSelected, onSelect }: CategoryCardProps) {
-  const { t } = useTranslate('common');
   const [isImageBroken, setIsImageBroken] = useState(false);
   const hasImage = Boolean(category.imageUrl) && !isImageBroken;
 
@@ -52,27 +47,57 @@ function CategoryCard({ category, isSelected, onSelect }: CategoryCardProps) {
     <ButtonBase
       onClick={() => onSelect(category.id)}
       sx={{
+        position: 'relative',
         width: 1,
-        textAlign: 'left',
-        borderRadius: 3,
+        minHeight: 208,
+        px: 2,
+        py: 2.5,
+        borderRadius: 0,
         border: '1px solid',
         borderColor: isSelected ? 'primary.main' : 'divider',
-        backgroundColor: isSelected ? 'action.selected' : 'background.paper',
-        p: 1.25,
+        bgcolor: isSelected ? 'action.selected' : 'background.paper',
+        boxShadow: isSelected ? (theme) => `0 0 0 1px ${theme.vars.palette.primary.main}` : 'none',
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'stretch',
-        gap: 1.25,
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 2,
+        textAlign: 'center',
+        opacity: category.isActive ? 1 : 0.72,
+        transition: (theme) =>
+          theme.transitions.create(['border-color', 'background-color', 'transform', 'box-shadow']),
+        '&:hover': {
+          transform: 'translateY(-2px)',
+          boxShadow: (theme) => theme.shadows[4],
+        },
       }}>
+      {isSelected ? (
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 12,
+            right: 12,
+            width: 26,
+            height: 26,
+            borderRadius: '50%',
+            display: 'grid',
+            placeItems: 'center',
+            bgcolor: 'primary.main',
+            color: 'primary.contrastText',
+          }}>
+          <Iconify icon="solar:check-circle-bold" width={16} />
+        </Box>
+      ) : null}
+
       <Box
         sx={{
-          position: 'relative',
+          width: 92,
+          height: 92,
+          borderRadius: '50%',
           overflow: 'hidden',
-          borderRadius: 2,
-          aspectRatio: '1 / 0.78',
-          background: hasImage
-            ? 'linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.08))'
-            : 'linear-gradient(135deg, rgba(18,18,18,0.04), rgba(18,18,18,0.12))',
+          display: 'grid',
+          placeItems: 'center',
+          bgcolor: hasImage ? 'grey.100' : 'background.neutral',
         }}>
         {hasImage ? (
           <Box
@@ -83,40 +108,25 @@ function CategoryCard({ category, isSelected, onSelect }: CategoryCardProps) {
             sx={{ width: 1, height: 1, objectFit: 'cover' }}
           />
         ) : (
-          <Box
-            sx={{
-              width: 1,
-              height: 1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'text.secondary',
-            }}>
-            <Iconify icon="solar:gallery-wide-bold-duotone" width={32} />
-          </Box>
+          <Iconify icon="solar:gallery-wide-bold-duotone" width={34} sx={{ color: 'text.secondary' }} />
         )}
-
-        <Chip
-          size="small"
-          label={category.isActive ? t('status.active') : t('status.inactive')}
-          color={category.isActive ? 'success' : 'default'}
-          sx={{ position: 'absolute', top: 10, right: 10 }}
-        />
       </Box>
 
-      <Box sx={{ minWidth: 0 }}>
-        <Typography variant="subtitle2" sx={{ display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden' }}>
-          {category.name}
-        </Typography>
-        <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
-          {category.mxikCode ? `MXIK: ${category.mxikCode}` : '-'}
-        </Typography>
-      </Box>
+      <Typography
+        variant="subtitle2"
+        sx={{
+          display: '-webkit-box',
+          WebkitBoxOrient: 'vertical',
+          WebkitLineClamp: 2,
+          overflow: 'hidden',
+        }}>
+        {category.name}
+      </Typography>
     </ButtonBase>
   );
 }
 
-function ItemCard({ item }: ItemCardProps) {
+function ItemCard({ item, onEdit }: ItemCardProps) {
   const { t } = useTranslate('catalog');
   const { t: tCommon } = useTranslate('common');
 
@@ -124,32 +134,27 @@ function ItemCard({ item }: ItemCardProps) {
     <Card
       sx={{
         p: 2,
-        minHeight: 208,
+        minHeight: 198,
+        borderRadius: 0,
         display: 'flex',
         flexDirection: 'column',
         gap: 1.5,
       }}>
-      <Stack direction="row" spacing={1} alignItems="flex-start" justifyContent="space-between">
-        <Box sx={{ minWidth: 0 }}>
-          <Typography variant="subtitle1" sx={{ display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden' }}>
-            {item.name}
-          </Typography>
-          {item.description ? (
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{ mt: 0.5, display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden' }}>
-              {item.description}
-            </Typography>
-          ) : null}
-        </Box>
+      <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="flex-start">
+        <Typography
+          variant="subtitle1"
+          sx={{
+            minWidth: 0,
+            display: '-webkit-box',
+            WebkitBoxOrient: 'vertical',
+            WebkitLineClamp: 3,
+            overflow: 'hidden',
+          }}>
+          {item.name}
+        </Typography>
 
         <Tooltip title={t('actions.edit', { defaultValue: 'Tahrirlash' })}>
-          <IconButton
-            component={RouterLink}
-            href={RouterPathHelper.catalogItemEdit(item.id)}
-            size="small"
-            sx={{ flexShrink: 0 }}>
+          <IconButton size="small" onClick={() => onEdit(item)} sx={{ flexShrink: 0 }}>
             <Iconify icon="solar:pen-bold" width={18} />
           </IconButton>
         </Tooltip>
@@ -158,23 +163,20 @@ function ItemCard({ item }: ItemCardProps) {
       <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
         <Chip
           size="small"
-          label={item.isActive ? tCommon('status.active') : tCommon('status.inactive')}
-          color={item.isActive ? 'success' : 'default'}
           variant="soft"
+          color={item.isActive ? 'success' : 'default'}
+          label={item.isActive ? tCommon('status.active') : tCommon('status.inactive')}
         />
         <Chip
           size="small"
-          label={item.isStoplisted ? t('labels.stoplisted') : t('labels.available')}
-          color={item.isStoplisted ? 'error' : 'info'}
           variant="soft"
+          color={item.isStoplisted ? 'error' : 'info'}
+          label={item.isStoplisted ? t('labels.stoplisted') : t('labels.available')}
         />
       </Stack>
 
       <Box sx={{ mt: 'auto' }}>
         <Typography variant="h6">{formatMoney(item.price)}</Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.75 }}>
-          {item.mxikCode ? `MXIK: ${item.mxikCode}` : '-'}
-        </Typography>
       </Box>
     </Card>
   );
@@ -186,20 +188,17 @@ const CatalogBrowserPage = () => {
   const { disabled: isCreateItemDisabled } = useAdminCreateAccess(RoutePath.catalogItemCreate);
 
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
-  const [search, setSearch] = useState('');
-  const [itemStatusFilter, setItemStatusFilter] = useState<ItemStatusFilter>('all');
-  const [stoplistFilter, setStoplistFilter] = useState<StoplistFilter>('all');
-
-  const deferredSearch = useDeferredValue(search);
-  const normalizedSearch = deferredSearch.trim();
+  const [isCategoryCreateOpen, setCategoryCreateOpen] = useState(false);
+  const [isCategoryEditOpen, setCategoryEditOpen] = useState(false);
+  const [isItemCreateOpen, setItemCreateOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState<CatalogItem | null>(null);
 
   const categoriesQuery = useGetCatalogCategoriesListQuery({
     page: 1,
     pageSize: CATEGORY_PAGE_SIZE,
     ordering: 'sortOrder,name',
   });
-
-  const categories = categoriesQuery.data?.data ?? [];
+  const categories = useMemo(() => categoriesQuery.data?.data ?? [], [categoriesQuery.data]);
 
   useEffect(() => {
     if (!categories.length) {
@@ -224,235 +223,118 @@ const CatalogBrowserPage = () => {
     {
       page: 1,
       pageSize: ITEM_PAGE_SIZE,
-      search: normalizedSearch || undefined,
       categoryIdIn: selectedCategoryId ?? undefined,
-      isActive:
-        itemStatusFilter === 'all' ? undefined : itemStatusFilter === 'active',
-      isStoplisted:
-        stoplistFilter === 'all' ? undefined : stoplistFilter === 'stoplisted',
       ordering: 'name',
     },
     { enabled: Boolean(selectedCategoryId) },
   );
 
-  const items = itemsQuery.data?.data ?? [];
+  const items = useMemo(() => itemsQuery.data?.data ?? [], [itemsQuery.data]);
   const isCategoryLoading = categoriesQuery.isLoading && !categories.length;
   const isItemLoading = itemsQuery.isLoading && !items.length;
   const isRefreshingItems = itemsQuery.isFetching && !isItemLoading;
 
-  const filterChipSx = { borderRadius: 999 };
-
   return (
     <ListPageContent>
-      <CustomBreadcrumbs
-        heading={t('pages.browser.title', { defaultValue: 'Katalog brauzeri' })}
-        links={[{ name: t('pages.browser.title', { defaultValue: 'Katalog brauzeri' }) }]}
-        action={
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5}>
-            <Button
-              component={RouterLink}
-              href={RoutePath.catalogCategoryCreate}
-              variant="outlined"
-              color="inherit"
-              startIcon={<Iconify icon="mingcute:add-line" />}
-              disabled={isCreateCategoryDisabled}>
-              {t('actions.createCategory', { defaultValue: 'Yangi kategoriya' })}
-            </Button>
-            <Button
-              component={RouterLink}
-              href={RoutePath.catalogItemCreate}
-              variant="contained"
-              color="black"
-              startIcon={<Iconify icon="mingcute:add-line" />}
-              disabled={isCreateItemDisabled}>
-              {t('actions.createItem', { defaultValue: 'Yangi mahsulot' })}
-            </Button>
-          </Stack>
-        }
-        sx={{ mb: { xs: 3, md: 5 } }}
-      />
-
       <ListPageBody>
         <Box
           sx={{
             display: 'grid',
-            gridTemplateColumns: { xs: '1fr', lg: '340px minmax(0, 1fr)' },
+            gridTemplateColumns: { xs: '1fr', xl: 'minmax(320px, 5fr) minmax(0, 8fr)' },
             gap: 3,
-            width: 1,
+            flex: 1,
             minHeight: 0,
           }}>
-          <Card sx={{ p: 2.5, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-            <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
-              <Box>
+          <Card sx={{ display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden', borderRadius: 0 }}>
+            <Box sx={{ px: 2.5, py: 2.25, borderBottom: '1px solid', borderColor: 'divider' }}>
+              <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1.5}>
                 <Typography variant="h6">{t('pages.categories.title')}</Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {categoriesQuery.data?.total ?? categories.length} {t('fields.category', { defaultValue: 'Kategoriya' }).toLowerCase()}
-                </Typography>
-              </Box>
 
-              {selectedCategory ? (
-                <Tooltip title={t('actions.edit', { defaultValue: 'Tahrirlash' })}>
-                  <IconButton component={RouterLink} href={RouterPathHelper.catalogCategoryEdit(selectedCategory.id)} size="small">
-                    <Iconify icon="solar:pen-bold" width={18} />
-                  </IconButton>
-                </Tooltip>
-              ) : null}
-            </Stack>
+                <Stack direction="row" spacing={0.5}>
+                  <Tooltip title={t('actions.createCategory', { defaultValue: 'Yangi kategoriya' })}>
+                    <span>
+                      <IconButton onClick={() => setCategoryCreateOpen(true)} disabled={isCreateCategoryDisabled}>
+                        <Iconify icon="mingcute:add-line" width={20} />
+                      </IconButton>
+                    </span>
+                  </Tooltip>
 
-            {isCategoryLoading ? (
-              <Box
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: { xs: 'repeat(2, minmax(0, 1fr))', lg: '1fr' },
-                  gap: 1.5,
-                }}>
-                {Array.from({ length: 6 }).map((_, index) => (
-                  <Skeleton key={index} variant="rounded" height={140} />
-                ))}
-              </Box>
-            ) : categories.length ? (
-              <Box
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: { xs: 'repeat(2, minmax(0, 1fr))', md: 'repeat(3, minmax(0, 1fr))', lg: '1fr' },
-                  gap: 1.5,
-                  overflowY: 'auto',
-                  pr: { lg: 0.5 },
-                }}>
-                {categories.map((category) => (
-                  <CategoryCard
-                    key={category.id}
-                    category={category}
-                    isSelected={category.id === selectedCategoryId}
-                    onSelect={setSelectedCategoryId}
-                  />
-                ))}
-              </Box>
-            ) : (
-              <EmptyContent
-                filled
-                title={t('empty.categories.noData.title')}
-                description={t('empty.categories.noData.description')}
-                action={
-                  <Button
-                    component={RouterLink}
-                    href={RoutePath.catalogCategoryCreate}
-                    variant="contained"
-                    color="black"
-                    startIcon={<Iconify icon="mingcute:add-line" />}
-                    disabled={isCreateCategoryDisabled}
-                    sx={{ mt: 3 }}>
-                    {t('actions.createCategory', { defaultValue: 'Yangi kategoriya' })}
-                  </Button>
-                }
-              />
-            )}
-          </Card>
-
-          <Card sx={{ display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}>
-            {isRefreshingItems ? <LinearProgress /> : null}
-
-            <Box sx={{ p: 2.5 }}>
-              <Stack
-                direction={{ xs: 'column', md: 'row' }}
-                spacing={2}
-                alignItems={{ xs: 'stretch', md: 'flex-start' }}
-                justifyContent="space-between">
-                <Box sx={{ minWidth: 0 }}>
-                  <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap>
-                    <Typography variant="h6">
-                      {selectedCategory?.name ?? t('pages.items.title')}
-                    </Typography>
-                    {selectedCategory ? (
-                      <Chip size="small" label={`${itemsQuery.data?.total ?? items.length}`} color="primary" variant="soft" />
-                    ) : null}
-                  </Stack>
-                  <Typography variant="body2" color="text.secondary" sx={{ mt: 0.75 }}>
-                    {selectedCategory?.mxikCode
-                      ? `MXIK: ${selectedCategory.mxikCode}`
-                      : t('labels.mxikOptional', { defaultValue: 'Mahsulot uchun MXIK kodi ixtiyoriy.' })}
-                  </Typography>
-                </Box>
-
-                {selectedCategory ? (
-                  <Button
-                    component={RouterLink}
-                    href={RoutePath.catalogItemCreate}
-                    variant="outlined"
-                    color="inherit"
-                    startIcon={<Iconify icon="mingcute:add-line" />}
-                    disabled={isCreateItemDisabled}>
-                    {t('actions.createItem', { defaultValue: 'Yangi mahsulot' })}
-                  </Button>
-                ) : null}
-              </Stack>
-
-              <Stack direction={{ xs: 'column', xl: 'row' }} spacing={1.5} sx={{ mt: 2.5 }}>
-                <TextField
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                  fullWidth
-                  placeholder={t('filters.searchItemsPlaceholder')}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Iconify icon="solar:magnifer-linear" width={18} />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-
-                <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-                  <Chip
-                    label={t('filters.all')}
-                    variant={itemStatusFilter === 'all' ? 'filled' : 'outlined'}
-                    color={itemStatusFilter === 'all' ? 'primary' : 'default'}
-                    onClick={() => setItemStatusFilter('all')}
-                    sx={filterChipSx}
-                  />
-                  <Chip
-                    label={t('actions.activeOnly', { defaultValue: 'Faqat faol' })}
-                    variant={itemStatusFilter === 'active' ? 'filled' : 'outlined'}
-                    color={itemStatusFilter === 'active' ? 'primary' : 'default'}
-                    onClick={() => setItemStatusFilter('active')}
-                    sx={filterChipSx}
-                  />
-                  <Chip
-                    label={t('actions.inactiveOnly', { defaultValue: 'Nofaol' })}
-                    variant={itemStatusFilter === 'inactive' ? 'filled' : 'outlined'}
-                    color={itemStatusFilter === 'inactive' ? 'primary' : 'default'}
-                    onClick={() => setItemStatusFilter('inactive')}
-                    sx={filterChipSx}
-                  />
-                </Stack>
-
-                <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-                  <Chip
-                    label={t('filters.all')}
-                    variant={stoplistFilter === 'all' ? 'filled' : 'outlined'}
-                    color={stoplistFilter === 'all' ? 'primary' : 'default'}
-                    onClick={() => setStoplistFilter('all')}
-                    sx={filterChipSx}
-                  />
-                  <Chip
-                    label={t('labels.available')}
-                    variant={stoplistFilter === 'available' ? 'filled' : 'outlined'}
-                    color={stoplistFilter === 'available' ? 'primary' : 'default'}
-                    onClick={() => setStoplistFilter('available')}
-                    sx={filterChipSx}
-                  />
-                  <Chip
-                    label={t('labels.stoplisted')}
-                    variant={stoplistFilter === 'stoplisted' ? 'filled' : 'outlined'}
-                    color={stoplistFilter === 'stoplisted' ? 'primary' : 'default'}
-                    onClick={() => setStoplistFilter('stoplisted')}
-                    sx={filterChipSx}
-                  />
+                  <Tooltip title={t('actions.edit', { defaultValue: 'Tahrirlash' })}>
+                    <span>
+                      <IconButton onClick={() => setCategoryEditOpen(true)} disabled={!selectedCategory}>
+                        <Iconify icon="solar:pen-bold" width={18} />
+                      </IconButton>
+                    </span>
+                  </Tooltip>
                 </Stack>
               </Stack>
             </Box>
 
-            <Divider />
+            <Box sx={{ p: 2.5, flex: 1, minHeight: 0, overflowY: 'auto' }}>
+              {isCategoryLoading ? (
+                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 1.5 }}>
+                  {Array.from({ length: 9 }).map((_, index) => (
+                    <Skeleton key={index} variant="rounded" height={208} />
+                  ))}
+                </Box>
+              ) : categories.length ? (
+                <Box
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns: { xs: 'repeat(2, minmax(0, 1fr))', sm: 'repeat(3, minmax(0, 1fr))' },
+                    gap: 1.5,
+                  }}>
+                  {categories.map((category) => (
+                    <CategoryCard
+                      key={category.id}
+                      category={category}
+                      isSelected={category.id === selectedCategoryId}
+                      onSelect={setSelectedCategoryId}
+                    />
+                  ))}
+                </Box>
+              ) : (
+                <EmptyContent
+                  filled
+                  title={t('empty.categories.noData.title')}
+                  description={t('empty.categories.noData.description')}
+                  action={
+                    <Button
+                      variant="contained"
+                      color="black"
+                      startIcon={<Iconify icon="mingcute:add-line" />}
+                      disabled={isCreateCategoryDisabled}
+                      onClick={() => setCategoryCreateOpen(true)}
+                      sx={{ mt: 3 }}>
+                      {t('actions.createCategory', { defaultValue: 'Yangi kategoriya' })}
+                    </Button>
+                  }
+                />
+              )}
+            </Box>
+          </Card>
+
+          <Card sx={{ display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden', borderRadius: 0 }}>
+            {isRefreshingItems ? <LinearProgress /> : null}
+
+            <Box sx={{ px: 2.5, py: 2.25, borderBottom: '1px solid', borderColor: 'divider' }}>
+              <Stack
+                direction={{ xs: 'column', sm: 'row' }}
+                spacing={1.5}
+                alignItems={{ xs: 'stretch', sm: 'center' }}
+                justifyContent="space-between">
+                <Typography variant="h6">{t('pages.items.title')}</Typography>
+
+                <Button
+                  variant="contained"
+                  color="black"
+                  startIcon={<Iconify icon="mingcute:add-line" />}
+                  disabled={isCreateItemDisabled || !selectedCategory}
+                  onClick={() => setItemCreateOpen(true)}>
+                  {t('actions.createItem', { defaultValue: 'Yangi mahsulot' })}
+                </Button>
+              </Stack>
+            </Box>
 
             <Box sx={{ p: 2.5, flex: 1, minHeight: 0, overflowY: 'auto' }}>
               {!selectedCategoryId && !isCategoryLoading ? (
@@ -467,42 +349,45 @@ const CatalogBrowserPage = () => {
                 <Box
                   sx={{
                     display: 'grid',
-                    gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))', xl: 'repeat(3, minmax(0, 1fr))' },
+                    gridTemplateColumns: {
+                      xs: '1fr',
+                      sm: 'repeat(2, minmax(0, 1fr))',
+                      xl: 'repeat(4, minmax(0, 1fr))',
+                    },
                     gap: 2,
                   }}>
-                  {Array.from({ length: 6 }).map((_, index) => (
-                    <Skeleton key={index} variant="rounded" height={208} />
+                  {Array.from({ length: 8 }).map((_, index) => (
+                    <Skeleton key={index} variant="rounded" height={198} />
                   ))}
                 </Box>
               ) : items.length ? (
                 <Box
                   sx={{
                     display: 'grid',
-                    gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))', xl: 'repeat(3, minmax(0, 1fr))' },
+                    gridTemplateColumns: {
+                      xs: '1fr',
+                      sm: 'repeat(2, minmax(0, 1fr))',
+                      xl: 'repeat(4, minmax(0, 1fr))',
+                    },
                     gap: 2,
                   }}>
                   {items.map((item) => (
-                    <ItemCard key={item.id} item={item} />
+                    <ItemCard key={item.id} item={item} onEdit={setEditingItem} />
                   ))}
                 </Box>
               ) : (
                 <EmptyContent
                   filled
-                  title={normalizedSearch || itemStatusFilter !== 'all' || stoplistFilter !== 'all'
-                    ? t('empty.items.noResults.title')
-                    : t('empty.items.noData.title')}
-                  description={normalizedSearch || itemStatusFilter !== 'all' || stoplistFilter !== 'all'
-                    ? t('empty.items.noResults.description')
-                    : t('empty.items.noData.description')}
+                  title={t('empty.items.noData.title')}
+                  description={t('empty.items.noData.description')}
                   action={
                     selectedCategory ? (
                       <Button
-                        component={RouterLink}
-                        href={RoutePath.catalogItemCreate}
                         variant="contained"
                         color="black"
                         startIcon={<Iconify icon="mingcute:add-line" />}
                         disabled={isCreateItemDisabled}
+                        onClick={() => setItemCreateOpen(true)}
                         sx={{ mt: 3 }}>
                         {t('actions.createItem', { defaultValue: 'Yangi mahsulot' })}
                       </Button>
@@ -514,6 +399,40 @@ const CatalogBrowserPage = () => {
           </Card>
         </Box>
       </ListPageBody>
+
+      <Dialog open={isCategoryCreateOpen} onClose={() => setCategoryCreateOpen(false)} maxWidth="sm" fullWidth>
+        <CatalogCategoryFormDialog
+          onCancel={() => setCategoryCreateOpen(false)}
+          onSuccess={(category) => {
+            setSelectedCategoryId(category.id);
+            setCategoryCreateOpen(false);
+          }}
+        />
+      </Dialog>
+
+      <Dialog open={isCategoryEditOpen} onClose={() => setCategoryEditOpen(false)} maxWidth="sm" fullWidth>
+        <CatalogCategoryFormDialog
+          category={selectedCategory}
+          onCancel={() => setCategoryEditOpen(false)}
+          onSuccess={() => setCategoryEditOpen(false)}
+        />
+      </Dialog>
+
+      <Dialog open={isItemCreateOpen} onClose={() => setItemCreateOpen(false)} maxWidth="md" fullWidth>
+        <CatalogItemFormDialog
+          defaultCategoryId={selectedCategoryId}
+          onCancel={() => setItemCreateOpen(false)}
+          onSuccess={() => setItemCreateOpen(false)}
+        />
+      </Dialog>
+
+      <Dialog open={Boolean(editingItem)} onClose={() => setEditingItem(null)} maxWidth="md" fullWidth>
+        <CatalogItemFormDialog
+          item={editingItem}
+          onCancel={() => setEditingItem(null)}
+          onSuccess={() => setEditingItem(null)}
+        />
+      </Dialog>
     </ListPageContent>
   );
 };

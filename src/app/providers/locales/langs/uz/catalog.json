@@ -1,5 +1,13 @@
 {
   "pages": {
+    "browser": {
+      "title": "Menu Catalog",
+      "subtitle": "Kategoriyalar va mahsulotlarni bitta ekranda tez boshqaring.",
+      "categoriesCount": "Kategoriyalar: {{count}}",
+      "itemsCount": "Mahsulotlar: {{count}}",
+      "categoriesPanelSubtitle": "{{count}} ta kategoriya mavjud",
+      "itemsPanelSubtitle": "Mahsulotlarni ko'rish uchun chap tomondan kategoriya tanlang."
+    },
     "categories": {
       "title": "Menyu kategoriyalari"
     },
@@ -47,6 +55,10 @@
   "labels": {
     "stoplisted": "Stop-listda",
     "available": "Mavjud",
+    "mxikImagePreview": "MXIK rasmi",
+    "mxikImagePreviewDescription": "Kategoriya rasmi MXIK kodi bo'yicha avtomatik sinxronlangan.",
+    "mxikImageSource": "MXIK orqali yangilangan",
+    "mxikNotAssigned": "MXIK biriktirilmagan",
     "mxikRequired": "Kategoriya uchun MXIK kodi majburiy.",
     "mxikOptional": "Mahsulot uchun MXIK kodi ixtiyoriy.",
     "mxikLoading": "MXIK qidirilmoqda...",
@@ -63,6 +75,8 @@
     "save": "Saqlash",
     "edit": "Tahrirlash",
     "delete": "O'chirish",
+    "activeOnly": "Faqat faol",
+    "inactiveOnly": "Nofaol",
     "createCategory": "Yangi kategoriya",
     "createItem": "Yangi mahsulot",
     "searchMxik": "MXIK bo'yicha qidiring"
