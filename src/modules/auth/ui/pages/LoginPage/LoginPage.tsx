@@ -13,10 +13,7 @@ import { Form, RHFTextField } from 'shared/ui/HookForm';
 import { Iconify } from 'shared/ui/Iconify';
 
 import { useLoginMutation } from '../../../application/mutations';
-import { loginSchema } from '../../../domain/entities/login.schema';
-
-import { FormHead } from './FormHead';
-import { defaultValues, type LoginSchemaType } from './model/model';
+import { loginSchema, LoginSchemaType } from '../../../domain/entities/login.schema';
 
 const LoginPage = () => {
   const { t } = useTranslate('auth');
@@ -24,7 +21,6 @@ const LoginPage = () => {
 
   const methods = useForm<LoginSchemaType>({
     resolver: zodResolver(loginSchema),
-    defaultValues,
   });
 
   const {
@@ -45,10 +41,20 @@ const LoginPage = () => {
   return (
     <>
       <AnimateLogoRotate sx={{ mb: 3, mx: 'auto' }} />
-      <FormHead
-        title={t('login.title')}
-        description={<Typography variant="body2">{t('login.description')}</Typography>}
-      />
+      <Box
+        sx={{
+          mb: 5,
+          gap: 1.5,
+          display: 'flex',
+          textAlign: 'center',
+          whiteSpace: 'pre-line',
+          flexDirection: 'column',
+        }}>
+        <Typography variant="h5">{t('login.title')}</Typography>
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          {t('login.description')}
+        </Typography>
+      </Box>
 
       <Form onSubmit={onSubmit} methods={methods}>
         <Box sx={{ gap: 3, display: 'flex', flexDirection: 'column' }}>

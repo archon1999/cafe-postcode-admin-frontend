@@ -8,9 +8,9 @@ import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { Iconify } from 'shared/ui/Iconify';
 import { RouterLink } from 'shared/ui/RouterLink';
 
-import { ItemsGrid } from './ItemsGrid';
+import { ProductsGrid } from './ProductsGrid';
 
-const ItemsListPage = () => {
+const ProductsListPage = () => {
   const { t } = useTranslate('catalog');
   const { disabled: isCreateDisabled } = useAdminCreateAccess(RoutePath.catalogItemCreate);
 
@@ -29,13 +29,13 @@ const ItemsListPage = () => {
             {t('actions.createItem', { defaultValue: 'Yangi mahsulot' })}
           </Button>
         }
-        sx={{ mb: { xs: 3, md: 5 } }}
       />
       <ListPageBody>
-        <ItemsGrid />
+        <ProductsGrid />
       </ListPageBody>
     </ListPageContent>
   );
 };
 
-export default ItemsListPage;
+export default ProductsListPage;
+

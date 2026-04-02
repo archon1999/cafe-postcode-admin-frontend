@@ -8,7 +8,7 @@ import { LoadingScreen } from 'shared/ui/LoadingScreen';
 import { useGetCatalogItemByIdQuery } from '../../../application';
 import { CatalogItemFormCard } from '../../components/CatalogItemForm';
 
-const ItemFormPage = () => {
+const ProductFormPage = () => {
   const { t } = useTranslate('catalog');
   const { id } = useParams<{ id: string }>();
   const { push } = useRouter();
@@ -38,7 +38,6 @@ const ItemFormPage = () => {
               : t('pages.itemCreate.title', { defaultValue: 'Yangi mahsulot' }),
           },
         ]}
-        sx={{ mb: { xs: 3, md: 5 } }}
       />
 
       <CatalogItemFormCard
@@ -50,4 +49,5 @@ const ItemFormPage = () => {
   );
 };
 
-export default ItemFormPage;
+export default ProductFormPage;
+

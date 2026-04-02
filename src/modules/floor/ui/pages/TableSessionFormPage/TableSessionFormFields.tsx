@@ -4,7 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { RHFSelect, RHFTextField } from 'shared/ui/HookForm';
 import { formatHallDisplayName } from 'shared/utils/format-hall-display';
 
-import { getTableSessionStatusTranslationKey } from '../../lib/presenters';
+import { getTableSessionStatusTranslationKey } from '../../../domain';
 
 import type { Values } from './TableSessionFormPage';
 

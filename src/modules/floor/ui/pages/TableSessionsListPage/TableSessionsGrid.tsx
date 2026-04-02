@@ -9,14 +9,13 @@ import type {
   GridSortModel,
 } from '@mui/x-data-grid';
 import { gridClasses } from '@mui/x-data-grid';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { RouterPathHelper } from 'app/routes';
 import type { AdminTableSession } from 'shared/api/admin-types';
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState } from 'shared/ui/CustomDataGrid';
 import { ConfirmDialog } from 'shared/ui/CustomDialog';
-import type { FilterOption } from 'shared/ui/Filters';
 import { Iconify } from 'shared/ui/Iconify';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 import { formatHallDisplayName } from 'shared/utils/format-hall-display';
@@ -26,14 +25,16 @@ import {
   useGetFloorHallsQuery,
   useGetTableSessionsListQuery,
 } from '../../../application';
-import { FloorGridToolbar } from '../../components/FloorGridToolbar';
-import { getTableSessionStatusTranslationKey } from '../../lib/presenters';
+
+import {
+  DEFAULT_TABLE_SESSIONS_GRID_FILTERS,
+  type TableSessionsGridFilters,
+  TableSessionsGridToolbar,
+} from './TableSessionsGridToolbar';
 
 const DEFAULT_PAGINATION_MODEL: GridPaginationModel = { page: 0, pageSize: 10 };
 const DEFAULT_COLUMN_VISIBILITY_MODEL: GridColumnVisibilityModel = {};
 const DEFAULT_SELECTION_MODEL: GridRowSelectionModel = { type: 'include', ids: new Set() };
-
-const TABLE_SESSION_STATUSES = ['open', 'pending_payment', 'closed', 'merged'] as const;
 
 export const TableSessionsGrid = () => {
   const { t, currentLang } = useTranslate('floor');
@@ -42,40 +43,27 @@ export const TableSessionsGrid = () => {
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
 
   const [paginationModel, setPaginationModel] = useState(DEFAULT_PAGINATION_MODEL);
-  const [search, setSearch] = useState('');
-  const [halls, setHalls] = useState<string[]>([]);
-  const [statuses, setStatuses] = useState<string[]>([]);
-  const [columnVisibilityModel, setColumnVisibilityModel] = useState(DEFAULT_COLUMN_VISIBILITY_MODEL);
+  const [filters, setFilters] = useState<TableSessionsGridFilters>(DEFAULT_TABLE_SESSIONS_GRID_FILTERS);
+  const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(
+    DEFAULT_COLUMN_VISIBILITY_MODEL,
+  );
   const [selectedRows, setSelectedRows] = useState<GridRowSelectionModel>(DEFAULT_SELECTION_MODEL);
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
   const [sessionToDelete, setSessionToDelete] = useState<AdminTableSession | null>(null);
   const query = useGetTableSessionsListQuery({
     page: paginationModel.page + 1,
     pageSize: paginationModel.pageSize,
-    search: search || undefined,
-    hallIdIn: halls.length ? halls.join(',') : undefined,
-    statusIn: statuses.length ? statuses.join(',') : undefined,
+    search: filters.search || undefined,
+    hallIdIn: filters.halls.length ? filters.halls.join(',') : undefined,
+    statusIn: filters.statuses.length ? filters.statuses.join(',') : undefined,
     ordering: getOrderingFromSortModel(sortModel),
   });
 
-  const hallOptions = useMemo<FilterOption[]>(
-    () =>
-      (hallsQuery.data ?? []).map((hall) => ({
-        value: hall.id,
-        label: formatHallDisplayName(hall.name),
-      })),
-    [hallsQuery.data],
-  );
-  const statusOptions = useMemo<FilterOption[]>(
-    () =>
-      TABLE_SESSION_STATUSES.map((status) => ({
-        value: status,
-        label: t(getTableSessionStatusTranslationKey(status)),
-      })),
-    [t],
-  );
-
-  const hasActiveFilters = Boolean(search || halls.length || statuses.length);
+  const hasActiveFilters = Boolean(filters.search || filters.halls.length || filters.statuses.length);
+  const handleFiltersChange = useCallback((next: TableSessionsGridFilters) => {
+    setFilters(next);
+    setPaginationModel((prev) => ({ ...prev, page: 0 }));
+  }, []);
 
   const columns = useMemo<GridColDef<AdminTableSession>[]>(
     () => [
@@ -114,7 +102,7 @@ export const TableSessionsGrid = () => {
         minWidth: 150,
         flex: 0.6,
         renderCell: ({ row }) => (
-          <Chip size="small" label={t(getTableSessionStatusTranslationKey(row.status))} variant="soft" color="info" />
+          <Chip size="small" label={t(`tableSessionStatuses.${row.status}`)} variant="soft" color="info" />
         ),
       },
       {
@@ -196,43 +184,14 @@ export const TableSessionsGrid = () => {
               />
             ),
             toolbar: () => (
-              <FloorGridToolbar
-                searchLabel={t('filters.search')}
-                searchPlaceholder={t('filters.searchTableSessionsPlaceholder')}
-                clearSearchLabel={t('filters.clearSearch')}
-                search={search}
-                onSearchChange={setSearch}
-                onClearSearch={() => setSearch('')}
-                filters={[
-                  {
-                    id: 'halls',
-                    label: t('filters.hall'),
-                    value: halls,
-                    options: hallOptions,
-                    onApply: (values) => {
-                      setHalls(values);
-                      setPaginationModel((prev) => ({ ...prev, page: 0 }));
-                    },
-                    testId: 'table-sessions-hall-filter',
-                    emptyLabel: t('filters.all'),
-                  },
-                  {
-                    id: 'statuses',
-                    label: t('filters.status'),
-                    value: statuses,
-                    options: statusOptions,
-                    onApply: (values) => {
-                      setStatuses(values);
-                      setPaginationModel((prev) => ({ ...prev, page: 0 }));
-                    },
-                    testId: 'table-sessions-status-filter',
-                    emptyLabel: t('filters.all'),
-                  },
-                ]}
+              <TableSessionsGridToolbar
+                halls={hallsQuery.data ?? []}
+                value={filters}
+                onChange={handleFiltersChange}
                 columns={columns}
                 columnVisibilityModel={columnVisibilityModel}
                 defaultColumnVisibilityModel={DEFAULT_COLUMN_VISIBILITY_MODEL}
-                onSave={setColumnVisibilityModel}
+                onSaveColumns={setColumnVisibilityModel}
               />
             ),
           }}

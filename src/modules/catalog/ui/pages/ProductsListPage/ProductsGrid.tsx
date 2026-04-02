@@ -9,14 +9,13 @@ import type {
   GridSortModel,
 } from '@mui/x-data-grid';
 import { gridClasses } from '@mui/x-data-grid';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { RouterPathHelper } from 'app/routes';
 import type { CatalogItem } from 'shared/api/admin-types';
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState } from 'shared/ui/CustomDataGrid';
 import { ConfirmDialog } from 'shared/ui/CustomDialog';
-import type { FilterOption } from 'shared/ui/Filters';
 import { Iconify } from 'shared/ui/Iconify';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 import { formatMoney } from 'shared/utils/format-money';
@@ -26,22 +25,21 @@ import {
   useGetCatalogCategoriesQuery,
   useGetCatalogItemsListQuery,
 } from '../../../application';
-import { CatalogGridToolbar } from '../../components/CatalogGridToolbar';
+
+import { DEFAULT_PRODUCTS_GRID_FILTERS, type ProductsGridFilters, ProductsGridToolbar } from './ProductsGridToolbar';
 
 const DEFAULT_PAGINATION_MODEL: GridPaginationModel = { page: 0, pageSize: 10 };
 const DEFAULT_COLUMN_VISIBILITY_MODEL: GridColumnVisibilityModel = {};
 const DEFAULT_SELECTION_MODEL: GridRowSelectionModel = { type: 'include', ids: new Set() };
 
-export const ItemsGrid = () => {
+export const ProductsGrid = () => {
   const { t, currentLang } = useTranslate('catalog');
   const { t: tCommon } = useTranslate('common');
   const deleteItemMutation = useDeleteCatalogItemMutation();
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_PAGINATION_MODEL);
-  const [search, setSearch] = useState('');
-  const [categories, setCategories] = useState<string[]>([]);
-  const [stoplistStatuses, setStoplistStatuses] = useState<string[]>([]);
+  const [filters, setFilters] = useState<ProductsGridFilters>(DEFAULT_PRODUCTS_GRID_FILTERS);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(
     DEFAULT_COLUMN_VISIBILITY_MODEL,
   );
@@ -51,26 +49,17 @@ export const ItemsGrid = () => {
   const itemsQuery = useGetCatalogItemsListQuery({
     page: paginationModel.page + 1,
     pageSize: paginationModel.pageSize,
-    search: search || undefined,
-    categoryIdIn: categories.length ? categories.join(',') : undefined,
-    isStoplisted: stoplistStatuses.length === 1 ? stoplistStatuses[0] === 'stoplisted' : undefined,
+    search: filters.search || undefined,
+    categoryIdIn: filters.categories.length ? filters.categories.join(',') : undefined,
+    isStoplisted: filters.stoplistStatuses.length === 1 ? filters.stoplistStatuses[0] === 'stoplisted' : undefined,
     ordering: getOrderingFromSortModel(sortModel),
   });
   const categoriesQuery = useGetCatalogCategoriesQuery();
-
-  const categoryOptions = useMemo<FilterOption[]>(() => {
-    return (categoriesQuery.data ?? []).map((category) => ({ value: category.id, label: category.name }));
-  }, [categoriesQuery.data]);
-
-  const stoplistOptions = useMemo<FilterOption[]>(
-    () => [
-      { value: 'stoplisted', label: t('labels.stoplisted') },
-      { value: 'available', label: t('labels.available') },
-    ],
-    [t],
-  );
-
-  const hasActiveFilters = Boolean(search || categories.length || stoplistStatuses.length);
+  const hasActiveFilters = Boolean(filters.search || filters.categories.length || filters.stoplistStatuses.length);
+  const handleFiltersChange = useCallback((next: ProductsGridFilters) => {
+    setFilters(next);
+    setPaginationModel((prev) => ({ ...prev, page: 0 }));
+  }, []);
 
   const columns = useMemo<GridColDef<CatalogItem>[]>(
     () => [
@@ -178,11 +167,6 @@ export const ItemsGrid = () => {
     [t],
   );
 
-  const handleSearchChange = (value: string) => {
-    setSearch(value.trim());
-    setPaginationModel((prev) => ({ ...prev, page: 0 }));
-  };
-
   return (
     <>
       <Card sx={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'hidden' }}>
@@ -224,39 +208,10 @@ export const ItemsGrid = () => {
               />
             ),
             toolbar: () => (
-              <CatalogGridToolbar
-                searchLabel={t('filters.search')}
-                searchPlaceholder={t('filters.searchItemsPlaceholder')}
-                clearSearchLabel={t('filters.clearSearch')}
-                search={search}
-                onSearchChange={handleSearchChange}
-                onClearSearch={() => handleSearchChange('')}
-                filters={[
-                  {
-                    id: 'categories',
-                    label: t('filters.category'),
-                    value: categories,
-                    options: categoryOptions,
-                    onApply: (values) => {
-                      setCategories(values);
-                      setPaginationModel((prev) => ({ ...prev, page: 0 }));
-                    },
-                    testId: 'catalog-items-category-filter',
-                    emptyLabel: t('filters.all'),
-                  },
-                  {
-                    id: 'stoplistStatuses',
-                    label: t('filters.stoplist'),
-                    value: stoplistStatuses,
-                    options: stoplistOptions,
-                    onApply: (values) => {
-                      setStoplistStatuses(values);
-                      setPaginationModel((prev) => ({ ...prev, page: 0 }));
-                    },
-                    testId: 'catalog-items-stoplist-filter',
-                    emptyLabel: t('filters.all'),
-                  },
-                ]}
+              <ProductsGridToolbar
+                categories={categoriesQuery.data ?? []}
+                value={filters}
+                onChange={handleFiltersChange}
                 columns={columns}
                 columnVisibilityModel={columnVisibilityModel}
                 defaultColumnVisibilityModel={DEFAULT_COLUMN_VISIBILITY_MODEL}
@@ -296,4 +251,4 @@ export const ItemsGrid = () => {
       />
     </>
   );
-}
+};

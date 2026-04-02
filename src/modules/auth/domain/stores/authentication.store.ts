@@ -4,8 +4,18 @@ import { queryClient } from 'shared/api';
 import { sessionService } from 'shared/lib/auth/session.service';
 
 import { adminScopeStore } from './admin-scope.store';
-import type { AuthState } from './authentication.store.interface';
 import { currentUserStore } from './current-user.store';
+
+export interface AuthState {
+  isAuthenticated: boolean;
+  isLoading: boolean;
+
+  setAccessToken: (accessToken: string) => void;
+  logout: () => void;
+  checkAuth: () => void;
+
+  getAccessToken: () => string | null;
+}
 
 export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: sessionService.isSessionActive(),

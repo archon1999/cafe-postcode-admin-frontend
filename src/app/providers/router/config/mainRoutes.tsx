@@ -25,32 +25,34 @@ const RoleFormPage = lazy(() => import('modules/users/ui/pages/RoleFormPage/Role
 const PermissionsListPage = lazy(() => import('modules/users/ui/pages/PermissionsListPage/PermissionsListPage'));
 const UserFormPage = lazy(() => import('modules/users/ui/pages/UserFormPage/UserFormPage'));
 const EmployeeFormPage = lazy(() => import('modules/users/ui/pages/EmployeeFormPage/EmployeeFormPage'));
-const ViewUserPage = lazy(() => import('modules/users/ui/pages/ViewUserPage/ViewUserPage'));
-const ViewEmployeePage = lazy(() => import('modules/users/ui/pages/ViewEmployeePage/ViewEmployeePage'));
+const UserDetailPage = lazy(() => import('modules/users/ui/pages/UserDetailPage/UserDetailPage'));
+const EmployeeDetailPage = lazy(() => import('modules/users/ui/pages/EmployeeDetailPage/EmployeeDetailPage'));
 const OrdersListPage = lazy(() => import('modules/orders/ui/pages/OrdersListPage/OrdersListPage'));
-const ViewOrderPage = lazy(() => import('modules/orders/ui/pages/ViewOrderPage/ViewOrderPage'));
+const OrderDetailPage = lazy(() => import('modules/orders/ui/pages/OrderDetailPage/OrderDetailPage'));
 const OrderItemsListPage = lazy(() => import('modules/orders/ui/pages/OrderItemsListPage/OrderItemsListPage'));
-const ViewOrderItemPage = lazy(() => import('modules/orders/ui/pages/ViewOrderItemPage/ViewOrderItemPage'));
+const OrderItemDetailPage = lazy(() => import('modules/orders/ui/pages/OrderItemDetailPage/OrderItemDetailPage'));
 const OrderItemNotesListPage = lazy(
   () => import('modules/orders/ui/pages/OrderItemNotesListPage/OrderItemNotesListPage'),
 );
-const ViewOrderItemNotePage = lazy(() => import('modules/orders/ui/pages/ViewOrderItemNotePage/ViewOrderItemNotePage'));
+const OrderItemNoteDetailPage = lazy(
+  () => import('modules/orders/ui/pages/OrderItemNoteDetailPage/OrderItemNoteDetailPage'),
+);
 const PaymentsListPage = lazy(() => import('modules/orders/ui/pages/PaymentsListPage/PaymentsListPage'));
-const ViewPaymentPage = lazy(() => import('modules/orders/ui/pages/ViewPaymentPage/ViewPaymentPage'));
+const PaymentDetailPage = lazy(() => import('modules/orders/ui/pages/PaymentDetailPage/PaymentDetailPage'));
 const ReceiptsListPage = lazy(() => import('modules/orders/ui/pages/ReceiptsListPage/ReceiptsListPage'));
-const ViewReceiptPage = lazy(() => import('modules/orders/ui/pages/ViewReceiptPage/ViewReceiptPage'));
+const ReceiptDetailPage = lazy(() => import('modules/orders/ui/pages/ReceiptDetailPage/ReceiptDetailPage'));
 const ReportsPage = lazy(() => import('modules/reports/ui/pages/ReportsPage/ReportsPage'));
 const KitchenTicketsListPage = lazy(
   () => import('modules/kitchen/ui/pages/KitchenTicketsListPage/KitchenTicketsListPage'),
 );
-const ViewKitchenTicketPage = lazy(
-  () => import('modules/kitchen/ui/pages/ViewKitchenTicketPage/ViewKitchenTicketPage'),
+const KitchenTicketDetailPage = lazy(
+  () => import('modules/kitchen/ui/pages/KitchenTicketDetailPage/KitchenTicketDetailPage'),
 );
 const CategoriesListPage = lazy(() => import('modules/catalog/ui/pages/CategoriesListPage/CategoriesListPage'));
 const CatalogBrowserPage = lazy(() => import('modules/catalog/ui/pages/CatalogBrowserPage/CatalogBrowserPage'));
 const CategoryFormPage = lazy(() => import('modules/catalog/ui/pages/CategoryFormPage/CategoryFormPage'));
-const ItemsListPage = lazy(() => import('modules/catalog/ui/pages/ItemsListPage/ItemsListPage'));
-const ItemFormPage = lazy(() => import('modules/catalog/ui/pages/ItemFormPage/ItemFormPage'));
+const ProductsListPage = lazy(() => import('modules/catalog/ui/pages/ProductsListPage/ProductsListPage'));
+const ProductFormPage = lazy(() => import('modules/catalog/ui/pages/ProductFormPage/ProductFormPage'));
 const RestaurantsListPage = lazy(
   () => import('modules/organizations/ui/pages/RestaurantsListPage/RestaurantsListPage'),
 );
@@ -146,7 +148,7 @@ const mainChildren: RouteObject[] = [
   },
   {
     path: RoutePath.orderView,
-    element: <ViewOrderPage />,
+    element: <OrderDetailPage />,
   },
   {
     path: RoutePath.orderItemList,
@@ -154,7 +156,7 @@ const mainChildren: RouteObject[] = [
   },
   {
     path: RoutePath.orderItemView,
-    element: <ViewOrderItemPage />,
+    element: <OrderItemDetailPage />,
   },
   {
     path: RoutePath.orderItemNoteList,
@@ -162,7 +164,7 @@ const mainChildren: RouteObject[] = [
   },
   {
     path: RoutePath.orderItemNoteView,
-    element: <ViewOrderItemNotePage />,
+    element: <OrderItemNoteDetailPage />,
   },
   {
     path: RoutePath.paymentList,
@@ -170,7 +172,7 @@ const mainChildren: RouteObject[] = [
   },
   {
     path: RoutePath.paymentView,
-    element: <ViewPaymentPage />,
+    element: <PaymentDetailPage />,
   },
   {
     path: RoutePath.receiptList,
@@ -186,7 +188,7 @@ const mainChildren: RouteObject[] = [
   },
   {
     path: RoutePath.receiptView,
-    element: <ViewReceiptPage />,
+    element: <ReceiptDetailPage />,
   },
   {
     path: RoutePath.kitchenTicketList,
@@ -194,7 +196,7 @@ const mainChildren: RouteObject[] = [
   },
   {
     path: RoutePath.kitchenTicketView,
-    element: <ViewKitchenTicketPage />,
+    element: <KitchenTicketDetailPage />,
   },
   {
     path: RoutePath.catalogCategoryList,
@@ -214,15 +216,15 @@ const mainChildren: RouteObject[] = [
   },
   {
     path: RoutePath.catalogItemList,
-    element: <ItemsListPage />,
+    element: <ProductsListPage />,
   },
   {
     path: RoutePath.catalogItemCreate,
-    element: <ItemFormPage />,
+    element: <ProductFormPage />,
   },
   {
     path: RoutePath.catalogItemEdit,
-    element: <ItemFormPage />,
+    element: <ProductFormPage />,
   },
   {
     path: RoutePath.organizationRestaurantList,
@@ -310,11 +312,11 @@ const mainChildren: RouteObject[] = [
   },
   {
     path: RoutePath.userView,
-    element: <ViewUserPage />,
+    element: <UserDetailPage />,
   },
   {
     path: RoutePath.employeeView,
-    element: <ViewEmployeePage />,
+    element: <EmployeeDetailPage />,
   },
   {
     path: RoutePath.userEdit,

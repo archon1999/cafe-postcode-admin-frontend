@@ -30,7 +30,7 @@ import {
   getRequiredGridRows,
   getShapeVariantsForSeatCount,
   getVariantMarkers,
-} from '../../lib/hall-constructor';
+} from '../../../domain';
 
 type DraftTable = AdminHallConstructorTable & {
   localId: string;

@@ -49,10 +49,9 @@ export function getRequiredGridRows(tables: Pick<AdminHallConstructorTable, 'pos
   return Math.max(maxRows, MIN_GRID_ROWS);
 }
 
-export function clampTableToGrid<T extends Pick<AdminHallConstructorTable, 'positionX' | 'positionY' | 'width' | 'height'>>(
-  table: T,
-  gridColumns: number,
-) {
+export function clampTableToGrid<
+  T extends Pick<AdminHallConstructorTable, 'positionX' | 'positionY' | 'width' | 'height'>,
+>(table: T, gridColumns: number) {
   const width = Math.max(1, table.width);
   const height = Math.max(1, table.height);
   return {
