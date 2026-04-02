@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 
 import { useTranslate } from 'app/providers/locales';
 import { useAdminScopeStore, useCurrentUser } from 'modules/auth';
-import { useGetRestaurantsQuery } from 'modules/organizations/application';
+import { useGetRestaurantsQuery } from 'modules/business-partner/restaurants/application';
 import { queryClient } from 'shared/api';
 
 export function AdminScopeSelector() {

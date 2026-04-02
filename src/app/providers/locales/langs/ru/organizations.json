@@ -117,17 +117,17 @@
   "helpers": {
     "featureConfigMissing": "Для ресторана конфигурация POS пока не создана или не загружена."
   },
-  "branchManagement": {
-    "title": "Управление филиалом",
-    "description": "Управляйте операционными разделами, привязанными к филиалу \"{{name}}\".",
+  "restaurantManagement": {
+    "title": "Управление рестораном",
+    "description": "Управляйте операционными разделами, привязанными к ресторану \"{{name}}\".",
     "sections": {
-      "prepStations": { "description": "Управляйте кухонными и барными станциями филиала." },
-      "cashDesks": { "description": "Управляйте кассами филиала и их расположением." },
+      "prepStations": { "description": "Управляйте кухонными и барными станциями ресторана." },
+      "cashDesks": { "description": "Управляйте кассами ресторана и их расположением." },
       "devices": { "description": "Управляйте POS-устройствами, режимами и привязкой к залу." },
       "distributionPoints": { "description": "Управляйте каналами заказов и точками распределения." }
     },
     "openList": "Открыть список",
-    "createForBranch": "Создать для филиала"
+    "createForRestaurant": "Создать для этого ресторана"
   },
   "deviceModes": {
     "admin": "Админ",

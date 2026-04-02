@@ -1,83 +1,150 @@
 import { Suspense, lazy } from 'react';
 import type { RouteObject } from 'react-router';
-import { Outlet } from 'react-router';
+import { Navigate, Outlet } from 'react-router';
 
 import { DashboardLayout } from 'app/layouts/Dashboard';
-import { RoutePath } from 'app/routes';
+import { RoutePath, getDefaultAdminPath } from 'app/routes';
+import { useCurrentUser } from 'modules/auth';
 import { usePathname } from 'shared/hooks/router';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 
 import { ProtectedRoute } from '../guards/ProtectedRoute';
 
-const UsersListPage = lazy(() => import('modules/users/ui/pages/UsersListPage/UsersListPage'));
-const EmployeesListPage = lazy(() => import('modules/users/ui/pages/EmployeesListPage/EmployeesListPage'));
-const DashboardHomePage = lazy(() => import('modules/platform/ui/pages/DashboardHomePage/DashboardHomePage'));
+const UsersListPage = lazy(() => import('modules/user-management/users/ui/pages/UsersListPage/UsersListPage'));
+const EmployeesListPage = lazy(
+  () => import('modules/restaurant-admin/employees/ui/pages/EmployeesListPage/EmployeesListPage'),
+);
 const BusinessPartnersListPage = lazy(
-  () => import('modules/platform/ui/pages/BusinessPartnersListPage/BusinessPartnersListPage'),
+  () => import('modules/product-owner/business-partners/ui/pages/BusinessPartnersListPage/BusinessPartnersListPage'),
 );
 const BusinessPartnerFormPage = lazy(
-  () => import('modules/platform/ui/pages/BusinessPartnerFormPage/BusinessPartnerFormPage'),
+  () => import('modules/product-owner/business-partners/ui/pages/BusinessPartnerFormPage/BusinessPartnerFormPage'),
 );
-const TariffsListPage = lazy(() => import('modules/platform/ui/pages/TariffsListPage/TariffsListPage'));
-const TariffFormPage = lazy(() => import('modules/platform/ui/pages/TariffFormPage/TariffFormPage'));
-const RolesListPage = lazy(() => import('modules/users/ui/pages/RolesListPage/RolesListPage'));
-const RoleFormPage = lazy(() => import('modules/users/ui/pages/RoleFormPage/RoleFormPage'));
-const PermissionsListPage = lazy(() => import('modules/users/ui/pages/PermissionsListPage/PermissionsListPage'));
-const UserFormPage = lazy(() => import('modules/users/ui/pages/UserFormPage/UserFormPage'));
-const EmployeeFormPage = lazy(() => import('modules/users/ui/pages/EmployeeFormPage/EmployeeFormPage'));
-const UserDetailPage = lazy(() => import('modules/users/ui/pages/UserDetailPage/UserDetailPage'));
-const EmployeeDetailPage = lazy(() => import('modules/users/ui/pages/EmployeeDetailPage/EmployeeDetailPage'));
-const OrdersListPage = lazy(() => import('modules/orders/ui/pages/OrdersListPage/OrdersListPage'));
-const OrderDetailPage = lazy(() => import('modules/orders/ui/pages/OrderDetailPage/OrderDetailPage'));
-const OrderItemsListPage = lazy(() => import('modules/orders/ui/pages/OrderItemsListPage/OrderItemsListPage'));
-const OrderItemDetailPage = lazy(() => import('modules/orders/ui/pages/OrderItemDetailPage/OrderItemDetailPage'));
+const TariffsListPage = lazy(() => import('modules/product-owner/tariffs/ui/pages/TariffsListPage/TariffsListPage'));
+const TariffFormPage = lazy(() => import('modules/product-owner/tariffs/ui/pages/TariffFormPage/TariffFormPage'));
+const RolesListPage = lazy(() => import('modules/user-management/roles/ui/pages/RolesListPage/RolesListPage'));
+const RoleFormPage = lazy(() => import('modules/user-management/roles/ui/pages/RoleFormPage/RoleFormPage'));
+const PermissionsListPage = lazy(
+  () => import('modules/user-management/permissions/ui/pages/PermissionsListPage/PermissionsListPage'),
+);
+const UserFormPage = lazy(() => import('modules/user-management/users/ui/pages/UserFormPage/UserFormPage'));
+const EmployeeFormPage = lazy(
+  () => import('modules/restaurant-admin/employees/ui/pages/EmployeeFormPage/EmployeeFormPage'),
+);
+const UserDetailPage = lazy(() => import('modules/user-management/users/ui/pages/UserDetailPage/UserDetailPage'));
+const EmployeeDetailPage = lazy(
+  () => import('modules/restaurant-admin/employees/ui/pages/EmployeeDetailPage/EmployeeDetailPage'),
+);
+const OrdersListPage = lazy(() => import('modules/restaurant-admin/orders/ui/pages/OrdersListPage/OrdersListPage'));
+const OrderDetailPage = lazy(() => import('modules/restaurant-admin/orders/ui/pages/OrderDetailPage/OrderDetailPage'));
+const OrderItemsListPage = lazy(
+  () => import('modules/restaurant-admin/orders/ui/pages/OrderItemsListPage/OrderItemsListPage'),
+);
+const OrderItemDetailPage = lazy(
+  () => import('modules/restaurant-admin/orders/ui/pages/OrderItemDetailPage/OrderItemDetailPage'),
+);
 const OrderItemNotesListPage = lazy(
-  () => import('modules/orders/ui/pages/OrderItemNotesListPage/OrderItemNotesListPage'),
+  () => import('modules/restaurant-admin/orders/ui/pages/OrderItemNotesListPage/OrderItemNotesListPage'),
 );
 const OrderItemNoteDetailPage = lazy(
-  () => import('modules/orders/ui/pages/OrderItemNoteDetailPage/OrderItemNoteDetailPage'),
+  () => import('modules/restaurant-admin/orders/ui/pages/OrderItemNoteDetailPage/OrderItemNoteDetailPage'),
 );
-const PaymentsListPage = lazy(() => import('modules/orders/ui/pages/PaymentsListPage/PaymentsListPage'));
-const PaymentDetailPage = lazy(() => import('modules/orders/ui/pages/PaymentDetailPage/PaymentDetailPage'));
-const ReceiptsListPage = lazy(() => import('modules/orders/ui/pages/ReceiptsListPage/ReceiptsListPage'));
-const ReceiptDetailPage = lazy(() => import('modules/orders/ui/pages/ReceiptDetailPage/ReceiptDetailPage'));
-const ReportsPage = lazy(() => import('modules/reports/ui/pages/ReportsPage/ReportsPage'));
+const PaymentsListPage = lazy(
+  () => import('modules/restaurant-admin/orders/ui/pages/PaymentsListPage/PaymentsListPage'),
+);
+const PaymentDetailPage = lazy(
+  () => import('modules/restaurant-admin/orders/ui/pages/PaymentDetailPage/PaymentDetailPage'),
+);
+const ReceiptsListPage = lazy(
+  () => import('modules/restaurant-admin/orders/ui/pages/ReceiptsListPage/ReceiptsListPage'),
+);
+const ReceiptDetailPage = lazy(
+  () => import('modules/restaurant-admin/orders/ui/pages/ReceiptDetailPage/ReceiptDetailPage'),
+);
+const ReportsPage = lazy(() => import('modules/restaurant-admin/reports/ui/pages/ReportsPage/ReportsPage'));
 const KitchenTicketsListPage = lazy(
-  () => import('modules/kitchen/ui/pages/KitchenTicketsListPage/KitchenTicketsListPage'),
+  () => import('modules/restaurant-admin/kitchen/ui/pages/KitchenTicketsListPage/KitchenTicketsListPage'),
 );
 const KitchenTicketDetailPage = lazy(
-  () => import('modules/kitchen/ui/pages/KitchenTicketDetailPage/KitchenTicketDetailPage'),
+  () => import('modules/restaurant-admin/kitchen/ui/pages/KitchenTicketDetailPage/KitchenTicketDetailPage'),
 );
-const CategoriesListPage = lazy(() => import('modules/catalog/ui/pages/CategoriesListPage/CategoriesListPage'));
-const CatalogBrowserPage = lazy(() => import('modules/catalog/ui/pages/CatalogBrowserPage/CatalogBrowserPage'));
-const CategoryFormPage = lazy(() => import('modules/catalog/ui/pages/CategoryFormPage/CategoryFormPage'));
-const ProductsListPage = lazy(() => import('modules/catalog/ui/pages/ProductsListPage/ProductsListPage'));
-const ProductFormPage = lazy(() => import('modules/catalog/ui/pages/ProductFormPage/ProductFormPage'));
+const CategoriesListPage = lazy(
+  () => import('modules/restaurant-admin/catalog/ui/pages/CategoriesListPage/CategoriesListPage'),
+);
+const CatalogBrowserPage = lazy(
+  () => import('modules/restaurant-admin/catalog/ui/pages/CatalogBrowserPage/CatalogBrowserPage'),
+);
+const CategoryFormPage = lazy(
+  () => import('modules/restaurant-admin/catalog/ui/pages/CategoryFormPage/CategoryFormPage'),
+);
+const ProductsListPage = lazy(
+  () => import('modules/restaurant-admin/catalog/ui/pages/ProductsListPage/ProductsListPage'),
+);
+const ProductFormPage = lazy(() => import('modules/restaurant-admin/catalog/ui/pages/ProductFormPage/ProductFormPage'));
 const RestaurantsListPage = lazy(
-  () => import('modules/organizations/ui/pages/RestaurantsListPage/RestaurantsListPage'),
+  () => import('modules/business-partner/restaurants/ui/pages/RestaurantsListPage/RestaurantsListPage'),
 );
-const MyRestaurantPage = lazy(() => import('modules/organizations/ui/pages/MyRestaurantPage/MyRestaurantPage'));
+const MyRestaurantPage = lazy(
+  () => import('modules/restaurant-admin/restaurant-management/ui/pages/MyRestaurantPage/MyRestaurantPage'),
+);
 const MyRestaurantGeneralPage = lazy(
-  () => import('modules/organizations/ui/pages/MyRestaurantGeneralPage/MyRestaurantGeneralPage'),
+  () =>
+    import('modules/restaurant-admin/restaurant-management/ui/pages/MyRestaurantGeneralPage/MyRestaurantGeneralPage'),
 );
 const MyRestaurantCashDesksPage = lazy(
-  () => import('modules/organizations/ui/pages/MyRestaurantCashDesksPage/MyRestaurantCashDesksPage'),
+  () =>
+    import(
+      'modules/restaurant-admin/restaurant-management/ui/pages/MyRestaurantCashDesksPage/MyRestaurantCashDesksPage'
+    ),
 );
 const MyRestaurantDevicesPage = lazy(
-  () => import('modules/organizations/ui/pages/MyRestaurantDevicesPage/MyRestaurantDevicesPage'),
+  () =>
+    import('modules/restaurant-admin/restaurant-management/ui/pages/MyRestaurantDevicesPage/MyRestaurantDevicesPage'),
 );
 const MyRestaurantPrepStationsPage = lazy(
-  () => import('modules/organizations/ui/pages/MyRestaurantPrepStationsPage/MyRestaurantPrepStationsPage'),
+  () =>
+    import(
+      'modules/restaurant-admin/restaurant-management/ui/pages/MyRestaurantPrepStationsPage/MyRestaurantPrepStationsPage'
+    ),
 );
 const MyRestaurantDistributionPointsPage = lazy(
-  () => import('modules/organizations/ui/pages/MyRestaurantDistributionPointsPage/MyRestaurantDistributionPointsPage'),
+  () =>
+    import(
+      'modules/restaurant-admin/restaurant-management/ui/pages/MyRestaurantDistributionPointsPage/MyRestaurantDistributionPointsPage'
+    ),
 );
-const RestaurantFormPage = lazy(() => import('modules/organizations/ui/pages/RestaurantFormPage/RestaurantFormPage'));
-const HallsListPage = lazy(() => import('modules/floor/ui/pages/HallsListPage/HallsListPage'));
-const HallConstructorPage = lazy(() => import('modules/floor/ui/pages/HallConstructorPage/HallConstructorPage'));
-const ZonesListPage = lazy(() => import('modules/floor/ui/pages/ZonesListPage/ZonesListPage'));
-const TableSessionsListPage = lazy(() => import('modules/floor/ui/pages/TableSessionsListPage/TableSessionsListPage'));
-const TableSessionFormPage = lazy(() => import('modules/floor/ui/pages/TableSessionFormPage/TableSessionFormPage'));
+const RestaurantFormPage = lazy(
+  () => import('modules/business-partner/restaurants/ui/pages/RestaurantFormPage/RestaurantFormPage'),
+);
+const HallsListPage = lazy(() => import('modules/restaurant-admin/floor/ui/pages/HallsListPage/HallsListPage'));
+const HallFormPage = lazy(() => import('modules/restaurant-admin/floor/ui/pages/HallFormPage/HallFormPage'));
+const HallConstructorPage = lazy(
+  () => import('modules/restaurant-admin/floor/ui/pages/HallConstructorPage/HallConstructorPage'),
+);
+const ZonesListPage = lazy(() => import('modules/restaurant-admin/floor/ui/pages/ZonesListPage/ZonesListPage'));
+const ZoneFormPage = lazy(() => import('modules/restaurant-admin/floor/ui/pages/ZoneFormPage/ZoneFormPage'));
+const TableSessionsListPage = lazy(
+  () => import('modules/restaurant-admin/floor/ui/pages/TableSessionsListPage/TableSessionsListPage'),
+);
+const TableSessionFormPage = lazy(
+  () => import('modules/restaurant-admin/floor/ui/pages/TableSessionFormPage/TableSessionFormPage'),
+);
+
+function MainRedirectPage() {
+  const { profile } = useCurrentUser();
+
+  if (!profile) {
+    return <LoadingScreen />;
+  }
+
+  const nextPath = getDefaultAdminPath(profile);
+
+  if (!nextPath) {
+    return <LoadingScreen />;
+  }
+
+  return <Navigate replace to={nextPath} />;
+}
 
 function SuspenseOutlet() {
   const pathname = usePathname();
@@ -92,7 +159,7 @@ function SuspenseOutlet() {
 const mainChildren: RouteObject[] = [
   {
     path: RoutePath.main,
-    element: <DashboardHomePage />,
+    element: <MainRedirectPage />,
   },
   {
     path: RoutePath.platformBusinessPartnerList,
@@ -268,11 +335,11 @@ const mainChildren: RouteObject[] = [
   },
   {
     path: RoutePath.floorHallCreate,
-    element: <HallsListPage />,
+    element: <HallFormPage />,
   },
   {
     path: RoutePath.floorHallEdit,
-    element: <HallsListPage />,
+    element: <HallFormPage />,
   },
   {
     path: RoutePath.floorHallConstructor,
@@ -284,11 +351,11 @@ const mainChildren: RouteObject[] = [
   },
   {
     path: RoutePath.floorZoneCreate,
-    element: <ZonesListPage />,
+    element: <ZoneFormPage />,
   },
   {
     path: RoutePath.floorZoneEdit,
-    element: <ZonesListPage />,
+    element: <ZoneFormPage />,
   },
   {
     path: RoutePath.floorTableSessionList,

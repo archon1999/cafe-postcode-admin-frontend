@@ -30,6 +30,7 @@ const ICONS = {
   organizations: <Iconify icon="solar:buildings-3-bold-duotone" width={24} />,
   restaurants: <Iconify icon="solar:city-bold-duotone" width={20} />,
   restaurantManagement: <Iconify icon="solar:settings-bold-duotone" width={20} />,
+  general: <Iconify icon="solar:widget-6-bold-duotone" width={20} />,
   cashDesks: <Iconify icon="solar:wallet-money-bold-duotone" width={20} />,
   devices: <Iconify icon="solar:smartphone-2-bold-duotone" width={20} />,
   prepStations: <Iconify icon="solar:chef-hat-bold-duotone" width={20} />,
@@ -171,6 +172,13 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
   ].filter(Boolean) as NavSectionProps['data'][number]['items'];
 
   const myRestaurantChildren = [
+    canAccess(RoutePath.organizationMyRestaurantGeneral)
+      ? {
+          title: t('general', { defaultValue: 'Umumiy' }),
+          path: RoutePath.organizationMyRestaurantGeneral,
+          icon: ICONS.general,
+        }
+      : null,
     canAccess(RoutePath.organizationMyRestaurantCashDeskList)
       ? {
           title: t('cashDesks'),
@@ -244,7 +252,7 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
     myRestaurantChildren.length
       ? {
           title: t('restaurantManagement', { defaultValue: 'Restoran boshqaruvi' }),
-          path: myRestaurantChildren[0].path,
+          path: RoutePath.organizationMyRestaurant,
           icon: ICONS.restaurantManagement,
           children: myRestaurantChildren,
         }

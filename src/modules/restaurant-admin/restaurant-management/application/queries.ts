@@ -1,0 +1,233 @@
+import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
+
+import type {
+  AdminCashDesk,
+  AdminCashDesksQueryParams,
+  AdminDevice,
+  AdminDevicesQueryParams,
+  AdminDistributionPoint,
+  AdminDistributionPointsQueryParams,
+  AdminFeatureConfig,
+  AdminFeatureConfigsQueryParams,
+  AdminHall,
+  AdminPaginatedResponse,
+  AdminPrepStation,
+  AdminPrepStationsQueryParams,
+  AdminRestaurant,
+  AdminRestaurantsQueryParams,
+} from 'shared/api/admin-types';
+import { apiClient } from 'shared/api/http/apiClient';
+
+import { organizationsRepository } from '../data-access';
+
+import { organizationsKeys } from './keys';
+
+export function useGetCashDesksQuery(options?: Omit<UseQueryOptions<AdminCashDesk[]>, 'queryFn' | 'queryKey'>) {
+  return useQuery({
+    queryKey: organizationsKeys.cashDesks(),
+    queryFn: () => organizationsRepository.getCashDesks(),
+    ...options,
+  });
+}
+
+export function useGetCashDesksListQuery(
+  params: AdminCashDesksQueryParams,
+  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminCashDesk>>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: organizationsKeys.cashDesksList(params),
+    queryFn: () => apiClient.getAdminCashDesks(params),
+    ...options,
+  });
+}
+
+export function useGetCashDeskByIdQuery(
+  id: string,
+  options?: Omit<UseQueryOptions<AdminCashDesk>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: organizationsKeys.cashDeskDetail(id),
+    queryFn: () => organizationsRepository.getCashDeskById(id),
+    enabled: Boolean(id),
+    ...options,
+  });
+}
+
+export function useGetDevicesQuery(options?: Omit<UseQueryOptions<AdminDevice[]>, 'queryFn' | 'queryKey'>) {
+  return useQuery({
+    queryKey: organizationsKeys.devices(),
+    queryFn: () => organizationsRepository.getDevices(),
+    ...options,
+  });
+}
+
+export function useGetDevicesListQuery(
+  params: AdminDevicesQueryParams,
+  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminDevice>>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: organizationsKeys.devicesList(params),
+    queryFn: () => apiClient.getAdminDevices(params),
+    ...options,
+  });
+}
+
+export function useGetDeviceByIdQuery(
+  id: string,
+  options?: Omit<UseQueryOptions<AdminDevice>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: organizationsKeys.deviceDetail(id),
+    queryFn: () => organizationsRepository.getDeviceById(id),
+    enabled: Boolean(id),
+    ...options,
+  });
+}
+
+export function useGetDistributionPointsQuery(
+  options?: Omit<UseQueryOptions<AdminDistributionPoint[]>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: organizationsKeys.distributionPoints(),
+    queryFn: () => organizationsRepository.getDistributionPoints(),
+    ...options,
+  });
+}
+
+export function useGetDistributionPointsListQuery(
+  params: AdminDistributionPointsQueryParams,
+  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminDistributionPoint>>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: organizationsKeys.distributionPointsList(params),
+    queryFn: () => apiClient.getAdminDistributionPoints(params),
+    ...options,
+  });
+}
+
+export function useGetDistributionPointByIdQuery(
+  id: string,
+  options?: Omit<UseQueryOptions<AdminDistributionPoint>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: organizationsKeys.distributionPointDetail(id),
+    queryFn: () => organizationsRepository.getDistributionPointById(id),
+    enabled: Boolean(id),
+    ...options,
+  });
+}
+
+export function useGetFeatureConfigsQuery(
+  options?: Omit<UseQueryOptions<AdminFeatureConfig[]>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: organizationsKeys.featureConfigs(),
+    queryFn: () => organizationsRepository.getFeatureConfigs(),
+    ...options,
+  });
+}
+
+export function useGetFeatureConfigsListQuery(
+  params: AdminFeatureConfigsQueryParams,
+  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminFeatureConfig>>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: organizationsKeys.featureConfigsList(params),
+    queryFn: () => apiClient.getAdminFeatureConfigs(params),
+    ...options,
+  });
+}
+
+export function useGetFeatureConfigByIdQuery(
+  id: string,
+  options?: Omit<UseQueryOptions<AdminFeatureConfig>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: organizationsKeys.featureConfigDetail(id),
+    queryFn: () => organizationsRepository.getFeatureConfigById(id),
+    enabled: Boolean(id),
+    ...options,
+  });
+}
+
+export function useGetRestaurantFeatureConfigQuery(
+  restaurantId: string,
+  options?: Omit<UseQueryOptions<AdminFeatureConfig>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: organizationsKeys.restaurantFeatureConfig(restaurantId),
+    queryFn: () => organizationsRepository.getRestaurantFeatureConfig(restaurantId),
+    enabled: Boolean(restaurantId),
+    ...options,
+  });
+}
+
+export function useGetPrepStationsQuery(options?: Omit<UseQueryOptions<AdminPrepStation[]>, 'queryFn' | 'queryKey'>) {
+  return useQuery({
+    queryKey: organizationsKeys.prepStations(),
+    queryFn: () => organizationsRepository.getPrepStations(),
+    ...options,
+  });
+}
+
+export function useGetPrepStationsListQuery(
+  params: AdminPrepStationsQueryParams,
+  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminPrepStation>>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: organizationsKeys.prepStationsList(params),
+    queryFn: () => apiClient.getAdminPrepStations(params),
+    ...options,
+  });
+}
+
+export function useGetOrganizationsPrepStationByIdQuery(
+  id: string,
+  options?: Omit<UseQueryOptions<AdminPrepStation>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: organizationsKeys.prepStationDetail(id),
+    queryFn: () => organizationsRepository.getPrepStationById(id),
+    enabled: Boolean(id),
+    ...options,
+  });
+}
+
+export function useGetRestaurantsQuery(options?: Omit<UseQueryOptions<AdminRestaurant[]>, 'queryFn' | 'queryKey'>) {
+  return useQuery({
+    queryKey: organizationsKeys.restaurants(),
+    queryFn: () => organizationsRepository.getRestaurants(),
+    ...options,
+  });
+}
+
+export function useGetRestaurantsListQuery(
+  params: AdminRestaurantsQueryParams,
+  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminRestaurant>>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: organizationsKeys.restaurantsList(params),
+    queryFn: () => apiClient.getAdminRestaurants(params),
+    ...options,
+  });
+}
+
+export function useGetRestaurantByIdQuery(
+  id: string,
+  options?: Omit<UseQueryOptions<AdminRestaurant>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: organizationsKeys.restaurantDetail(id),
+    queryFn: () => organizationsRepository.getRestaurantById(id),
+    enabled: Boolean(id),
+    ...options,
+  });
+}
+
+export function useGetOrganizationsHallsQuery(options?: Omit<UseQueryOptions<AdminHall[]>, 'queryFn' | 'queryKey'>) {
+  return useQuery({
+    queryKey: organizationsKeys.halls(),
+    queryFn: () => organizationsRepository.getHalls(),
+    ...options,
+  });
+}

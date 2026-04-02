@@ -1,6 +1,8 @@
+import { matchPath } from 'react-router';
+
 import type { AdminSessionUser } from 'shared/api/admin-types';
 
-import { AppRoutesRoot, RoutePath, RouteRootPath } from './route-paths';
+import { RoutePath } from './route-paths';
 
 export type AdminAccessSnapshot = Pick<AdminSessionUser, 'isSuperuser' | 'permissionCodes' | 'restaurantAccessActive'>;
 
@@ -96,6 +98,7 @@ const EMPLOYEE_PERMISSION_CODES: PermissionCode[] = [
 
 const ADMIN_LANDING_CANDIDATES = [
   RoutePath.platformBusinessPartnerList,
+  RoutePath.platformTariffList,
   RoutePath.organizationRestaurantList,
   RoutePath.organizationMyRestaurant,
   RoutePath.reports,
@@ -107,6 +110,7 @@ const ADMIN_LANDING_CANDIDATES = [
   RoutePath.employeeList,
   RoutePath.userList,
   RoutePath.roleList,
+  RoutePath.permissionList,
 ] as const;
 
 function hasActiveRestaurantAccess(snapshot?: AdminAccessSnapshot | null) {
@@ -199,12 +203,7 @@ export function canAccessMyRestaurant(snapshot?: AdminAccessSnapshot | null) {
 }
 
 export function canAccessAccessControl(snapshot?: AdminAccessSnapshot | null) {
-  return (
-    canAccessUsers(snapshot) ||
-    canAccessEmployees(snapshot) ||
-    canAccessRoles(snapshot) ||
-    canAccessPermissions(snapshot)
-  );
+  return canAccessUsers(snapshot) || canAccessRoles(snapshot) || canAccessPermissions(snapshot);
 }
 
 export function canAccessMyRestaurantGeneral(snapshot?: AdminAccessSnapshot | null) {
@@ -232,10 +231,14 @@ export function canAccessMyRestaurantDistributionPoints(snapshot?: AdminAccessSn
 const MY_RESTAURANT_LANDING_CANDIDATES = [
   RoutePath.organizationMyRestaurantGeneral,
   RoutePath.organizationMyRestaurantCashDeskList,
-  RoutePath.organizationMyRestaurantPrepStationList,
   RoutePath.organizationMyRestaurantDeviceList,
+  RoutePath.organizationMyRestaurantPrepStationList,
   RoutePath.organizationMyRestaurantDistributionPointList,
 ] as const;
+
+function matchesRoute(pathname: string, path: string) {
+  return Boolean(matchPath({ path, end: true }, pathname));
+}
 
 export function canAccessAdminPath(pathname: string, snapshot?: AdminAccessSnapshot | null) {
   if (!pathname || pathname === RoutePath.main) {
@@ -248,10 +251,6 @@ export function canAccessAdminPath(pathname: string, snapshot?: AdminAccessSnaps
 
   if (matchesPrefix(pathname, RoutePath.platformTariffList)) {
     return canAccessTariffs(snapshot);
-  }
-
-  if (matchesPrefix(pathname, RoutePath.organizationFeatureConfigList)) {
-    return canAccessFeatureConfigs(snapshot);
   }
 
   if (pathname === RoutePath.organizationMyRestaurant) {
@@ -278,67 +277,61 @@ export function canAccessAdminPath(pathname: string, snapshot?: AdminAccessSnaps
     return canAccessMyRestaurantDistributionPoints(snapshot);
   }
 
-  if (pathname.includes('/restaurants/') && pathname.endsWith('/feature-config')) {
-    return canAccessMyRestaurantGeneral(snapshot) || canAccessRestaurants(snapshot);
-  }
-
-  if (
-    pathname !== RoutePath.organizationRestaurantList &&
-    pathname !== RoutePath.organizationRestaurantCreate &&
-    matchesPrefix(pathname, `${RouteRootPath[AppRoutesRoot.ORGANIZATIONS]}/restaurants`)
-  ) {
-    return canAccessRestaurants(snapshot) || canAccessMyRestaurant(snapshot);
-  }
-
   if (matchesPrefix(pathname, RoutePath.organizationRestaurantList)) {
     return canAccessRestaurants(snapshot);
   }
 
-  if (matchesPrefix(pathname, RouteRootPath[AppRoutesRoot.ROLES])) {
-    return canAccessRoles(snapshot);
-  }
-
-  if (matchesPrefix(pathname, RouteRootPath[AppRoutesRoot.PERMISSIONS])) {
-    return canAccessPermissions(snapshot);
-  }
-
-  if (matchesPrefix(pathname, RouteRootPath[AppRoutesRoot.REPORTS])) {
+  if (matchesPrefix(pathname, RoutePath.reports)) {
     return canAccessReports(snapshot);
   }
 
+  if (matchesPrefix(pathname, RoutePath.paymentList) || matchesPrefix(pathname, RoutePath.receiptList)) {
+    return canAccessPayments(snapshot);
+  }
+
   if (
-    matchesPrefix(pathname, RouteRootPath[AppRoutesRoot.ORDERS]) ||
-    matchesPrefix(pathname, RouteRootPath[AppRoutesRoot.ORDER_ITEMS]) ||
-    matchesPrefix(pathname, RouteRootPath[AppRoutesRoot.ORDER_ITEM_NOTES])
+    matchesPrefix(pathname, RoutePath.orderItemNoteList) ||
+    matchesPrefix(pathname, RoutePath.orderItemList) ||
+    pathname === RoutePath.orderList ||
+    matchesRoute(pathname, RoutePath.orderView)
   ) {
     return canAccessOrders(snapshot);
   }
 
-  if (
-    matchesPrefix(pathname, RouteRootPath[AppRoutesRoot.PAYMENTS]) ||
-    matchesPrefix(pathname, RouteRootPath[AppRoutesRoot.RECEIPTS])
-  ) {
-    return canAccessPayments(snapshot);
-  }
-
-  if (matchesPrefix(pathname, RouteRootPath[AppRoutesRoot.KITCHEN])) {
+  if (matchesPrefix(pathname, RoutePath.kitchenTicketList)) {
     return canAccessKitchen(snapshot);
   }
 
-  if (matchesPrefix(pathname, RouteRootPath[AppRoutesRoot.CATALOG])) {
+  if (
+    matchesPrefix(pathname, RoutePath.catalogBrowser) ||
+    matchesPrefix(pathname, RoutePath.catalogCategoryList) ||
+    matchesPrefix(pathname, RoutePath.catalogItemList)
+  ) {
     return canAccessCatalog(snapshot);
   }
 
-  if (matchesPrefix(pathname, RouteRootPath[AppRoutesRoot.FLOOR])) {
+  if (
+    matchesPrefix(pathname, RoutePath.floorHallList) ||
+    matchesPrefix(pathname, RoutePath.floorZoneList) ||
+    matchesPrefix(pathname, RoutePath.floorTableSessionList)
+  ) {
     return canAccessFloor(snapshot);
   }
 
-  if (matchesPrefix(pathname, RouteRootPath[AppRoutesRoot.USERS])) {
+  if (matchesPrefix(pathname, RoutePath.employeeList)) {
+    return canAccessEmployees(snapshot);
+  }
+
+  if (matchesPrefix(pathname, RoutePath.userList)) {
     return canAccessUsers(snapshot);
   }
 
-  if (matchesPrefix(pathname, RouteRootPath[AppRoutesRoot.EMPLOYEES])) {
-    return canAccessEmployees(snapshot);
+  if (matchesPrefix(pathname, RoutePath.roleList)) {
+    return canAccessRoles(snapshot);
+  }
+
+  if (matchesPrefix(pathname, RoutePath.permissionList)) {
+    return canAccessPermissions(snapshot);
   }
 
   return true;

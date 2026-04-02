@@ -5,7 +5,7 @@ import type { Params } from 'react-router';
 
 import { CONFIG } from 'app/config/globalConfig';
 import { AppRoutes, RoutePath } from 'app/routes';
-import { DEFAULT_REPORT_KEY } from 'modules/reports/domain';
+import { DEFAULT_REPORT_KEY } from 'modules/restaurant-admin/reports/domain';
 
 type RouteParams = Params<string>;
 type TitleRule = {
@@ -30,7 +30,7 @@ const getReportTitle = (t: TFunction, reportKey?: string): string => {
 
 const TITLE_RULES: TitleRule[] = [
   { route: AppRoutes.LOGIN, namespaces: ['auth'], resolve: (_params, t) => [t('auth:login.pageTitle')] },
-  { route: AppRoutes.MAIN, namespaces: ['users'], resolve: (_params, t) => [t('users:pages.list.title')] },
+  { route: AppRoutes.MAIN, namespaces: [], resolve: () => [] },
   {
     route: AppRoutes.PLATFORM_BUSINESS_PARTNER_LIST,
     namespaces: ['platform'],

@@ -117,17 +117,17 @@
   "helpers": {
     "featureConfigMissing": "Restoran uchun POS konfiguratsiyasi hali yaratilmagan yoki yuklanmagan."
   },
-  "branchManagement": {
-    "title": "Filial bo'yicha boshqaruv",
-    "description": "\"{{name}}\" filialiga tegishli operatsion bo'limlarni shu yerdan boshqaring.",
+  "restaurantManagement": {
+    "title": "Restoran bo'yicha boshqaruv",
+    "description": "\"{{name}}\" restoraniga tegishli operatsion bo'limlarni shu yerdan boshqaring.",
     "sections": {
-      "prepStations": { "description": "Filial oshxona va bar stansiyalarini boshqaring." },
-      "cashDesks": { "description": "Filialdagi kassalar va ularning joylashuvini boshqaring." },
+      "prepStations": { "description": "Restoran oshxona va bar stansiyalarini boshqaring." },
+      "cashDesks": { "description": "Restorandagi kassalar va ularning joylashuvini boshqaring." },
       "devices": { "description": "POS qurilmalari, rejimlari va zal birikmalarini boshqaring." },
       "distributionPoints": { "description": "Buyurtma kanallari va tarqatish nuqtalarini boshqaring." }
     },
     "openList": "Ro'yxatni ochish",
-    "createForBranch": "Shu filial uchun yaratish"
+    "createForRestaurant": "Shu restoran uchun yaratish"
   },
   "deviceModes": {
     "admin": "Admin",

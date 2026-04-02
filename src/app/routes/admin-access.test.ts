@@ -42,9 +42,13 @@ describe('admin access', () => {
     expect(getDefaultAdminPath(snapshot)).toBe(RoutePath.paymentList);
   });
 
-  it('treats employees and roles as access-control routes without a system bucket', () => {
-    const snapshot = createSnapshot(['employees.list']);
-    expect(canAccessAccessControl(snapshot)).toBe(true);
-    expect(canAccessAdminPath(RoutePath.employeeList, snapshot)).toBe(true);
+  it('keeps employees under restaurant-admin and access-control under user-management', () => {
+    const employeeSnapshot = createSnapshot(['employees.list']);
+    const roleSnapshot = createSnapshot(['roles.list']);
+
+    expect(canAccessAccessControl(employeeSnapshot)).toBe(false);
+    expect(canAccessAdminPath(RoutePath.employeeList, employeeSnapshot)).toBe(true);
+    expect(canAccessAccessControl(roleSnapshot)).toBe(true);
+    expect(canAccessAdminPath(RoutePath.roleList, roleSnapshot)).toBe(true);
   });
 });
