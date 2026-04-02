@@ -57,15 +57,7 @@ const schema = z.object({
 
 type Values = z.infer<typeof schema>;
 
-function BranchDeviceDialog({
-  open,
-  item,
-  onClose,
-}: {
-  open: boolean;
-  item: AdminDevice | null;
-  onClose: () => void;
-}) {
+function BranchDeviceDialog({ open, item, onClose }: { open: boolean; item: AdminDevice | null; onClose: () => void }) {
   const { t } = useTranslate('organizations');
   const { t: tCommon } = useTranslate('common');
   const isEditMode = Boolean(item);
@@ -366,10 +358,10 @@ export function BranchDevicesSection({
                   }}
                   filters={[
                     {
+                      id: 'modes',
                       label: t('filters.mode'),
                       value: modes,
                       options: modeOptions,
-                      onChange: setModes,
                       onApply: (values) => {
                         setModes(values);
                         setPaginationModel((prev) => ({ ...prev, page: 0 }));
@@ -378,10 +370,10 @@ export function BranchDevicesSection({
                       emptyLabel: t('filters.all'),
                     },
                     {
+                      id: 'statuses',
                       label: t('filters.status'),
                       value: statuses,
                       options: statusOptions,
-                      onChange: setStatuses,
                       onApply: (values) => {
                         setStatuses(values);
                         setPaginationModel((prev) => ({ ...prev, page: 0 }));

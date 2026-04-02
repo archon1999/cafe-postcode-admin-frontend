@@ -4,6 +4,8 @@ export * from './ToolbarCore';
 
 export * from './DataGridColumnsDialogButton';
 
+export * from './DataGridFiltersToolbar';
+
 export * from './DataGrid';
 
 export * from './GridActionsCellItem';

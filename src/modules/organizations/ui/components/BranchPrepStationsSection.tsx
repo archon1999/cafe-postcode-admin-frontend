@@ -316,10 +316,10 @@ export function BranchPrepStationsSection({
                   }}
                   filters={[
                     {
+                      id: 'kinds',
                       label: t('filters.kind'),
                       value: kinds,
                       options: kindOptions,
-                      onChange: setKinds,
                       onApply: (values) => {
                         setKinds(values);
                         setPaginationModel((prev) => ({ ...prev, page: 0 }));
@@ -328,10 +328,10 @@ export function BranchPrepStationsSection({
                       emptyLabel: t('filters.all'),
                     },
                     {
+                      id: 'statuses',
                       label: t('filters.status'),
                       value: statuses,
                       options: statusOptions,
-                      onChange: setStatuses,
                       onApply: (values) => {
                         setStatuses(values);
                         setPaginationModel((prev) => ({ ...prev, page: 0 }));

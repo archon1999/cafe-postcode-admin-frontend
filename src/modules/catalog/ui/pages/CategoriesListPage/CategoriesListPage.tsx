@@ -19,6 +19,7 @@ import type { CatalogCategory } from 'shared/api/admin-types';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState } from 'shared/ui/CustomDataGrid';
 import { ConfirmDialog } from 'shared/ui/CustomDialog';
+import type { FilterOption } from 'shared/ui/Filters';
 import { Iconify } from 'shared/ui/Iconify';
 import { RouterLink } from 'shared/ui/RouterLink';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
@@ -201,10 +202,10 @@ const CategoriesListPage = () => {
                   onClearSearch={() => handleSearchChange('')}
                   filters={[
                     {
+                      id: 'statuses',
                       label: t('filters.status'),
                       value: statuses,
                       options: statusOptions,
-                      onChange: setStatuses,
                       onApply: (values) => {
                         setStatuses(values);
                         setPaginationModel((prev) => ({ ...prev, page: 0 }));

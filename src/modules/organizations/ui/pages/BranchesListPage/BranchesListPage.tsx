@@ -186,10 +186,10 @@ const BranchesListPage = () => {
                   onClearSearch={() => setSearch('')}
                   filters={[
                     {
+                      id: 'defaults',
                       label: t('filters.default'),
                       value: defaults,
                       options: defaultOptions,
-                      onChange: setDefaults,
                       onApply: (values) => {
                         setDefaults(values);
                         setPaginationModel((prev) => ({ ...prev, page: 0 }));

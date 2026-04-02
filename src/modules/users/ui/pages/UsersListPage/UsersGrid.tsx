@@ -76,9 +76,12 @@ export function UsersGrid({ surface = 'user' }: UsersGridProps) {
   const usersListQuery = useGetUsersQuery(queryParams, { enabled: surface === 'user' });
   const employeesListQuery = useGetEmployeesQuery(queryParams, { enabled: surface === 'employee' });
   const usersQuery = surface === 'employee' ? employeesListQuery : usersListQuery;
-  const toggleUserStatusMutation =
-    surface === 'employee' ? useToggleEmployeeActiveMutation() : useToggleUserActiveMutation();
-  const archiveUserMutation = surface === 'employee' ? useArchiveEmployeeMutation() : useArchiveUserMutation();
+  const toggleEmployeeStatusMutation = useToggleEmployeeActiveMutation();
+  const toggleUserStatusMutation = useToggleUserActiveMutation();
+  const toggleStatusMutation = surface === 'employee' ? toggleEmployeeStatusMutation : toggleUserStatusMutation;
+  const archiveEmployeeMutation = useArchiveEmployeeMutation();
+  const archiveUserMutation = useArchiveUserMutation();
+  const archiveMutation = surface === 'employee' ? archiveEmployeeMutation : archiveUserMutation;
   const hasActiveFilters = Boolean(search || roleIds.length || statuses.length);
 
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
@@ -91,8 +94,10 @@ export function UsersGrid({ surface = 'user' }: UsersGridProps) {
     [rolesQuery.data],
   );
 
-  const viewHref = (id: string) => (surface === 'employee' ? RouterPathHelper.employeeView(id) : RouterPathHelper.userView(id));
-  const editHref = (id: string) => (surface === 'employee' ? RouterPathHelper.employeeEdit(id) : RouterPathHelper.userEdit(id));
+  const viewHref = (id: string) =>
+    surface === 'employee' ? RouterPathHelper.employeeView(id) : RouterPathHelper.userView(id);
+  const editHref = (id: string) =>
+    surface === 'employee' ? RouterPathHelper.employeeEdit(id) : RouterPathHelper.userEdit(id);
 
   const columns = useMemo<GridColDef<AdminUser>[]>(
     () => [
@@ -163,7 +168,7 @@ export function UsersGrid({ surface = 'user' }: UsersGridProps) {
             checked={row.isActive}
             disabled={row.employmentStatus === 'archived'}
             onClick={(event) => event.stopPropagation()}
-            onChange={(_, checked) => toggleUserStatusMutation.mutate({ user: row, isActive: checked })}
+            onChange={(_, checked) => toggleStatusMutation.mutate({ user: row, isActive: checked })}
           />
         ),
       },
@@ -205,7 +210,7 @@ export function UsersGrid({ surface = 'user' }: UsersGridProps) {
                 key="archive"
                 label={t('actions.archive')}
                 icon={<Iconify icon="solar:archive-bold" />}
-                onClick={() => archiveUserMutation.mutate(params.row)}
+                onClick={() => archiveMutation.mutate(params.row)}
               />,
             );
           }
@@ -214,14 +219,16 @@ export function UsersGrid({ surface = 'user' }: UsersGridProps) {
         },
       },
     ],
-    [archiveUserMutation, editHref, surface, t, tCommon, toggleUserStatusMutation, viewHref],
+    [archiveMutation, editHref, surface, t, tCommon, toggleStatusMutation, viewHref],
   );
 
   const emptyStateMessages = useMemo(
     () => ({
       noData: {
         title: t(surface === 'employee' ? 'empty.employees.noData.title' : 'empty.users.noData.title'),
-        description: t(surface === 'employee' ? 'empty.employees.noData.description' : 'empty.users.noData.description'),
+        description: t(
+          surface === 'employee' ? 'empty.employees.noData.description' : 'empty.users.noData.description',
+        ),
       },
       noResults: {
         title: t(surface === 'employee' ? 'empty.employees.noResults.title' : 'empty.users.noResults.title'),
@@ -306,10 +313,8 @@ export function UsersGrid({ surface = 'user' }: UsersGridProps) {
               onSearchChange={handleSearchChange}
               onClearSearch={handleClearSearch}
               roleIds={roleIds}
-              onRoleIdsChange={setRoleIds}
               onRoleIdsApply={handleRoleIdsApply}
               statuses={statuses}
-              onStatusesChange={setStatuses}
               onStatusesApply={handleStatusesApply}
               roleOptions={roleOptions}
               columns={columns}
@@ -318,23 +323,6 @@ export function UsersGrid({ surface = 'user' }: UsersGridProps) {
               onSaveColumns={setColumnVisibilityModel}
             />
           ),
-        }}
-        sx={{
-          border: 'none',
-          [`& .${gridClasses.cell}`]: {
-            display: 'flex',
-            alignItems: 'center',
-          },
-          [`& .${gridClasses.actionsCell}`]: {
-            gap: 0.25,
-          },
-          '& .MuiDataGrid-toolbarContainer': {
-            px: 2.5,
-            py: 2,
-          },
-          '& .MuiDataGrid-columnHeaders': {
-            borderTop: (theme) => `1px solid ${theme.vars.palette.divider}`,
-          },
         }}
       />
     </Card>

@@ -67,11 +67,11 @@ const OrderItemsListPage = () => {
     () => [
       withDetailLink(
         {
-        field: 'orderNumber',
-        headerName: t('fields.orderNumber'),
-        minWidth: 110,
-        flex: 0.4,
-        valueGetter: (_v, row) => `#${row.orderNumber}`,
+          field: 'orderNumber',
+          headerName: t('fields.orderNumber'),
+          minWidth: 110,
+          flex: 0.4,
+          valueGetter: (_v, row) => `#${row.orderNumber}`,
         },
         (row) => RouterPathHelper.orderItemView(row.id),
       ),
@@ -203,10 +203,10 @@ const OrderItemsListPage = () => {
                   }}
                   filters={[
                     {
+                      id: 'statuses',
                       label: t('filters.status'),
                       value: statuses,
                       options: statusOptions,
-                      onChange: setStatuses,
                       onApply: (values) => {
                         setStatuses(values);
                         setPaginationModel((prev) => ({ ...prev, page: 0 }));

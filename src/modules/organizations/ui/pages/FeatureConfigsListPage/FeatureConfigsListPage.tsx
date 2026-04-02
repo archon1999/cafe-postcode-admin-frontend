@@ -25,15 +25,16 @@ import { RouterLink } from 'shared/ui/RouterLink';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 
 import { useDeleteFeatureConfigMutation, useGetFeatureConfigsListQuery } from '../../../application';
+import {
+  ORGANIZATION_FEATURE_KITCHEN_MODE_VALUES,
+  ORGANIZATION_FEATURE_ORDER_ENTRY_MODE_VALUES,
+} from '../../../domain';
 import { OrganizationsGridToolbar } from '../../components/OrganizationsGridToolbar';
 import { getFeatureKitchenModeTranslationKey, getFeatureOrderEntryModeTranslationKey } from '../../lib/presenters';
 
 const DEFAULT_PAGINATION_MODEL: GridPaginationModel = { page: 0, pageSize: 10 };
 const DEFAULT_COLUMN_VISIBILITY_MODEL: GridColumnVisibilityModel = {};
 const DEFAULT_SELECTION_MODEL: GridRowSelectionModel = { type: 'include', ids: new Set() };
-
-const ORDER_ENTRY_MODES = ['hall', 'cashier_builder'] as const;
-const KITCHEN_MODES = ['display', 'printer', 'both'] as const;
 
 const FeatureConfigsListPage = () => {
   const { t, currentLang } = useTranslate('organizations');
@@ -59,11 +60,19 @@ const FeatureConfigsListPage = () => {
   });
 
   const orderEntryModeOptions = useMemo<FilterOption[]>(
-    () => ORDER_ENTRY_MODES.map((mode) => ({ value: mode, label: t(getFeatureOrderEntryModeTranslationKey(mode)) })),
+    () =>
+      ORGANIZATION_FEATURE_ORDER_ENTRY_MODE_VALUES.map((mode) => ({
+        value: mode,
+        label: t(getFeatureOrderEntryModeTranslationKey(mode)),
+      })),
     [t],
   );
   const kitchenModeOptions = useMemo<FilterOption[]>(
-    () => KITCHEN_MODES.map((mode) => ({ value: mode, label: t(getFeatureKitchenModeTranslationKey(mode)) })),
+    () =>
+      ORGANIZATION_FEATURE_KITCHEN_MODE_VALUES.map((mode) => ({
+        value: mode,
+        label: t(getFeatureKitchenModeTranslationKey(mode)),
+      })),
     [t],
   );
 
@@ -113,10 +122,7 @@ const FeatureConfigsListPage = () => {
         minWidth: 220,
         flex: 1,
         renderCell: ({ row }) =>
-          (row.enabledRoleDetails?.length
-            ? row.enabledRoleDetails.map((role) => role.name)
-            : row.enabledRoles
-          )
+          (row.enabledRoleDetails?.length ? row.enabledRoleDetails.map((role) => role.name) : row.enabledRoles)
             .slice(0, 3)
             .join(', ') || '-',
       },
@@ -224,10 +230,10 @@ const FeatureConfigsListPage = () => {
                   onClearSearch={() => setSearch('')}
                   filters={[
                     {
+                      id: 'orderEntryModes',
                       label: t('filters.orderEntryMode'),
                       value: orderEntryModes,
                       options: orderEntryModeOptions,
-                      onChange: setOrderEntryModes,
                       onApply: (values) => {
                         setOrderEntryModes(values);
                         setPaginationModel((prev) => ({ ...prev, page: 0 }));
@@ -236,10 +242,10 @@ const FeatureConfigsListPage = () => {
                       emptyLabel: t('filters.all'),
                     },
                     {
+                      id: 'kitchenModes',
                       label: t('filters.kitchenMode'),
                       value: kitchenModes,
                       options: kitchenModeOptions,
-                      onChange: setKitchenModes,
                       onApply: (values) => {
                         setKitchenModes(values);
                         setPaginationModel((prev) => ({ ...prev, page: 0 }));

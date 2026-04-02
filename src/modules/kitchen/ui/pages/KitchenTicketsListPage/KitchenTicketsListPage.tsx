@@ -133,11 +133,11 @@ const KitchenTicketsListPage = () => {
     () => [
       withDetailLink(
         {
-        field: 'orderNumber',
-        headerName: t('fields.orderNumber'),
-        minWidth: 130,
-        flex: 0.5,
-        valueGetter: (_value, row) => `#${row.orderNumber}`,
+          field: 'orderNumber',
+          headerName: t('fields.orderNumber'),
+          minWidth: 130,
+          flex: 0.5,
+          valueGetter: (_value, row) => `#${row.orderNumber}`,
         },
         (row) => RouterPathHelper.kitchenTicketView(row.id),
       ),
@@ -314,25 +314,21 @@ const KitchenTicketsListPage = () => {
                   onSearchChange={handleSearchChange}
                   onClearSearch={() => handleSearchChange('')}
                   statuses={statuses}
-                  onStatusesChange={setStatuses}
                   onStatusesApply={(values) => {
                     setStatuses(values);
                     setPaginationModel((prev) => ({ ...prev, page: 0 }));
                   }}
                   prepStationIds={prepStationIds}
-                  onPrepStationIdsChange={setPrepStationIds}
                   onPrepStationIdsApply={(values) => {
                     setPrepStationIds(values);
                     setPaginationModel((prev) => ({ ...prev, page: 0 }));
                   }}
                   routedViaValues={routedViaValues}
-                  onRoutedViaValuesChange={setRoutedViaValues}
                   onRoutedViaValuesApply={(values) => {
                     setRoutedViaValues(values);
                     setPaginationModel((prev) => ({ ...prev, page: 0 }));
                   }}
                   printedValues={printedValues}
-                  onPrintedValuesChange={setPrintedValues}
                   onPrintedValuesApply={(values) => {
                     setPrintedValues(values);
                     setPaginationModel((prev) => ({ ...prev, page: 0 }));

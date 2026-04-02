@@ -1,25 +1,17 @@
-import Box from '@mui/material/Box';
-import type { GridColDef, GridColumnVisibilityModel } from '@mui/x-data-grid';
-import { Toolbar } from '@mui/x-data-grid';
-
 import { useTranslate } from 'app/providers/locales';
 import {
-  DataGridColumnsDialogButton,
-  ToolbarContainer,
-  ToolbarLeftPanel,
-  ToolbarRightPanel,
+  DataGridFiltersToolbar,
+  type DataGridToolbarFilter,
 } from 'shared/ui/CustomDataGrid';
-import { FilterSelect, type FilterOption } from 'shared/ui/Filters';
-import { TableSearchInput } from 'shared/ui/TableSearchInput';
+import type { GridColDef, GridColumnVisibilityModel } from '@mui/x-data-grid';
 
 type RolesGridToolbarProps = {
   search: string;
   onSearchChange: (value: string) => void;
   onClearSearch: () => void;
   types: string[];
-  onTypesChange: (values: string[]) => void;
   onTypesApply: (values: string[]) => void;
-  typeOptions: FilterOption[];
+  typeOptions: DataGridToolbarFilter['options'];
   columns: GridColDef[];
   columnVisibilityModel: GridColumnVisibilityModel;
   defaultColumnVisibilityModel: GridColumnVisibilityModel;
@@ -31,7 +23,6 @@ export function RolesGridToolbar({
   onSearchChange,
   onClearSearch,
   types,
-  onTypesChange,
   onTypesApply,
   typeOptions,
   columns,
@@ -40,46 +31,31 @@ export function RolesGridToolbar({
   onSaveColumns,
 }: RolesGridToolbarProps) {
   const { t } = useTranslate('users');
+  const filters: DataGridToolbarFilter[] = [
+    {
+      id: 'types',
+      label: t('filters.type'),
+      value: types,
+      options: typeOptions,
+      onApply: onTypesApply,
+      emptyLabel: t('filters.all'),
+      testId: 'roles-list-filter-type',
+    },
+  ];
 
   return (
-    <Toolbar>
-      <ToolbarContainer>
-        <ToolbarLeftPanel>
-          <TableSearchInput
-            size="small"
-            label={t('filters.search')}
-            placeholder={t('filters.searchRolesPlaceholder')}
-            value={search}
-            onChange={onSearchChange}
-            onClear={onClearSearch}
-            fullWidth
-            clearAriaLabel={t('filters.clearSearch')}
-            sx={{ minWidth: { xs: 1, md: 260 }, maxWidth: { md: 320 } }}
-          />
-
-          <FilterSelect
-            label={t('filters.type')}
-            value={types}
-            options={typeOptions}
-            onChange={onTypesChange}
-            onApply={onTypesApply}
-            emptyLabel={t('filters.all')}
-            testId="roles-list-filter-type"
-          />
-        </ToolbarLeftPanel>
-
-        <ToolbarRightPanel>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <DataGridColumnsDialogButton
-              columns={columns}
-              columnVisibilityModel={columnVisibilityModel}
-              defaultColumnVisibilityModel={defaultColumnVisibilityModel}
-              onSave={onSaveColumns}
-              showLabel
-            />
-          </Box>
-        </ToolbarRightPanel>
-      </ToolbarContainer>
-    </Toolbar>
+    <DataGridFiltersToolbar
+      searchLabel={t('filters.search')}
+      searchPlaceholder={t('filters.searchRolesPlaceholder')}
+      clearSearchLabel={t('filters.clearSearch')}
+      search={search}
+      onSearchChange={onSearchChange}
+      onClearSearch={onClearSearch}
+      filters={filters}
+      columns={columns}
+      columnVisibilityModel={columnVisibilityModel}
+      defaultColumnVisibilityModel={defaultColumnVisibilityModel}
+      onSaveColumns={onSaveColumns}
+    />
   );
 }

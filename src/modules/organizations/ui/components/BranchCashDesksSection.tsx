@@ -362,10 +362,10 @@ export function BranchCashDesksSection({
                   }}
                   filters={[
                     {
+                      id: 'statuses',
                       label: t('filters.status'),
                       value: statuses,
                       options: statusOptions,
-                      onChange: setStatuses,
                       onApply: (values) => {
                         setStatuses(values);
                         setPaginationModel((prev) => ({ ...prev, page: 0 }));
