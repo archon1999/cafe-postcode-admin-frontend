@@ -1,5 +1,4 @@
 import Card from '@mui/material/Card';
-import Typography from '@mui/material/Typography';
 import type {
   GridColDef,
   GridColumnVisibilityModel,
@@ -16,10 +15,11 @@ import type { AdminPermission } from 'shared/api/admin-types';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { DataGrid, DataGridEmptyState } from 'shared/ui/CustomDataGrid';
 import type { FilterOption } from 'shared/ui/Filters';
+import { Iconify } from 'shared/ui/Iconify';
+import { Label } from 'shared/ui/Label';
 import {
   getAdminPermissionAction,
   getAdminPermissionActionLabel,
-  getAdminPermissionLabel,
   getAdminPermissionScope,
   getAdminPermissionScopeLabel,
 } from 'shared/utils/admin-permission';
@@ -35,6 +35,28 @@ const DEFAULT_SELECTION_MODEL: GridRowSelectionModel = {
   type: 'include',
   ids: new Set(),
 };
+
+const SCOPE_BADGE_CONFIG = {
+  admin: { color: 'primary', icon: 'solar:key-bold-duotone' },
+  pos: { color: 'warning', icon: 'solar:shop-2-bold-duotone' },
+  dashboard: { color: 'success', icon: 'solar:chart-square-bold-duotone' },
+} as const;
+
+const ACTION_BADGE_CONFIG = {
+  list: { color: 'info', icon: 'solar:list-bold' },
+  view: { color: 'success', icon: 'solar:eye-bold' },
+  manage: { color: 'primary', icon: 'solar:key-bold-duotone' },
+  create: { color: 'secondary', icon: 'solar:add-circle-bold' },
+  update: { color: 'warning', icon: 'solar:pen-bold' },
+  delete: { color: 'error', icon: 'solar:trash-bin-trash-bold' },
+  activate: { color: 'success', icon: 'solar:play-circle-bold' },
+  deactivate: { color: 'error', icon: 'solar:lock-keyhole-bold' },
+  reset_password: { color: 'secondary', icon: 'solar:refresh-circle-bold-duotone' },
+  open: { color: 'success', icon: 'solar:play-bold' },
+  close: { color: 'error', icon: 'solar:lock-keyhole-bold' },
+  refund: { color: 'warning', icon: 'solar:refresh-bold' },
+  reprint: { color: 'info', icon: 'solar:refresh-circle-bold-duotone' },
+} as const;
 
 const PermissionsListPage = () => {
   const { t, currentLang } = useTranslate('users');
@@ -93,11 +115,10 @@ const PermissionsListPage = () => {
   const columns = useMemo<GridColDef<AdminPermission>[]>(
     () => [
       {
-        field: 'label',
-        headerName: t('fields.permission'),
-        minWidth: 260,
-        flex: 1,
-        valueGetter: (_value, row) => getAdminPermissionLabel(row, t),
+        field: 'description',
+        headerName: t('fields.description'),
+        minWidth: 320,
+        flex: 1.2,
       },
       {
         field: 'code',
@@ -111,6 +132,22 @@ const PermissionsListPage = () => {
         minWidth: 170,
         flex: 0.7,
         valueGetter: (_value, row) => getAdminPermissionScopeLabel(row.scope ?? getAdminPermissionScope(row.code), t),
+        renderCell: (params) => {
+          const scope = params.row.scope ?? getAdminPermissionScope(params.row.code);
+          const badge = SCOPE_BADGE_CONFIG[scope as keyof typeof SCOPE_BADGE_CONFIG] ?? {
+            color: 'default',
+            icon: 'solar:key-bold-duotone',
+          };
+
+          return (
+            <Label
+              color={badge.color}
+              startIcon={<Iconify icon={badge.icon} width={14} />}
+              sx={{ textTransform: 'none' }}>
+              {getAdminPermissionScopeLabel(scope, t)}
+            </Label>
+          );
+        },
       },
       {
         field: 'action',
@@ -118,17 +155,22 @@ const PermissionsListPage = () => {
         minWidth: 140,
         flex: 0.5,
         valueGetter: (_value, row) => getAdminPermissionActionLabel(getAdminPermissionAction(row.code), t),
-      },
-      {
-        field: 'description',
-        headerName: t('fields.description'),
-        minWidth: 320,
-        flex: 1.2,
-        renderCell: ({ row }) => (
-          <Typography variant="body2" color="text.secondary">
-            {row.description || '-'}
-          </Typography>
-        ),
+        renderCell: (params) => {
+          const action = getAdminPermissionAction(params.row.code);
+          const badge = ACTION_BADGE_CONFIG[action as keyof typeof ACTION_BADGE_CONFIG] ?? {
+            color: 'default',
+            icon: 'solar:key-bold-duotone',
+          };
+
+          return (
+            <Label
+              color={badge.color}
+              startIcon={<Iconify icon={badge.icon} width={14} />}
+              sx={{ textTransform: 'none' }}>
+              {getAdminPermissionActionLabel(action, t)}
+            </Label>
+          );
+        },
       },
     ],
     [t],

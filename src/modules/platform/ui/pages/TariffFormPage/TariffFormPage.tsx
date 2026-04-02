@@ -11,13 +11,13 @@ import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath, canAccessTariffs } from 'app/routes';
 import { useCurrentUser } from 'modules/auth/domain/services/current-user';
-import { useGetPermissionsQuery, useGetRolesQuery } from 'modules/users/application';
+import { useGetRolesQuery } from 'modules/users/application';
+import { PermissionsSelect } from 'modules/users/ui/components/PermissionsSelect/PermissionsSelect';
 import { useParams, useRedirectOnNotFound, useRouter } from 'shared/hooks/router';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { FormActions } from 'shared/ui/FormActions';
 import { Form, RHFMultiSelect, RHFSelect, RHFSumCurrencyField, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
-import { getAdminPermissionLabel } from 'shared/utils/admin-permission';
 
 import { useCreateTariffMutation, useGetTariffByIdQuery, useUpdateTariffMutation } from '../../../application';
 
@@ -45,7 +45,6 @@ const TariffFormPage = () => {
   const query = useGetTariffByIdQuery(id ?? '', { enabled: isEditMode && canManagePlatform });
   const createMutation = useCreateTariffMutation();
   const updateMutation = useUpdateTariffMutation(id ?? '');
-  const permissionsQuery = useGetPermissionsQuery({ enabled: canManagePlatform });
   const rolesQuery = useGetRolesQuery({ enabled: canManagePlatform });
 
   useRedirectOnNotFound(query.error, isEditMode);
@@ -87,15 +86,6 @@ const TariffFormPage = () => {
     });
   }, [methods, query.data]);
 
-  const permissionOptions = useMemo(
-    () =>
-      (permissionsQuery.data ?? []).map((permission) => ({
-        value: permission.id,
-        label: getAdminPermissionLabel(permission, t),
-      })),
-    [permissionsQuery.data, t],
-  );
-
   const roleOptions = useMemo(
     () =>
       (rolesQuery.data ?? [])
@@ -104,7 +94,7 @@ const TariffFormPage = () => {
           value: role.id,
           label: role.name,
         })),
-    [rolesQuery.data, t],
+    [rolesQuery.data],
   );
 
   const onSubmit = methods.handleSubmit(async (values) => {
@@ -177,13 +167,11 @@ const TariffFormPage = () => {
                 rows={4}
                 sx={{ gridColumn: { md: '1 / -1' } }}
               />
-              <RHFMultiSelect<Values>
+              <PermissionsSelect<Values>
                 name="permissionIds"
                 label={t('fields.permissions')}
-                options={permissionOptions}
-                checkbox
-                chip
                 placeholder={t('labels.notSelected')}
+                enabled={canManagePlatform}
               />
               <RHFMultiSelect<Values>
                 name="allowedRoleIds"

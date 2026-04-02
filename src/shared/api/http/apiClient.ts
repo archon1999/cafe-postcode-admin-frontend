@@ -259,7 +259,7 @@ export const apiClient = {
 
   getAdminPermissions() {
     return instance
-      .get<AdminCollectionResponse<AdminPermission> | AdminPermission[]>('/api/v1/admin/users/permissions/')
+      .get<AdminCollectionResponse<AdminPermission> | AdminPermission[]>('/api/v1/admin/users/permissions/options/')
       .then((response) => extractCollectionData(response.data));
   },
 

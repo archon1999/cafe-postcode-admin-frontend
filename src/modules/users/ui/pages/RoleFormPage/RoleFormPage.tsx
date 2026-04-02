@@ -12,16 +12,11 @@ import { RoutePath } from 'app/routes';
 import { useParams, useRedirectOnNotFound, useRouter } from 'shared/hooks/router';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { FormActions } from 'shared/ui/FormActions';
-import { Form, RHFMultiSelect, RHFTextField } from 'shared/ui/HookForm';
+import { Form, RHFTextField } from 'shared/ui/HookForm';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
-import { getAdminPermissionLabel } from 'shared/utils/admin-permission';
 
-import {
-  useCreateRoleMutation,
-  useGetPermissionsQuery,
-  useGetRoleByIdQuery,
-  useUpdateRoleMutation,
-} from '../../../application';
+import { useCreateRoleMutation, useGetRoleByIdQuery, useUpdateRoleMutation } from '../../../application';
+import { PermissionsSelect } from '../../components/PermissionsSelect/PermissionsSelect';
 
 const roleFormSchema = z.object({
   name: z.string().min(1, { message: 'Nomi talab qilinadi' }),
@@ -39,12 +34,10 @@ const defaultValues: RoleFormValues = {
 
 const RoleFormPage = () => {
   const { t } = useTranslate('users');
-  const { t: tCommon } = useTranslate('common');
   const { id } = useParams<{ id: string }>();
   const { push } = useRouter();
   const isEditMode = Boolean(id);
 
-  const permissionsQuery = useGetPermissionsQuery();
   const roleQuery = useGetRoleByIdQuery(id ?? '', { enabled: isEditMode });
   const createRoleMutation = useCreateRoleMutation();
   const updateRoleMutation = useUpdateRoleMutation(id ?? '');
@@ -67,11 +60,6 @@ const RoleFormPage = () => {
       permissionIds: roleQuery.data.permissions.map((permission) => permission.id),
     });
   }, [reset, roleQuery.data]);
-
-  const permissionOptions = (permissionsQuery.data ?? []).map((permission) => ({
-    value: permission.id,
-    label: getAdminPermissionLabel(permission, t),
-  }));
 
   const onSubmit = handleSubmit(async (values) => {
     const payload = {
@@ -123,14 +111,10 @@ const RoleFormPage = () => {
               }}>
               <RHFTextField<RoleFormValues> name="name" label={t('fields.name')} />
               <RHFTextField<RoleFormValues> name="description" label={t('fields.description')} multiline rows={4} />
-              <RHFMultiSelect<RoleFormValues>
+              <PermissionsSelect<RoleFormValues>
                 name="permissionIds"
                 label={t('fields.permissions')}
-                options={permissionOptions}
-                checkbox
-                chip
                 placeholder={t('labels.notSelected')}
-                helperText={permissionsQuery.isLoading ? tCommon('labels.loading') : undefined}
               />
             </Box>
 
