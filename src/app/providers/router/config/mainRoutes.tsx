@@ -72,10 +72,8 @@ const MyRestaurantDistributionPointsPage = lazy(
 );
 const RestaurantFormPage = lazy(() => import('modules/organizations/ui/pages/RestaurantFormPage/RestaurantFormPage'));
 const HallsListPage = lazy(() => import('modules/floor/ui/pages/HallsListPage/HallsListPage'));
-const HallFormPage = lazy(() => import('modules/floor/ui/pages/HallFormPage/HallFormPage'));
 const HallConstructorPage = lazy(() => import('modules/floor/ui/pages/HallConstructorPage/HallConstructorPage'));
 const ZonesListPage = lazy(() => import('modules/floor/ui/pages/ZonesListPage/ZonesListPage'));
-const ZoneFormPage = lazy(() => import('modules/floor/ui/pages/ZoneFormPage/ZoneFormPage'));
 const TableSessionsListPage = lazy(() => import('modules/floor/ui/pages/TableSessionsListPage/TableSessionsListPage'));
 const TableSessionFormPage = lazy(() => import('modules/floor/ui/pages/TableSessionFormPage/TableSessionFormPage'));
 
@@ -268,11 +266,11 @@ const mainChildren: RouteObject[] = [
   },
   {
     path: RoutePath.floorHallCreate,
-    element: <HallFormPage />,
+    element: <HallsListPage />,
   },
   {
     path: RoutePath.floorHallEdit,
-    element: <HallFormPage />,
+    element: <HallsListPage />,
   },
   {
     path: RoutePath.floorHallConstructor,
@@ -284,11 +282,11 @@ const mainChildren: RouteObject[] = [
   },
   {
     path: RoutePath.floorZoneCreate,
-    element: <ZoneFormPage />,
+    element: <ZonesListPage />,
   },
   {
     path: RoutePath.floorZoneEdit,
-    element: <ZoneFormPage />,
+    element: <ZonesListPage />,
   },
   {
     path: RoutePath.floorTableSessionList,

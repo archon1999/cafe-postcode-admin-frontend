@@ -1,6 +1,7 @@
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
 import type {
   GridColDef,
   GridColumnVisibilityModel,
@@ -10,12 +11,14 @@ import type {
 } from '@mui/x-data-grid';
 import { gridClasses } from '@mui/x-data-grid';
 import { useMemo, useState } from 'react';
+import { useMatch } from 'react-router';
 
 import { useAdminCreateAccess } from 'app/layouts/components/admin-scope-access';
 import { ListPageBody, ListPageContent } from 'app/layouts/Dashboard';
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { RoutePath, RouterPathHelper } from 'app/routes';
 import type { AdminHall } from 'shared/api/admin-types';
+import { useRouter } from 'shared/hooks/router';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState } from 'shared/ui/CustomDataGrid';
 import { ConfirmDialog } from 'shared/ui/CustomDialog';
@@ -25,25 +28,30 @@ import { RouterLink } from 'shared/ui/RouterLink';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 
 import { useDeleteHallMutation, useGetFloorHallsListQuery } from '../../../application';
+import { HallDialog } from '../../components/HallDialog/HallDialog';
 import { FloorGridToolbar } from '../../components/FloorGridToolbar';
 
 const DEFAULT_PAGINATION_MODEL: GridPaginationModel = { page: 0, pageSize: 10 };
 const DEFAULT_COLUMN_VISIBILITY_MODEL: GridColumnVisibilityModel = {};
 const DEFAULT_SELECTION_MODEL: GridRowSelectionModel = { type: 'include', ids: new Set() };
+const DEFAULT_SORT_MODEL: GridSortModel = [{ field: 'sortOrder', sort: 'asc' }];
 
 const HallsListPage = () => {
   const { t, currentLang } = useTranslate('floor');
   const { t: tCommon } = useTranslate('common');
+  const { replace } = useRouter();
   const { disabled: isCreateDisabled } = useAdminCreateAccess(RoutePath.floorHallCreate);
   const deleteMutation = useDeleteHallMutation();
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
+  const createMatch = useMatch(RoutePath.floorHallCreate);
+  const editMatch = useMatch(RoutePath.floorHallEdit);
 
   const [paginationModel, setPaginationModel] = useState(DEFAULT_PAGINATION_MODEL);
   const [search, setSearch] = useState('');
   const [statuses, setStatuses] = useState<string[]>([]);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState(DEFAULT_COLUMN_VISIBILITY_MODEL);
   const [selectedRows, setSelectedRows] = useState<GridRowSelectionModel>(DEFAULT_SELECTION_MODEL);
-  const [sortModel, setSortModel] = useState<GridSortModel>([]);
+  const [sortModel, setSortModel] = useState<GridSortModel>(DEFAULT_SORT_MODEL);
   const [hallToDelete, setHallToDelete] = useState<AdminHall | null>(null);
   const query = useGetFloorHallsListQuery({
     page: paginationModel.page + 1,
@@ -67,6 +75,15 @@ const HallsListPage = () => {
     () => [
       { field: 'name', headerName: t('fields.name'), minWidth: 220, flex: 1 },
       { field: 'description', headerName: t('fields.description'), minWidth: 220, flex: 1 },
+      {
+        field: 'zoneOrCabin',
+        headerName: t('fields.zone'),
+        minWidth: 220,
+        flex: 1,
+        sortable: false,
+        valueGetter: (_value, row) => row.zoneOrCabin?.name ?? t('labels.notSelected'),
+        renderCell: ({ row }) => <Chip size="small" variant="soft" label={row.zoneOrCabin?.name ?? t('labels.notSelected')} />,
+      },
       {
         field: 'sortOrder',
         headerName: t('fields.sortOrder'),
@@ -120,6 +137,9 @@ const HallsListPage = () => {
     ],
     [t, tCommon],
   );
+
+  const activeHallId = editMatch?.params.id ?? null;
+  const isDialogOpen = Boolean(createMatch || editMatch);
 
   return (
     <ListPageContent>
@@ -239,6 +259,7 @@ const HallsListPage = () => {
           </Button>
         }
       />
+      <HallDialog open={isDialogOpen} hallId={activeHallId} onClose={() => replace(RoutePath.floorHallList)} />
     </ListPageContent>
   );
 };

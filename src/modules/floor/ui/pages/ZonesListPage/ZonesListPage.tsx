@@ -10,12 +10,14 @@ import type {
 } from '@mui/x-data-grid';
 import { gridClasses } from '@mui/x-data-grid';
 import { useMemo, useState } from 'react';
+import { useMatch } from 'react-router';
 
 import { useAdminCreateAccess } from 'app/layouts/components/admin-scope-access';
 import { ListPageBody, ListPageContent } from 'app/layouts/Dashboard';
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { RoutePath, RouterPathHelper } from 'app/routes';
 import type { AdminZoneOrCabin } from 'shared/api/admin-types';
+import { useRouter } from 'shared/hooks/router';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState } from 'shared/ui/CustomDataGrid';
 import { ConfirmDialog } from 'shared/ui/CustomDialog';
@@ -23,57 +25,41 @@ import type { FilterOption } from 'shared/ui/Filters';
 import { Iconify } from 'shared/ui/Iconify';
 import { RouterLink } from 'shared/ui/RouterLink';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
-import { formatHallDisplayName } from 'shared/utils/format-hall-display';
 
-import { useDeleteZoneMutation, useGetFloorHallsQuery, useGetZonesListQuery } from '../../../application';
+import { useDeleteZoneMutation, useGetZonesListQuery } from '../../../application';
+import { ZoneDialog } from '../../components/ZoneDialog/ZoneDialog';
 import { FloorGridToolbar } from '../../components/FloorGridToolbar';
 
 const DEFAULT_PAGINATION_MODEL: GridPaginationModel = { page: 0, pageSize: 10 };
 const DEFAULT_COLUMN_VISIBILITY_MODEL: GridColumnVisibilityModel = {};
 const DEFAULT_SELECTION_MODEL: GridRowSelectionModel = { type: 'include', ids: new Set() };
+const DEFAULT_SORT_MODEL: GridSortModel = [{ field: 'sortOrder', sort: 'asc' }];
 
 const ZonesListPage = () => {
   const { t, currentLang } = useTranslate('floor');
   const { t: tCommon } = useTranslate('common');
+  const { replace } = useRouter();
   const { disabled: isCreateDisabled } = useAdminCreateAccess(RoutePath.floorZoneCreate);
-  const hallsQuery = useGetFloorHallsQuery();
   const deleteMutation = useDeleteZoneMutation();
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
+  const createMatch = useMatch(RoutePath.floorZoneCreate);
+  const editMatch = useMatch(RoutePath.floorZoneEdit);
 
   const [paginationModel, setPaginationModel] = useState(DEFAULT_PAGINATION_MODEL);
   const [search, setSearch] = useState('');
-  const [halls, setHalls] = useState<string[]>([]);
-  const [privacy, setPrivacy] = useState<string[]>([]);
   const [statuses, setStatuses] = useState<string[]>([]);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState(DEFAULT_COLUMN_VISIBILITY_MODEL);
   const [selectedRows, setSelectedRows] = useState<GridRowSelectionModel>(DEFAULT_SELECTION_MODEL);
-  const [sortModel, setSortModel] = useState<GridSortModel>([]);
+  const [sortModel, setSortModel] = useState<GridSortModel>(DEFAULT_SORT_MODEL);
   const [zoneToDelete, setZoneToDelete] = useState<AdminZoneOrCabin | null>(null);
   const query = useGetZonesListQuery({
     page: paginationModel.page + 1,
     pageSize: paginationModel.pageSize,
     search: search || undefined,
-    hallIdIn: halls.length ? halls.join(',') : undefined,
-    isPrivate: privacy.length === 1 ? privacy[0] === 'private' : undefined,
     isActive: statuses.length === 1 ? statuses[0] === 'active' : undefined,
     ordering: getOrderingFromSortModel(sortModel),
   });
 
-  const hallOptions = useMemo<FilterOption[]>(
-    () =>
-      (hallsQuery.data ?? []).map((hall) => ({
-        value: hall.id,
-        label: formatHallDisplayName(hall.name),
-      })),
-    [hallsQuery.data, tCommon],
-  );
-  const privacyOptions = useMemo<FilterOption[]>(
-    () => [
-      { value: 'private', label: t('labels.private') },
-      { value: 'shared', label: t('labels.shared') },
-    ],
-    [t],
-  );
   const statusOptions = useMemo<FilterOption[]>(
     () => [
       { value: 'active', label: tCommon('status.active') },
@@ -82,27 +68,11 @@ const ZonesListPage = () => {
     [tCommon],
   );
 
-  const hasActiveFilters = Boolean(search || halls.length || privacy.length || statuses.length);
+  const hasActiveFilters = Boolean(search || statuses.length);
 
   const columns = useMemo<GridColDef<AdminZoneOrCabin>[]>(
     () => [
       { field: 'name', headerName: t('fields.name'), minWidth: 220, flex: 1 },
-      {
-        field: 'hallName',
-        headerName: t('fields.hall'),
-        minWidth: 180,
-        flex: 0.7,
-        valueGetter: (_v, row) => formatHallDisplayName(row.hallName),
-      },
-      {
-        field: 'isPrivate',
-        headerName: t('fields.privacy'),
-        minWidth: 140,
-        flex: 0.6,
-        renderCell: ({ row }) => (
-          <Chip size="small" label={row.isPrivate ? t('labels.private') : t('labels.shared')} variant="soft" />
-        ),
-      },
       { field: 'sortOrder', headerName: t('fields.sortOrder'), minWidth: 120, flex: 0.4 },
       {
         field: 'isActive',
@@ -143,6 +113,9 @@ const ZonesListPage = () => {
     ],
     [t, tCommon],
   );
+
+  const activeZoneId = editMatch?.params.id ?? null;
+  const isDialogOpen = Boolean(createMatch || editMatch);
 
   return (
     <ListPageContent>
@@ -216,30 +189,6 @@ const ZonesListPage = () => {
                   onClearSearch={() => setSearch('')}
                   filters={[
                     {
-                      label: t('filters.hall'),
-                      value: halls,
-                      options: hallOptions,
-                      onChange: setHalls,
-                      onApply: (values) => {
-                        setHalls(values);
-                        setPaginationModel((prev) => ({ ...prev, page: 0 }));
-                      },
-                      testId: 'zones-hall-filter',
-                      emptyLabel: t('filters.all'),
-                    },
-                    {
-                      label: t('filters.privacy'),
-                      value: privacy,
-                      options: privacyOptions,
-                      onChange: setPrivacy,
-                      onApply: (values) => {
-                        setPrivacy(values);
-                        setPaginationModel((prev) => ({ ...prev, page: 0 }));
-                      },
-                      testId: 'zones-privacy-filter',
-                      emptyLabel: t('filters.all'),
-                    },
-                    {
                       label: t('filters.status'),
                       value: statuses,
                       options: statusOptions,
@@ -286,6 +235,7 @@ const ZonesListPage = () => {
           </Button>
         }
       />
+      <ZoneDialog open={isDialogOpen} zoneId={activeZoneId} onClose={() => replace(RoutePath.floorZoneList)} />
     </ListPageContent>
   );
 };

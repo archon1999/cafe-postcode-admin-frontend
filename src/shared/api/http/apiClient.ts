@@ -310,8 +310,6 @@ export const apiClient = {
           page: params?.page,
           pageSize: params?.pageSize,
           search: params?.search,
-          hall_id_in: params?.hallIdIn,
-          is_private: params?.isPrivate,
           is_active: params?.isActive,
           ordering: params?.ordering,
         },

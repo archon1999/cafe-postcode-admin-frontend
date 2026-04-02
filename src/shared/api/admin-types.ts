@@ -32,7 +32,6 @@ export type AdminTableShapeVariant =
   | 'seat6_horizontal'
   | 'seat6_vertical';
 export type AdminDiningTableStatus = 'available' | 'occupied' | 'reserved' | 'blocked';
-export type AdminLayoutObjectKind = 'table' | 'bar' | 'cash_desk' | 'door' | 'wall' | 'decor' | 'label';
 export type AdminTableSessionStatus = 'open' | 'pending_payment' | 'closed' | 'merged';
 export type AdminOrderStatus = 'open' | 'submitted' | 'ready' | 'closed' | 'cancelled';
 export type AdminOrderChannel = 'hall' | 'takeaway' | 'online' | 'delivery';
@@ -54,6 +53,13 @@ export type AdminReportPeriodType = 'day' | 'month' | 'year';
 export type AdminBusinessPartnerStatus = 'draft' | 'active' | 'inactive';
 export type AdminTariffClassification = 'basic' | 'standard' | 'premium' | 'custom';
 
+export type AdminZoneOrCabinSummary = {
+  id: string;
+  name: string;
+  sortOrder: number;
+  isActive: boolean;
+};
+
 export type AdminHall = {
   id: string;
   name: string;
@@ -61,6 +67,8 @@ export type AdminHall = {
   gridColumns?: number;
   sortOrder?: number;
   isActive: boolean;
+  zoneOrCabinId: string;
+  zoneOrCabin?: AdminZoneOrCabinSummary | null;
 };
 
 export type AdminHallPayload = {
@@ -69,22 +77,18 @@ export type AdminHallPayload = {
   gridColumns?: number;
   sortOrder: number;
   isActive: boolean;
+  zoneOrCabinId: string;
 };
 
 export type AdminZoneOrCabin = {
   id: string;
-  hall: string;
-  hallName?: string | null;
   name: string;
-  isPrivate: boolean;
   sortOrder: number;
   isActive: boolean;
 };
 
 export type AdminZoneOrCabinPayload = {
-  hall: string;
   name: string;
-  isPrivate: boolean;
   sortOrder: number;
   isActive: boolean;
 };
@@ -852,8 +856,6 @@ export type AdminHallsQueryParams = AdminListQueryParams & {
 };
 
 export type AdminZonesQueryParams = AdminListQueryParams & {
-  hallIdIn?: string;
-  isPrivate?: boolean;
   isActive?: boolean;
 };
 
