@@ -1,6 +1,4 @@
-import type { ReactNode } from 'react';
-
-import Avatar from '@mui/material/Avatar';
+﻿import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -10,13 +8,13 @@ import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { varAlpha } from 'minimal-shared/utils';
+import type { ReactNode } from 'react';
 
 import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath, RouterPathHelper } from 'app/routes';
-import { EmptyValueChip, renderEmptyValue } from 'shared/ui/EmptyValue';
-import { useParams } from 'shared/hooks/router';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
+import { EmptyValueChip, renderEmptyValue } from 'shared/ui/EmptyValue';
 import { Iconify, type IconifyName } from 'shared/ui/Iconify';
 import { Label } from 'shared/ui/Label';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
@@ -68,15 +66,7 @@ function resolveStatusColor(status: 'active' | 'inactive' | 'archived') {
   return 'default' as const;
 }
 
-function SectionCard({
-  title,
-  icon,
-  children,
-}: {
-  title: string;
-  icon: IconifyName;
-  children: ReactNode;
-}) {
+function SectionCard({ title, icon, children }: { title: string; icon: IconifyName; children: ReactNode }) {
   return (
     <Card sx={{ p: { xs: 2, md: 2.5 } }}>
       <Stack spacing={2}>
@@ -147,22 +137,11 @@ function HallChips({ halls }: { halls: string[] }) {
   );
 }
 
-function SummaryChip({
-  title,
-  children,
-  icon,
-}: {
-  title: string;
-  children: ReactNode;
-  icon?: IconifyName;
-}) {
+function SummaryChip({ title, children, icon }: { title: string; children: ReactNode; icon?: IconifyName }) {
   return (
     <Tooltip title={title} arrow>
       <Box component="span">
-        <Label
-          variant="soft"
-          color="default"
-          startIcon={icon ? <Iconify icon={icon} width={14} /> : undefined}>
+        <Label variant="soft" color="default" startIcon={icon ? <Iconify icon={icon} width={14} /> : undefined}>
           {children}
         </Label>
       </Box>
@@ -170,14 +149,14 @@ function SummaryChip({
   );
 }
 
-type ViewUserPageProps = {
+export type UserDetailPageContentProps = {
+  id?: string;
   surface?: UserManagementSurface;
 };
 
-const ViewUserPage = ({ surface = 'user' }: ViewUserPageProps) => {
+export const UserDetailPageContent = ({ id, surface = 'user' }: UserDetailPageContentProps) => {
   const { t } = useTranslate('users');
   const { t: tCommon } = useTranslate('common');
-  const { id } = useParams<{ id: string }>();
 
   const isEmployeeSurface = surface === 'employee';
   const systemUserQuery = useGetUserByIdQuery(id ?? '', { enabled: Boolean(id) && !isEmployeeSurface });
@@ -407,5 +386,3 @@ const ViewUserPage = ({ surface = 'user' }: ViewUserPageProps) => {
     </Content>
   );
 };
-
-export default ViewUserPage;

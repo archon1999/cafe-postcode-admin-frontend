@@ -71,7 +71,10 @@ export function useArchiveUserMutation() {
 
   return useMutation({
     mutationFn: (user: AdminUser) =>
-      usersRepository.update(user.id, buildUserPayloadFromUser(user, { isActive: false, employmentStatus: 'archived' })),
+      usersRepository.update(
+        user.id,
+        buildUserPayloadFromUser(user, { isActive: false, employmentStatus: 'archived' }),
+      ),
     onSuccess: async (_data, user) => {
       await queryClient.invalidateQueries({ queryKey: usersKeys.all });
       await queryClient.invalidateQueries({ queryKey: usersKeys.detail(user.id) });

@@ -38,7 +38,6 @@ const CategoryFormPage = () => {
               : t('pages.categoryCreate.title', { defaultValue: 'Yangi kategoriya' }),
           },
         ]}
-        sx={{ mb: { xs: 3, md: 5 } }}
       />
 
       <CatalogCategoryFormCard
@@ -51,3 +50,4 @@ const CategoryFormPage = () => {
 };
 
 export default CategoryFormPage;
+

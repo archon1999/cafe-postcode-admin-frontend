@@ -45,7 +45,7 @@ const getMenuActionSx =
     const paletteColor = ACTION_COLORS[actionKind];
     const iconColor = theme.vars?.palette[paletteColor].main ?? theme.palette[paletteColor].main;
     const textColor =
-      actionKind === 'delete' ? iconColor : theme.vars?.palette.text.primary ?? theme.palette.text.primary;
+      actionKind === 'delete' ? iconColor : (theme.vars?.palette.text.primary ?? theme.palette.text.primary);
 
     return {
       color: textColor,

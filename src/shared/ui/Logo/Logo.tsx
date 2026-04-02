@@ -37,7 +37,13 @@ export function Logo({ sx, disabled, className, href = '/', isSingle = true, ...
           <stop offset="0.55" stopColor={PRIMARY_MAIN} />
           <stop offset="1" stopColor={PRIMARY_LIGHT} />
         </linearGradient>
-        <radialGradient id={glowId} cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(45 15) rotate(130) scale(34 32)">
+        <radialGradient
+          id={glowId}
+          cx="0"
+          cy="0"
+          r="1"
+          gradientUnits="userSpaceOnUse"
+          gradientTransform="translate(45 15) rotate(130) scale(34 32)">
           <stop stopColor="#FFFFFF" stopOpacity="0.34" />
           <stop offset="1" stopColor="#FFFFFF" stopOpacity="0" />
         </radialGradient>
@@ -63,9 +69,24 @@ export function Logo({ sx, disabled, className, href = '/', isSingle = true, ...
         strokeLinejoin="round"
       />
       <path d="M25.8 43.6H37.8" stroke={PRIMARY_DARK} strokeWidth="2.4" strokeLinecap="round" />
-      <path d="M27.8 24.2C27.8 22.9 28.7 22.05 28.7 20.8" stroke={PRIMARY_DARK} strokeWidth="2.3" strokeLinecap="round" />
-      <path d="M32 23.3C32 21.95 32.95 21.05 32.95 19.7" stroke={PRIMARY_DARK} strokeWidth="2.3" strokeLinecap="round" />
-      <path d="M36.2 24.2C36.2 22.9 37.1 22.05 37.1 20.8" stroke={PRIMARY_DARK} strokeWidth="2.3" strokeLinecap="round" />
+      <path
+        d="M27.8 24.2C27.8 22.9 28.7 22.05 28.7 20.8"
+        stroke={PRIMARY_DARK}
+        strokeWidth="2.3"
+        strokeLinecap="round"
+      />
+      <path
+        d="M32 23.3C32 21.95 32.95 21.05 32.95 19.7"
+        stroke={PRIMARY_DARK}
+        strokeWidth="2.3"
+        strokeLinecap="round"
+      />
+      <path
+        d="M36.2 24.2C36.2 22.9 37.1 22.05 37.1 20.8"
+        stroke={PRIMARY_DARK}
+        strokeWidth="2.3"
+        strokeLinecap="round"
+      />
 
       <rect x="39" y="11" width="14" height="14" rx="5" fill={WARNING_MAIN} />
       <rect x="42" y="14.3" width="2.2" height="2.2" rx="0.7" fill="#FFFFFF" />

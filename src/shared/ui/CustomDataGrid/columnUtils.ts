@@ -77,7 +77,7 @@ const getCellDisplayValue = <T extends GridValidRowModel = GridValidRowModel>(
     return value;
   }
 
-  return value == null ? null : String(value);
+  return value === null || value === undefined ? null : String(value);
 };
 
 export const withDetailLink = <T extends GridValidRowModel = GridValidRowModel>(

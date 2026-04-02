@@ -5,8 +5,8 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import type { PickersTextFieldProps } from '@mui/x-date-pickers/PickersTextField';
 import type { TimePickerProps } from '@mui/x-date-pickers/TimePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { Controller, useFormContext } from 'react-hook-form';
 import type { Dayjs } from 'dayjs';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import dayjs, { TASHKENT_TIMEZONE, toTashkentCalendarDayjs } from 'shared/utils/dayjs';
 

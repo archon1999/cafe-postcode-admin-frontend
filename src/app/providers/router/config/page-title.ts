@@ -73,7 +73,11 @@ const TITLE_RULES: TitleRule[] = [
     ],
   },
   { route: AppRoutes.USER_LIST, namespaces: ['users'], resolve: (_params, t) => [t('users:pages.list.title')] },
-  { route: AppRoutes.EMPLOYEE_LIST, namespaces: ['users'], resolve: (_params, t) => [t('users:pages.employeeList.title')] },
+  {
+    route: AppRoutes.EMPLOYEE_LIST,
+    namespaces: ['users'],
+    resolve: (_params, t) => [t('users:pages.employeeList.title')],
+  },
   {
     route: AppRoutes.ORGANIZATION_MY_RESTAURANT,
     namespaces: ['organizations'],

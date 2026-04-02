@@ -1,92 +1,97 @@
-import type { AdminSessionUser } from "shared/api/admin-types";
+import type { AdminSessionUser } from 'shared/api/admin-types';
 
-import { AppRoutesRoot, RoutePath, RouteRootPath } from "./route-paths";
+import { AppRoutesRoot, RoutePath, RouteRootPath } from './route-paths';
 
-export type AdminAccessSnapshot = Pick<AdminSessionUser, "isSuperuser" | "permissionCodes" | "restaurantAccessActive">;
+export type AdminAccessSnapshot = Pick<AdminSessionUser, 'isSuperuser' | 'permissionCodes' | 'restaurantAccessActive'>;
 
 type PermissionCode = string;
 
 const BUSINESS_PARTNER_PERMISSION_CODES: PermissionCode[] = [
-  "business_partners.list",
-  "business_partners.view",
-  "business_partners.create",
-  "business_partners.update",
-  "business_partners.activate",
-  "business_partners.deactivate",
-  "business_partners.reset_password",
+  'business_partners.list',
+  'business_partners.view',
+  'business_partners.create',
+  'business_partners.update',
+  'business_partners.activate',
+  'business_partners.deactivate',
+  'business_partners.reset_password',
 ];
-const TARIFF_PERMISSION_CODES: PermissionCode[] = ["tariffs.list", "tariffs.view", "tariffs.create", "tariffs.update"];
+const TARIFF_PERMISSION_CODES: PermissionCode[] = ['tariffs.list', 'tariffs.view', 'tariffs.create', 'tariffs.update'];
 const RESTAURANT_PERMISSION_CODES: PermissionCode[] = [
-  "restaurants.list",
-  "restaurants.view",
-  "restaurants.create",
-  "restaurants.update",
-  "restaurants.activate",
-  "restaurants.deactivate",
-  "restaurants.reset_password",
+  'restaurants.list',
+  'restaurants.view',
+  'restaurants.create',
+  'restaurants.update',
+  'restaurants.activate',
+  'restaurants.deactivate',
+  'restaurants.reset_password',
 ];
-const REPORT_PERMISSION_CODES: PermissionCode[] = ["reports.view"];
-const ORDER_PERMISSION_CODES: PermissionCode[] = ["orders.list", "orders.view", "orders.create", "orders.update"];
-const PAYMENT_PERMISSION_CODES: PermissionCode[] = ["payments.list", "payments.view", "receipts.list", "receipts.view"];
-const KITCHEN_PERMISSION_CODES: PermissionCode[] = ["kitchen_tickets.list", "kitchen_tickets.view"];
+const REPORT_PERMISSION_CODES: PermissionCode[] = ['reports.view'];
+const ORDER_PERMISSION_CODES: PermissionCode[] = ['orders.list', 'orders.view', 'orders.create', 'orders.update'];
+const PAYMENT_PERMISSION_CODES: PermissionCode[] = ['payments.list', 'payments.view', 'receipts.list', 'receipts.view'];
+const KITCHEN_PERMISSION_CODES: PermissionCode[] = ['kitchen_tickets.list', 'kitchen_tickets.view'];
 const CATALOG_PERMISSION_CODES: PermissionCode[] = [
-  "catalog_categories.list",
-  "catalog_categories.view",
-  "catalog_categories.create",
-  "catalog_categories.update",
-  "catalog_items.list",
-  "catalog_items.view",
-  "catalog_items.create",
-  "catalog_items.update",
+  'catalog_categories.list',
+  'catalog_categories.view',
+  'catalog_categories.create',
+  'catalog_categories.update',
+  'catalog_items.list',
+  'catalog_items.view',
+  'catalog_items.create',
+  'catalog_items.update',
 ];
 const FLOOR_PERMISSION_CODES: PermissionCode[] = [
-  "halls.list",
-  "halls.view",
-  "halls.create",
-  "halls.update",
-  "zones.list",
-  "zones.view",
-  "zones.create",
-  "zones.update",
-  "tables.list",
-  "tables.view",
-  "tables.create",
-  "tables.update",
-  "table_sessions.list",
-  "table_sessions.view",
-  "table_sessions.create",
-  "table_sessions.update",
+  'halls.list',
+  'halls.view',
+  'halls.create',
+  'halls.update',
+  'zones.list',
+  'zones.view',
+  'zones.create',
+  'zones.update',
+  'tables.list',
+  'tables.view',
+  'tables.create',
+  'tables.update',
+  'table_sessions.list',
+  'table_sessions.view',
+  'table_sessions.create',
+  'table_sessions.update',
 ];
 const MY_RESTAURANT_GENERAL_PERMISSION_CODES: PermissionCode[] = [
-  "restaurant_settings.view",
-  "restaurant_settings.update",
-  "restaurant_feature_configs.view",
-  "restaurant_feature_configs.update",
+  'restaurant_settings.view',
+  'restaurant_settings.update',
+  'restaurant_feature_configs.view',
+  'restaurant_feature_configs.update',
 ];
 const MY_RESTAURANT_CASH_DESK_PERMISSION_CODES: PermissionCode[] = [
-  "cash_desks.list",
-  "cash_desks.view",
-  "cash_desks.create",
-  "cash_desks.update",
+  'cash_desks.list',
+  'cash_desks.view',
+  'cash_desks.create',
+  'cash_desks.update',
 ];
-const MY_RESTAURANT_DEVICE_PERMISSION_CODES: PermissionCode[] = ["devices.list", "devices.view", "devices.create", "devices.update"];
+const MY_RESTAURANT_DEVICE_PERMISSION_CODES: PermissionCode[] = [
+  'devices.list',
+  'devices.view',
+  'devices.create',
+  'devices.update',
+];
 const MY_RESTAURANT_PREP_STATION_PERMISSION_CODES: PermissionCode[] = [
-  "prep_stations.list",
-  "prep_stations.view",
-  "prep_stations.create",
-  "prep_stations.update",
+  'prep_stations.list',
+  'prep_stations.view',
+  'prep_stations.create',
+  'prep_stations.update',
 ];
 const MY_RESTAURANT_DISTRIBUTION_POINT_PERMISSION_CODES: PermissionCode[] = [
-  "distribution_points.list",
-  "distribution_points.view",
-  "distribution_points.create",
-  "distribution_points.update",
+  'distribution_points.list',
+  'distribution_points.view',
+  'distribution_points.create',
+  'distribution_points.update',
 ];
 const EMPLOYEE_PERMISSION_CODES: PermissionCode[] = [
-  "employees.list",
-  "employees.view",
-  "employees.create",
-  "employees.update",
+  'employees.list',
+  'employees.view',
+  'employees.create',
+  'employees.update',
 ];
 
 const ADMIN_LANDING_CANDIDATES = [
@@ -161,7 +166,7 @@ export function canAccessFloor(snapshot?: AdminAccessSnapshot | null) {
 }
 
 export function canAccessUsers(snapshot?: AdminAccessSnapshot | null) {
-  return hasAnyPermission(snapshot, ["users.list", "users.view", "users.create", "users.update"]);
+  return hasAnyPermission(snapshot, ['users.list', 'users.view', 'users.create', 'users.update']);
 }
 
 export function canAccessEmployees(snapshot?: AdminAccessSnapshot | null) {
@@ -169,11 +174,14 @@ export function canAccessEmployees(snapshot?: AdminAccessSnapshot | null) {
 }
 
 export function canAccessRoles(snapshot?: AdminAccessSnapshot | null) {
-  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, ["roles.list", "roles.view", "roles.create", "roles.update", "roles.delete"]);
+  return (
+    hasActiveRestaurantAccess(snapshot) &&
+    hasAnyPermission(snapshot, ['roles.list', 'roles.view', 'roles.create', 'roles.update', 'roles.delete'])
+  );
 }
 
 export function canAccessPermissions(snapshot?: AdminAccessSnapshot | null) {
-  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, ["permissions.list"]);
+  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, ['permissions.list']);
 }
 
 export function canAccessFeatureConfigs(_snapshot?: AdminAccessSnapshot | null) {
@@ -191,7 +199,12 @@ export function canAccessMyRestaurant(snapshot?: AdminAccessSnapshot | null) {
 }
 
 export function canAccessAccessControl(snapshot?: AdminAccessSnapshot | null) {
-  return canAccessUsers(snapshot) || canAccessEmployees(snapshot) || canAccessRoles(snapshot) || canAccessPermissions(snapshot);
+  return (
+    canAccessUsers(snapshot) ||
+    canAccessEmployees(snapshot) ||
+    canAccessRoles(snapshot) ||
+    canAccessPermissions(snapshot)
+  );
 }
 
 export function canAccessMyRestaurantGeneral(snapshot?: AdminAccessSnapshot | null) {
@@ -211,7 +224,9 @@ export function canAccessMyRestaurantPrepStations(snapshot?: AdminAccessSnapshot
 }
 
 export function canAccessMyRestaurantDistributionPoints(snapshot?: AdminAccessSnapshot | null) {
-  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, MY_RESTAURANT_DISTRIBUTION_POINT_PERMISSION_CODES);
+  return (
+    hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, MY_RESTAURANT_DISTRIBUTION_POINT_PERMISSION_CODES)
+  );
 }
 
 const MY_RESTAURANT_LANDING_CANDIDATES = [
@@ -263,7 +278,7 @@ export function canAccessAdminPath(pathname: string, snapshot?: AdminAccessSnaps
     return canAccessMyRestaurantDistributionPoints(snapshot);
   }
 
-  if (pathname.includes("/restaurants/") && pathname.endsWith("/feature-config")) {
+  if (pathname.includes('/restaurants/') && pathname.endsWith('/feature-config')) {
     return canAccessMyRestaurantGeneral(snapshot) || canAccessRestaurants(snapshot);
   }
 

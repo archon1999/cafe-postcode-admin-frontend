@@ -1,6 +1,7 @@
-import type { DateInput } from 'shared/utils/format-time';
-import dayjs, { getCurrentTashkentTime, toTashkentCalendarDayjs } from 'shared/utils/dayjs';
 import type { Dayjs } from 'dayjs';
+
+import dayjs, { getCurrentTashkentTime, toTashkentCalendarDayjs } from 'shared/utils/dayjs';
+import type { DateInput } from 'shared/utils/format-time';
 
 export function normalizeDateValue(value: DateInput): Dayjs | null {
   if (dayjs.isDayjs(value)) return toTashkentCalendarDayjs(value);

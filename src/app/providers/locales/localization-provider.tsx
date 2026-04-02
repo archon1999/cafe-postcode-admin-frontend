@@ -4,6 +4,7 @@ import 'dayjs/locale/uz-latn';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider as Provider } from '@mui/x-date-pickers/LocalizationProvider';
+
 import dayjs from 'shared/utils/dayjs';
 
 import { resolvePickerLocaleText } from './picker-locale-text';

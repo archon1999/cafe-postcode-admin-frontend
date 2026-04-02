@@ -8,10 +8,7 @@ type ScopeSnapshot = {
   restaurantId: string | null;
 };
 
-export function hasRequiredAdminScope(
-  requirement: AdminScopeRequirement,
-  { restaurantId }: ScopeSnapshot,
-): boolean {
+export function hasRequiredAdminScope(requirement: AdminScopeRequirement, { restaurantId }: ScopeSnapshot): boolean {
   if (requirement === 'none') {
     return true;
   }
@@ -32,7 +29,7 @@ export function useAdminCreateAccess(pathname: string) {
 
     const scope = profile.isSuperuser
       ? {
-        restaurantId: selectedRestaurantId,
+          restaurantId: selectedRestaurantId,
         }
       : {
           restaurantId: profile.restaurantId ?? null,
