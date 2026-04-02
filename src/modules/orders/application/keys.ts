@@ -1,13 +1,27 @@
+import { createKeyFactory } from 'shared/api';
+
+const ordersBaseKeys = createKeyFactory('orders');
+const orderListKeys = createKeyFactory('orders', 'orders');
+const orderKeys = createKeyFactory('orders', 'order');
+const itemListKeys = createKeyFactory('orders', 'items');
+const itemKeys = createKeyFactory('orders', 'item');
+const noteListKeys = createKeyFactory('orders', 'notes');
+const noteKeys = createKeyFactory('orders', 'note');
+const paymentListKeys = createKeyFactory('orders', 'payments');
+const paymentKeys = createKeyFactory('orders', 'payment');
+const receiptListKeys = createKeyFactory('orders', 'receipts');
+const receiptKeys = createKeyFactory('orders', 'receipt');
+
 export const ordersKeys = {
-  all: ['orders'] as const,
-  orders: (params: Record<string, unknown>) => [...ordersKeys.all, 'orders', params] as const,
-  orderDetail: (id: string) => [...ordersKeys.all, 'order', id] as const,
-  items: (params: Record<string, unknown>) => [...ordersKeys.all, 'items', params] as const,
-  itemDetail: (id: string) => [...ordersKeys.all, 'item', id] as const,
-  notes: (params: Record<string, unknown>) => [...ordersKeys.all, 'notes', params] as const,
-  noteDetail: (id: string) => [...ordersKeys.all, 'note', id] as const,
-  payments: (params: Record<string, unknown>) => [...ordersKeys.all, 'payments', params] as const,
-  paymentDetail: (id: string) => [...ordersKeys.all, 'payment', id] as const,
-  receipts: (params: Record<string, unknown>) => [...ordersKeys.all, 'receipts', params] as const,
-  receiptDetail: (id: string) => [...ordersKeys.all, 'receipt', id] as const,
-};
+  all: ordersBaseKeys.all,
+  orders: orderListKeys.params,
+  orderDetail: orderKeys.id,
+  items: itemListKeys.params,
+  itemDetail: itemKeys.id,
+  notes: noteListKeys.params,
+  noteDetail: noteKeys.id,
+  payments: paymentListKeys.params,
+  paymentDetail: paymentKeys.id,
+  receipts: receiptListKeys.params,
+  receiptDetail: receiptKeys.id,
+} as const;

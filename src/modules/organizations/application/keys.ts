@@ -1,26 +1,40 @@
+import { createKeyFactory } from 'shared/api';
+
+const organizationsBaseKeys = createKeyFactory('organizations');
+const cashDesksKeys = createKeyFactory('organizations', 'cashDesks');
+const cashDeskKeys = createKeyFactory('organizations', 'cashDesk');
+const devicesKeys = createKeyFactory('organizations', 'devices');
+const deviceKeys = createKeyFactory('organizations', 'device');
+const distributionPointsKeys = createKeyFactory('organizations', 'distributionPoints');
+const distributionPointKeys = createKeyFactory('organizations', 'distributionPoint');
+const featureConfigsKeys = createKeyFactory('organizations', 'featureConfigs');
+const featureConfigKeys = createKeyFactory('organizations', 'featureConfig');
+const prepStationsKeys = createKeyFactory('organizations', 'prepStations');
+const prepStationKeys = createKeyFactory('organizations', 'prepStation');
+const restaurantsKeys = createKeyFactory('organizations', 'restaurants');
+const restaurantKeys = createKeyFactory('organizations', 'restaurant');
+const hallsKeys = createKeyFactory('organizations', 'halls');
+
 export const organizationsKeys = {
-  all: ['organizations'] as const,
-  cashDesks: () => [...organizationsKeys.all, 'cashDesks'] as const,
-  cashDesksList: (params: Record<string, unknown>) => [...organizationsKeys.cashDesks(), 'list', params] as const,
-  cashDeskDetail: (id: string) => [...organizationsKeys.all, 'cashDesk', id] as const,
-  devices: () => [...organizationsKeys.all, 'devices'] as const,
-  devicesList: (params: Record<string, unknown>) => [...organizationsKeys.devices(), 'list', params] as const,
-  deviceDetail: (id: string) => [...organizationsKeys.all, 'device', id] as const,
-  distributionPoints: () => [...organizationsKeys.all, 'distributionPoints'] as const,
-  distributionPointsList: (params: Record<string, unknown>) =>
-    [...organizationsKeys.distributionPoints(), 'list', params] as const,
-  distributionPointDetail: (id: string) => [...organizationsKeys.all, 'distributionPoint', id] as const,
-  featureConfigs: () => [...organizationsKeys.all, 'featureConfigs'] as const,
-  featureConfigsList: (params: Record<string, unknown>) =>
-    [...organizationsKeys.featureConfigs(), 'list', params] as const,
-  featureConfigDetail: (id: string) => [...organizationsKeys.all, 'featureConfig', id] as const,
-  prepStations: () => [...organizationsKeys.all, 'prepStations'] as const,
-  prepStationsList: (params: Record<string, unknown>) => [...organizationsKeys.prepStations(), 'list', params] as const,
-  prepStationDetail: (id: string) => [...organizationsKeys.all, 'prepStation', id] as const,
-  restaurants: () => [...organizationsKeys.all, 'restaurants'] as const,
-  restaurantsList: (params: Record<string, unknown>) => [...organizationsKeys.restaurants(), 'list', params] as const,
-  restaurantDetail: (id: string) => [...organizationsKeys.all, 'restaurant', id] as const,
-  restaurantFeatureConfig: (restaurantId: string) =>
-    [...organizationsKeys.all, 'restaurant', restaurantId, 'featureConfig'] as const,
-  halls: () => [...organizationsKeys.all, 'halls'] as const,
+  all: organizationsBaseKeys.all,
+  cashDesks: () => cashDesksKeys.all,
+  cashDesksList: cashDesksKeys.list,
+  cashDeskDetail: cashDeskKeys.id,
+  devices: () => devicesKeys.all,
+  devicesList: devicesKeys.list,
+  deviceDetail: deviceKeys.id,
+  distributionPoints: () => distributionPointsKeys.all,
+  distributionPointsList: distributionPointsKeys.list,
+  distributionPointDetail: distributionPointKeys.id,
+  featureConfigs: () => featureConfigsKeys.all,
+  featureConfigsList: featureConfigsKeys.list,
+  featureConfigDetail: featureConfigKeys.id,
+  prepStations: () => prepStationsKeys.all,
+  prepStationsList: prepStationsKeys.list,
+  prepStationDetail: prepStationKeys.id,
+  restaurants: () => restaurantsKeys.all,
+  restaurantsList: restaurantsKeys.list,
+  restaurantDetail: restaurantKeys.id,
+  restaurantFeatureConfig: (restaurantId: string) => [...restaurantKeys.id(restaurantId), 'featureConfig'] as const,
+  halls: () => hallsKeys.all,
 } as const;

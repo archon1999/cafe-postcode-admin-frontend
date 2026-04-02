@@ -1,6 +1,11 @@
+import { createKeyFactory } from 'shared/api';
+
+const kitchenBaseKeys = createKeyFactory('kitchen');
+const prepStationKeys = createKeyFactory('kitchen', 'prepStations');
+
 export const kitchenKeys = {
-  all: ['kitchen'] as const,
-  list: (params: Record<string, unknown>) => [...kitchenKeys.all, 'list', params] as const,
-  detail: (id: string) => [...kitchenKeys.all, 'detail', id] as const,
-  prepStations: () => [...kitchenKeys.all, 'prepStations'] as const,
-};
+  all: kitchenBaseKeys.all,
+  list: kitchenBaseKeys.list,
+  detail: kitchenBaseKeys.detail,
+  prepStations: () => prepStationKeys.all,
+} as const;

@@ -1,17 +1,30 @@
+import { createKeyFactory } from 'shared/api';
+
+const floorBaseKeys = createKeyFactory('floor');
+const floorUsersKeys = createKeyFactory('floor', 'users');
+const hallsKeys = createKeyFactory('floor', 'halls');
+const hallKeys = createKeyFactory('floor', 'hall');
+const zonesKeys = createKeyFactory('floor', 'zones');
+const zoneKeys = createKeyFactory('floor', 'zone');
+const diningTablesKeys = createKeyFactory('floor', 'diningTables');
+const diningTableKeys = createKeyFactory('floor', 'diningTable');
+const tableSessionsKeys = createKeyFactory('floor', 'tableSessions');
+const tableSessionKeys = createKeyFactory('floor', 'tableSession');
+
 export const floorKeys = {
-  all: ['floor'] as const,
-  users: () => [...floorKeys.all, 'users'] as const,
-  halls: () => [...floorKeys.all, 'halls'] as const,
-  hallsList: (params: Record<string, unknown>) => [...floorKeys.halls(), 'list', params] as const,
-  hallDetail: (id: string) => [...floorKeys.all, 'hall', id] as const,
+  all: floorBaseKeys.all,
+  users: () => floorUsersKeys.all,
+  halls: () => hallsKeys.all,
+  hallsList: hallsKeys.list,
+  hallDetail: hallKeys.id,
   hallConstructor: (id: string) => [...floorKeys.hallDetail(id), 'constructor'] as const,
-  zones: () => [...floorKeys.all, 'zones'] as const,
-  zonesList: (params: Record<string, unknown>) => [...floorKeys.zones(), 'list', params] as const,
-  zoneDetail: (id: string) => [...floorKeys.all, 'zone', id] as const,
-  diningTables: () => [...floorKeys.all, 'diningTables'] as const,
-  diningTablesList: (params: Record<string, unknown>) => [...floorKeys.diningTables(), 'list', params] as const,
-  diningTableDetail: (id: string) => [...floorKeys.all, 'diningTable', id] as const,
-  tableSessions: () => [...floorKeys.all, 'tableSessions'] as const,
-  tableSessionsList: (params: Record<string, unknown>) => [...floorKeys.tableSessions(), 'list', params] as const,
-  tableSessionDetail: (id: string) => [...floorKeys.all, 'tableSession', id] as const,
+  zones: () => zonesKeys.all,
+  zonesList: zonesKeys.list,
+  zoneDetail: zoneKeys.id,
+  diningTables: () => diningTablesKeys.all,
+  diningTablesList: diningTablesKeys.list,
+  diningTableDetail: diningTableKeys.id,
+  tableSessions: () => tableSessionsKeys.all,
+  tableSessionsList: tableSessionsKeys.list,
+  tableSessionDetail: tableSessionKeys.id,
 } as const;
