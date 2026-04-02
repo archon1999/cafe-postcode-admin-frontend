@@ -123,6 +123,8 @@
     "dashboard": "Dashboard"
   },
   "permissionActions": {
+    "list": "Рўйхатни кўриш",
+    "delete": "Ўчириш",
     "view": "Кўриш",
     "manage": "Бошқариш",
     "create": "Яратиш",

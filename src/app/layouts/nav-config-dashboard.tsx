@@ -1,6 +1,6 @@
 import { type TFunction } from 'i18next';
 
-import { RoutePath, canAccessAdminPath, canAccessSystem, type AdminAccessSnapshot } from 'app/routes';
+import { RoutePath, canAccessAccessControl, canAccessAdminPath, type AdminAccessSnapshot } from 'app/routes';
 import { Iconify } from 'shared/ui/Iconify';
 import type { NavSectionProps } from 'shared/ui/NavSection';
 
@@ -34,7 +34,7 @@ const ICONS = {
   devices: <Iconify icon="solar:smartphone-2-bold-duotone" width={20} />,
   prepStations: <Iconify icon="solar:chef-hat-bold-duotone" width={20} />,
   distributionPoints: <Iconify icon="solar:shop-bold-duotone" width={20} />,
-  system: <Iconify icon="solar:settings-bold-duotone" width={24} />,
+  accessControl: <Iconify icon="solar:settings-bold-duotone" width={24} />,
 };
 
 type NavOptions = AdminAccessSnapshot;
@@ -263,7 +263,7 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
     restaurantAdminItems,
   );
 
-  const systemItems = [
+  const accessControlItems = [
     canAccess(RoutePath.userList)
       ? {
           title: t('users'),
@@ -287,8 +287,11 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
       : null,
   ].filter(Boolean) as NavSectionProps['data'][number]['items'];
 
-  if (isSuperuser || canAccessSystem(options)) {
-    pushSection(isSuperuser ? t('systemSection', { defaultValue: 'Tizim' }) : undefined, systemItems);
+  if (isSuperuser || canAccessAccessControl(options)) {
+    pushSection(
+      isSuperuser ? t('accessControlSection', { defaultValue: 'Foydalanuvchilar va ruxsatlar' }) : undefined,
+      accessControlItems,
+    );
   }
 
   return sections;

@@ -235,7 +235,6 @@ export const apiClient = {
           pageSize: params.pageSize,
           search: params.search,
           type_in: params.typeIn,
-          permission_code_in: params.permissionCodeIn,
           ordering: params.ordering,
         },
       })

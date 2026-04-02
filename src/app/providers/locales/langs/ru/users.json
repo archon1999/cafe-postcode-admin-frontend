@@ -123,6 +123,8 @@
     "dashboard": "Dashboard"
   },
   "permissionActions": {
+    "list": "Просмотр списка",
+    "delete": "Удаление",
     "view": "Просмотр",
     "manage": "Управление",
     "create": "Создание",

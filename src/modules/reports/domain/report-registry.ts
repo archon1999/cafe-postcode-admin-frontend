@@ -87,7 +87,6 @@ export const REPORTS_REGISTRY: ReportDefinition[] = [
     icon: 'solar:hourglass-bold-duotone',
     exportPath: '/api/v1/admin/reports/shifts/export/',
     availableFilters: ['status', 'cashDesk', 'cashier', 'differenceOnly'],
-    requiredPermissionCode: 'reports.shift.view',
     defaultSort: { field: 'openedAt', sort: 'desc' },
   },
 ];

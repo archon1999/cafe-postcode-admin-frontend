@@ -123,10 +123,12 @@
     "dashboard": "Dashboard"
   },
   "permissionActions": {
+    "list": "Ro'yxatni ko'rish",
     "view": "Ko'rish",
     "manage": "Boshqarish",
     "create": "Yaratish",
     "update": "Yangilash",
+    "delete": "O'chirish",
     "activate": "Aktivlashtirish",
     "deactivate": "Deaktivlashtirish",
     "resetPassword": "Parolni yangilash",

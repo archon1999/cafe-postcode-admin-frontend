@@ -21,28 +21,12 @@ const RESTAURANT_PERMISSION_CODES: PermissionCode[] = [
   "restaurants.view",
   "restaurants.create",
   "restaurants.update",
-  "restaurants.delete",
   "restaurants.activate",
   "restaurants.deactivate",
   "restaurants.reset_password",
 ];
-const REPORT_PERMISSION_CODES: PermissionCode[] = [
-  "reports.summary.view",
-  "reports.sales.view",
-  "reports.open_checks.view",
-  "reports.top_items.view",
-  "reports.top_staff.view",
-  "reports.payment_breakdown.view",
-  "reports.shifts.view",
-];
-const ORDER_PERMISSION_CODES: PermissionCode[] = [
-  "orders.list",
-  "orders.view",
-  "order_items.list",
-  "order_items.view",
-  "order_item_notes.list",
-  "order_item_notes.view",
-];
+const REPORT_PERMISSION_CODES: PermissionCode[] = ["reports.view"];
+const ORDER_PERMISSION_CODES: PermissionCode[] = ["orders.list", "orders.view", "orders.create", "orders.update"];
 const PAYMENT_PERMISSION_CODES: PermissionCode[] = ["payments.list", "payments.view", "receipts.list", "receipts.view"];
 const KITCHEN_PERMISSION_CODES: PermissionCode[] = ["kitchen_tickets.list", "kitchen_tickets.view"];
 const CATALOG_PERMISSION_CODES: PermissionCode[] = [
@@ -72,7 +56,6 @@ const FLOOR_PERMISSION_CODES: PermissionCode[] = [
   "table_sessions.view",
   "table_sessions.create",
   "table_sessions.update",
-  "halls.update_layout",
 ];
 const MY_RESTAURANT_GENERAL_PERMISSION_CODES: PermissionCode[] = [
   "restaurant_settings.view",
@@ -104,17 +87,6 @@ const EMPLOYEE_PERMISSION_CODES: PermissionCode[] = [
   "employees.view",
   "employees.create",
   "employees.update",
-];
-const SYSTEM_PERMISSION_CODES: PermissionCode[] = [
-  "users.list",
-  "users.view",
-  "users.create",
-  "users.update",
-  "roles.list",
-  "roles.view",
-  "roles.create",
-  "roles.update",
-  "permissions.list",
 ];
 
 const ADMIN_LANDING_CANDIDATES = [
@@ -197,11 +169,11 @@ export function canAccessEmployees(snapshot?: AdminAccessSnapshot | null) {
 }
 
 export function canAccessRoles(snapshot?: AdminAccessSnapshot | null) {
-  return Boolean(snapshot?.isSuperuser) || hasAnyPermission(snapshot, ["roles.list", "roles.view", "roles.create", "roles.update"]);
+  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, ["roles.list", "roles.view", "roles.create", "roles.update", "roles.delete"]);
 }
 
 export function canAccessPermissions(snapshot?: AdminAccessSnapshot | null) {
-  return Boolean(snapshot?.isSuperuser) || hasAnyPermission(snapshot, ["permissions.list"]);
+  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, ["permissions.list"]);
 }
 
 export function canAccessFeatureConfigs(_snapshot?: AdminAccessSnapshot | null) {
@@ -218,8 +190,8 @@ export function canAccessMyRestaurant(snapshot?: AdminAccessSnapshot | null) {
   );
 }
 
-export function canAccessSystem(snapshot?: AdminAccessSnapshot | null) {
-  return Boolean(snapshot?.isSuperuser) || hasAnyPermission(snapshot, SYSTEM_PERMISSION_CODES);
+export function canAccessAccessControl(snapshot?: AdminAccessSnapshot | null) {
+  return canAccessUsers(snapshot) || canAccessEmployees(snapshot) || canAccessRoles(snapshot) || canAccessPermissions(snapshot);
 }
 
 export function canAccessMyRestaurantGeneral(snapshot?: AdminAccessSnapshot | null) {

@@ -1,7 +1,14 @@
 import { describe, expect, it } from "vitest";
 
 import { RoutePath } from "./route-paths";
-import { canAccessAdminPath, canAccessMyRestaurantGeneral, canAccessReports, getDefaultAdminPath, type AdminAccessSnapshot } from "./admin-access";
+import {
+  canAccessAccessControl,
+  canAccessAdminPath,
+  canAccessMyRestaurantGeneral,
+  canAccessReports,
+  getDefaultAdminPath,
+  type AdminAccessSnapshot,
+} from "./admin-access";
 
 function createSnapshot(permissionCodes: string[], overrides: Partial<AdminAccessSnapshot> = {}): AdminAccessSnapshot {
   return {
@@ -13,14 +20,14 @@ function createSnapshot(permissionCodes: string[], overrides: Partial<AdminAcces
 }
 
 describe("admin access", () => {
-  it("allows reports routes for report view permissions", () => {
-    const snapshot = createSnapshot(["reports.sales.view"]);
+  it("allows reports routes for consolidated report permissions", () => {
+    const snapshot = createSnapshot(["reports.view"]);
     expect(canAccessReports(snapshot)).toBe(true);
     expect(canAccessAdminPath(RoutePath.reports, snapshot)).toBe(true);
   });
 
   it("blocks restaurants routes without canonical restaurant permissions", () => {
-    const snapshot = createSnapshot(["reports.sales.view"]);
+    const snapshot = createSnapshot(["reports.view"]);
     expect(canAccessAdminPath(RoutePath.organizationRestaurantList, snapshot)).toBe(false);
   });
 
@@ -33,5 +40,11 @@ describe("admin access", () => {
   it("picks the first reachable landing path from canonical permissions", () => {
     const snapshot = createSnapshot(["payments.list"]);
     expect(getDefaultAdminPath(snapshot)).toBe(RoutePath.paymentList);
+  });
+
+  it("treats employees and roles as access-control routes without a system bucket", () => {
+    const snapshot = createSnapshot(["employees.list"]);
+    expect(canAccessAccessControl(snapshot)).toBe(true);
+    expect(canAccessAdminPath(RoutePath.employeeList, snapshot)).toBe(true);
   });
 });

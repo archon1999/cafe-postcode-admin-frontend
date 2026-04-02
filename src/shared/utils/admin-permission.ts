@@ -9,10 +9,12 @@ const SCOPE_TRANSLATION_KEYS: Record<string, string> = {
 };
 
 const ACTION_TRANSLATION_KEYS: Record<string, string> = {
+  list: 'permissionActions.list',
   view: 'permissionActions.view',
   manage: 'permissionActions.manage',
   create: 'permissionActions.create',
   update: 'permissionActions.update',
+  delete: 'permissionActions.delete',
   activate: 'permissionActions.activate',
   deactivate: 'permissionActions.deactivate',
   reset_password: 'permissionActions.resetPassword',

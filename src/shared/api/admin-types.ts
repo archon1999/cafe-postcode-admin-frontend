@@ -790,7 +790,6 @@ export type AdminEmployeesQueryParams = AdminUsersQueryParams;
 
 export type AdminRolesQueryParams = AdminListQueryParams & {
   typeIn?: string;
-  permissionCodeIn?: string;
 };
 
 export type AdminPermissionsQueryParams = AdminListQueryParams & {

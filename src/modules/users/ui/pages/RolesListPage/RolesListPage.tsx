@@ -21,10 +21,9 @@ import { ConfirmDialog } from 'shared/ui/CustomDialog';
 import type { FilterOption } from 'shared/ui/Filters';
 import { Iconify } from 'shared/ui/Iconify';
 import { RouterLink } from 'shared/ui/RouterLink';
-import { getAdminPermissionLabel } from 'shared/utils/admin-permission';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 
-import { useDeleteRoleMutation, useGetPermissionsQuery, useGetRolesListQuery } from '../../../application';
+import { useDeleteRoleMutation, useGetRolesListQuery } from '../../../application';
 import { PermissionPreview } from '../../components/PermissionPreview/PermissionPreview';
 
 import { RolesGridToolbar } from './RolesGridToolbar';
@@ -45,7 +44,6 @@ const RolesListPage = () => {
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_PAGINATION_MODEL);
   const [search, setSearch] = useState('');
   const [types, setTypes] = useState<string[]>([]);
-  const [permissionCodes, setPermissionCodes] = useState<string[]>([]);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(
     DEFAULT_COLUMN_VISIBILITY_MODEL,
   );
@@ -58,25 +56,8 @@ const RolesListPage = () => {
     pageSize: paginationModel.pageSize,
     search: search || undefined,
     typeIn: types.length ? types.join(',') : undefined,
-    permissionCodeIn: permissionCodes.length ? permissionCodes.join(',') : undefined,
     ordering: getOrderingFromSortModel(sortModel),
   });
-  const permissionsQuery = useGetPermissionsQuery();
-
-  const permissionOptions = useMemo<FilterOption[]>(() => {
-    const seen = new Map<string, FilterOption>();
-
-    (permissionsQuery.data ?? []).forEach((permission) => {
-      if (!seen.has(permission.code)) {
-        seen.set(permission.code, {
-          value: permission.code,
-          label: getAdminPermissionLabel(permission, t),
-        });
-      }
-    });
-
-    return Array.from(seen.values()).sort((left, right) => left.label.localeCompare(right.label));
-  }, [permissionsQuery.data, t]);
 
   const typeOptions = useMemo<FilterOption[]>(
     () => [
@@ -86,7 +67,7 @@ const RolesListPage = () => {
     [t],
   );
 
-  const hasActiveFilters = Boolean(search || types.length || permissionCodes.length);
+  const hasActiveFilters = Boolean(search || types.length);
 
   const columns = useMemo<GridColDef<AdminRole>[]>(
     () => [
@@ -191,11 +172,6 @@ const RolesListPage = () => {
     setPaginationModel((prev) => ({ ...prev, page: 0 }));
   };
 
-  const handlePermissionCodesApply = (values: string[]) => {
-    setPermissionCodes(values);
-    setPaginationModel((prev) => ({ ...prev, page: 0 }));
-  };
-
   return (
     <ListPageContent>
       <CustomBreadcrumbs
@@ -267,10 +243,6 @@ const RolesListPage = () => {
                   types={types}
                   onTypesChange={setTypes}
                   onTypesApply={handleTypesApply}
-                  permissionCodes={permissionCodes}
-                  onPermissionCodesChange={setPermissionCodes}
-                  onPermissionCodesApply={handlePermissionCodesApply}
-                  permissionOptions={permissionOptions}
                   typeOptions={typeOptions}
                   columns={columns}
                   columnVisibilityModel={columnVisibilityModel}

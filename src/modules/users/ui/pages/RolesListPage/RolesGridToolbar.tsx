@@ -19,10 +19,6 @@ type RolesGridToolbarProps = {
   types: string[];
   onTypesChange: (values: string[]) => void;
   onTypesApply: (values: string[]) => void;
-  permissionCodes: string[];
-  onPermissionCodesChange: (values: string[]) => void;
-  onPermissionCodesApply: (values: string[]) => void;
-  permissionOptions: FilterOption[];
   typeOptions: FilterOption[];
   columns: GridColDef[];
   columnVisibilityModel: GridColumnVisibilityModel;
@@ -37,10 +33,6 @@ export function RolesGridToolbar({
   types,
   onTypesChange,
   onTypesApply,
-  permissionCodes,
-  onPermissionCodesChange,
-  onPermissionCodesApply,
-  permissionOptions,
   typeOptions,
   columns,
   columnVisibilityModel,
@@ -73,16 +65,6 @@ export function RolesGridToolbar({
             onApply={onTypesApply}
             emptyLabel={t('filters.all')}
             testId="roles-list-filter-type"
-          />
-
-          <FilterSelect
-            label={t('filters.permission')}
-            value={permissionCodes}
-            options={permissionOptions}
-            onChange={onPermissionCodesChange}
-            onApply={onPermissionCodesApply}
-            emptyLabel={t('filters.all')}
-            testId="roles-list-filter-permission"
           />
         </ToolbarLeftPanel>
 
