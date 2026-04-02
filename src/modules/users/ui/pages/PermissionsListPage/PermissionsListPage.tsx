@@ -1,4 +1,6 @@
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Typography from '@mui/material/Typography';
 import type {
   GridColDef,
   GridColumnVisibilityModel,
@@ -163,12 +165,10 @@ const PermissionsListPage = () => {
           };
 
           return (
-            <Label
-              color={badge.color}
-              startIcon={<Iconify icon={badge.icon} width={14} />}
-              sx={{ textTransform: 'none' }}>
-              {getAdminPermissionActionLabel(action, t)}
-            </Label>
+            <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
+              <Iconify icon={badge.icon} width={18} sx={{ color: `${badge.color}.main` }} />
+              <Typography variant="body2">{getAdminPermissionActionLabel(action, t)}</Typography>
+            </Box>
           );
         },
       },
