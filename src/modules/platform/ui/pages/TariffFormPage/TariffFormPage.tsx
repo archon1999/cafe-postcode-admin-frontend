@@ -1,7 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
@@ -12,14 +10,15 @@ import { useTranslate } from 'app/providers/locales';
 import { RoutePath, canAccessTariffs } from 'app/routes';
 import { useCurrentUser } from 'modules/auth/domain/services/current-user';
 import { useGetRolesQuery } from 'modules/users/application';
-import { PermissionsSelect } from 'modules/users/ui/components/PermissionsSelect/PermissionsSelect';
 import { useParams, useRedirectOnNotFound, useRouter } from 'shared/hooks/router';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { FormActions } from 'shared/ui/FormActions';
-import { Form, RHFMultiSelect, RHFSelect, RHFSumCurrencyField, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
+import { Form } from 'shared/ui/HookForm';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 
 import { useCreateTariffMutation, useGetTariffByIdQuery, useUpdateTariffMutation } from '../../../application';
+
+import { TariffFormFields } from './TariffFormFields';
 
 const schema = z.object({
   name: z.string().min(1),
@@ -33,7 +32,7 @@ const schema = z.object({
   operationalSettingsText: z.string().default(''),
 });
 
-type Values = z.infer<typeof schema>;
+export type Values = z.infer<typeof schema>;
 
 const TariffFormPage = () => {
   const { t } = useTranslate('platform');
@@ -145,50 +144,11 @@ const TariffFormPage = () => {
           { name: t('pages.tariffs.title'), href: RoutePath.platformTariffList },
           { name: isEditMode ? t('pages.tariffEdit.title') : t('pages.tariffCreate.title') },
         ]}
-        sx={{ mb: { xs: 3, md: 5 } }}
       />
       <Card sx={{ p: 3 }}>
         <Form methods={methods} onSubmit={onSubmit}>
           <Stack spacing={3}>
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' }, gap: 3 }}>
-              <RHFTextField<Values> name="name" label={t('fields.name')} />
-              <RHFSelect<Values> name="classification" label={t('fields.classification')}>
-                <MenuItem value="basic">{t('classifications.basic')}</MenuItem>
-                <MenuItem value="standard">{t('classifications.standard')}</MenuItem>
-                <MenuItem value="premium">{t('classifications.premium')}</MenuItem>
-                <MenuItem value="custom">{t('classifications.custom')}</MenuItem>
-              </RHFSelect>
-              <RHFSumCurrencyField<Values> name="monthlyPrice" label={t('fields.monthlyPrice')} />
-              <RHFSumCurrencyField<Values> name="yearlyPrice" label={t('fields.yearlyPrice')} />
-              <RHFTextField<Values>
-                name="description"
-                label={t('fields.description')}
-                multiline
-                rows={4}
-                sx={{ gridColumn: { md: '1 / -1' } }}
-              />
-              <PermissionsSelect<Values>
-                name="permissionIds"
-                label={t('fields.permissions')}
-                enabled={canManagePlatform}
-              />
-              <RHFMultiSelect<Values>
-                name="allowedRoleIds"
-                label={t('fields.allowedRoles')}
-                options={roleOptions}
-                checkbox
-                chip
-                placeholder={t('labels.notSelected')}
-              />
-              <RHFTextField<Values>
-                name="operationalSettingsText"
-                label={t('fields.operationalSettings')}
-                multiline
-                rows={6}
-                sx={{ gridColumn: { md: '1 / -1' } }}
-              />
-            </Box>
-            <RHFSwitch<Values> name="isActive" label={t('fields.status')} />
+            <TariffFormFields canManagePlatform={canManagePlatform} roleOptions={roleOptions} t={t} />
             <FormActions
               isSubmitting={methods.formState.isSubmitting}
               submitLabel={isEditMode ? t('actions.save') : t('actions.create')}
@@ -202,3 +162,4 @@ const TariffFormPage = () => {
 };
 
 export default TariffFormPage;
+

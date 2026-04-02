@@ -1,7 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -15,11 +13,12 @@ import { useGetRolesQuery } from 'modules/users/application';
 import { useParams, useRedirectOnNotFound, useRouter } from 'shared/hooks/router';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { FormActions } from 'shared/ui/FormActions';
-import { Form, RHFMultiSelect, RHFSelect, RHFSwitch } from 'shared/ui/HookForm';
+import { Form } from 'shared/ui/HookForm';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 
 import { useGetRestaurantFeatureConfigQuery, useUpsertRestaurantFeatureConfigMutation } from '../../../application';
-import { getFeatureKitchenModeTranslationKey, getFeatureOrderEntryModeTranslationKey } from '../../lib/presenters';
+
+import { FeatureConfigFormFields } from './FeatureConfigFormFields';
 
 const schema = z.object({
   hallEnabled: z.boolean(),
@@ -31,7 +30,7 @@ const schema = z.object({
   enabledRoles: z.array(z.string()),
 });
 
-type Values = z.infer<typeof schema>;
+export type Values = z.infer<typeof schema>;
 
 const ORDER_ENTRY_MODES = ['hall', 'cashier_builder'] as const;
 const KITCHEN_MODES = ['display', 'printer', 'both'] as const;
@@ -224,98 +223,24 @@ const FeatureConfigFormPage = () => {
           { name: restaurantName },
           { name: t('pages.restaurantFeatureConfig.title', { defaultValue: 'POS konfiguratsiyasi' }) },
         ]}
-        sx={{ mb: { xs: 3, md: 5 } }}
       />
       <Card sx={{ p: 3 }}>
         <Form methods={methods} onSubmit={onSubmit}>
           <Stack spacing={3}>
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: 'repeat(2, minmax(0, 1fr))' }, gap: 3 }}>
-              <RHFSelect<Values>
-                name="orderEntryMode"
-                label={t('fields.orderEntryMode')}
-                helperText={orderEntryModeHelperText}>
-                {ORDER_ENTRY_MODES.map((mode) => (
-                  <MenuItem
-                    key={mode}
-                    value={mode}
-                    disabled={(mode === 'hall' && !hallEnabled) || (mode === 'cashier_builder' && !cashierEnabled)}>
-                    {t(getFeatureOrderEntryModeTranslationKey(mode))}
-                  </MenuItem>
-                ))}
-              </RHFSelect>
-              <RHFSelect<Values>
-                name="kitchenMode"
-                label={t('fields.kitchenMode')}
-                disabled={!kitchenEnabled}
-                helperText={kitchenModeHelperText}>
-                {KITCHEN_MODES.map((mode) => (
-                  <MenuItem key={mode} value={mode}>
-                    {t(getFeatureKitchenModeTranslationKey(mode))}
-                  </MenuItem>
-                ))}
-              </RHFSelect>
-              <RHFMultiSelect<Values>
-                name="enabledRoles"
-                label={t('fields.enabledRoles')}
-                chip
-                checkbox
-                helperText={enabledRolesHelperText}
-                options={availableRoleOptions.map((role) => ({
-                  value: role,
-                  label: rolesByCode.get(role) ?? role,
-                }))}
-                sx={{ gridColumn: { lg: '1 / -1' } }}
-              />
-            </Box>
-
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: 'repeat(2, minmax(0, 1fr))' }, gap: 2 }}>
-              <RHFSwitch<Values>
-                name="hallEnabled"
-                label={t('fields.hallEnabled')}
-                helperText={
-                  !cashierEnabled
-                    ? t('helpers.hallRequired', {
-                        defaultValue: "Kassa o'chirilganida zallar moduli yoqilgan bo'lishi kerak.",
-                      })
-                    : undefined
-                }
-                slotProps={{ switch: { disabled: !cashierEnabled && hallEnabled } }}
-              />
-              <RHFSwitch<Values>
-                name="kitchenEnabled"
-                label={t('fields.kitchenEnabled')}
-                helperText={
-                  !kitchenEnabled
-                    ? t('helpers.kitchenDisabled', {
-                        defaultValue: "Oshxona o'chirilsa kitchen mode va oshpaz rollari avtomatik cheklanadi.",
-                      })
-                    : undefined
-                }
-              />
-              <RHFSwitch<Values>
-                name="cashierEnabled"
-                label={t('fields.cashierEnabled')}
-                helperText={
-                  !hallEnabled
-                    ? t('helpers.cashierRequired', {
-                        defaultValue: "Zallar o'chirilganida kassa moduli yoqilgan bo'lishi kerak.",
-                      })
-                    : undefined
-                }
-                slotProps={{ switch: { disabled: !hallEnabled && cashierEnabled } }}
-              />
-              <RHFSwitch<Values>
-                name="ownerDashboardEnabled"
-                label={t('fields.ownerDashboardEnabled')}
-                helperText={
-                  ownerDashboardEnabled
-                    ? t('helpers.ownerDashboardEnabled', {
-                        defaultValue: 'Rahbar paneli owner uchun alohida loyiha sifatida keyin ulanadi.',
-                      })
-                    : undefined
-                }
-              />
-            </Box>
+            <FeatureConfigFormFields
+              availableRoleOptions={availableRoleOptions}
+              cashierEnabled={cashierEnabled}
+              enabledRolesHelperText={enabledRolesHelperText}
+              hallEnabled={hallEnabled}
+              kitchenEnabled={kitchenEnabled}
+              kitchenModeHelperText={kitchenModeHelperText}
+              kitchenModes={KITCHEN_MODES}
+              orderEntryModeHelperText={orderEntryModeHelperText}
+              orderEntryModes={ORDER_ENTRY_MODES}
+              ownerDashboardEnabled={ownerDashboardEnabled}
+              rolesByCode={rolesByCode}
+              t={t}
+            />
 
             <FormActions
               isSubmitting={methods.formState.isSubmitting}
@@ -330,3 +255,4 @@ const FeatureConfigFormPage = () => {
 };
 
 export default FeatureConfigFormPage;
+

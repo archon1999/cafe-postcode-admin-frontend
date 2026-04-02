@@ -1,7 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
@@ -13,9 +11,8 @@ import { RoutePath } from 'app/routes';
 import { useParams, useRedirectOnNotFound, useRouter } from 'shared/hooks/router';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { FormActions } from 'shared/ui/FormActions';
-import { Form, RHFSelect, RHFTextField } from 'shared/ui/HookForm';
+import { Form } from 'shared/ui/HookForm';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
-import { formatHallDisplayName } from 'shared/utils/format-hall-display';
 
 import {
   useCreateTableSessionMutation,
@@ -25,7 +22,8 @@ import {
   useGetUsersForFloorQuery,
   useUpdateTableSessionMutation,
 } from '../../../application';
-import { getTableSessionStatusTranslationKey } from '../../lib/presenters';
+
+import { TableSessionFormFields } from './TableSessionFormFields';
 
 const schema = z.object({
   hall: z.string().min(1),
@@ -37,7 +35,7 @@ const schema = z.object({
   note: z.string(),
 });
 
-type Values = z.infer<typeof schema>;
+export type Values = z.infer<typeof schema>;
 
 const TABLE_SESSION_STATUSES = ['open', 'pending_payment', 'closed', 'merged'] as const;
 
@@ -105,64 +103,21 @@ const TableSessionFormPage = () => {
           { name: t('pages.tableSessions.title'), href: RoutePath.floorTableSessionList },
           { name: isEditMode ? t('pages.tableSessionEdit.title') : t('pages.tableSessionCreate.title') },
         ]}
-        sx={{ mb: { xs: 3, md: 5 } }}
       />
       <Card sx={{ p: 3 }}>
         <Form methods={methods} onSubmit={onSubmit}>
           <Stack spacing={3}>
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' }, gap: 3 }}>
-              <RHFSelect<Values>
-                name="hall"
-                label={t('fields.hall')}
-                helperText={hallsQuery.isLoading ? tCommon('labels.loading') : undefined}>
-                {(hallsQuery.data ?? []).map((hall) => (
-                  <MenuItem key={hall.id} value={hall.id}>
-                    {formatHallDisplayName(hall.name)}
-                  </MenuItem>
-                ))}
-              </RHFSelect>
-              <RHFSelect<Values>
-                name="table"
-                label={t('fields.table')}
-                helperText={tablesQuery.isLoading ? tCommon('labels.loading') : undefined}>
-                {tableOptions.map((table) => (
-                  <MenuItem key={table.id} value={table.id}>
-                    {table.name}
-                  </MenuItem>
-                ))}
-              </RHFSelect>
-              <RHFSelect<Values>
-                name="openedBy"
-                label={t('fields.openedBy')}
-                helperText={usersQuery.isLoading ? tCommon('labels.loading') : undefined}>
-                <MenuItem value="">{t('labels.notSelected')}</MenuItem>
-                {(usersQuery.data ?? []).map((user) => (
-                  <MenuItem key={user.id} value={user.id}>
-                    {user.fullName || user.username}
-                  </MenuItem>
-                ))}
-              </RHFSelect>
-              <RHFSelect<Values>
-                name="assignedWaiter"
-                label={t('fields.assignedWaiter')}
-                helperText={usersQuery.isLoading ? tCommon('labels.loading') : undefined}>
-                <MenuItem value="">{t('labels.notSelected')}</MenuItem>
-                {(usersQuery.data ?? []).map((user) => (
-                  <MenuItem key={user.id} value={user.id}>
-                    {user.fullName || user.username}
-                  </MenuItem>
-                ))}
-              </RHFSelect>
-              <RHFTextField<Values> name="guestCount" label={t('fields.guestCount')} type="number" />
-              <RHFSelect<Values> name="status" label={t('fields.status')}>
-                {TABLE_SESSION_STATUSES.map((status) => (
-                  <MenuItem key={status} value={status}>
-                    {t(getTableSessionStatusTranslationKey(status))}
-                  </MenuItem>
-                ))}
-              </RHFSelect>
-              <RHFTextField<Values> name="note" label={t('fields.note')} multiline rows={4} />
-            </Box>
+            <TableSessionFormFields
+              halls={hallsQuery.data ?? []}
+              isHallsLoading={hallsQuery.isLoading}
+              isTablesLoading={tablesQuery.isLoading}
+              isUsersLoading={usersQuery.isLoading}
+              statuses={TABLE_SESSION_STATUSES}
+              t={t}
+              tCommon={tCommon}
+              tables={tableOptions}
+              users={usersQuery.data ?? []}
+            />
             <FormActions
               isSubmitting={methods.formState.isSubmitting}
               submitLabel={isEditMode ? t('actions.save') : t('actions.create')}
@@ -176,3 +131,4 @@ const TableSessionFormPage = () => {
 };
 
 export default TableSessionFormPage;
+

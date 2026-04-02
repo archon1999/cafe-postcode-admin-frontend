@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import { useEffect } from 'react';
@@ -12,11 +11,12 @@ import { RoutePath } from 'app/routes';
 import { useParams, useRedirectOnNotFound, useRouter } from 'shared/hooks/router';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { FormActions } from 'shared/ui/FormActions';
-import { Form, RHFTextField } from 'shared/ui/HookForm';
+import { Form } from 'shared/ui/HookForm';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 
 import { useCreateRoleMutation, useGetRoleByIdQuery, useUpdateRoleMutation } from '../../../application';
-import { PermissionsSelect } from '../../components/PermissionsSelect/PermissionsSelect';
+
+import { RoleFormFields } from './RoleFormFields';
 
 const roleFormSchema = z.object({
   name: z.string().min(1, { message: 'Nomi talab qilinadi' }),
@@ -24,7 +24,7 @@ const roleFormSchema = z.object({
   permissionIds: z.array(z.string()).default([]),
 });
 
-type RoleFormValues = z.infer<typeof roleFormSchema>;
+export type RoleFormValues = z.infer<typeof roleFormSchema>;
 
 const defaultValues: RoleFormValues = {
   name: '',
@@ -97,22 +97,12 @@ const RoleFormPage = () => {
               : t('pages.roleCreate.title', { defaultValue: 'Yangi rol' }),
           },
         ]}
-        sx={{ mb: { xs: 3, md: 5 } }}
       />
 
       <Card sx={{ p: 3 }}>
         <Form methods={methods} onSubmit={onSubmit}>
           <Stack spacing={3}>
-            <Box
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
-                gap: 3,
-              }}>
-              <RHFTextField<RoleFormValues> name="name" label={t('fields.name')} />
-              <RHFTextField<RoleFormValues> name="description" label={t('fields.description')} multiline rows={4} />
-              <PermissionsSelect<RoleFormValues> name="permissionIds" label={t('fields.permissions')} />
-            </Box>
+            <RoleFormFields t={t} />
 
             <FormActions
               isSubmitting={formState.isSubmitting}
@@ -129,3 +119,4 @@ const RoleFormPage = () => {
 };
 
 export default RoleFormPage;
+

@@ -1,8 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -13,10 +11,12 @@ import { RoutePath } from 'app/routes';
 import { useParams, useRedirectOnNotFound, useRouter } from 'shared/hooks/router';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { FormActions } from 'shared/ui/FormActions';
-import { Form, RHFCheckbox, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
+import { Form } from 'shared/ui/HookForm';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 
 import { useCreateBranchMutation, useGetBranchByIdQuery, useUpdateBranchMutation } from '../../../application';
+
+import { BranchFormFields } from './BranchFormFields';
 
 const schema = z.object({
   name: z.string().min(1),
@@ -29,7 +29,7 @@ const schema = z.object({
   isDefault: z.boolean(),
 });
 
-type Values = z.infer<typeof schema>;
+export type Values = z.infer<typeof schema>;
 
 const BranchFormPage = () => {
   const { t } = useTranslate('organizations');
@@ -99,38 +99,11 @@ const BranchFormPage = () => {
           { name: t('pages.branches.title'), href: RoutePath.organizationBranchList },
           { name: isEditMode ? t('pages.branchEdit.title') : t('pages.branchCreate.title') },
         ]}
-        sx={{ mb: { xs: 3, md: 5 } }}
       />
       <Card sx={{ p: 3 }}>
         <Form methods={methods} onSubmit={onSubmit}>
           <Stack spacing={3}>
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: 'repeat(2, minmax(0, 1fr))' }, gap: 3 }}>
-              <RHFTextField<Values> name="name" label={t('fields.name')} />
-              <RHFTextField<Values> name="address" label={t('fields.address')} sx={{ gridColumn: { lg: '1 / -1' } }} />
-              <RHFTextField<Values> name="phone" label={t('fields.phone')} />
-            </Box>
-            <Card variant="outlined" sx={{ p: 2.5 }}>
-              <Stack spacing={2.5}>
-                <Box>
-                  <Typography variant="h6">{t('sections.fiscalProfile')}</Typography>
-                  <Typography variant="body2" sx={{ mt: 0.75, color: 'text.secondary' }}>
-                    {t('sections.fiscalProfileDescription')}
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns: { xs: '1fr', lg: 'repeat(2, minmax(0, 1fr))' },
-                    gap: 3,
-                  }}>
-                  <RHFTextField<Values> name="legalName" label={t('fields.legalName')} />
-                  <RHFTextField<Values> name="taxNumber" label={t('fields.taxNumber')} />
-                  <RHFTextField<Values> name="serviceFeePercent" type="number" label={t('fields.serviceFeePercent')} />
-                  <RHFCheckbox<Values> name="vatEnabled" label={t('fields.vatEnabled')} />
-                </Box>
-              </Stack>
-            </Card>
-            <RHFSwitch<Values> name="isDefault" label={t('fields.default')} />
+            <BranchFormFields t={t} />
             <FormActions
               isSubmitting={methods.formState.isSubmitting}
               submitLabel={isEditMode ? t('actions.save') : t('actions.create')}
@@ -144,3 +117,4 @@ const BranchFormPage = () => {
 };
 
 export default BranchFormPage;
+

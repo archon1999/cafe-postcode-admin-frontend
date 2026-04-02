@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import { useEffect } from 'react';
@@ -13,7 +12,7 @@ import { useCurrentUser } from 'modules/auth/domain/services/current-user';
 import { useParams, useRedirectOnNotFound, useRouter } from 'shared/hooks/router';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { FormActions } from 'shared/ui/FormActions';
-import { Form, RHFPhoneInput, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
+import { Form } from 'shared/ui/HookForm';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 
 import {
@@ -21,6 +20,8 @@ import {
   useGetRestaurantByIdQuery,
   useUpdateRestaurantMutation,
 } from '../../../application';
+
+import { RestaurantFormFields } from './RestaurantFormFields';
 
 const schema = z.object({
   name: z.string().min(1),
@@ -31,7 +32,7 @@ const schema = z.object({
   isActive: z.boolean(),
 });
 
-type Values = z.infer<typeof schema>;
+export type Values = z.infer<typeof schema>;
 
 const RestaurantFormPage = () => {
   const { t } = useTranslate('organizations');
@@ -113,30 +114,11 @@ const RestaurantFormPage = () => {
           },
           { name: isEditMode ? t('pages.restaurantEdit.title') : t('pages.restaurantCreate.title') },
         ]}
-        sx={{ mb: { xs: 3, md: 5 } }}
       />
       <Card sx={{ p: 3 }}>
         <Form methods={methods} onSubmit={onSubmit}>
           <Stack spacing={3}>
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: 'repeat(2, minmax(0, 1fr))' }, gap: 3 }}>
-              <RHFTextField<Values> name="name" label={t('fields.name')} />
-              <RHFTextField<Values> name="legalName" label={t('fields.legalName')} />
-              <RHFTextField<Values> name="taxNumber" label={t('fields.taxNumber')} />
-              <RHFPhoneInput<Values>
-                name="phone"
-                label={t('fields.phone')}
-                defaultCountry="UZ"
-                placeholder={t('fields.phonePlaceholder')}
-              />
-              <RHFTextField<Values>
-                name="address"
-                label={t('fields.address')}
-                multiline
-                rows={3}
-                sx={{ gridColumn: { lg: '1 / -1' } }}
-              />
-            </Box>
-            {isEditMode ? <RHFSwitch<Values> name="isActive" label={t('fields.status')} /> : null}
+            <RestaurantFormFields isEditMode={isEditMode} t={t} />
             <FormActions
               isSubmitting={methods.formState.isSubmitting}
               submitLabel={isEditMode ? t('actions.save') : t('actions.create')}
@@ -150,3 +132,4 @@ const RestaurantFormPage = () => {
 };
 
 export default RestaurantFormPage;
+

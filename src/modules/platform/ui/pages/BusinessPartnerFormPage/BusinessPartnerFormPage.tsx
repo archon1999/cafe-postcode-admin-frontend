@@ -1,6 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import { useEffect } from 'react';
@@ -15,7 +13,7 @@ import { normalizeError, notifyError } from 'shared/api/errors/errorHandling';
 import { useParams, useRedirectOnNotFound, useRouter } from 'shared/hooks/router';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { FormActions } from 'shared/ui/FormActions';
-import { Form, RHFPhoneInput, RHFTextField } from 'shared/ui/HookForm';
+import { Form } from 'shared/ui/HookForm';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 
 import {
@@ -24,6 +22,8 @@ import {
   useLookupBusinessPartnerMutation,
   useUpdateBusinessPartnerMutation,
 } from '../../../application';
+
+import { BusinessPartnerFormFields } from './BusinessPartnerFormFields';
 
 const schema = z.object({
   inn: z.string().min(1),
@@ -36,7 +36,7 @@ const schema = z.object({
   fakturaPayload: z.record(z.string(), z.unknown()).optional(),
 });
 
-type Values = z.infer<typeof schema>;
+export type Values = z.infer<typeof schema>;
 
 const BusinessPartnerFormPage = () => {
   const { t } = useTranslate('platform');
@@ -151,41 +151,17 @@ const BusinessPartnerFormPage = () => {
           { name: t('pages.businessPartners.title'), href: RoutePath.platformBusinessPartnerList },
           { name: isEditMode ? t('pages.businessPartnerEdit.title') : t('pages.businessPartnerCreate.title') },
         ]}
-        sx={{ mb: { xs: 3, md: 5 } }}
       />
       <Card sx={{ p: 3 }}>
         <Form methods={methods} onSubmit={onSubmit}>
           <Stack spacing={3}>
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: 'repeat(2, minmax(0, 1fr))' }, gap: 3 }}>
-              {isEditMode ? (
-                <RHFTextField<Values> name="inn" label={t('fields.inn')} />
-              ) : (
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ alignItems: { sm: 'flex-start' } }}>
-                  <RHFTextField<Values> name="inn" label={t('fields.inn')} />
-                  <Button
-                    type="button"
-                    variant="outlined"
-                    onClick={handleLookup}
-                    loading={lookupMutation.isPending}
-                    disabled={lookupMutation.isPending || methods.formState.isSubmitting}
-                    sx={{ minWidth: { sm: 120 }, height: 56 }}>
-                    {t('filters.search')}
-                  </Button>
-                </Stack>
-              )}
-              <RHFTextField<Values> name="companyName" label={t('fields.companyName')} />
-              <RHFTextField<Values> name="legalName" label={t('fields.legalName')} />
-              <RHFTextField<Values> name="directorName" label={t('fields.directorName')} />
-              <RHFPhoneInput<Values> name="phone" label={t('fields.phone')} defaultCountry="UZ" />
-              <RHFTextField<Values> name="email" label={t('fields.email')} />
-              <RHFTextField<Values>
-                name="address"
-                label={t('fields.address')}
-                multiline
-                rows={3}
-                sx={{ gridColumn: { lg: '1 / -1' } }}
-              />
-            </Box>
+            <BusinessPartnerFormFields
+              isEditMode={isEditMode}
+              isLookupPending={lookupMutation.isPending}
+              isSubmitting={methods.formState.isSubmitting}
+              onLookup={handleLookup}
+              t={t}
+            />
             <FormActions
               isSubmitting={methods.formState.isSubmitting}
               submitLabel={isEditMode ? t('actions.save') : t('actions.create')}
@@ -199,3 +175,4 @@ const BusinessPartnerFormPage = () => {
 };
 
 export default BusinessPartnerFormPage;
+
