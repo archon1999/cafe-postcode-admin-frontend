@@ -1,4 +1,3 @@
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import type { GridColDef, GridColumnVisibilityModel, GridRowSelectionModel, GridSortModel } from '@mui/x-data-grid';
@@ -6,20 +5,13 @@ import { gridClasses } from '@mui/x-data-grid';
 import { useCallback, useMemo, useState } from 'react';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
-import { RouterPathHelper } from 'app/routes';
 import type { AdminTableSession } from 'shared/api/admin-types';
 import { DEFAULT_PAGINATION_MODEL, DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
-import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState } from 'shared/ui/CustomDataGrid';
-import { ConfirmDialog } from 'shared/ui/CustomDialog';
-import { Iconify } from 'shared/ui/Iconify';
+import { DataGrid, DataGridEmptyState } from 'shared/ui/CustomDataGrid';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 import { formatHallDisplayName } from 'shared/utils/format-hall-display';
 
-import {
-  useDeleteTableSessionMutation,
-  useGetFloorHallsQuery,
-  useGetTableSessionsListQuery,
-} from '../../../application';
+import { useGetFloorHallsQuery, useGetTableSessionsListQuery } from '../../../application';
 
 import {
   DEFAULT_TABLE_SESSIONS_GRID_FILTERS,
@@ -30,7 +22,6 @@ import {
 export const TableSessionsGrid = () => {
   const { t, currentLang } = useTranslate('floor');
   const hallsQuery = useGetFloorHallsQuery();
-  const deleteMutation = useDeleteTableSessionMutation();
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
 
   const [paginationModel, setPaginationModel] = useState(DEFAULT_PAGINATION_MODEL);
@@ -40,7 +31,6 @@ export const TableSessionsGrid = () => {
   );
   const [selectedRows, setSelectedRows] = useState<GridRowSelectionModel>(DEFAULT_SELECTION_MODEL);
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
-  const [sessionToDelete, setSessionToDelete] = useState<AdminTableSession | null>(null);
   const query = useGetTableSessionsListQuery({
     page: paginationModel.page + 1,
     pageSize: paginationModel.pageSize,
@@ -96,120 +86,75 @@ export const TableSessionsGrid = () => {
           <Chip size="small" label={t(`tableSessionStatuses.${row.status}`)} variant="soft" color="info" />
         ),
       },
-      {
-        type: 'actions',
-        field: 'actions',
-        headerName: t('actions.title'),
-        minWidth: 90,
-        getActions: (params) => [
-          <CustomGridActionsCellItem
-            actionKind="edit"
-            key="edit"
-            label={t('actions.edit')}
-            icon={<Iconify icon="solar:pen-bold" />}
-            href={RouterPathHelper.floorTableSessionEdit(params.row.id)}
-          />,
-          <CustomGridActionsCellItem
-            actionKind="delete"
-            key="delete"
-            label={t('actions.delete')}
-            icon={<Iconify icon="solar:trash-bin-trash-bold" />}
-            onClick={() => setSessionToDelete(params.row)}
-          />,
-        ],
-      },
     ],
     [t],
   );
 
   return (
-    <>
-      <Card sx={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'hidden' }}>
-        <DataGrid
-          checkboxSelection
-          rows={query.data?.data ?? []}
-          columns={columns}
-          rowCount={query.data?.total ?? 0}
-          loading={query.isLoading}
-          localeText={localeText}
-          paginationMode="server"
-          sortingMode="server"
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
-          sortModel={sortModel}
-          onSortModelChange={setSortModel}
-          rowSelectionModel={selectedRows}
-          onRowSelectionModelChange={setSelectedRows}
-          columnVisibilityModel={columnVisibilityModel}
-          onColumnVisibilityModelChange={setColumnVisibilityModel}
-          disableColumnMenu
-          slots={{
-            noRowsOverlay: () => (
-              <DataGridEmptyState
-                hasActiveFilters={hasActiveFilters}
-                noData={{
-                  title: t('empty.tableSessions.noData.title'),
-                  description: t('empty.tableSessions.noData.description'),
-                }}
-                noResults={{
-                  title: t('empty.tableSessions.noResults.title'),
-                  description: t('empty.tableSessions.noResults.description'),
-                }}
-              />
-            ),
-            noResultsOverlay: () => (
-              <DataGridEmptyState
-                forceFiltered
-                noData={{
-                  title: t('empty.tableSessions.noData.title'),
-                  description: t('empty.tableSessions.noData.description'),
-                }}
-                noResults={{
-                  title: t('empty.tableSessions.noResults.title'),
-                  description: t('empty.tableSessions.noResults.description'),
-                }}
-              />
-            ),
-            toolbar: () => (
-              <TableSessionsGridToolbar
-                halls={hallsQuery.data ?? []}
-                value={filters}
-                onChange={handleFiltersChange}
-                columns={columns}
-                columnVisibilityModel={columnVisibilityModel}
-                defaultColumnVisibilityModel={DEFAULT_COLUMN_VISIBILITY_MODEL}
-                onSaveColumns={setColumnVisibilityModel}
-              />
-            ),
-          }}
-          sx={{
-            border: 'none',
-            [`& .${gridClasses.cell}`]: { display: 'flex', alignItems: 'center' },
-            '& .MuiDataGrid-toolbarContainer': { px: 2.5, py: 2 },
-          }}
-        />
-      </Card>
-      <ConfirmDialog
-        open={Boolean(sessionToDelete)}
-        onClose={() => setSessionToDelete(null)}
-        title={t('dialogs.deleteTableSession.title')}
-        content={t('dialogs.deleteTableSession.description', {
-          name: sessionToDelete?.tableName || sessionToDelete?.id || '',
-        })}
-        action={
-          <Button
-            color="error"
-            variant="contained"
-            loading={deleteMutation.isPending}
-            onClick={async () => {
-              if (!sessionToDelete) return;
-              await deleteMutation.mutateAsync(sessionToDelete.id);
-              setSessionToDelete(null);
-            }}>
-            {t('actions.delete')}
-          </Button>
-        }
+    <Card sx={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'hidden' }}>
+      <DataGrid
+        checkboxSelection
+        rows={query.data?.data ?? []}
+        columns={columns}
+        rowCount={query.data?.total ?? 0}
+        loading={query.isLoading}
+        localeText={localeText}
+        paginationMode="server"
+        sortingMode="server"
+        paginationModel={paginationModel}
+        onPaginationModelChange={setPaginationModel}
+        sortModel={sortModel}
+        onSortModelChange={setSortModel}
+        rowSelectionModel={selectedRows}
+        onRowSelectionModelChange={setSelectedRows}
+        columnVisibilityModel={columnVisibilityModel}
+        onColumnVisibilityModelChange={setColumnVisibilityModel}
+        disableColumnMenu
+        slots={{
+          noRowsOverlay: () => (
+            <DataGridEmptyState
+              hasActiveFilters={hasActiveFilters}
+              noData={{
+                title: t('empty.tableSessions.noData.title'),
+                description: t('empty.tableSessions.noData.description'),
+              }}
+              noResults={{
+                title: t('empty.tableSessions.noResults.title'),
+                description: t('empty.tableSessions.noResults.description'),
+              }}
+            />
+          ),
+          noResultsOverlay: () => (
+            <DataGridEmptyState
+              forceFiltered
+              noData={{
+                title: t('empty.tableSessions.noData.title'),
+                description: t('empty.tableSessions.noData.description'),
+              }}
+              noResults={{
+                title: t('empty.tableSessions.noResults.title'),
+                description: t('empty.tableSessions.noResults.description'),
+              }}
+            />
+          ),
+          toolbar: () => (
+            <TableSessionsGridToolbar
+              halls={hallsQuery.data ?? []}
+              value={filters}
+              onChange={handleFiltersChange}
+              columns={columns}
+              columnVisibilityModel={columnVisibilityModel}
+              defaultColumnVisibilityModel={DEFAULT_COLUMN_VISIBILITY_MODEL}
+              onSaveColumns={setColumnVisibilityModel}
+            />
+          ),
+        }}
+        sx={{
+          border: 'none',
+          [`& .${gridClasses.cell}`]: { display: 'flex', alignItems: 'center' },
+          '& .MuiDataGrid-toolbarContainer': { px: 2.5, py: 2 },
+        }}
       />
-    </>
+    </Card>
   );
 };

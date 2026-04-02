@@ -126,9 +126,6 @@ const ZoneFormPage = lazy(() => import('modules/restaurant-admin/floor/ui/pages/
 const TableSessionsListPage = lazy(
   () => import('modules/restaurant-admin/floor/ui/pages/TableSessionsListPage/TableSessionsListPage'),
 );
-const TableSessionFormPage = lazy(
-  () => import('modules/restaurant-admin/floor/ui/pages/TableSessionFormPage/TableSessionFormPage'),
-);
 
 function MainRedirectPage() {
   const { profile } = useCurrentUser();
@@ -363,11 +360,11 @@ const mainChildren: RouteObject[] = [
   },
   {
     path: RoutePath.floorTableSessionCreate,
-    element: <TableSessionFormPage />,
+    element: <Navigate replace to={RoutePath.floorTableSessionList} />,
   },
   {
     path: RoutePath.floorTableSessionEdit,
-    element: <TableSessionFormPage />,
+    element: <Navigate replace to={RoutePath.floorTableSessionList} />,
   },
   {
     path: RoutePath.userCreate,

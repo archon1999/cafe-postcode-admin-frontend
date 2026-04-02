@@ -25,16 +25,14 @@ const ACTION_TRANSLATION_KEYS: Record<string, string> = {
 };
 
 const POS_PERMISSION_PREFIXES = [
-  'hall.',
-  'table.',
+  'halls.',
+  'table_sessions.',
+  'catalog_menu.',
+  'open_checks.',
   'orders.',
   'payments.',
-  'cashshift.',
-  'payment.',
-  'receipt.',
-  'kitchen.',
-  'stoplist.',
-  'cashdesk.',
+  'kitchen_queue.',
+  'kitchen_tickets.',
 ] as const;
 
 function titleCase(value: string) {
