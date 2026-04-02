@@ -10,23 +10,23 @@ export type RestaurantCredentialsDialogState = {
 } | null;
 
 type RestaurantCredentialsDialogProps = {
-  value: RestaurantCredentialsDialogState;
+  open: RestaurantCredentialsDialogState;
   onClose: () => void;
 };
 
-export function RestaurantCredentialsDialog({ value, onClose }: RestaurantCredentialsDialogProps) {
+export function RestaurantCredentialsDialog({ open, onClose }: RestaurantCredentialsDialogProps) {
   const { t } = useTranslate('platform');
 
   return (
     <CredentialsRevealDialog
-      open={Boolean(value)}
+      open={Boolean(open)}
       title={t('dialogs.restaurantCredentials.title')}
       description={
-        value?.mode === 'reset'
+        open?.mode === 'reset'
           ? t('dialogs.restaurantCredentials.resetDescription')
           : t('dialogs.restaurantCredentials.description')
       }
-      credentials={value?.credentials ?? null}
+      credentials={open?.credentials ?? null}
       onClose={onClose}
     />
   );

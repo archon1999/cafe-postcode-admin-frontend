@@ -174,8 +174,6 @@ export const ProductsGrid = () => {
           rowCount={itemsQuery.data?.total ?? 0}
           loading={itemsQuery.isLoading}
           localeText={localeText}
-          rowHeight={64}
-          pageSizeOptions={[10, 20, 50]}
           paginationMode="server"
           sortingMode="server"
           paginationModel={paginationModel}
@@ -186,8 +184,6 @@ export const ProductsGrid = () => {
           onRowSelectionModelChange={setSelectedRows}
           columnVisibilityModel={columnVisibilityModel}
           onColumnVisibilityModelChange={setColumnVisibilityModel}
-          disableRowSelectionOnClick
-          disableColumnFilter
           disableColumnMenu
           slots={{
             noRowsOverlay: () => (

@@ -165,8 +165,6 @@ export const OrdersGrid = () => {
         rowCount={ordersQuery.data?.total ?? 0}
         loading={ordersQuery.isLoading}
         localeText={localeText}
-        rowHeight={64}
-        pageSizeOptions={[10, 20, 50]}
         paginationMode="server"
         sortingMode="server"
         paginationModel={paginationModel}
@@ -177,8 +175,6 @@ export const OrdersGrid = () => {
         onRowSelectionModelChange={setSelectedRows}
         columnVisibilityModel={columnVisibilityModel}
         onColumnVisibilityModelChange={setColumnVisibilityModel}
-        disableRowSelectionOnClick
-        disableColumnFilter
         disableColumnMenu
         onRowClick={(params) => router.push(RouterPathHelper.orderView(params.row.id))}
         slots={{

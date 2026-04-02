@@ -159,7 +159,6 @@ export const RolesGrid = () => {
           loading={rolesQuery.isLoading}
           localeText={localeText}
           rowHeight={72}
-          pageSizeOptions={[10, 20, 50]}
           paginationMode="server"
           sortingMode="server"
           paginationModel={paginationModel}
@@ -170,8 +169,6 @@ export const RolesGrid = () => {
           onRowSelectionModelChange={setSelectedRows}
           columnVisibilityModel={columnVisibilityModel}
           onColumnVisibilityModelChange={setColumnVisibilityModel}
-          disableRowSelectionOnClick
-          disableColumnFilter
           disableColumnMenu
           slots={{
             noRowsOverlay: () => (

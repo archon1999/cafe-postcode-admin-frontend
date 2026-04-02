@@ -106,8 +106,6 @@ export function OrderItemNotesGrid() {
         rowCount={query.data?.total ?? 0}
         loading={query.isLoading}
         localeText={localeText}
-        rowHeight={64}
-        pageSizeOptions={[10, 20, 50]}
         paginationMode="server"
         sortingMode="server"
         paginationModel={paginationModel}
@@ -118,8 +116,6 @@ export function OrderItemNotesGrid() {
         onRowSelectionModelChange={setSelectedRows}
         columnVisibilityModel={columnVisibilityModel}
         onColumnVisibilityModelChange={setColumnVisibilityModel}
-        disableRowSelectionOnClick
-        disableColumnFilter
         disableColumnMenu
         onRowClick={(params) => router.push(RouterPathHelper.orderItemNoteView(params.row.id))}
         slots={{

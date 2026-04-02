@@ -1,4 +1,3 @@
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import type { GridColDef, GridRowSelectionModel, GridSortModel } from '@mui/x-data-grid';
@@ -7,22 +6,21 @@ import { useCallback, useMemo, useState } from 'react';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { RouterPathHelper } from 'app/routes';
-import {
-  useActivateRestaurantMutation,
-  useDeactivateRestaurantMutation,
-  useResetRestaurantPasswordMutation,
-} from 'modules/product-owner/business-partners/application';
-import { CredentialsRevealDialog } from 'modules/product-owner/business-partners/ui/components/CredentialsRevealDialog';
-import { RestaurantActivationDialog } from 'modules/product-owner/business-partners/ui/components/RestaurantActivationDialog';
-import { useGetTariffsListQuery } from 'modules/product-owner/tariffs/application';
+import { useResetRestaurantPasswordMutation } from 'modules/product-owner/business-partners/application';
 import type { AdminRestaurant } from 'shared/api/admin-types';
 import { DEFAULT_PAGINATION_MODEL, DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState } from 'shared/ui/CustomDataGrid';
-import { ConfirmDialog } from 'shared/ui/CustomDialog';
 import { Iconify } from 'shared/ui/Iconify';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 
-import { useDeleteRestaurantMutation, useGetRestaurantsListQuery } from '../../../application';
+import { useGetRestaurantsListQuery } from '../../../application';
+import {
+  RestaurantActivateDialog,
+  RestaurantCredentialsDialog,
+  RestaurantDeactivateDialog,
+  RestaurantDeleteDialog,
+  type RestaurantCredentialsDialogState,
+} from '../../components';
 
 import {
   DEFAULT_RESTAURANTS_GRID_FILTERS,
@@ -34,9 +32,6 @@ export function RestaurantsGrid() {
   const { t, currentLang } = useTranslate('organizations');
   const { t: tPlatform } = useTranslate('platform');
   const { t: tCommon } = useTranslate('common');
-  const deleteMutation = useDeleteRestaurantMutation();
-  const activateMutation = useActivateRestaurantMutation();
-  const deactivateMutation = useDeactivateRestaurantMutation();
   const resetPasswordMutation = useResetRestaurantPasswordMutation();
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
 
@@ -48,20 +43,13 @@ export function RestaurantsGrid() {
   const [rowToDelete, setRowToDelete] = useState<AdminRestaurant | null>(null);
   const [rowToDeactivate, setRowToDeactivate] = useState<AdminRestaurant | null>(null);
   const [rowToActivate, setRowToActivate] = useState<AdminRestaurant | null>(null);
-  const [credentials, setCredentials] = useState<{ username: string; password: string } | null>(null);
-  const [credentialsDialogTitle, setCredentialsDialogTitle] = useState('');
-  const [credentialsDialogDescription, setCredentialsDialogDescription] = useState('');
+  const [credentialsDialogOpen, setCredentialsDialogOpen] = useState<RestaurantCredentialsDialogState>(null);
   const query = useGetRestaurantsListQuery({
     page: paginationModel.page + 1,
     pageSize: paginationModel.pageSize,
     search: filters.search || undefined,
     isActive: filters.statuses.length === 1 ? filters.statuses[0] === 'active' : undefined,
     ordering: getOrderingFromSortModel(sortModel),
-  });
-  const tariffsQuery = useGetTariffsListQuery({
-    page: 1,
-    pageSize: 100,
-    isActive: true,
   });
   const hasActiveFilters = Boolean(filters.search || filters.statuses.length);
   const handleFiltersChange = useCallback((next: RestaurantsGridFilters) => {
@@ -110,9 +98,10 @@ export function RestaurantsGrid() {
             disabled={!params.row.isActive}
             onClick={async () => {
               const result = await resetPasswordMutation.mutateAsync(params.row.id);
-              setCredentials({ username: result.username, password: result.password });
-              setCredentialsDialogTitle(tPlatform('dialogs.restaurantCredentials.title'));
-              setCredentialsDialogDescription(tPlatform('dialogs.restaurantCredentials.resetDescription'));
+              setCredentialsDialogOpen({
+                credentials: { username: result.username, password: result.password },
+                mode: 'reset',
+              });
             }}
           />,
           <CustomGridActionsCellItem
@@ -150,15 +139,8 @@ export function RestaurantsGrid() {
           rows={query.data?.data ?? []}
           columns={columns}
           rowCount={query.data?.total ?? 0}
-          loading={
-            query.isLoading ||
-            activateMutation.isPending ||
-            deactivateMutation.isPending ||
-            resetPasswordMutation.isPending
-          }
+          loading={query.isLoading || resetPasswordMutation.isPending}
           localeText={localeText}
-          rowHeight={64}
-          pageSizeOptions={[10, 20, 50]}
           paginationMode="server"
           sortingMode="server"
           paginationModel={paginationModel}
@@ -169,8 +151,6 @@ export function RestaurantsGrid() {
           onRowSelectionModelChange={setSelectedRows}
           columnVisibilityModel={columnVisibilityModel}
           onColumnVisibilityModelChange={setColumnVisibilityModel}
-          disableRowSelectionOnClick
-          disableColumnFilter
           disableColumnMenu
           slots={{
             noRowsOverlay: () => (
@@ -218,74 +198,33 @@ export function RestaurantsGrid() {
         />
       </Card>
 
-      <ConfirmDialog
-        open={Boolean(rowToDelete)}
+      <RestaurantDeleteDialog
+        open={rowToDelete}
         onClose={() => setRowToDelete(null)}
-        title={t('dialogs.deleteRestaurant.title')}
-        content={t('dialogs.deleteRestaurant.description', { name: rowToDelete?.name ?? '' })}
-        action={
-          <Button
-            color="error"
-            variant="contained"
-            loading={deleteMutation.isPending}
-            onClick={async () => {
-              if (!rowToDelete) return;
-              await deleteMutation.mutateAsync(rowToDelete.id);
-              setRowToDelete(null);
-            }}>
-            {t('actions.delete')}
-          </Button>
-        }
+        onSuccess={() => setRowToDelete(null)}
       />
 
-      <ConfirmDialog
-        open={Boolean(rowToDeactivate)}
+      <RestaurantDeactivateDialog
+        open={rowToDeactivate}
         onClose={() => setRowToDeactivate(null)}
-        title={tPlatform('dialogs.deactivateRestaurant.title')}
-        content={tPlatform('dialogs.deactivateRestaurant.description', { name: rowToDeactivate?.name ?? '' })}
-        action={
-          <Button
-            color="error"
-            variant="contained"
-            loading={deactivateMutation.isPending}
-            onClick={async () => {
-              if (!rowToDeactivate) return;
-              await deactivateMutation.mutateAsync(rowToDeactivate.id);
-              setRowToDeactivate(null);
-            }}>
-            {tPlatform('actions.deactivate')}
-          </Button>
-        }
+        onSuccess={() => setRowToDeactivate(null)}
       />
 
-      <RestaurantActivationDialog
-        open={Boolean(rowToActivate)}
-        tariffs={tariffsQuery.data?.data ?? []}
-        isSubmitting={activateMutation.isPending}
+      <RestaurantActivateDialog
+        open={rowToActivate}
         onClose={() => setRowToActivate(null)}
-        onSubmit={async (payload) => {
-          if (!rowToActivate) {
-            return;
-          }
-
-          const result = await activateMutation.mutateAsync({ id: rowToActivate.id, payload });
+        onSuccess={(credentials) => {
           setRowToActivate(null);
-          setCredentials({ username: result.username, password: result.password });
-          setCredentialsDialogTitle(tPlatform('dialogs.restaurantCredentials.title'));
-          setCredentialsDialogDescription(tPlatform('dialogs.restaurantCredentials.description'));
+          setCredentialsDialogOpen({
+            credentials,
+            mode: 'activation',
+          });
         }}
       />
 
-      <CredentialsRevealDialog
-        open={Boolean(credentials)}
-        title={credentialsDialogTitle}
-        description={credentialsDialogDescription}
-        credentials={credentials}
-        onClose={() => {
-          setCredentials(null);
-          setCredentialsDialogTitle('');
-          setCredentialsDialogDescription('');
-        }}
+      <RestaurantCredentialsDialog
+        open={credentialsDialogOpen}
+        onClose={() => setCredentialsDialogOpen(null)}
       />
     </>
   );

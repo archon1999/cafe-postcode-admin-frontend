@@ -251,8 +251,6 @@ export function UsersGrid({ surface = 'user' }: UsersGridProps) {
         rowCount={usersQuery.data?.total ?? 0}
         loading={usersQuery.isLoading}
         localeText={localeText}
-        rowHeight={64}
-        pageSizeOptions={[10, 20, 50]}
         paginationMode="server"
         sortingMode="server"
         paginationModel={paginationModel}
@@ -263,8 +261,6 @@ export function UsersGrid({ surface = 'user' }: UsersGridProps) {
         onRowSelectionModelChange={setSelectedRows}
         columnVisibilityModel={columnVisibilityModel}
         onColumnVisibilityModelChange={setColumnVisibilityModel}
-        disableRowSelectionOnClick
-        disableColumnFilter
         onRowClick={(params) => router.push(viewHref(params.row.id))}
         slots={{
           noRowsOverlay: () => (

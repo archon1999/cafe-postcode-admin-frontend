@@ -2,12 +2,15 @@ import type { DataGridProps, GridColDef, GridValidRowModel } from '@mui/x-data-g
 import { DataGrid as MuiDataGrid, useGridApiRef } from '@mui/x-data-grid';
 import { cloneElement, isValidElement, useEffect, useMemo, useRef } from 'react';
 
+import { DATA_GRID_PAGE_SIZE_OPTIONS } from 'shared/constants';
+
 type CustomDataGridProps<R extends GridValidRowModel = GridValidRowModel> = DataGridProps<R>;
 
 const DEFAULT_DATA_GRID_SX = {
   flex: 1,
   minHeight: 0,
 };
+const DEFAULT_DATA_GRID_ROW_HEIGHT = 64;
 
 export const DataGrid = <R extends GridValidRowModel = GridValidRowModel>({
   sx,
@@ -17,6 +20,10 @@ export const DataGrid = <R extends GridValidRowModel = GridValidRowModel>({
   rowCount,
   loading,
   paginationMode,
+  rowHeight = DEFAULT_DATA_GRID_ROW_HEIGHT,
+  pageSizeOptions = DATA_GRID_PAGE_SIZE_OPTIONS,
+  disableRowSelectionOnClick = true,
+  disableColumnFilter = true,
   ...rest
 }: CustomDataGridProps<R>) => {
   const internalApiRef = useGridApiRef();
@@ -99,6 +106,10 @@ export const DataGrid = <R extends GridValidRowModel = GridValidRowModel>({
       rowCount={resolvedRowCount}
       loading={loading}
       paginationMode={paginationMode}
+      rowHeight={rowHeight}
+      pageSizeOptions={pageSizeOptions}
+      disableRowSelectionOnClick={disableRowSelectionOnClick}
+      disableColumnFilter={disableColumnFilter}
       sx={[DEFAULT_DATA_GRID_SX, ...(Array.isArray(sx) ? sx : [sx])]}
     />
   );

@@ -156,8 +156,6 @@ export const PermissionsGrid = () => {
         rowCount={permissionsQuery.data?.total ?? 0}
         loading={permissionsQuery.isLoading}
         localeText={localeText}
-        rowHeight={64}
-        pageSizeOptions={[10, 20, 50]}
         paginationMode="server"
         sortingMode="server"
         paginationModel={paginationModel}
@@ -168,8 +166,6 @@ export const PermissionsGrid = () => {
         onRowSelectionModelChange={setSelectedRows}
         columnVisibilityModel={columnVisibilityModel}
         onColumnVisibilityModelChange={setColumnVisibilityModel}
-        disableRowSelectionOnClick
-        disableColumnFilter
         disableColumnMenu
         slots={{
           noRowsOverlay: () => (

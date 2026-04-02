@@ -6,29 +6,30 @@ import type { AdminRestaurant } from 'shared/api/admin-types.ts';
 import { ConfirmDialog } from 'shared/ui/CustomDialog';
 
 type RestaurantDeactivateDialogProps = {
-  restaurant: AdminRestaurant | null;
+  open: AdminRestaurant | null;
   onClose: () => void;
+  onSuccess?: () => void;
 };
 
-export function RestaurantDeactivateDialog({ restaurant, onClose }: RestaurantDeactivateDialogProps) {
+export function RestaurantDeactivateDialog({ open, onClose, onSuccess }: RestaurantDeactivateDialogProps) {
   const { t } = useTranslate('platform');
   const deactivateMutation = useDeactivateRestaurantMutation();
 
   return (
     <ConfirmDialog
-      open={Boolean(restaurant)}
+      open={Boolean(open)}
       onClose={onClose}
       title={t('dialogs.deactivateRestaurant.title')}
-      content={t('dialogs.deactivateRestaurant.description', { name: restaurant?.name ?? '' })}
+      content={t('dialogs.deactivateRestaurant.description', { name: open?.name ?? '' })}
       action={
         <Button
           color="error"
           variant="contained"
           loading={deactivateMutation.isPending}
           onClick={async () => {
-            if (!restaurant) return;
-            await deactivateMutation.mutateAsync(restaurant.id);
-            onClose();
+            if (!open) return;
+            await deactivateMutation.mutateAsync(open.id);
+            onSuccess?.();
           }}>
           {t('actions.deactivate')}
         </Button>

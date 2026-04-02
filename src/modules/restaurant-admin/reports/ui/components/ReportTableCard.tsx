@@ -67,8 +67,6 @@ export function ReportTableCard<RowModel extends GridValidRowModel>({
         rowCount={rowCount}
         loading={loading}
         localeText={localeText}
-        rowHeight={64}
-        pageSizeOptions={[10, 20, 50]}
         paginationMode="server"
         sortingMode="server"
         paginationModel={paginationModel}
@@ -78,8 +76,6 @@ export function ReportTableCard<RowModel extends GridValidRowModel>({
         getRowId={getRowId}
         columnVisibilityModel={columnVisibilityModel}
         onColumnVisibilityModelChange={onColumnVisibilityModelChange}
-        disableRowSelectionOnClick
-        disableColumnFilter
         disableColumnMenu
         slots={{
           noRowsOverlay: () => (

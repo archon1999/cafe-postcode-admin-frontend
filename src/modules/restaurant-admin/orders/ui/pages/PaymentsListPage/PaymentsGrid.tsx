@@ -184,8 +184,6 @@ export const PaymentsGrid = () => {
         rowCount={query.data?.total ?? 0}
         loading={query.isLoading}
         localeText={localeText}
-        rowHeight={64}
-        pageSizeOptions={[10, 20, 50]}
         paginationMode="server"
         sortingMode="server"
         paginationModel={paginationModel}
@@ -196,8 +194,6 @@ export const PaymentsGrid = () => {
         onRowSelectionModelChange={setSelectedRows}
         columnVisibilityModel={columnVisibilityModel}
         onColumnVisibilityModelChange={setColumnVisibilityModel}
-        disableRowSelectionOnClick
-        disableColumnFilter
         disableColumnMenu
         onRowClick={(params) => router.push(RouterPathHelper.paymentView(params.row.id))}
         slots={{

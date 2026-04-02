@@ -8,26 +8,25 @@ import type {
 } from 'shared/api/admin-types.ts';
 
 type RestaurantActivateDialogProps = {
-  restaurant: AdminRestaurant | null;
+  open: AdminRestaurant | null;
   onClose: () => void;
   onSuccess: (credentials: AdminGeneratedCredentials) => void;
 };
 
-export function RestaurantActivateDialog({ restaurant, onClose, onSuccess }: RestaurantActivateDialogProps) {
+export function RestaurantActivateDialog({ open, onClose, onSuccess }: RestaurantActivateDialogProps) {
   const activateMutation = useActivateRestaurantMutation();
   const tariffsQuery = useGetTariffsListQuery({
     page: 1,
     pageSize: 100,
     isActive: true,
-  });
+  }, { enabled: Boolean(open) });
 
   const handleSubmit = async (payload: AdminRestaurantActivationPayload) => {
-    if (!restaurant) {
+    if (!open) {
       return;
     }
 
-    const result = await activateMutation.mutateAsync({ id: restaurant.id, payload });
-    onClose();
+    const result = await activateMutation.mutateAsync({ id: open.id, payload });
     onSuccess({
       username: result.username,
       password: result.password,
@@ -36,7 +35,7 @@ export function RestaurantActivateDialog({ restaurant, onClose, onSuccess }: Res
 
   return (
     <RestaurantActivationDialog
-      open={Boolean(restaurant)}
+      open={Boolean(open)}
       tariffs={tariffsQuery.data?.data ?? []}
       isSubmitting={activateMutation.isPending}
       onClose={onClose}

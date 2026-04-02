@@ -132,8 +132,6 @@ export function CategoriesGrid() {
           rowCount={categoriesQuery.data?.total ?? 0}
           loading={categoriesQuery.isLoading}
           localeText={localeText}
-          rowHeight={64}
-          pageSizeOptions={[10, 20, 50]}
           paginationMode="server"
           sortingMode="server"
           paginationModel={paginationModel}
@@ -144,8 +142,6 @@ export function CategoriesGrid() {
           onRowSelectionModelChange={setSelectedRows}
           columnVisibilityModel={columnVisibilityModel}
           onColumnVisibilityModelChange={setColumnVisibilityModel}
-          disableRowSelectionOnClick
-          disableColumnFilter
           disableColumnMenu
           slots={{
             noRowsOverlay: () => (

@@ -7,29 +7,30 @@ import { ConfirmDialog } from 'shared/ui/CustomDialog';
 import { useDeleteRestaurantMutation } from '../../application';
 
 type RestaurantDeleteDialogProps = {
-  restaurant: AdminRestaurant | null;
+  open: AdminRestaurant | null;
   onClose: () => void;
+  onSuccess?: () => void;
 };
 
-export function RestaurantDeleteDialog({ restaurant, onClose }: RestaurantDeleteDialogProps) {
+export function RestaurantDeleteDialog({ open, onClose, onSuccess }: RestaurantDeleteDialogProps) {
   const { t } = useTranslate('organizations');
   const deleteMutation = useDeleteRestaurantMutation();
 
   return (
     <ConfirmDialog
-      open={Boolean(restaurant)}
+      open={Boolean(open)}
       onClose={onClose}
       title={t('dialogs.deleteRestaurant.title')}
-      content={t('dialogs.deleteRestaurant.description', { name: restaurant?.name ?? '' })}
+      content={t('dialogs.deleteRestaurant.description', { name: open?.name ?? '' })}
       action={
         <Button
           color="error"
           variant="contained"
           loading={deleteMutation.isPending}
           onClick={async () => {
-            if (!restaurant) return;
-            await deleteMutation.mutateAsync(restaurant.id);
-            onClose();
+            if (!open) return;
+            await deleteMutation.mutateAsync(open.id);
+            onSuccess?.();
           }}>
           {t('actions.delete')}
         </Button>
