@@ -1,5 +1,6 @@
 import type {
   AdminBusinessPartner,
+  AdminBusinessPartnerLookupResult,
   AdminBusinessPartnerPayload,
   AdminBusinessPartnersQueryParams,
   AdminCashDesk,
@@ -327,7 +328,9 @@ export const apiClient = {
   },
 
   updateAdminZone(id: string, payload: AdminZoneOrCabinPayload) {
-    return instance.put<AdminZoneOrCabin>(`/api/v1/admin/floor/zones/${id}/`, payload).then((response) => response.data);
+    return instance
+      .put<AdminZoneOrCabin>(`/api/v1/admin/floor/zones/${id}/`, payload)
+      .then((response) => response.data);
   },
 
   deleteAdminZone(id: string) {
@@ -598,6 +601,14 @@ export const apiClient = {
   getAdminBusinessPartnerById(id: string) {
     return instance
       .get<AdminBusinessPartner>(`/api/v1/admin/platform/business-partners/${id}/`)
+      .then((response) => response.data);
+  },
+
+  lookupAdminBusinessPartner(inn: string) {
+    return instance
+      .get<AdminBusinessPartnerLookupResult>('/api/v1/admin/platform/business-partners/lookup/', {
+        params: { inn },
+      })
       .then((response) => response.data);
   },
 

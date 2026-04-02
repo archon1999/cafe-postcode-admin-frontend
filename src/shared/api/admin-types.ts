@@ -372,6 +372,18 @@ export type AdminBusinessPartnerPayload = {
   phone: string;
   email: string;
   address: string;
+  fakturaPayload?: Record<string, unknown>;
+};
+
+export type AdminBusinessPartnerLookupResult = {
+  inn: string;
+  companyName: string;
+  legalName: string;
+  directorName: string;
+  phone: string;
+  email: string;
+  address: string;
+  fakturaPayload: Record<string, unknown>;
 };
 
 export type AdminTariff = {

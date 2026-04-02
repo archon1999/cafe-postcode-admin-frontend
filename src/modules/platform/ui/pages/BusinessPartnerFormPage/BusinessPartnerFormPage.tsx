@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import { useEffect } from 'react';
@@ -10,6 +11,7 @@ import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath, canAccessBusinessPartners } from 'app/routes';
 import { useCurrentUser } from 'modules/auth/domain/services/current-user';
+import { normalizeError, notifyError } from 'shared/api/errors/errorHandling';
 import { useParams, useRedirectOnNotFound, useRouter } from 'shared/hooks/router';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { FormActions } from 'shared/ui/FormActions';
@@ -19,6 +21,7 @@ import { LoadingScreen } from 'shared/ui/LoadingScreen';
 import {
   useCreateBusinessPartnerMutation,
   useGetBusinessPartnerByIdQuery,
+  useLookupBusinessPartnerMutation,
   useUpdateBusinessPartnerMutation,
 } from '../../../application';
 
@@ -30,6 +33,7 @@ const schema = z.object({
   phone: z.string().default(''),
   email: z.string().email().or(z.literal('')).default(''),
   address: z.string().default(''),
+  fakturaPayload: z.record(z.string(), z.unknown()).optional(),
 });
 
 type Values = z.infer<typeof schema>;
@@ -37,12 +41,13 @@ type Values = z.infer<typeof schema>;
 const BusinessPartnerFormPage = () => {
   const { t } = useTranslate('platform');
   const { profile } = useCurrentUser();
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams() as { id?: string };
   const { push, replace } = useRouter();
   const isEditMode = Boolean(id);
   const canManagePlatform = canAccessBusinessPartners(profile);
   const query = useGetBusinessPartnerByIdQuery(id ?? '', { enabled: isEditMode && canManagePlatform });
   const createMutation = useCreateBusinessPartnerMutation();
+  const lookupMutation = useLookupBusinessPartnerMutation();
   const updateMutation = useUpdateBusinessPartnerMutation(id ?? '');
 
   useRedirectOnNotFound(query.error, isEditMode);
@@ -57,6 +62,7 @@ const BusinessPartnerFormPage = () => {
       phone: '',
       email: '',
       address: '',
+      fakturaPayload: {},
     },
   });
 
@@ -77,8 +83,40 @@ const BusinessPartnerFormPage = () => {
       phone: query.data.phone,
       email: query.data.email,
       address: query.data.address,
+      fakturaPayload: query.data.fakturaPayload ?? {},
     });
   }, [methods, query.data]);
+
+  const handleLookup = async () => {
+    const inn = methods.getValues('inn').trim();
+
+    if (!inn) {
+      methods.setError('inn', { type: 'manual', message: 'INN is required.' });
+      return;
+    }
+
+    methods.clearErrors('inn');
+
+    try {
+      const result = await lookupMutation.mutateAsync(inn);
+
+      methods.setValue('inn', result.inn, { shouldDirty: true, shouldValidate: true });
+      methods.setValue('companyName', result.companyName, { shouldDirty: true, shouldValidate: true });
+      methods.setValue('legalName', result.legalName, { shouldDirty: true, shouldValidate: true });
+      methods.setValue('directorName', result.directorName, { shouldDirty: true, shouldValidate: true });
+      methods.setValue('phone', result.phone, { shouldDirty: true, shouldValidate: true });
+      methods.setValue('email', result.email, { shouldDirty: true, shouldValidate: true });
+      methods.setValue('address', result.address, { shouldDirty: true, shouldValidate: true });
+      methods.setValue('fakturaPayload', result.fakturaPayload, { shouldDirty: true });
+    } catch (error) {
+      const normalizedError = normalizeError(error);
+      methods.setError('inn', {
+        type: 'manual',
+        message: normalizedError.message,
+      });
+      notifyError(normalizedError);
+    }
+  };
 
   const onSubmit = methods.handleSubmit(async (values) => {
     const payload = {
@@ -89,6 +127,7 @@ const BusinessPartnerFormPage = () => {
       phone: values.phone.trim(),
       email: values.email.trim(),
       address: values.address.trim(),
+      fakturaPayload: values.fakturaPayload,
     };
 
     if (isEditMode && id) {
@@ -118,7 +157,22 @@ const BusinessPartnerFormPage = () => {
         <Form methods={methods} onSubmit={onSubmit}>
           <Stack spacing={3}>
             <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: 'repeat(2, minmax(0, 1fr))' }, gap: 3 }}>
-              <RHFTextField<Values> name="inn" label={t('fields.inn')} />
+              {isEditMode ? (
+                <RHFTextField<Values> name="inn" label={t('fields.inn')} />
+              ) : (
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ alignItems: { sm: 'flex-start' } }}>
+                  <RHFTextField<Values> name="inn" label={t('fields.inn')} />
+                  <Button
+                    type="button"
+                    variant="outlined"
+                    onClick={handleLookup}
+                    loading={lookupMutation.isPending}
+                    disabled={lookupMutation.isPending || methods.formState.isSubmitting}
+                    sx={{ minWidth: { sm: 120 }, height: 56 }}>
+                    {t('filters.search')}
+                  </Button>
+                </Stack>
+              )}
               <RHFTextField<Values> name="companyName" label={t('fields.companyName')} />
               <RHFTextField<Values> name="legalName" label={t('fields.legalName')} />
               <RHFTextField<Values> name="directorName" label={t('fields.directorName')} />

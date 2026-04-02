@@ -25,6 +25,12 @@ export function useCreateBusinessPartnerMutation() {
   });
 }
 
+export function useLookupBusinessPartnerMutation() {
+  return useMutation({
+    mutationFn: (inn: string) => apiClient.lookupAdminBusinessPartner(inn),
+  });
+}
+
 export function useUpdateBusinessPartnerMutation(id: string) {
   const queryClient = useQueryClient();
 

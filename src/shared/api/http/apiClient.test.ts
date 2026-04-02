@@ -6,13 +6,19 @@ const { getMock } = vi.hoisted(() => ({
 const { postMock } = vi.hoisted(() => ({
   postMock: vi.fn(),
 }));
+const { putMock } = vi.hoisted(() => ({
+  putMock: vi.fn(),
+}));
+const { deleteMock } = vi.hoisted(() => ({
+  deleteMock: vi.fn(),
+}));
 
 vi.mock('./axiosInstance.ts', () => ({
   instance: {
     get: getMock,
     post: postMock,
-    put: vi.fn(),
-    delete: vi.fn(),
+    put: putMock,
+    delete: deleteMock,
   },
 }));
 
@@ -21,6 +27,8 @@ import { apiClient } from './apiClient';
 afterEach(() => {
   getMock.mockReset();
   postMock.mockReset();
+  putMock.mockReset();
+  deleteMock.mockReset();
 });
 
 describe('apiClient query params', () => {
@@ -31,9 +39,8 @@ describe('apiClient query params', () => {
       page: 2,
       pageSize: 20,
       search: 'ali',
-      roleCodeIn: 'manager',
-      uiModeIn: 'pos',
-      isActive: true,
+      roleIdIn: 'manager-role-id',
+      employmentStatusIn: 'active',
       ordering: '-createdAt',
     });
 
@@ -42,9 +49,8 @@ describe('apiClient query params', () => {
         page: 2,
         pageSize: 20,
         search: 'ali',
-        roleCodeIn: 'manager',
-        uiModeIn: 'pos',
-        isActive: true,
+        role_id_in: 'manager-role-id',
+        employment_status_in: 'active',
         ordering: '-createdAt',
       },
     });
@@ -110,6 +116,27 @@ describe('apiClient query params', () => {
       phone: '',
       address: '',
       isActive: true,
+    });
+  });
+
+  it('looks up business partners by inn through the backend proxy', async () => {
+    getMock.mockResolvedValueOnce({
+      data: {
+        inn: '123456789',
+        companyName: 'Test Company',
+        legalName: 'Test Company',
+        directorName: 'Director',
+        phone: '+998901112233',
+        email: 'test@example.com',
+        address: 'Tashkent',
+        fakturaPayload: { CompanyName: 'Test Company' },
+      },
+    });
+
+    await apiClient.lookupAdminBusinessPartner('123456789');
+
+    expect(getMock).toHaveBeenCalledWith('/api/v1/admin/platform/business-partners/lookup/', {
+      params: { inn: '123456789' },
     });
   });
 });
