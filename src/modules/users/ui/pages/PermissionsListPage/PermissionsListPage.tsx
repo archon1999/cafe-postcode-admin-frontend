@@ -9,7 +9,7 @@ const PermissionsListPage = () => {
 
   return (
     <ListPageContent>
-      <CustomBreadcrumbs heading={t('pages.permissions.title')} sx={{ mb: { xs: 3, md: 5 } }} />
+      <CustomBreadcrumbs heading={t('pages.permissions.title')} />
       <ListPageBody>
         <PermissionsGrid />
       </ListPageBody>

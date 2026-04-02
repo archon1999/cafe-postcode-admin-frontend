@@ -17,7 +17,7 @@ const initOptions: InitOptions = {
   detection: { caches: ['localStorage'] },
 };
 
-i18next.use(LanguageDetector).use(initReactI18next).use(i18nResourceLoader).init(initOptions);
+void i18next.use(LanguageDetector).use(initReactI18next).use(i18nResourceLoader).init(initOptions);
 
 type I18nProviderProps = {
   children: React.ReactNode;

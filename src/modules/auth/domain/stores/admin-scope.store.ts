@@ -29,7 +29,7 @@ function persistScope(scope: PersistedAdminScope) {
   });
 }
 
-export const useAdminScopeStore = create<AdminScopeState>((set, get) => ({
+export const useAdminScopeStore = create<AdminScopeState>((set) => ({
   ...defaultScope,
   setSelectedRestaurantId: (restaurantId) => {
     const selectedRestaurantId = restaurantId ?? null;

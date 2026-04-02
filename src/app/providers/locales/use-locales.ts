@@ -3,8 +3,8 @@ import { useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
-import dayjs from 'shared/utils/dayjs';
 import { useSettingsContext } from 'shared/ui/Settings';
+import dayjs from 'shared/utils/dayjs';
 
 import type { LangCode } from './locales-config';
 import { fallbackLng, getCurrentLang } from './locales-config';
@@ -52,7 +52,7 @@ export function useTranslate(namespace?: Namespace) {
   );
 
   const handleResetLang = useCallback(() => {
-    handleChangeLang(fallbackLng);
+    void handleChangeLang(fallbackLng);
   }, [handleChangeLang]);
 
   return {
@@ -86,7 +86,7 @@ export function useLocaleDirectionSync() {
   }, [currentLang.value, i18n, setState, state.direction]);
 
   useEffect(() => {
-    handleSync();
+    void handleSync();
   }, [handleSync]);
 
   return null;

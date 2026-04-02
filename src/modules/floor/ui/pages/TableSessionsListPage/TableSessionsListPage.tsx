@@ -29,7 +29,6 @@ const TableSessionsListPage = () => {
             {t('actions.createTableSession')}
           </Button>
         }
-        sx={{ mb: { xs: 3, md: 5 } }}
       />
       <ListPageBody>
         <TableSessionsGrid />

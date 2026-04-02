@@ -255,4 +255,3 @@ const FeatureConfigFormPage = () => {
 };
 
 export default FeatureConfigFormPage;
-

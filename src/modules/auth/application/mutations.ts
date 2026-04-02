@@ -43,7 +43,7 @@ export const useLoginMutation = (
         const returnTo = searchParams.get('returnTo');
         const redirectPath = returnTo || RoutePath.main;
 
-        navigate(redirectPath, { replace: true });
+        void navigate(redirectPath, { replace: true });
       }
     },
     ...options,
@@ -56,7 +56,7 @@ export const useLogoutMutation = (options?: Omit<UseMutationOptions<void, Error,
   return useMutation({
     mutationFn: () => logoutRequest(),
     onSuccess: () => {
-      navigate(RoutePath.login, { replace: true });
+      void navigate(RoutePath.login, { replace: true });
     },
     ...options,
   });

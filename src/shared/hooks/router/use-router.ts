@@ -13,7 +13,7 @@ export function useRouter() {
       if (!isEqualPath(href, window.location.href, { deep: false })) {
         NProgress.start();
       }
-      navigate(href, options);
+      void navigate(href, options);
     },
     [navigate],
   );
@@ -23,22 +23,33 @@ export function useRouter() {
       if (!isEqualPath(href, window.location.href, { deep: false })) {
         NProgress.start();
       }
-      navigate(href, { ...options, replace: true });
+      void navigate(href, { ...options, replace: true });
     },
     [navigate],
   );
+
+  const back = useCallback(() => {
+    void navigate(-1);
+  }, [navigate]);
+
+  const forward = useCallback(() => {
+    void navigate(1);
+  }, [navigate]);
+
+  const refresh = useCallback(() => {
+    void navigate(0);
+  }, [navigate]);
 
   const router = useMemo(
     () => ({
       push,
       replace,
-      back: () => navigate(-1),
-      forward: () => navigate(1),
-      refresh: () => navigate(0),
+      back,
+      forward,
+      refresh,
       pathname: location.pathname,
-      ...navigate,
     }),
-    [navigate, push, replace],
+    [back, forward, location.pathname, push, refresh, replace],
   );
 
   return router;

@@ -26,7 +26,6 @@ const RolesListPage = () => {
             {t('actions.roleCreate', { defaultValue: 'Yangi rol' })}
           </Button>
         }
-        sx={{ mb: { xs: 3, md: 5 } }}
       />
       <ListPageBody>
         <RolesGrid />

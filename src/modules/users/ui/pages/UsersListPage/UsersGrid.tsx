@@ -8,8 +8,7 @@ import type {
   GridRowSelectionModel,
   GridSortModel,
 } from '@mui/x-data-grid';
-import { gridClasses } from '@mui/x-data-grid';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { RouterPathHelper } from 'app/routes';
@@ -94,10 +93,14 @@ export function UsersGrid({ surface = 'user' }: UsersGridProps) {
     [rolesQuery.data],
   );
 
-  const viewHref = (id: string) =>
-    surface === 'employee' ? RouterPathHelper.employeeView(id) : RouterPathHelper.userView(id);
-  const editHref = (id: string) =>
-    surface === 'employee' ? RouterPathHelper.employeeEdit(id) : RouterPathHelper.userEdit(id);
+  const viewHref = useCallback(
+    (id: string) => (surface === 'employee' ? RouterPathHelper.employeeView(id) : RouterPathHelper.userView(id)),
+    [surface],
+  );
+  const editHref = useCallback(
+    (id: string) => (surface === 'employee' ? RouterPathHelper.employeeEdit(id) : RouterPathHelper.userEdit(id)),
+    [surface],
+  );
 
   const columns = useMemo<GridColDef<AdminUser>[]>(
     () => [

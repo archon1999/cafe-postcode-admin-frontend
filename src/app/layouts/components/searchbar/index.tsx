@@ -6,15 +6,16 @@ import InputAdornment from '@mui/material/InputAdornment';
 import InputBase, { inputBaseClasses } from '@mui/material/InputBase';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
-import { useTheme } from '@mui/material/styles';
 import type { Breakpoint } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
 import { useBoolean } from 'minimal-shared/hooks';
 import { varAlpha } from 'minimal-shared/utils';
-import { useMemo, useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { useTranslate } from 'app/providers/locales';
 import { Iconify } from 'shared/ui/Iconify';
 import { Label } from 'shared/ui/Label';
 import type { NavSectionProps } from 'shared/ui/NavSection';
@@ -32,6 +33,7 @@ const breakpoint: Breakpoint = 'sm';
 
 export function Searchbar({ data: navItems = [], sx, ...other }: SearchbarProps) {
   const theme = useTheme();
+  const { t } = useTranslate('common');
   const smUp = useMediaQuery(theme.breakpoints.up(breakpoint));
 
   const { value: open, onFalse: onClose, onTrue: onOpen, onToggle } = useBoolean();
@@ -77,6 +79,8 @@ export function Searchbar({ data: navItems = [], sx, ...other }: SearchbarProps)
   );
 
   const notFound = searchQuery && !dataFiltered.length;
+  const shortcutLabel = '\u2318K';
+  const escapeLabel = 'esc';
 
   const renderButton = () => (
     <Box
@@ -123,7 +127,7 @@ export function Searchbar({ data: navItems = [], sx, ...other }: SearchbarProps)
           boxShadow: theme.vars.customShadows.z1,
           display: { xs: 'none', [breakpoint]: 'inline-flex' },
         }}>
-        ⌘K
+        {shortcutLabel}
       </Label>
     </Box>
   );
@@ -179,7 +183,7 @@ export function Searchbar({ data: navItems = [], sx, ...other }: SearchbarProps)
         <InputBase
           fullWidth
           autoFocus={open}
-          placeholder="Search..."
+          placeholder={t('labels.search', { defaultValue: 'Search...' })}
           value={searchQuery}
           onChange={handleSearch}
           startAdornment={
@@ -187,7 +191,7 @@ export function Searchbar({ data: navItems = [], sx, ...other }: SearchbarProps)
               <Iconify icon="eva:search-fill" width={24} sx={{ color: 'text.disabled' }} />
             </InputAdornment>
           }
-          endAdornment={<Label sx={{ letterSpacing: 1, color: 'text.secondary' }}>esc</Label>}
+          endAdornment={<Label sx={{ letterSpacing: 1, color: 'text.secondary' }}>{escapeLabel}</Label>}
           inputProps={{ id: 'search-input' }}
           sx={{
             p: 3,

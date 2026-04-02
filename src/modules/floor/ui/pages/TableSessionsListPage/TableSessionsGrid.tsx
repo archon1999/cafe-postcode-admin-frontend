@@ -37,7 +37,6 @@ const TABLE_SESSION_STATUSES = ['open', 'pending_payment', 'closed', 'merged'] a
 
 export const TableSessionsGrid = () => {
   const { t, currentLang } = useTranslate('floor');
-  const { t: tCommon } = useTranslate('common');
   const hallsQuery = useGetFloorHallsQuery();
   const deleteMutation = useDeleteTableSessionMutation();
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
@@ -65,7 +64,7 @@ export const TableSessionsGrid = () => {
         value: hall.id,
         label: formatHallDisplayName(hall.name),
       })),
-    [hallsQuery.data, tCommon],
+    [hallsQuery.data],
   );
   const statusOptions = useMemo<FilterOption[]>(
     () =>
@@ -141,7 +140,7 @@ export const TableSessionsGrid = () => {
         ],
       },
     ],
-    [t, tCommon],
+    [t],
   );
 
   return (

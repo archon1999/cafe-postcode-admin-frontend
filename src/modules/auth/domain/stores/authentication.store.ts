@@ -3,8 +3,8 @@ import { create } from 'zustand';
 import { queryClient } from 'shared/api';
 import { sessionService } from 'shared/lib/auth/session.service';
 
-import type { AuthState } from './authentication.store.interface';
 import { adminScopeStore } from './admin-scope.store';
+import type { AuthState } from './authentication.store.interface';
 import { currentUserStore } from './current-user.store';
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -15,7 +15,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     sessionService.setAccessToken(accessToken);
     set({ isAuthenticated: true, isLoading: false });
 
-    queryClient.invalidateQueries();
+    void queryClient.invalidateQueries();
   },
 
   logout: () => {

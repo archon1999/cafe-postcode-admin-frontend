@@ -9,7 +9,7 @@ const PaymentsListPage = () => {
 
   return (
     <ListPageContent>
-      <CustomBreadcrumbs heading={t('pages.payments.title')} sx={{ mb: { xs: 3, md: 5 } }} />
+      <CustomBreadcrumbs heading={t('pages.payments.title')} />
       <ListPageBody>
         <PaymentsGrid />
       </ListPageBody>

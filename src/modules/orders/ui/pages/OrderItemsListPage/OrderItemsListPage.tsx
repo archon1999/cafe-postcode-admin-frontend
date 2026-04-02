@@ -134,7 +134,7 @@ const OrderItemsListPage = () => {
 
   return (
     <ListPageContent>
-      <CustomBreadcrumbs heading={t('pages.orderItems.title')} sx={{ mb: { xs: 3, md: 5 } }} />
+      <CustomBreadcrumbs heading={t('pages.orderItems.title')} />
       <ListPageBody>
         <Card sx={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'hidden' }}>
           <DataGrid

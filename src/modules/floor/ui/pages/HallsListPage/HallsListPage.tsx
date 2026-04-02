@@ -1,7 +1,6 @@
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
-import Stack from '@mui/material/Stack';
 import type {
   GridColDef,
   GridColumnVisibilityModel,
@@ -158,7 +157,6 @@ const HallsListPage = () => {
             {t('actions.createHall')}
           </Button>
         }
-        sx={{ mb: { xs: 3, md: 5 } }}
       />
       <ListPageBody>
         <Card sx={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'hidden' }}>

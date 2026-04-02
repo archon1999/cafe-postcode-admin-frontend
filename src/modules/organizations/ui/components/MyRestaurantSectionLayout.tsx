@@ -23,7 +23,6 @@ export function MyRestaurantSectionLayout({ heading, children }: MyRestaurantSec
             ? [{ name: rootTitle }]
             : [{ name: rootTitle, href: RoutePath.organizationMyRestaurantGeneral }, { name: heading }]
         }
-        sx={{ mb: { xs: 3, md: 5 } }}
       />
       {children}
     </Content>

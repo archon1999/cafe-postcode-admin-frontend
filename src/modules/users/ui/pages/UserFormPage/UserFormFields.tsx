@@ -4,14 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import {
-  RHFDatePicker,
-  RHFMultiSelect,
-  RHFPhoneInput,
-  RHFSelect,
-  RHFSwitch,
-  RHFTextField,
-} from 'shared/ui/HookForm';
+import { RHFDatePicker, RHFMultiSelect, RHFPhoneInput, RHFSelect, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
 
 import type { UserFormValues } from '../../../domain';
 

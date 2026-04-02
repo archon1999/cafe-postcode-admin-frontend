@@ -27,7 +27,7 @@ export function LanguagePopover({ data = [], sx, ...other }: LanguagePopoverProp
 
   const handleChangeLang = useCallback(
     (lang: LangCode) => {
-      onChangeLang(lang);
+      void onChangeLang(lang);
       onClose();
     },
     [onChangeLang, onClose],

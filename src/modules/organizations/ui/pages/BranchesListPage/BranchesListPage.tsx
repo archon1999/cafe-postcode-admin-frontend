@@ -123,7 +123,6 @@ const BranchesListPage = () => {
             {t('actions.createBranch')}
           </Button>
         }
-        sx={{ mb: { xs: 3, md: 5 } }}
       />
       <ListPageBody>
         <Card sx={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'hidden' }}>

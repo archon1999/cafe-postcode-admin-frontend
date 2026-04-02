@@ -9,7 +9,7 @@ const OrdersListPage = () => {
 
   return (
     <ListPageContent>
-      <CustomBreadcrumbs heading={t('pages.orders.title')} sx={{ mb: { xs: 3, md: 5 } }} />
+      <CustomBreadcrumbs heading={t('pages.orders.title')} />
       <ListPageBody>
         <OrdersGrid />
       </ListPageBody>

@@ -235,4 +235,3 @@ export const UserFormPageContent = ({ id, surface = 'user' }: UserFormPageConten
     </Content>
   );
 };
-

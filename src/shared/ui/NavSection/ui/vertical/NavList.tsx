@@ -23,7 +23,7 @@ export function NavList({ data, depth, render, slotProps, checkPermissions, enab
     if (!isActive) {
       onClose();
     }
-  }, [pathname]);
+  }, [isActive, onClose, pathname]);
 
   const handleToggleMenu = useCallback(() => {
     if (data.children) {

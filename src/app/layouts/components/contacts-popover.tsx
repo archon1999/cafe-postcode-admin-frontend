@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import { m } from 'framer-motion';
 import { usePopover } from 'minimal-shared/hooks';
 
+import { useTranslate } from 'app/providers/locales';
 import { varTap, varHover, transitionTap } from 'shared/ui/Animate';
 import { CustomPopover } from 'shared/ui/CustomPopover';
 import { Iconify } from 'shared/ui/Iconify';
@@ -32,11 +33,12 @@ export type ContactsPopoverProps = IconButtonProps & {
 
 export function ContactsPopover({ data = [], sx, ...other }: ContactsPopoverProps) {
   const { open, anchorEl, onClose, onOpen } = usePopover();
+  const { t } = useTranslate('common');
 
   const renderMenuList = () => (
     <CustomPopover open={open} anchorEl={anchorEl} onClose={onClose} slotProps={{ arrow: { offset: 20 } }}>
       <Typography variant="h6" sx={{ p: 1.5 }}>
-        Contacts <span>({data.length})</span>
+        {t('labels.contacts', { defaultValue: 'Contacts' })} <span>({data.length})</span>
       </Typography>
 
       <Scrollbar sx={{ height: 320, width: 320 }}>

@@ -25,12 +25,12 @@ export function SignOutButton({ onClose, sx, ...other }: Props) {
       await checkAuth();
 
       onClose?.();
-      router.refresh();
+      void router.refresh();
     } catch (error) {
       console.error(error);
       toast.error('Unable to logout!');
     }
-  }, [checkAuth, onClose, router]);
+  }, [checkAuth, logout, logoutMutation, onClose, router]);
 
   return (
     <Button fullWidth variant="soft" size="large" color="error" onClick={handleLogout} sx={sx} {...other}>

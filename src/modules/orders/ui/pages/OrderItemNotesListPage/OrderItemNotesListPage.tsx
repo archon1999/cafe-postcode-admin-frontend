@@ -51,11 +51,11 @@ const OrderItemNotesListPage = () => {
     () => [
       withDetailLink(
         {
-        field: 'orderNumber',
-        headerName: t('fields.orderNumber'),
-        minWidth: 110,
-        flex: 0.4,
-        valueGetter: (_v, row) => `#${row.orderNumber}`,
+          field: 'orderNumber',
+          headerName: t('fields.orderNumber'),
+          minWidth: 110,
+          flex: 0.4,
+          valueGetter: (_v, row) => `#${row.orderNumber}`,
         },
         (row) => RouterPathHelper.orderItemNoteView(row.id),
       ),
@@ -96,7 +96,7 @@ const OrderItemNotesListPage = () => {
 
   return (
     <ListPageContent>
-      <CustomBreadcrumbs heading={t('pages.orderItemNotes.title')} sx={{ mb: { xs: 3, md: 5 } }} />
+      <CustomBreadcrumbs heading={t('pages.orderItemNotes.title')} />
       <ListPageBody>
         <Card sx={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'hidden' }}>
           <DataGrid

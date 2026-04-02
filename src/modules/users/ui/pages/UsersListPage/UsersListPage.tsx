@@ -39,7 +39,6 @@ const UsersListPage = ({ surface = 'user' }: UsersListPageProps) => {
             {createLabel}
           </Button>
         }
-        sx={{ mb: { xs: 3, md: 5 } }}
       />
 
       <ListPageBody>

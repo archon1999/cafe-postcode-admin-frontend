@@ -27,7 +27,7 @@ export function NavMobile({ sx, data, open, slots, onClose, className, checkPerm
     if (open) {
       onClose();
     }
-  }, [pathname]);
+  }, [onClose, open, pathname]);
 
   return (
     <Drawer

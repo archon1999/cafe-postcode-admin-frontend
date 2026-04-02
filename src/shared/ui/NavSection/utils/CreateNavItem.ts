@@ -8,7 +8,7 @@ type CreateNavItemReturn = {
   subItem: boolean;
   rootItem: boolean;
   subDeepItem: boolean;
-  baseProps: Record<string, any>;
+  baseProps: Record<string, unknown>;
   renderIcon: React.ReactNode;
   renderInfo: React.ReactNode;
 };

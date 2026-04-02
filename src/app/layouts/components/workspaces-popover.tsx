@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import { usePopover } from 'minimal-shared/hooks';
 import { useState, useCallback } from 'react';
 
+import { useTranslate } from 'app/providers/locales';
 import { CustomPopover } from 'shared/ui/CustomPopover';
 import { Iconify } from 'shared/ui/Iconify';
 import { Label } from 'shared/ui/Label';
@@ -27,6 +28,7 @@ export type WorkspacesPopoverProps = ButtonBaseProps & {
 
 export function WorkspacesPopover({ data = [], sx, ...other }: WorkspacesPopoverProps) {
   const mediaQuery = 'sm';
+  const { t } = useTranslate('common');
 
   const { open, anchorEl, onClose, onOpen } = usePopover();
 
@@ -149,7 +151,7 @@ export function WorkspacesPopover({ data = [], sx, ...other }: WorkspacesPopover
             justifyContent: 'center',
           },
         }}>
-        Create workspace
+        {t('workspace.create', { defaultValue: 'Create workspace' })}
       </Button>
     </CustomPopover>
   );

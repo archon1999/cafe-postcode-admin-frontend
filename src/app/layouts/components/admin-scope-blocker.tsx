@@ -9,7 +9,7 @@ type AdminScopeBlockerProps = {
   requirement: 'restaurant';
 };
 
-export function AdminScopeBlocker({ requirement }: AdminScopeBlockerProps) {
+export function AdminScopeBlocker({ requirement: _requirement }: AdminScopeBlockerProps) {
   const { t } = useTranslate('common');
 
   const title = t('scope.selectRestaurantTitle', { defaultValue: 'Restoranni tanlang' });

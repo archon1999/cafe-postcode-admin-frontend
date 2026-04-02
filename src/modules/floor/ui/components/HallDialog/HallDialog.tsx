@@ -55,7 +55,7 @@ export function HallDialog({ open, hallId, onClose }: { open: boolean; hallId?: 
           value: zone.id,
           label: zone.name,
         })),
-    [hallId, zonesQuery.data],
+    [zonesQuery.data],
   );
 
   useEffect(() => {

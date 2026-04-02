@@ -45,14 +45,20 @@ export const TableSessionFormFields = ({
   users,
 }: TableSessionFormFieldsProps) => (
   <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' }, gap: 3 }}>
-    <RHFSelect<Values> name="hall" label={t('fields.hall')} helperText={isHallsLoading ? tCommon('labels.loading') : undefined}>
+    <RHFSelect<Values>
+      name="hall"
+      label={t('fields.hall')}
+      helperText={isHallsLoading ? tCommon('labels.loading') : undefined}>
       {halls.map((hall) => (
         <MenuItem key={hall.id} value={hall.id}>
           {formatHallDisplayName(hall.name)}
         </MenuItem>
       ))}
     </RHFSelect>
-    <RHFSelect<Values> name="table" label={t('fields.table')} helperText={isTablesLoading ? tCommon('labels.loading') : undefined}>
+    <RHFSelect<Values>
+      name="table"
+      label={t('fields.table')}
+      helperText={isTablesLoading ? tCommon('labels.loading') : undefined}>
       {tables.map((table) => (
         <MenuItem key={table.id} value={table.id}>
           {table.name}

@@ -12,6 +12,7 @@ import { m } from 'framer-motion';
 import { useBoolean } from 'minimal-shared/hooks';
 import { useState, useCallback } from 'react';
 
+import { useTranslate } from 'app/providers/locales';
 import { varTap, varHover, transitionTap } from 'shared/ui/Animate';
 import { Iconify } from 'shared/ui/Iconify';
 import { Label } from 'shared/ui/Label';
@@ -31,6 +32,7 @@ export type NotificationsDrawerProps = IconButtonProps & {
 };
 
 export function NotificationsDrawer({ data = [], sx, ...other }: NotificationsDrawerProps) {
+  const { t } = useTranslate('common');
   const { value: open, onFalse: onClose, onTrue: onOpen } = useBoolean();
 
   const [currentTab, setCurrentTab] = useState('all');
@@ -58,7 +60,7 @@ export function NotificationsDrawer({ data = [], sx, ...other }: NotificationsDr
         alignItems: 'center',
       }}>
       <Typography variant="h6" sx={{ flexGrow: 1 }}>
-        Notifications
+        {t('labels.notifications', { defaultValue: 'Notifications' })}
       </Typography>
 
       {!!totalUnRead && (
@@ -141,7 +143,7 @@ export function NotificationsDrawer({ data = [], sx, ...other }: NotificationsDr
 
         <Box sx={{ p: 1 }}>
           <Button fullWidth size="large">
-            View all
+            {t('actions.viewAll', { defaultValue: 'View all' })}
           </Button>
         </Box>
       </Drawer>

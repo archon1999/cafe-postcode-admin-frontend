@@ -38,7 +38,7 @@ function parseStackTrace(stack?: string) {
   };
 }
 
-function renderErrorMessage(error: any, t: TFunction<'messages'>) {
+function renderErrorMessage(error: unknown, t: TFunction<'messages'>) {
   if (isRouteErrorResponse(error)) {
     return (
       <>
