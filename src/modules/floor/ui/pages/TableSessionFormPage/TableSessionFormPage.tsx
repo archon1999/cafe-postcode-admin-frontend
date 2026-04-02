@@ -22,6 +22,7 @@ import {
   useGetUsersForFloorQuery,
   useUpdateTableSessionMutation,
 } from '../../../application';
+import { FLOOR_TABLE_SESSION_STATUS_VALUES } from '../../../domain';
 
 import { TableSessionFormFields } from './TableSessionFormFields';
 
@@ -31,18 +32,17 @@ const schema = z.object({
   openedBy: z.string().optional(),
   assignedWaiter: z.string().optional(),
   guestCount: z.coerce.number().min(1),
-  status: z.enum(['open', 'pending_payment', 'closed', 'merged']),
+  status: z.enum(FLOOR_TABLE_SESSION_STATUS_VALUES),
   note: z.string(),
 });
 
-export type Values = z.infer<typeof schema>;
-
-const TABLE_SESSION_STATUSES = ['open', 'pending_payment', 'closed', 'merged'] as const;
+type TableSessionFormValues = z.input<typeof schema>;
+export type Values = z.output<typeof schema>;
 
 const TableSessionFormPage = () => {
   const { t } = useTranslate('floor');
   const { t: tCommon } = useTranslate('common');
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams() as { id?: string };
   const { push } = useRouter();
   const isEditMode = Boolean(id);
   const query = useGetTableSessionByIdQuery(id ?? '', { enabled: isEditMode });
@@ -54,7 +54,7 @@ const TableSessionFormPage = () => {
 
   useRedirectOnNotFound(query.error, isEditMode);
 
-  const methods = useForm<Values>({
+  const methods = useForm<TableSessionFormValues, unknown, Values>({
     resolver: zodResolver(schema),
     defaultValues: { hall: '', table: '', openedBy: '', assignedWaiter: '', guestCount: 1, status: 'open', note: '' },
   });
@@ -78,7 +78,7 @@ const TableSessionFormPage = () => {
     });
   }, [methods, query.data]);
 
-  const onSubmit = methods.handleSubmit(async (values) => {
+  const onSubmit = methods.handleSubmit(async (values: Values) => {
     const payload = {
       hall: values.hall,
       table: values.table,
@@ -112,7 +112,7 @@ const TableSessionFormPage = () => {
               isHallsLoading={hallsQuery.isLoading}
               isTablesLoading={tablesQuery.isLoading}
               isUsersLoading={usersQuery.isLoading}
-              statuses={TABLE_SESSION_STATUSES}
+              statuses={FLOOR_TABLE_SESSION_STATUS_VALUES}
               t={t}
               tCommon={tCommon}
               tables={tableOptions}

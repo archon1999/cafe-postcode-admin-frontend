@@ -8,21 +8,21 @@ import type {
   GridSortModel,
 } from '@mui/x-data-grid';
 import { gridClasses } from '@mui/x-data-grid';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { RouterPathHelper } from 'app/routes';
 import type { AdminPayment } from 'shared/api/admin-types';
 import { useRouter } from 'shared/hooks/router';
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState, withDetailLink } from 'shared/ui/CustomDataGrid';
-import type { FilterOption } from 'shared/ui/Filters';
 import { Iconify } from 'shared/ui/Iconify';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 import { formatMoney } from 'shared/utils/format-money';
 
 import { useGetPaymentsQuery } from '../../../application';
-import { OrdersGridToolbar } from '../../components/OrdersGridToolbar';
 import { formatDateTime, getPaymentMethodTranslationKey, getPaymentStatusColor } from '../../lib/presenters';
+
+import { DEFAULT_PAYMENTS_GRID_FILTERS, type PaymentsGridFilters, PaymentsGridToolbar } from './PaymentsGridToolbar';
 
 const DEFAULT_PAGINATION_MODEL: GridPaginationModel = { page: 0, pageSize: 10 };
 const DEFAULT_COLUMN_VISIBILITY_MODEL: GridColumnVisibilityModel = {};
@@ -35,9 +35,7 @@ export const PaymentsGrid = () => {
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_PAGINATION_MODEL);
-  const [search, setSearch] = useState('');
-  const [statuses, setStatuses] = useState<string[]>([]);
-  const [methods, setMethods] = useState<string[]>([]);
+  const [filters, setFilters] = useState<PaymentsGridFilters>(DEFAULT_PAYMENTS_GRID_FILTERS);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(
     DEFAULT_COLUMN_VISIBILITY_MODEL,
   );
@@ -47,32 +45,16 @@ export const PaymentsGrid = () => {
   const query = useGetPaymentsQuery({
     page: paginationModel.page + 1,
     pageSize: paginationModel.pageSize,
-    search: search || undefined,
-    statusIn: statuses.length ? statuses.join(',') : undefined,
-    methodIn: methods.length ? methods.join(',') : undefined,
+    search: filters.search || undefined,
+    statusIn: filters.statuses.length ? filters.statuses.join(',') : undefined,
+    methodIn: filters.methods.length ? filters.methods.join(',') : undefined,
     ordering: getOrderingFromSortModel(sortModel),
   });
-
-  const hasActiveFilters = Boolean(search || statuses.length || methods.length);
-
-  const statusOptions = useMemo<FilterOption[]>(
-    () => [
-      { value: 'pending', label: t('paymentStatuses.pending') },
-      { value: 'succeeded', label: t('paymentStatuses.succeeded') },
-      { value: 'failed', label: t('paymentStatuses.failed') },
-    ],
-    [t],
-  );
-
-  const methodOptions = useMemo<FilterOption[]>(
-    () => [
-      { value: 'cash', label: t('paymentMethods.cash') },
-      { value: 'card', label: t('paymentMethods.card') },
-      { value: 'qr', label: t('paymentMethods.qr') },
-      { value: 'mixed', label: t('paymentMethods.mixed') },
-    ],
-    [t],
-  );
+  const hasActiveFilters = Boolean(filters.search || filters.statuses.length || filters.methods.length);
+  const handleFiltersChange = useCallback((next: PaymentsGridFilters) => {
+    setFilters(next);
+    setPaginationModel((prev) => ({ ...prev, page: 0 }));
+  }, []);
 
   const columns = useMemo<GridColDef<AdminPayment>[]>(
     () => [
@@ -249,45 +231,9 @@ export const PaymentsGrid = () => {
             />
           ),
           toolbar: () => (
-            <OrdersGridToolbar
-              searchLabel={t('filters.search')}
-              searchPlaceholder={t('filters.searchPaymentsPlaceholder')}
-              clearSearchLabel={t('filters.clearSearch')}
-              search={search}
-              onSearchChange={(value) => {
-                setSearch(value.trim());
-                setPaginationModel((prev) => ({ ...prev, page: 0 }));
-              }}
-              onClearSearch={() => {
-                setSearch('');
-                setPaginationModel((prev) => ({ ...prev, page: 0 }));
-              }}
-              filters={[
-                {
-                  id: 'statuses',
-                  label: t('filters.status'),
-                  value: statuses,
-                  options: statusOptions,
-                  onApply: (values) => {
-                    setStatuses(values);
-                    setPaginationModel((prev) => ({ ...prev, page: 0 }));
-                  },
-                  testId: 'payments-status-filter',
-                  emptyLabel: t('filters.all'),
-                },
-                {
-                  id: 'methods',
-                  label: t('filters.method'),
-                  value: methods,
-                  options: methodOptions,
-                  onApply: (values) => {
-                    setMethods(values);
-                    setPaginationModel((prev) => ({ ...prev, page: 0 }));
-                  },
-                  testId: 'payments-method-filter',
-                  emptyLabel: t('filters.all'),
-                },
-              ]}
+            <PaymentsGridToolbar
+              value={filters}
+              onChange={handleFiltersChange}
               columns={columns}
               columnVisibilityModel={columnVisibilityModel}
               defaultColumnVisibilityModel={DEFAULT_COLUMN_VISIBILITY_MODEL}

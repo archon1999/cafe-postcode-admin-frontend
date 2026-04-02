@@ -37,6 +37,7 @@ import {
   useGetOrganizationsHallsQuery,
   useUpdateDeviceMutation,
 } from '../../application';
+import { ORGANIZATION_DEVICE_MODE_VALUES } from '../../domain';
 import { getDeviceModeTranslationKey } from '../lib/presenters';
 
 import { BranchManagementAccordion } from './BranchManagementAccordion';
@@ -45,11 +46,9 @@ import { OrganizationsGridToolbar } from './OrganizationsGridToolbar';
 const DEFAULT_PAGINATION_MODEL: GridPaginationModel = { page: 0, pageSize: 10 };
 const DEFAULT_COLUMN_VISIBILITY_MODEL: GridColumnVisibilityModel = {};
 const DEFAULT_SELECTION_MODEL: GridRowSelectionModel = { type: 'include', ids: new Set() };
-const DEVICE_MODES = ['admin', 'waiter', 'cashier', 'kitchen_display', 'owner_dashboard'] as const;
-
 const schema = z.object({
   name: z.string().min(1),
-  mode: z.enum(DEVICE_MODES),
+  mode: z.enum(ORGANIZATION_DEVICE_MODE_VALUES),
   primaryHallId: z.string().optional(),
   allowedHallIds: z.array(z.string()).default([]),
   isActive: z.boolean(),
@@ -115,7 +114,7 @@ function BranchDeviceDialog({ open, item, onClose }: { open: boolean; item: Admi
           <Stack spacing={3} sx={{ pt: 1 }}>
             <RHFTextField<Values> name="name" label={t('fields.name')} />
             <RHFSelect<Values> name="mode" label={t('fields.mode')}>
-              {DEVICE_MODES.map((mode) => (
+              {ORGANIZATION_DEVICE_MODE_VALUES.map((mode) => (
                 <MenuItem key={mode} value={mode}>
                   {t(getDeviceModeTranslationKey(mode))}
                 </MenuItem>
@@ -199,7 +198,8 @@ export function BranchDevicesSection({
   });
 
   const modeOptions = useMemo<FilterOption[]>(
-    () => DEVICE_MODES.map((mode) => ({ value: mode, label: t(getDeviceModeTranslationKey(mode)) })),
+    () =>
+      ORGANIZATION_DEVICE_MODE_VALUES.map((mode) => ({ value: mode, label: t(getDeviceModeTranslationKey(mode)) })),
     [t],
   );
   const statusOptions = useMemo<FilterOption[]>(

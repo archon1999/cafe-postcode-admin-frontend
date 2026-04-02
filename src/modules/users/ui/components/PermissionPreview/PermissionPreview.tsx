@@ -3,6 +3,7 @@ import IconButton from '@mui/material/IconButton';
 import Popover from '@mui/material/Popover';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import type { TFunction } from 'i18next';
 import { useState } from 'react';
 
 import type { AdminPermission } from 'shared/api/admin-types';
@@ -12,7 +13,7 @@ import { getAdminPermissionLabel } from 'shared/utils/admin-permission';
 
 type PermissionPreviewProps = {
   permissions: AdminPermission[];
-  t: (key: string) => string;
+  t: TFunction;
   maxVisible?: number;
 };
 
@@ -38,10 +39,6 @@ export function PermissionPreview({ permissions, t, maxVisible = 3 }: Permission
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0, width: '100%' }}>
       <Box sx={{ minWidth: 0, flex: 1 }}>
-        <Typography variant="caption" color="text.secondary" noWrap>
-          {`${t('fields.permissions')}: ${permissions.length}`}
-        </Typography>
-
         <Typography
           variant="body2"
           title={previewText}

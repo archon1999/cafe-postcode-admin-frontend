@@ -8,22 +8,22 @@ import type {
   GridSortModel,
 } from '@mui/x-data-grid';
 import { gridClasses } from '@mui/x-data-grid';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { RouterPathHelper } from 'app/routes';
 import type { AdminOrder } from 'shared/api/admin-types';
 import { useRouter } from 'shared/hooks/router';
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState, withDetailLink } from 'shared/ui/CustomDataGrid';
-import type { FilterOption } from 'shared/ui/Filters';
 import { Iconify } from 'shared/ui/Iconify';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 import { formatHallDisplayName } from 'shared/utils/format-hall-display';
 import { formatMoney } from 'shared/utils/format-money';
 
 import { useGetOrdersQuery } from '../../../application';
-import { OrdersGridToolbar } from '../../components/OrdersGridToolbar';
 import { formatDateTime, getOrderChannelTranslationKey, getOrderStatusColor } from '../../lib/presenters';
+
+import { DEFAULT_ORDERS_GRID_FILTERS, type OrdersGridFilters, OrdersGridToolbar } from './OrdersGridToolbar';
 
 const DEFAULT_PAGINATION_MODEL: GridPaginationModel = { page: 0, pageSize: 10 };
 const DEFAULT_COLUMN_VISIBILITY_MODEL: GridColumnVisibilityModel = {};
@@ -36,9 +36,7 @@ export const OrdersGrid = () => {
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_PAGINATION_MODEL);
-  const [search, setSearch] = useState('');
-  const [statuses, setStatuses] = useState<string[]>([]);
-  const [channels, setChannels] = useState<string[]>([]);
+  const [filters, setFilters] = useState<OrdersGridFilters>(DEFAULT_ORDERS_GRID_FILTERS);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(
     DEFAULT_COLUMN_VISIBILITY_MODEL,
   );
@@ -48,33 +46,16 @@ export const OrdersGrid = () => {
   const ordersQuery = useGetOrdersQuery({
     page: paginationModel.page + 1,
     pageSize: paginationModel.pageSize,
-    search: search || undefined,
-    statusIn: statuses.length ? statuses.join(',') : undefined,
-    channelIn: channels.length ? channels.join(',') : undefined,
+    search: filters.search || undefined,
+    statusIn: filters.statuses.length ? filters.statuses.join(',') : undefined,
+    channelIn: filters.channels.length ? filters.channels.join(',') : undefined,
     ordering: getOrderingFromSortModel(sortModel),
   });
-  const hasActiveFilters = Boolean(search || statuses.length || channels.length);
-
-  const statusOptions = useMemo<FilterOption[]>(
-    () => [
-      { value: 'open', label: t('statuses.open') },
-      { value: 'submitted', label: t('statuses.submitted') },
-      { value: 'ready', label: t('statuses.ready') },
-      { value: 'closed', label: t('statuses.closed') },
-      { value: 'cancelled', label: t('statuses.cancelled') },
-    ],
-    [t],
-  );
-
-  const channelOptions = useMemo<FilterOption[]>(
-    () => [
-      { value: 'hall', label: t('channels.hall') },
-      { value: 'takeaway', label: t('channels.takeaway') },
-      { value: 'online', label: t('channels.online') },
-      { value: 'delivery', label: t('channels.delivery') },
-    ],
-    [t],
-  );
+  const hasActiveFilters = Boolean(filters.search || filters.statuses.length || filters.channels.length);
+  const handleFiltersChange = useCallback((next: OrdersGridFilters) => {
+    setFilters(next);
+    setPaginationModel((prev) => ({ ...prev, page: 0 }));
+  }, []);
 
   const columns = useMemo<GridColDef<AdminOrder>[]>(
     () => [
@@ -226,44 +207,8 @@ export const OrdersGrid = () => {
           ),
           toolbar: () => (
             <OrdersGridToolbar
-              searchLabel={t('filters.search')}
-              searchPlaceholder={t('filters.searchOrdersPlaceholder')}
-              clearSearchLabel={t('filters.clearSearch')}
-              search={search}
-              onSearchChange={(value) => {
-                setSearch(value.trim());
-                setPaginationModel((prev) => ({ ...prev, page: 0 }));
-              }}
-              onClearSearch={() => {
-                setSearch('');
-                setPaginationModel((prev) => ({ ...prev, page: 0 }));
-              }}
-              filters={[
-                {
-                  id: 'statuses',
-                  label: t('filters.status'),
-                  value: statuses,
-                  options: statusOptions,
-                  onApply: (values) => {
-                    setStatuses(values);
-                    setPaginationModel((prev) => ({ ...prev, page: 0 }));
-                  },
-                  testId: 'orders-status-filter',
-                  emptyLabel: t('filters.all'),
-                },
-                {
-                  id: 'channels',
-                  label: t('filters.channel'),
-                  value: channels,
-                  options: channelOptions,
-                  onApply: (values) => {
-                    setChannels(values);
-                    setPaginationModel((prev) => ({ ...prev, page: 0 }));
-                  },
-                  testId: 'orders-channel-filter',
-                  emptyLabel: t('filters.all'),
-                },
-              ]}
+              value={filters}
+              onChange={handleFiltersChange}
               columns={columns}
               columnVisibilityModel={columnVisibilityModel}
               defaultColumnVisibilityModel={DEFAULT_COLUMN_VISIBILITY_MODEL}

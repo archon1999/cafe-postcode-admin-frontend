@@ -32,23 +32,24 @@ const schema = z.object({
   operationalSettingsText: z.string().default(''),
 });
 
-export type Values = z.infer<typeof schema>;
+type TariffFormValues = z.input<typeof schema>;
+export type Values = z.output<typeof schema>;
 
 const TariffFormPage = () => {
   const { t } = useTranslate('platform');
   const { profile } = useCurrentUser();
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams() as { id?: string };
   const { push, replace } = useRouter();
   const isEditMode = Boolean(id);
   const canManagePlatform = canAccessTariffs(profile);
   const query = useGetTariffByIdQuery(id ?? '', { enabled: isEditMode && canManagePlatform });
   const createMutation = useCreateTariffMutation();
   const updateMutation = useUpdateTariffMutation(id ?? '');
-  const rolesQuery = useGetRolesQuery({ enabled: canManagePlatform });
+  const rolesQuery = useGetRolesQuery('user', { enabled: canManagePlatform });
 
   useRedirectOnNotFound(query.error, isEditMode);
 
-  const methods = useForm<Values>({
+  const methods = useForm<TariffFormValues, unknown, Values>({
     resolver: zodResolver(schema),
     defaultValues: {
       name: '',
@@ -96,7 +97,7 @@ const TariffFormPage = () => {
     [rolesQuery.data],
   );
 
-  const onSubmit = methods.handleSubmit(async (values) => {
+  const onSubmit = methods.handleSubmit(async (values: Values) => {
     let operationalSettings: Record<string, unknown> = {};
 
     if (values.operationalSettingsText.trim()) {

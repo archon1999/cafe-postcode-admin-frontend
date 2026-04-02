@@ -2,10 +2,10 @@ import { z } from 'zod';
 
 import type { AdminUser, AdminUserPayload } from 'shared/api/admin-types';
 
+import { USER_EMPLOYMENT_STATUS_VALUES, USER_SALARY_TYPE_VALUES } from '../enums';
+
 import type { UserManagementSurface } from './user.types';
 
-const employmentStatuses = ['active', 'inactive', 'archived'] as const;
-const salaryTypes = ['hourly', 'daily', 'kpi'] as const;
 const nullableNumberField = z.preprocess(
   (value) => (value === '' || value === null || value === undefined ? null : Number(value)),
   z.number().nullable().optional(),
@@ -13,59 +13,64 @@ const nullableNumberField = z.preprocess(
 
 function createUserFormSchema(surface: UserManagementSurface) {
   return z
-  .object({
-    username:
-      surface === 'user'
-        ? z.string().min(1, { message: 'Username talab qilinadi' })
-        : z.string().optional().default(''),
-    fullName: z.string().min(1, { message: "To'liq ism talab qilinadi" }),
-    phone: z.string().optional(),
-    roleId: z.string().min(1, { message: 'Rol tanlanishi kerak' }),
-    isActive: z.boolean(),
-    employmentStatus: z.enum(employmentStatuses),
-    passportSeries: z.string().optional(),
-    pnfl: z.string().optional(),
-    birthDate: z.string().optional().nullable(),
-    salaryType: z.enum(salaryTypes).optional().nullable(),
-    baseAmount: nullableNumberField,
-    kpiPercent: nullableNumberField.refine(
-      (value) => value === null || value === undefined || Number.isInteger(value),
-      'KPI foizi butun son bo‘lishi kerak',
-    ).refine((value) => value === null || value === undefined || (value >= 0 && value <= 100), 'KPI foizi 0-100 oralig‘ida bo‘lishi kerak'),
-    hallSwitchPermission: z.boolean(),
-    primaryHallId: z.string().optional(),
-    allowedHallIds: z.array(z.string()).default([]),
-    password: z.string().optional(),
-    pin: z.string().optional(),
-  })
-  .superRefine((value, context) => {
-    if (value.pin && !/^\d{4}$/.test(value.pin)) {
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ['pin'],
-        message: "PIN 4 ta raqamdan iborat bo'lishi kerak",
-      });
-    }
+    .object({
+      username:
+        surface === 'user'
+          ? z.string().min(1, { message: 'Username talab qilinadi' })
+          : z.string().optional().default(''),
+      fullName: z.string().min(1, { message: "To'liq ism talab qilinadi" }),
+      phone: z.string().optional(),
+      roleId: z.string().min(1, { message: 'Rol tanlanishi kerak' }),
+      isActive: z.boolean(),
+      employmentStatus: z.enum(USER_EMPLOYMENT_STATUS_VALUES),
+      passportSeries: z.string().optional(),
+      pnfl: z.string().optional(),
+      birthDate: z.string().optional().nullable(),
+      salaryType: z.enum(USER_SALARY_TYPE_VALUES).optional().nullable(),
+      baseAmount: nullableNumberField,
+      kpiPercent: nullableNumberField
+        .refine(
+          (value) => value === null || value === undefined || Number.isInteger(value),
+          'KPI foizi butun son bo‘lishi kerak',
+        )
+        .refine(
+          (value) => value === null || value === undefined || (value >= 0 && value <= 100),
+          'KPI foizi 0-100 oralig‘ida bo‘lishi kerak',
+        ),
+      hallSwitchPermission: z.boolean(),
+      primaryHallId: z.string().optional(),
+      allowedHallIds: z.array(z.string()).default([]),
+      password: z.string().optional(),
+      pin: z.string().optional(),
+    })
+    .superRefine((value, context) => {
+      if (value.pin && !/^\d{4}$/.test(value.pin)) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['pin'],
+          message: "PIN 4 ta raqamdan iborat bo'lishi kerak",
+        });
+      }
 
-    if (value.salaryType === 'kpi' && (value.kpiPercent === null || value.kpiPercent === undefined)) {
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ['kpiPercent'],
-        message: 'KPI foizi tanlangan bo‘lsa, KPI foizi talab qilinadi',
-      });
-    }
+      if (value.salaryType === 'kpi' && (value.kpiPercent === null || value.kpiPercent === undefined)) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['kpiPercent'],
+          message: 'KPI foizi tanlangan bo‘lsa, KPI foizi talab qilinadi',
+        });
+      }
 
-    if (
-      (value.salaryType === 'hourly' || value.salaryType === 'daily') &&
-      (value.baseAmount === null || value.baseAmount === undefined || Number.isNaN(value.baseAmount))
-    ) {
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ['baseAmount'],
-        message: 'Tanlangan maosh turi uchun summa talab qilinadi',
-      });
-    }
-  });
+      if (
+        (value.salaryType === 'hourly' || value.salaryType === 'daily') &&
+        (value.baseAmount === null || value.baseAmount === undefined || Number.isNaN(value.baseAmount))
+      ) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['baseAmount'],
+          message: 'Tanlangan maosh turi uchun summa talab qilinadi',
+        });
+      }
+    });
 }
 
 export const userFormSchema = createUserFormSchema('user');
@@ -116,13 +121,10 @@ export function mapUserToFormValues(user: AdminUser): UserFormValues {
 }
 
 export function buildUserPayload(values: UserFormValues, surface: UserManagementSurface = 'user'): AdminUserPayload {
-  const normalizedStatus = values.employmentStatus === 'archived'
-    ? 'archived'
-    : values.isActive
-      ? 'active'
-      : 'inactive';
+  const normalizedStatus =
+    values.employmentStatus === 'archived' ? 'archived' : values.isActive ? 'active' : 'inactive';
 
-  return {
+  const payload: AdminUserPayload = {
     fullName: values.fullName.trim(),
     phone: values.phone?.trim() ?? '',
     roleId: values.roleId,
@@ -132,8 +134,8 @@ export function buildUserPayload(values: UserFormValues, surface: UserManagement
     pnfl: values.pnfl?.trim() || '',
     birthDate: values.birthDate || null,
     salaryType: values.salaryType ?? null,
-    baseAmount: values.salaryType === 'hourly' || values.salaryType === 'daily' ? values.baseAmount ?? null : null,
-    kpiPercent: values.salaryType === 'kpi' ? values.kpiPercent ?? null : null,
+    baseAmount: values.salaryType === 'hourly' || values.salaryType === 'daily' ? (values.baseAmount ?? null) : null,
+    kpiPercent: values.salaryType === 'kpi' ? (values.kpiPercent ?? null) : null,
     hallSwitchPermission: values.hallSwitchPermission,
     ...(values.primaryHallId ? { primaryHallId: values.primaryHallId } : { primaryHallId: null }),
     allowedHallIds: values.allowedHallIds,
@@ -174,7 +176,7 @@ export function buildUserPayloadFromUser(
       ? overrides.isActive
         ? 'active'
         : 'inactive'
-      : user.employmentStatus ?? (user.isActive ? 'active' : 'inactive'));
+      : (user.employmentStatus ?? (user.isActive ? 'active' : 'inactive')));
 
   const payload: AdminUserPayload = {
     fullName: user.fullName,

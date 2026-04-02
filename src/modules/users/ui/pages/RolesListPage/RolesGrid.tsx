@@ -9,22 +9,20 @@ import type {
   GridSortModel,
 } from '@mui/x-data-grid';
 import { gridClasses } from '@mui/x-data-grid';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { RouterPathHelper } from 'app/routes';
 import type { AdminRole } from 'shared/api/admin-types';
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState } from 'shared/ui/CustomDataGrid';
 import { ConfirmDialog } from 'shared/ui/CustomDialog';
-import type { FilterOption } from 'shared/ui/Filters';
 import { Iconify } from 'shared/ui/Iconify';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 
 import { useDeleteRoleMutation, useGetRolesListQuery } from '../../../application';
-import { USER_ROLE_TYPE_VALUES } from '../../../domain';
 import { PermissionPreview } from '../../components/PermissionPreview/PermissionPreview';
 
-import { RolesGridToolbar } from './RolesGridToolbar';
+import { DEFAULT_ROLES_GRID_FILTERS, type RolesGridFilters, RolesGridToolbar } from './RolesGridToolbar';
 
 const DEFAULT_PAGINATION_MODEL: GridPaginationModel = { page: 0, pageSize: 10 };
 const DEFAULT_COLUMN_VISIBILITY_MODEL: GridColumnVisibilityModel = {};
@@ -40,8 +38,7 @@ export const RolesGrid = () => {
   const deleteRoleMutation = useDeleteRoleMutation();
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_PAGINATION_MODEL);
-  const [search, setSearch] = useState('');
-  const [types, setTypes] = useState<string[]>([]);
+  const [filters, setFilters] = useState<RolesGridFilters>(DEFAULT_ROLES_GRID_FILTERS);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(
     DEFAULT_COLUMN_VISIBILITY_MODEL,
   );
@@ -52,20 +49,15 @@ export const RolesGrid = () => {
   const rolesQuery = useGetRolesListQuery({
     page: paginationModel.page + 1,
     pageSize: paginationModel.pageSize,
-    search: search || undefined,
-    typeIn: types.length ? types.join(',') : undefined,
+    search: filters.search || undefined,
+    typeIn: filters.types.length ? filters.types.join(',') : undefined,
     ordering: getOrderingFromSortModel(sortModel),
   });
-
-  const typeOptions = useMemo<FilterOption[]>(
-    () => [
-      { value: USER_ROLE_TYPE_VALUES[0], label: t('labels.system') },
-      { value: USER_ROLE_TYPE_VALUES[1], label: t('labels.custom') },
-    ],
-    [t],
-  );
-
-  const hasActiveFilters = Boolean(search || types.length);
+  const hasActiveFilters = Boolean(filters.search || filters.types.length);
+  const handleFiltersChange = useCallback((next: RolesGridFilters) => {
+    setFilters(next);
+    setPaginationModel((prev) => ({ ...prev, page: 0 }));
+  }, []);
 
   const columns = useMemo<GridColDef<AdminRole>[]>(
     () => [
@@ -155,21 +147,6 @@ export const RolesGrid = () => {
     [t],
   );
 
-  const handleSearchChange = (value: string) => {
-    setSearch(value.trim());
-    setPaginationModel((prev) => ({ ...prev, page: 0 }));
-  };
-
-  const handleClearSearch = () => {
-    setSearch('');
-    setPaginationModel((prev) => ({ ...prev, page: 0 }));
-  };
-
-  const handleTypesApply = (values: string[]) => {
-    setTypes(values);
-    setPaginationModel((prev) => ({ ...prev, page: 0 }));
-  };
-
   return (
     <>
       <Card
@@ -219,12 +196,8 @@ export const RolesGrid = () => {
             ),
             toolbar: () => (
               <RolesGridToolbar
-                search={search}
-                onSearchChange={handleSearchChange}
-                onClearSearch={handleClearSearch}
-                types={types}
-                onTypesApply={handleTypesApply}
-                typeOptions={typeOptions}
+                value={filters}
+                onChange={handleFiltersChange}
                 columns={columns}
                 columnVisibilityModel={columnVisibilityModel}
                 defaultColumnVisibilityModel={DEFAULT_COLUMN_VISIBILITY_MODEL}
@@ -270,4 +243,4 @@ export const RolesGrid = () => {
       />
     </>
   );
-}
+};

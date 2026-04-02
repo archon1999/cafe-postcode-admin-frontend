@@ -9,19 +9,18 @@ import type {
   GridSortModel,
 } from '@mui/x-data-grid';
 import { gridClasses } from '@mui/x-data-grid';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { RouterPathHelper } from 'app/routes';
 import type { AdminZoneOrCabin } from 'shared/api/admin-types';
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState } from 'shared/ui/CustomDataGrid';
 import { ConfirmDialog } from 'shared/ui/CustomDialog';
-import type { FilterOption } from 'shared/ui/Filters';
 import { Iconify } from 'shared/ui/Iconify';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 
 import { useDeleteZoneMutation, useGetZonesListQuery } from '../../../application';
-import { FloorGridToolbar } from '../../components/FloorGridToolbar';
+import { DEFAULT_ZONES_GRID_FILTERS, type ZonesGridFilters, ZonesGridToolbar } from './ZonesGridToolbar';
 
 const DEFAULT_PAGINATION_MODEL: GridPaginationModel = { page: 0, pageSize: 10 };
 const DEFAULT_COLUMN_VISIBILITY_MODEL: GridColumnVisibilityModel = {};
@@ -35,8 +34,7 @@ export const ZonesGrid = () => {
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
 
   const [paginationModel, setPaginationModel] = useState(DEFAULT_PAGINATION_MODEL);
-  const [search, setSearch] = useState('');
-  const [statuses, setStatuses] = useState<string[]>([]);
+  const [filters, setFilters] = useState<ZonesGridFilters>(DEFAULT_ZONES_GRID_FILTERS);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState(DEFAULT_COLUMN_VISIBILITY_MODEL);
   const [selectedRows, setSelectedRows] = useState<GridRowSelectionModel>(DEFAULT_SELECTION_MODEL);
   const [sortModel, setSortModel] = useState<GridSortModel>(DEFAULT_SORT_MODEL);
@@ -44,20 +42,16 @@ export const ZonesGrid = () => {
   const query = useGetZonesListQuery({
     page: paginationModel.page + 1,
     pageSize: paginationModel.pageSize,
-    search: search || undefined,
-    isActive: statuses.length === 1 ? statuses[0] === 'active' : undefined,
+    search: filters.search || undefined,
+    isActive: filters.statuses.length === 1 ? filters.statuses[0] === 'active' : undefined,
     ordering: getOrderingFromSortModel(sortModel),
   });
 
-  const statusOptions = useMemo<FilterOption[]>(
-    () => [
-      { value: 'active', label: tCommon('status.active') },
-      { value: 'inactive', label: tCommon('status.inactive') },
-    ],
-    [tCommon],
-  );
-
-  const hasActiveFilters = Boolean(search || statuses.length);
+  const hasActiveFilters = Boolean(filters.search || filters.statuses.length);
+  const handleFiltersChange = useCallback((next: ZonesGridFilters) => {
+    setFilters(next);
+    setPaginationModel((prev) => ({ ...prev, page: 0 }));
+  }, []);
 
   const columns = useMemo<GridColDef<AdminZoneOrCabin>[]>(
     () => [
@@ -150,31 +144,13 @@ export const ZonesGrid = () => {
               />
             ),
             toolbar: () => (
-              <FloorGridToolbar
-                searchLabel={t('filters.search')}
-                searchPlaceholder={t('filters.searchZonesPlaceholder')}
-                clearSearchLabel={t('filters.clearSearch')}
-                search={search}
-                onSearchChange={setSearch}
-                onClearSearch={() => setSearch('')}
-                filters={[
-                  {
-                    id: 'statuses',
-                    label: t('filters.status'),
-                    value: statuses,
-                    options: statusOptions,
-                    onApply: (values) => {
-                      setStatuses(values);
-                      setPaginationModel((prev) => ({ ...prev, page: 0 }));
-                    },
-                    testId: 'zones-status-filter',
-                    emptyLabel: t('filters.all'),
-                  },
-                ]}
+              <ZonesGridToolbar
+                value={filters}
+                onChange={handleFiltersChange}
                 columns={columns}
                 columnVisibilityModel={columnVisibilityModel}
                 defaultColumnVisibilityModel={DEFAULT_COLUMN_VISIBILITY_MODEL}
-                onSave={setColumnVisibilityModel}
+                onSaveColumns={setColumnVisibilityModel}
               />
             ),
           }}

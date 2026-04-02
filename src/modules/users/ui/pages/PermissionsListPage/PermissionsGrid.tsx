@@ -9,12 +9,11 @@ import type {
   GridSortModel,
 } from '@mui/x-data-grid';
 import { gridClasses } from '@mui/x-data-grid';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import type { AdminPermission } from 'shared/api/admin-types';
 import { DataGrid, DataGridEmptyState } from 'shared/ui/CustomDataGrid';
-import type { FilterOption } from 'shared/ui/Filters';
 import { Iconify } from 'shared/ui/Iconify';
 import { Label } from 'shared/ui/Label';
 import {
@@ -28,7 +27,11 @@ import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 import { useGetPermissionsListQuery, useGetPermissionsQuery } from '../../../application';
 import { USER_PERMISSION_ACTION_BADGE_CONFIG, USER_PERMISSION_SCOPE_BADGE_CONFIG } from '../../../domain';
 
-import { PermissionsGridToolbar } from './PermissionsGridToolbar';
+import {
+  DEFAULT_PERMISSIONS_GRID_FILTERS,
+  type PermissionsGridFilters,
+  PermissionsGridToolbar,
+} from './PermissionsGridToolbar';
 
 const DEFAULT_PAGINATION_MODEL: GridPaginationModel = { page: 0, pageSize: 10 };
 const DEFAULT_COLUMN_VISIBILITY_MODEL: GridColumnVisibilityModel = {};
@@ -42,9 +45,7 @@ export const PermissionsGrid = () => {
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_PAGINATION_MODEL);
-  const [search, setSearch] = useState('');
-  const [scopes, setScopes] = useState<string[]>([]);
-  const [actions, setActions] = useState<string[]>([]);
+  const [filters, setFilters] = useState<PermissionsGridFilters>(DEFAULT_PERMISSIONS_GRID_FILTERS);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(
     DEFAULT_COLUMN_VISIBILITY_MODEL,
   );
@@ -53,43 +54,17 @@ export const PermissionsGrid = () => {
   const permissionsQuery = useGetPermissionsListQuery({
     page: paginationModel.page + 1,
     pageSize: paginationModel.pageSize,
-    search: search || undefined,
-    scopeIn: scopes.length ? scopes.join(',') : undefined,
-    actionIn: actions.length ? actions.join(',') : undefined,
+    search: filters.search || undefined,
+    scopeIn: filters.scopes.length ? filters.scopes.join(',') : undefined,
+    actionIn: filters.actions.length ? filters.actions.join(',') : undefined,
     ordering: getOrderingFromSortModel(sortModel),
   });
   const permissionsOptionsQuery = useGetPermissionsQuery();
-
-  const scopeOptions = useMemo<FilterOption[]>(() => {
-    const scopesSet = new Set(
-      (permissionsOptionsQuery.data ?? []).map(
-        (permission) => permission.scope ?? getAdminPermissionScope(permission.code),
-      ),
-    );
-
-    return Array.from(scopesSet)
-      .filter(Boolean)
-      .map((scope) => ({
-        value: scope,
-        label: getAdminPermissionScopeLabel(scope, t),
-      }))
-      .sort((left, right) => left.label.localeCompare(right.label));
-  }, [permissionsOptionsQuery.data, t]);
-
-  const actionOptions = useMemo<FilterOption[]>(() => {
-    const actionsSet = new Set(
-      (permissionsOptionsQuery.data ?? []).map((permission) => getAdminPermissionAction(permission.code)),
-    );
-
-    return Array.from(actionsSet)
-      .filter(Boolean)
-      .map((action) => ({
-        value: action,
-        label: getAdminPermissionActionLabel(action, t),
-      }))
-      .sort((left, right) => left.label.localeCompare(right.label));
-  }, [permissionsOptionsQuery.data, t]);
-  const hasActiveFilters = Boolean(search || scopes.length || actions.length);
+  const hasActiveFilters = Boolean(filters.search || filters.scopes.length || filters.actions.length);
+  const handleFiltersChange = useCallback((next: PermissionsGridFilters) => {
+    setFilters(next);
+    setPaginationModel((prev) => ({ ...prev, page: 0 }));
+  }, []);
 
   const columns = useMemo<GridColDef<AdminPermission>[]>(
     () => [
@@ -113,7 +88,9 @@ export const PermissionsGrid = () => {
         valueGetter: (_value, row) => getAdminPermissionScopeLabel(row.scope ?? getAdminPermissionScope(row.code), t),
         renderCell: (params) => {
           const scope = params.row.scope ?? getAdminPermissionScope(params.row.code);
-          const badge = USER_PERMISSION_SCOPE_BADGE_CONFIG[scope as keyof typeof USER_PERMISSION_SCOPE_BADGE_CONFIG] ?? {
+          const badge = USER_PERMISSION_SCOPE_BADGE_CONFIG[
+            scope as keyof typeof USER_PERMISSION_SCOPE_BADGE_CONFIG
+          ] ?? {
             color: 'default',
             icon: 'solar:key-bold-duotone',
           };
@@ -136,11 +113,12 @@ export const PermissionsGrid = () => {
         valueGetter: (_value, row) => getAdminPermissionActionLabel(getAdminPermissionAction(row.code), t),
         renderCell: (params) => {
           const action = getAdminPermissionAction(params.row.code);
-          const badge =
-            USER_PERMISSION_ACTION_BADGE_CONFIG[action as keyof typeof USER_PERMISSION_ACTION_BADGE_CONFIG] ?? {
-              color: 'default',
-              icon: 'solar:key-bold-duotone',
-            };
+          const badge = USER_PERMISSION_ACTION_BADGE_CONFIG[
+            action as keyof typeof USER_PERMISSION_ACTION_BADGE_CONFIG
+          ] ?? {
+            color: 'default',
+            icon: 'solar:key-bold-duotone',
+          };
 
           return (
             <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
@@ -167,26 +145,6 @@ export const PermissionsGrid = () => {
     }),
     [t],
   );
-
-  const handleSearchChange = (value: string) => {
-    setSearch(value.trim());
-    setPaginationModel((prev) => ({ ...prev, page: 0 }));
-  };
-
-  const handleClearSearch = () => {
-    setSearch('');
-    setPaginationModel((prev) => ({ ...prev, page: 0 }));
-  };
-
-  const handleScopesApply = (values: string[]) => {
-    setScopes(values);
-    setPaginationModel((prev) => ({ ...prev, page: 0 }));
-  };
-
-  const handleActionsApply = (values: string[]) => {
-    setActions(values);
-    setPaginationModel((prev) => ({ ...prev, page: 0 }));
-  };
 
   return (
     <Card
@@ -236,15 +194,9 @@ export const PermissionsGrid = () => {
           ),
           toolbar: () => (
             <PermissionsGridToolbar
-              search={search}
-              onSearchChange={handleSearchChange}
-              onClearSearch={handleClearSearch}
-              scopes={scopes}
-              onScopesApply={handleScopesApply}
-              actions={actions}
-              onActionsApply={handleActionsApply}
-              scopeOptions={scopeOptions}
-              actionOptions={actionOptions}
+              permissions={permissionsOptionsQuery.data ?? []}
+              value={filters}
+              onChange={handleFiltersChange}
               columns={columns}
               columnVisibilityModel={columnVisibilityModel}
               defaultColumnVisibilityModel={DEFAULT_COLUMN_VISIBILITY_MODEL}
@@ -266,4 +218,4 @@ export const PermissionsGrid = () => {
       />
     </Card>
   );
-}
+};

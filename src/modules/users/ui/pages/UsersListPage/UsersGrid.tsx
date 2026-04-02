@@ -15,7 +15,6 @@ import { RouterPathHelper } from 'app/routes';
 import type { AdminUser } from 'shared/api/admin-types';
 import { useRouter } from 'shared/hooks/router';
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState, withDetailLink } from 'shared/ui/CustomDataGrid';
-import { type FilterOption } from 'shared/ui/Filters';
 import { Iconify } from 'shared/ui/Iconify';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 
@@ -30,7 +29,7 @@ import {
 } from '../../../application';
 import type { UserManagementSurface } from '../../../domain';
 
-import { UsersGridToolbar } from './UsersGridToolbar';
+import { DEFAULT_USERS_GRID_FILTERS, type UsersGridFilters, UsersGridToolbar } from './UsersGridToolbar';
 
 const DEFAULT_PAGINATION_MODEL: GridPaginationModel = { page: 0, pageSize: 10 };
 const DEFAULT_COLUMN_VISIBILITY_MODEL: GridColumnVisibilityModel = {};
@@ -54,9 +53,7 @@ export function UsersGrid({ surface = 'user' }: UsersGridProps) {
   const { t: tCommon } = useTranslate('common');
   const router = useRouter();
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_PAGINATION_MODEL);
-  const [search, setSearch] = useState('');
-  const [roleIds, setRoleIds] = useState<string[]>([]);
-  const [statuses, setStatuses] = useState<string[]>([]);
+  const [filters, setFilters] = useState<UsersGridFilters>(DEFAULT_USERS_GRID_FILTERS);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(
     DEFAULT_COLUMN_VISIBILITY_MODEL,
   );
@@ -67,9 +64,9 @@ export function UsersGrid({ surface = 'user' }: UsersGridProps) {
   const queryParams = {
     page: paginationModel.page + 1,
     pageSize: paginationModel.pageSize,
-    search: search || undefined,
-    roleIdIn: roleIds.length ? roleIds.join(',') : undefined,
-    employmentStatusIn: statuses.length ? statuses.join(',') : undefined,
+    search: filters.search || undefined,
+    roleIdIn: filters.roleIds.length ? filters.roleIds.join(',') : undefined,
+    employmentStatusIn: filters.statuses.length ? filters.statuses.join(',') : undefined,
     ordering: getOrderingFromSortModel(sortModel),
   };
   const usersListQuery = useGetUsersQuery(queryParams, { enabled: surface === 'user' });
@@ -81,17 +78,13 @@ export function UsersGrid({ surface = 'user' }: UsersGridProps) {
   const archiveEmployeeMutation = useArchiveEmployeeMutation();
   const archiveUserMutation = useArchiveUserMutation();
   const archiveMutation = surface === 'employee' ? archiveEmployeeMutation : archiveUserMutation;
-  const hasActiveFilters = Boolean(search || roleIds.length || statuses.length);
+  const hasActiveFilters = Boolean(filters.search || filters.roleIds.length || filters.statuses.length);
 
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
-  const roleOptions = useMemo<FilterOption[]>(
-    () =>
-      (rolesQuery.data ?? []).map((role) => ({
-        value: role.id,
-        label: role.name,
-      })),
-    [rolesQuery.data],
-  );
+  const handleFiltersChange = useCallback((next: UsersGridFilters) => {
+    setFilters(next);
+    setPaginationModel((prev) => ({ ...prev, page: 0 }));
+  }, []);
 
   const viewHref = useCallback(
     (id: string) => (surface === 'employee' ? RouterPathHelper.employeeView(id) : RouterPathHelper.userView(id)),
@@ -102,41 +95,45 @@ export function UsersGrid({ surface = 'user' }: UsersGridProps) {
     [surface],
   );
 
-  const columns = useMemo<GridColDef<AdminUser>[]>(
-    () => [
-      ...(surface === 'employee'
-        ? []
-        : [
-            withDetailLink(
-              {
-                field: 'username',
-                headerName: t('fields.username'),
-                minWidth: 180,
-                flex: 0.95,
-              },
-              (row) => viewHref(row.id),
-            ),
-          ]),
-      ...(surface === 'employee'
-        ? [
-            withDetailLink(
-              {
-                field: 'fullName',
-                headerName: t('fields.fullName'),
-                minWidth: 220,
-                flex: 1.2,
-              },
-              (row) => viewHref(row.id),
-            ),
-          ]
-        : [
-            {
-              field: 'fullName',
-              headerName: t('fields.fullName'),
-              minWidth: 220,
-              flex: 1.2,
-            },
-          ]),
+  const columns = useMemo<GridColDef<AdminUser>[]>(() => {
+    const nextColumns: GridColDef<AdminUser>[] = [];
+
+    if (surface !== 'employee') {
+      nextColumns.push(
+        withDetailLink<AdminUser>(
+          {
+            field: 'username',
+            headerName: t('fields.username'),
+            minWidth: 180,
+            flex: 0.95,
+          },
+          (row) => viewHref(row.id),
+        ),
+      );
+    }
+
+    if (surface === 'employee') {
+      nextColumns.push(
+        withDetailLink<AdminUser>(
+          {
+            field: 'fullName',
+            headerName: t('fields.fullName'),
+            minWidth: 220,
+            flex: 1.2,
+          },
+          (row) => viewHref(row.id),
+        ),
+      );
+    } else {
+      nextColumns.push({
+        field: 'fullName',
+        headerName: t('fields.fullName'),
+        minWidth: 220,
+        flex: 1.2,
+      });
+    }
+
+    nextColumns.push(
       {
         field: 'role',
         headerName: t('fields.role'),
@@ -221,9 +218,10 @@ export function UsersGrid({ surface = 'user' }: UsersGridProps) {
           return actions;
         },
       },
-    ],
-    [archiveMutation, editHref, surface, t, tCommon, toggleStatusMutation, viewHref],
-  );
+    );
+
+    return nextColumns;
+  }, [archiveMutation, editHref, surface, t, tCommon, toggleStatusMutation, viewHref]);
 
   const emptyStateMessages = useMemo(
     () => ({
@@ -242,26 +240,6 @@ export function UsersGrid({ surface = 'user' }: UsersGridProps) {
     }),
     [surface, t],
   );
-
-  const handleSearchChange = (value: string) => {
-    setSearch(value.trim());
-    setPaginationModel((prev) => ({ ...prev, page: 0 }));
-  };
-
-  const handleClearSearch = () => {
-    setSearch('');
-    setPaginationModel((prev) => ({ ...prev, page: 0 }));
-  };
-
-  const handleRoleIdsApply = (values: string[]) => {
-    setRoleIds(values);
-    setPaginationModel((prev) => ({ ...prev, page: 0 }));
-  };
-
-  const handleStatusesApply = (values: string[]) => {
-    setStatuses(values);
-    setPaginationModel((prev) => ({ ...prev, page: 0 }));
-  };
 
   return (
     <Card
@@ -312,14 +290,9 @@ export function UsersGrid({ surface = 'user' }: UsersGridProps) {
           toolbar: () => (
             <UsersGridToolbar
               surface={surface}
-              search={search}
-              onSearchChange={handleSearchChange}
-              onClearSearch={handleClearSearch}
-              roleIds={roleIds}
-              onRoleIdsApply={handleRoleIdsApply}
-              statuses={statuses}
-              onStatusesApply={handleStatusesApply}
-              roleOptions={roleOptions}
+              roles={rolesQuery.data ?? []}
+              value={filters}
+              onChange={handleFiltersChange}
               columns={columns}
               columnVisibilityModel={columnVisibilityModel}
               defaultColumnVisibilityModel={DEFAULT_COLUMN_VISIBILITY_MODEL}

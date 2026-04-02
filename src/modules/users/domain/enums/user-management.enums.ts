@@ -2,6 +2,8 @@ export const USER_EMPLOYMENT_STATUS_VALUES = ['active', 'inactive', 'archived'] 
 
 export const USER_ROLE_TYPE_VALUES = ['system', 'custom'] as const;
 
+export const USER_SALARY_TYPE_VALUES = ['hourly', 'daily', 'kpi'] as const;
+
 export const USER_PERMISSION_SCOPE_BADGE_CONFIG = {
   admin: { color: 'primary', icon: 'solar:key-bold-duotone' },
   pos: { color: 'warning', icon: 'solar:shop-2-bold-duotone' },

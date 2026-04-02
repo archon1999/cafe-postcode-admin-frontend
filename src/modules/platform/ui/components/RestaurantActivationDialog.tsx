@@ -12,26 +12,18 @@ import { z } from 'zod';
 
 import { useTranslate } from 'app/providers/locales';
 import {
+  ORGANIZATION_FEATURE_KITCHEN_MODE_VALUES,
+  ORGANIZATION_FEATURE_ORDER_ENTRY_MODE_VALUES,
+  ORGANIZATION_FEATURE_ROLE_VALUES,
+} from 'modules/organizations/domain';
+import {
   getFeatureKitchenModeTranslationKey,
   getFeatureOrderEntryModeTranslationKey,
 } from 'modules/organizations/ui/lib/presenters';
 import { useGetRolesQuery } from 'modules/users/application';
-import type { AdminRestaurantActivationPayload, AdminTariff } from 'shared/api/admin-types';
+import type { AdminRestaurantActivationPayload, AdminRole, AdminTariff } from 'shared/api/admin-types';
 import { Form, RHFDatePicker, RHFMultiSelect, RHFSelect, RHFSumCurrencyField, RHFSwitch } from 'shared/ui/HookForm';
 import { getCurrentTashkentTime } from 'shared/utils/dayjs';
-
-const ORDER_ENTRY_MODES = ['hall', 'cashier_builder'] as const;
-const KITCHEN_MODES = ['display', 'printer', 'both'] as const;
-const ROLE_OPTIONS = [
-  'admin',
-  'owner',
-  'manager',
-  'waiter',
-  'cashier',
-  'chef',
-  'barman',
-  'universal_operator',
-] as const;
 
 const activationSchema = z
   .object({
@@ -44,8 +36,8 @@ const activationSchema = z
     kitchenEnabled: z.boolean().default(true),
     cashierEnabled: z.boolean().default(true),
     ownerDashboardEnabled: z.boolean().default(true),
-    orderEntryMode: z.enum(['hall', 'cashier_builder']).default('hall'),
-    kitchenMode: z.enum(['display', 'printer', 'both']).default('display'),
+    orderEntryMode: z.enum(ORGANIZATION_FEATURE_ORDER_ENTRY_MODE_VALUES).default('hall'),
+    kitchenMode: z.enum(ORGANIZATION_FEATURE_KITCHEN_MODE_VALUES).default('display'),
     enabledRoles: z.array(z.string()).default(['owner', 'admin', 'manager']),
   })
   .superRefine((values, ctx) => {
@@ -66,9 +58,10 @@ const activationSchema = z
     }
   });
 
-type ActivationValues = z.infer<typeof activationSchema>;
+type ActivationFormValues = z.input<typeof activationSchema>;
+type ActivationValues = z.output<typeof activationSchema>;
 
-const defaultValues: ActivationValues = {
+const defaultValues: ActivationFormValues = {
   tariffId: '',
   customTariff: false,
   monthlyPrice: '',
@@ -113,20 +106,20 @@ export function RestaurantActivationDialog({
 }: RestaurantActivationDialogProps) {
   const { t } = useTranslate('platform');
   const { t: tOrganizations } = useTranslate('organizations');
-  const rolesQuery = useGetRolesQuery({ enabled: open });
+  const rolesQuery = useGetRolesQuery('user', { enabled: open });
 
-  const methods = useForm<ActivationValues>({
+  const methods = useForm<ActivationFormValues, unknown, ActivationValues>({
     resolver: zodResolver(activationSchema),
     defaultValues,
   });
 
-  const customTariff = methods.watch('customTariff');
-  const hallEnabled = methods.watch('hallEnabled');
-  const kitchenEnabled = methods.watch('kitchenEnabled');
-  const cashierEnabled = methods.watch('cashierEnabled');
-  const orderEntryMode = methods.watch('orderEntryMode');
-  const kitchenMode = methods.watch('kitchenMode');
-  const enabledRoles = methods.watch('enabledRoles');
+  const customTariff = methods.watch('customTariff') ?? defaultValues.customTariff;
+  const hallEnabled = methods.watch('hallEnabled') ?? defaultValues.hallEnabled;
+  const kitchenEnabled = methods.watch('kitchenEnabled') ?? defaultValues.kitchenEnabled;
+  const cashierEnabled = methods.watch('cashierEnabled') ?? defaultValues.cashierEnabled;
+  const orderEntryMode = methods.watch('orderEntryMode') ?? defaultValues.orderEntryMode;
+  const kitchenMode = methods.watch('kitchenMode') ?? defaultValues.kitchenMode;
+  const enabledRoles = methods.watch('enabledRoles') ?? defaultValues.enabledRoles ?? [];
 
   useEffect(() => {
     if (!open) {
@@ -145,13 +138,13 @@ export function RestaurantActivationDialog({
     [tariffs],
   );
 
-  const roleByCode = useMemo(
-    () => new Map((rolesQuery.data ?? []).filter((role) => role.isSystem).map((role) => [role.code, role])),
+  const roleByCode = useMemo<Map<string, AdminRole>>(
+    () => new Map((rolesQuery.data ?? []).filter((role) => role.isSystem).map((role) => [role.code, role] as const)),
     [rolesQuery.data],
   );
   const availableRoleOptions = useMemo(
     () =>
-      ROLE_OPTIONS.filter((role) => {
+      ORGANIZATION_FEATURE_ROLE_VALUES.filter((role) => {
         if (role === 'waiter') {
           return hallEnabled;
         }
@@ -169,7 +162,10 @@ export function RestaurantActivationDialog({
     [cashierEnabled, hallEnabled, kitchenEnabled],
   );
   const filteredRoles = useMemo(
-    () => enabledRoles.filter((role) => availableRoleOptions.includes(role as (typeof ROLE_OPTIONS)[number])),
+    () =>
+      enabledRoles.filter((role) =>
+        availableRoleOptions.includes(role as (typeof ORGANIZATION_FEATURE_ROLE_VALUES)[number]),
+      ),
     [availableRoleOptions, enabledRoles],
   );
   const enabledRoleOptions = useMemo(
@@ -205,10 +201,10 @@ export function RestaurantActivationDialog({
     }
   }, [enabledRoles, filteredRoles, methods]);
 
-  const handleSubmit = methods.handleSubmit(async (values) => {
+  const handleSubmit = methods.handleSubmit(async (values: ActivationValues) => {
     const selectedRoles = values.enabledRoles
       .map((roleCode) => roleByCode.get(roleCode))
-      .filter((role): role is NonNullable<typeof role> => Boolean(role));
+      .filter((role): role is AdminRole => Boolean(role));
     const permissionIds = [
       ...new Set(selectedRoles.flatMap((role) => role.permissions.map((permission) => permission.id))),
     ];
@@ -276,7 +272,7 @@ export function RestaurantActivationDialog({
                             })
                           : undefined
                     }>
-                    {ORDER_ENTRY_MODES.map((mode) => (
+                    {ORGANIZATION_FEATURE_ORDER_ENTRY_MODE_VALUES.map((mode) => (
                       <MenuItem
                         key={mode}
                         value={mode}
@@ -296,7 +292,7 @@ export function RestaurantActivationDialog({
                           })
                         : undefined
                     }>
-                    {KITCHEN_MODES.map((mode) => (
+                    {ORGANIZATION_FEATURE_KITCHEN_MODE_VALUES.map((mode) => (
                       <MenuItem key={mode} value={mode}>
                         {tOrganizations(getFeatureKitchenModeTranslationKey(mode))}
                       </MenuItem>

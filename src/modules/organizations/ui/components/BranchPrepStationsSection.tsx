@@ -35,6 +35,7 @@ import {
   useGetPrepStationsListQuery,
   useUpdatePrepStationMutation,
 } from '../../application';
+import { ORGANIZATION_PREP_STATION_KIND_VALUES } from '../../domain';
 
 import { BranchManagementAccordion } from './BranchManagementAccordion';
 import { OrganizationsGridToolbar } from './OrganizationsGridToolbar';
@@ -42,11 +43,9 @@ import { OrganizationsGridToolbar } from './OrganizationsGridToolbar';
 const DEFAULT_PAGINATION_MODEL: GridPaginationModel = { page: 0, pageSize: 10 };
 const DEFAULT_COLUMN_VISIBILITY_MODEL: GridColumnVisibilityModel = {};
 const DEFAULT_SELECTION_MODEL: GridRowSelectionModel = { type: 'include', ids: new Set() };
-const PREP_STATION_KINDS = ['kitchen', 'bar', 'other'] as const;
-
 const schema = z.object({
   name: z.string().min(1),
-  kind: z.enum(PREP_STATION_KINDS),
+  kind: z.enum(ORGANIZATION_PREP_STATION_KIND_VALUES),
   isActive: z.boolean(),
 });
 
@@ -103,7 +102,7 @@ function BranchPrepStationDialog({
           <Stack spacing={3} sx={{ pt: 1 }}>
             <RHFTextField<Values> name="name" label={t('fields.name')} />
             <RHFSelect<Values> name="kind" label={t('fields.kind')}>
-              {PREP_STATION_KINDS.map((kind) => (
+              {ORGANIZATION_PREP_STATION_KIND_VALUES.map((kind) => (
                 <MenuItem key={kind} value={kind}>
                   {t(`prepStationKinds.${kind}`)}
                 </MenuItem>
@@ -164,7 +163,8 @@ export function BranchPrepStationsSection({
   });
 
   const kindOptions = useMemo<FilterOption[]>(
-    () => PREP_STATION_KINDS.map((kind) => ({ value: kind, label: t(`prepStationKinds.${kind}`) })),
+    () =>
+      ORGANIZATION_PREP_STATION_KIND_VALUES.map((kind) => ({ value: kind, label: t(`prepStationKinds.${kind}`) })),
     [t],
   );
   const statusOptions = useMemo<FilterOption[]>(

@@ -17,6 +17,11 @@ import { Form } from 'shared/ui/HookForm';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 
 import { useGetRestaurantFeatureConfigQuery, useUpsertRestaurantFeatureConfigMutation } from '../../../application';
+import {
+  ORGANIZATION_FEATURE_KITCHEN_MODE_VALUES,
+  ORGANIZATION_FEATURE_ORDER_ENTRY_MODE_VALUES,
+  ORGANIZATION_FEATURE_ROLE_VALUES,
+} from '../../../domain';
 
 import { FeatureConfigFormFields } from './FeatureConfigFormFields';
 
@@ -25,25 +30,12 @@ const schema = z.object({
   kitchenEnabled: z.boolean(),
   cashierEnabled: z.boolean(),
   ownerDashboardEnabled: z.boolean(),
-  orderEntryMode: z.enum(['hall', 'cashier_builder']),
-  kitchenMode: z.enum(['display', 'printer', 'both']),
+  orderEntryMode: z.enum(ORGANIZATION_FEATURE_ORDER_ENTRY_MODE_VALUES),
+  kitchenMode: z.enum(ORGANIZATION_FEATURE_KITCHEN_MODE_VALUES),
   enabledRoles: z.array(z.string()),
 });
 
 export type Values = z.infer<typeof schema>;
-
-const ORDER_ENTRY_MODES = ['hall', 'cashier_builder'] as const;
-const KITCHEN_MODES = ['display', 'printer', 'both'] as const;
-const ROLE_OPTIONS = [
-  'admin',
-  'owner',
-  'manager',
-  'waiter',
-  'cashier',
-  'chef',
-  'barman',
-  'universal_operator',
-] as const;
 
 const DEFAULT_VALUES: Values = {
   hallEnabled: true,
@@ -78,7 +70,7 @@ const FeatureConfigFormPage = () => {
   const query = useGetRestaurantFeatureConfigQuery(restaurantId ?? '', {
     enabled: Boolean(restaurantId) && canAccessFeatureConfig,
   });
-  const rolesQuery = useGetRolesQuery({ enabled: canAccessFeatureConfig });
+  const rolesQuery = useGetRolesQuery('user', { enabled: canAccessFeatureConfig });
   const upsertMutation = useUpsertRestaurantFeatureConfigMutation(restaurantId ?? '');
 
   useRedirectOnNotFound(query.error, Boolean(restaurantId));
@@ -101,7 +93,7 @@ const FeatureConfigFormPage = () => {
   const kitchenMode = methods.watch('kitchenMode');
   const enabledRoles = methods.watch('enabledRoles');
 
-  const availableRoleOptions = ROLE_OPTIONS.filter((role) => {
+  const availableRoleOptions = ORGANIZATION_FEATURE_ROLE_VALUES.filter((role) => {
     if (role === 'waiter') {
       return hallEnabled;
     }
@@ -118,7 +110,7 @@ const FeatureConfigFormPage = () => {
   });
 
   const filteredRoles = enabledRoles.filter((role) =>
-    availableRoleOptions.includes(role as (typeof ROLE_OPTIONS)[number]),
+    availableRoleOptions.includes(role as (typeof ORGANIZATION_FEATURE_ROLE_VALUES)[number]),
   );
   const rolesByCode = new Map((rolesQuery.data ?? []).map((role) => [role.code, role.name]));
 
@@ -234,9 +226,9 @@ const FeatureConfigFormPage = () => {
               hallEnabled={hallEnabled}
               kitchenEnabled={kitchenEnabled}
               kitchenModeHelperText={kitchenModeHelperText}
-              kitchenModes={KITCHEN_MODES}
+              kitchenModes={ORGANIZATION_FEATURE_KITCHEN_MODE_VALUES}
               orderEntryModeHelperText={orderEntryModeHelperText}
-              orderEntryModes={ORDER_ENTRY_MODES}
+              orderEntryModes={ORGANIZATION_FEATURE_ORDER_ENTRY_MODE_VALUES}
               ownerDashboardEnabled={ownerDashboardEnabled}
               rolesByCode={rolesByCode}
               t={t}

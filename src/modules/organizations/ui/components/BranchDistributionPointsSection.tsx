@@ -37,6 +37,7 @@ import {
   useGetOrganizationsHallsQuery,
   useUpdateDistributionPointMutation,
 } from '../../application';
+import { ORGANIZATION_DISTRIBUTION_POINT_KIND_VALUES } from '../../domain';
 import { getDistributionPointKindTranslationKey } from '../lib/presenters';
 
 import { BranchManagementAccordion } from './BranchManagementAccordion';
@@ -45,11 +46,9 @@ import { OrganizationsGridToolbar } from './OrganizationsGridToolbar';
 const DEFAULT_PAGINATION_MODEL: GridPaginationModel = { page: 0, pageSize: 10 };
 const DEFAULT_COLUMN_VISIBILITY_MODEL: GridColumnVisibilityModel = {};
 const DEFAULT_SELECTION_MODEL: GridRowSelectionModel = { type: 'include', ids: new Set() };
-const DISTRIBUTION_POINT_KINDS = ['hall', 'online', 'takeaway', 'delivery'] as const;
-
 const schema = z.object({
   name: z.string().min(1),
-  kind: z.enum(DISTRIBUTION_POINT_KINDS),
+  kind: z.enum(ORGANIZATION_DISTRIBUTION_POINT_KIND_VALUES),
   integrationChannel: z.string(),
   assignedHall: z.string().optional(),
   isActive: z.boolean(),
@@ -118,7 +117,7 @@ function BranchDistributionPointDialog({
           <Stack spacing={3} sx={{ pt: 1 }}>
             <RHFTextField<Values> name="name" label={t('fields.name')} />
             <RHFSelect<Values> name="kind" label={t('fields.kind')}>
-              {DISTRIBUTION_POINT_KINDS.map((kind) => (
+              {ORGANIZATION_DISTRIBUTION_POINT_KIND_VALUES.map((kind) => (
                 <MenuItem key={kind} value={kind}>
                   {t(getDistributionPointKindTranslationKey(kind))}
                 </MenuItem>
@@ -192,7 +191,10 @@ export function BranchDistributionPointsSection({
 
   const kindOptions = useMemo<FilterOption[]>(
     () =>
-      DISTRIBUTION_POINT_KINDS.map((kind) => ({ value: kind, label: t(getDistributionPointKindTranslationKey(kind)) })),
+      ORGANIZATION_DISTRIBUTION_POINT_KIND_VALUES.map((kind) => ({
+        value: kind,
+        label: t(getDistributionPointKindTranslationKey(kind)),
+      })),
     [t],
   );
   const statusOptions = useMemo<FilterOption[]>(
