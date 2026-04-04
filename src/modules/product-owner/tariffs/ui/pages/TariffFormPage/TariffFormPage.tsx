@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -22,18 +22,22 @@ import { TariffFormFields } from './TariffFormFields';
 
 const schema = z.object({
   name: z.string().min(1),
-  classification: z.enum(['basic', 'standard', 'premium', 'custom']),
   description: z.string().default(''),
   monthlyPrice: z.union([z.number(), z.literal('')]).default(''),
   yearlyPrice: z.union([z.number(), z.literal('')]).default(''),
   isActive: z.boolean().default(true),
-  permissionIds: z.array(z.string()).default([]),
   allowedRoleIds: z.array(z.string()).default([]),
-  operationalSettingsText: z.string().default(''),
+  permissionIds: z.array(z.string()).default([]),
 });
 
 type TariffFormValues = z.input<typeof schema>;
 export type Values = z.output<typeof schema>;
+
+const PLATFORM_ROLE_CODES = new Set(['product_owner', 'business_partner']);
+
+function uniquePermissionIds(permissionIds: string[]) {
+  return [...new Set(permissionIds)];
+}
 
 const TariffFormPage = () => {
   const { t } = useTranslate('platform');
@@ -53,16 +57,39 @@ const TariffFormPage = () => {
     resolver: zodResolver(schema),
     defaultValues: {
       name: '',
-      classification: 'basic',
       description: '',
       monthlyPrice: '',
       yearlyPrice: '',
       isActive: true,
-      permissionIds: [],
       allowedRoleIds: [],
-      operationalSettingsText: '',
+      permissionIds: [],
     },
   });
+  const previousDerivedPermissionIdsRef = useRef<string[]>([]);
+
+  const roles = useMemo(
+    () =>
+      (rolesQuery.data ?? []).filter(
+        (role) => role.isSystem && role.code && !PLATFORM_ROLE_CODES.has(role.code),
+      ),
+    [rolesQuery.data],
+  );
+
+  const selectedRoleIds = methods.watch('allowedRoleIds');
+  const isAllowedRoleSelectionDirty = Boolean(methods.formState.dirtyFields.allowedRoleIds);
+
+  const derivedPermissionIds = useMemo(() => {
+    const permissionIds = new Set<string>();
+    for (const role of roles) {
+      if (!selectedRoleIds.includes(role.id)) {
+        continue;
+      }
+      for (const permission of role.permissions) {
+        permissionIds.add(permission.id);
+      }
+    }
+    return [...permissionIds];
+  }, [roles, selectedRoleIds]);
 
   useEffect(() => {
     if (profile && !canManagePlatform) {
@@ -71,57 +98,54 @@ const TariffFormPage = () => {
   }, [canManagePlatform, profile, replace]);
 
   useEffect(() => {
-    if (!query.data) return;
+    if (!query.data) {
+      return;
+    }
 
     methods.reset({
       name: query.data.name,
-      classification: query.data.classification,
       description: query.data.description,
       monthlyPrice: Number(query.data.monthlyPrice),
       yearlyPrice: Number(query.data.yearlyPrice),
       isActive: query.data.isActive,
-      permissionIds: query.data.permissions.map((permission) => permission.id),
       allowedRoleIds: query.data.allowedRoles.map((role) => role.id),
-      operationalSettingsText: JSON.stringify(query.data.operationalSettings ?? {}, null, 2),
+      permissionIds: query.data.permissions.map((permission) => permission.id),
     });
   }, [methods, query.data]);
 
-  const roleOptions = useMemo(
-    () =>
-      (rolesQuery.data ?? [])
-        .filter((role) => role.isSystem)
-        .map((role) => ({
-          value: role.id,
-          label: role.name,
-        })),
-    [rolesQuery.data],
-  );
-
-  const onSubmit = methods.handleSubmit(async (values: Values) => {
-    let operationalSettings: Record<string, unknown> = {};
-
-    if (values.operationalSettingsText.trim()) {
-      try {
-        operationalSettings = JSON.parse(values.operationalSettingsText) as Record<string, unknown>;
-      } catch {
-        methods.setError('operationalSettingsText', {
-          type: 'validate',
-          message: t('validation.invalidJson'),
-        });
-        return;
-      }
+  useEffect(() => {
+    if (!isAllowedRoleSelectionDirty) {
+      previousDerivedPermissionIdsRef.current = derivedPermissionIds;
+      return;
     }
 
+    const previousDerivedPermissionIds = previousDerivedPermissionIdsRef.current;
+    const newlyDerivedPermissionIds = derivedPermissionIds.filter(
+      (permissionId) => !previousDerivedPermissionIds.includes(permissionId),
+    );
+
+    previousDerivedPermissionIdsRef.current = derivedPermissionIds;
+
+    if (newlyDerivedPermissionIds.length === 0) {
+      return;
+    }
+
+    const currentPermissionIds = methods.getValues('permissionIds');
+    methods.setValue('permissionIds', uniquePermissionIds([...currentPermissionIds, ...newlyDerivedPermissionIds]), {
+      shouldDirty: true,
+      shouldValidate: false,
+    });
+  }, [derivedPermissionIds, isAllowedRoleSelectionDirty, methods]);
+
+  const onSubmit = methods.handleSubmit(async (values: Values) => {
     const payload = {
       name: values.name.trim(),
-      classification: values.classification,
       description: values.description.trim(),
       monthlyPrice: values.monthlyPrice === '' ? 0 : values.monthlyPrice,
       yearlyPrice: values.yearlyPrice === '' ? 0 : values.yearlyPrice,
       isActive: values.isActive,
-      permissionIds: values.permissionIds,
       allowedRoleIds: values.allowedRoleIds,
-      operationalSettings,
+      permissionIds: uniquePermissionIds(values.permissionIds),
     };
 
     if (isEditMode && id) {
@@ -149,7 +173,12 @@ const TariffFormPage = () => {
       <Card sx={{ p: 3 }}>
         <Form methods={methods} onSubmit={onSubmit}>
           <Stack spacing={3}>
-            <TariffFormFields canManagePlatform={canManagePlatform} roleOptions={roleOptions} t={t} />
+            <TariffFormFields
+              canManagePlatform={canManagePlatform}
+              derivedPermissionCount={derivedPermissionIds.length}
+              roleOptions={roles}
+              t={t}
+            />
             <FormActions
               isSubmitting={methods.formState.isSubmitting}
               submitLabel={isEditMode ? t('actions.save') : t('actions.create')}

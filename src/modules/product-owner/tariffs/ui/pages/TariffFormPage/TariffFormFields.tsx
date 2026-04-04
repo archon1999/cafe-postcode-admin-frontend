@@ -1,34 +1,32 @@
 import Box from '@mui/material/Box';
-import MenuItem from '@mui/material/MenuItem';
 
 import { PermissionsSelect } from 'modules/user-management/permissions/ui/components/PermissionsSelect/PermissionsSelect';
-import { RHFMultiSelect, RHFSelect, RHFSumCurrencyField, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
+import {
+  RolesSelect,
+  type RoleSelectOption,
+} from 'modules/user-management/roles/ui/components/RolesSelect/RolesSelect';
+import { RHFSumCurrencyField, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
 
 import type { Values } from './TariffFormPage';
 
 type TranslateFn = (key: string, options?: Record<string, unknown>) => string;
 
-type Option = {
-  label: string;
-  value: string;
-};
-
 type TariffFormFieldsProps = {
   canManagePlatform: boolean;
-  roleOptions: Option[];
+  derivedPermissionCount: number;
+  roleOptions: RoleSelectOption[];
   t: TranslateFn;
 };
 
-export const TariffFormFields = ({ canManagePlatform, roleOptions, t }: TariffFormFieldsProps) => (
+export const TariffFormFields = ({
+  canManagePlatform,
+  derivedPermissionCount,
+  roleOptions,
+  t,
+}: TariffFormFieldsProps) => (
   <>
     <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' }, gap: 3 }}>
       <RHFTextField<Values> name="name" label={t('fields.name')} />
-      <RHFSelect<Values> name="classification" label={t('fields.classification')}>
-        <MenuItem value="basic">{t('classifications.basic')}</MenuItem>
-        <MenuItem value="standard">{t('classifications.standard')}</MenuItem>
-        <MenuItem value="premium">{t('classifications.premium')}</MenuItem>
-        <MenuItem value="custom">{t('classifications.custom')}</MenuItem>
-      </RHFSelect>
       <RHFSumCurrencyField<Values> name="monthlyPrice" label={t('fields.monthlyPrice')} />
       <RHFSumCurrencyField<Values> name="yearlyPrice" label={t('fields.yearlyPrice')} />
       <RHFTextField<Values>
@@ -38,21 +36,20 @@ export const TariffFormFields = ({ canManagePlatform, roleOptions, t }: TariffFo
         rows={4}
         sx={{ gridColumn: { md: '1 / -1' } }}
       />
-      <PermissionsSelect<Values> name="permissionIds" label={t('fields.permissions')} enabled={canManagePlatform} />
-      <RHFMultiSelect<Values>
+      <RolesSelect<Values>
         name="allowedRoleIds"
         label={t('fields.allowedRoles')}
         options={roleOptions}
-        checkbox
-        chip
-        placeholder={t('labels.notSelected')}
+        enabled={canManagePlatform}
       />
-      <RHFTextField<Values>
-        name="operationalSettingsText"
-        label={t('fields.operationalSettings')}
-        multiline
-        rows={6}
-        sx={{ gridColumn: { md: '1 / -1' } }}
+      <PermissionsSelect<Values>
+        name="permissionIds"
+        label={t('fields.permissions')}
+        enabled={canManagePlatform}
+        helperText={t('labels.permissionsAutoSelected', {
+          count: derivedPermissionCount,
+          defaultValue: `${derivedPermissionCount} ta ruxsat tanlangan rollardan avtomatik belgilandi, xohlasangiz qo'lda o'zgartiring`,
+        })}
       />
     </Box>
 

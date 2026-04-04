@@ -4,17 +4,17 @@ import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useTranslate } from 'app/providers/locales';
-import { RoutePath, canAccessMyRestaurant } from 'app/routes';
+import { RoutePath, canAccessMyRestaurant, RouterPathHelper } from 'app/routes';
 import { useCurrentUser } from 'modules/auth';
 import { useRouter } from 'shared/hooks/router';
 import { Iconify } from 'shared/ui/Iconify';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 import { RouterLink } from 'shared/ui/RouterLink';
 
-import { useGetRestaurantByIdQuery } from '../../../application';
+import { useGetMyRestaurantQuery } from '../../../application';
 import { MyRestaurantSectionLayout } from '../../components/MyRestaurantSectionLayout';
 
 const MyRestaurantGeneralPage = () => {
@@ -24,8 +24,9 @@ const MyRestaurantGeneralPage = () => {
   const { replace } = useRouter();
   const restaurantId = profile?.restaurantId ?? null;
   const canManageMyRestaurant = canAccessMyRestaurant(profile);
+  const [isAuthCodeVisible, setIsAuthCodeVisible] = useState(false);
 
-  const restaurantQuery = useGetRestaurantByIdQuery(restaurantId ?? '', {
+  const restaurantQuery = useGetMyRestaurantQuery({
     enabled: Boolean(restaurantId && canManageMyRestaurant),
   });
 
@@ -109,23 +110,33 @@ const MyRestaurantGeneralPage = () => {
                 </Typography>
                 <Typography variant="body2">{restaurant.currency || 'UZS'}</Typography>
               </Stack>
+              <Stack spacing={0.75}>
+                <Typography variant="caption" color="text.secondary">
+                  {t('fields.authCode', { defaultValue: 'Aktivatsiya kodi' })}
+                </Typography>
+                <Stack direction="row" spacing={1.5} alignItems="center" flexWrap="wrap">
+                  <Typography variant="body2" sx={{ letterSpacing: '0.18em', fontWeight: 700 }}>
+                    {isAuthCodeVisible ? (restaurant.authCode ?? '------') : '***'}
+                  </Typography>
+                  <Button
+                    size="small"
+                    color="inherit"
+                    startIcon={
+                      <Iconify icon={isAuthCodeVisible ? 'solar:eye-closed-bold' : 'solar:eye-bold'} width={18} />
+                    }
+                    onClick={() => setIsAuthCodeVisible((prev) => !prev)}>
+                    {isAuthCodeVisible
+                      ? t('actions.hideAuthCode', { defaultValue: 'Yashirish' })
+                      : t('actions.showAuthCode', { defaultValue: "Ko'rsatish" })}
+                  </Button>
+                </Stack>
+              </Stack>
               <Stack spacing={0.5} sx={{ gridColumn: { md: '1 / -1' } }}>
                 <Typography variant="caption" color="text.secondary">
                   {t('fields.address')}
                 </Typography>
                 <Typography variant="body2">{restaurant.address || t('labels.notSelected')}</Typography>
               </Stack>
-            </Box>
-
-            <Box>
-              <Button
-                component={RouterLink}
-                href={RouterPathHelper.organizationRestaurantEdit(restaurant.id)}
-                variant="contained"
-                color="black"
-                startIcon={<Iconify icon="solar:pen-bold" />}>
-                {t('actions.editRestaurantProfile', { defaultValue: 'Restoran profilini tahrirlash' })}
-              </Button>
             </Box>
           </Stack>
         </Card>

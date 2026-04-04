@@ -1,13 +1,15 @@
-import { useEffect } from 'react';
+import Button from '@mui/material/Button';
+import { useEffect, useState } from 'react';
 
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath, canAccessMyRestaurant } from 'app/routes';
 import { useCurrentUser } from 'modules/auth';
 import { useRouter } from 'shared/hooks/router';
+import { Iconify } from 'shared/ui/Iconify';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 
-import { RestaurantCashDesksSection } from '../../components/RestaurantCashDesksSection';
 import { MyRestaurantSectionLayout } from '../../components/MyRestaurantSectionLayout';
+import { RestaurantCashDesksSection } from '../../components/RestaurantCashDesksSection';
 
 const MyRestaurantCashDesksPage = () => {
   const { t } = useTranslate('organizations');
@@ -15,6 +17,7 @@ const MyRestaurantCashDesksPage = () => {
   const { replace } = useRouter();
   const restaurantId = profile?.restaurantId ?? null;
   const canManageMyRestaurant = canAccessMyRestaurant(profile);
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
 
   useEffect(() => {
     if (profile && (!canManageMyRestaurant || !restaurantId)) {
@@ -31,16 +34,25 @@ const MyRestaurantCashDesksPage = () => {
   }
 
   return (
-    <MyRestaurantSectionLayout heading={t('pages.cashDesks.title', { defaultValue: 'Kassalar' })}>
+    <MyRestaurantSectionLayout
+      heading={t('pages.cashDesks.title', { defaultValue: 'Kassalar' })}
+      listPage
+      action={
+        <Button
+          variant="contained"
+          color="black"
+          startIcon={<Iconify icon="mingcute:add-line" />}
+          onClick={() => setCreateDialogOpen(true)}>
+          {t('actions.createCashDesk')}
+        </Button>
+      }>
       <RestaurantCashDesksSection
-        defaultExpanded
-        title={t('pages.cashDesks.title', { defaultValue: 'Kassalar' })}
-        description={t('sections.myRestaurantManagement.cashDesksDescription', {
-          defaultValue: "Restorandagi kassalar va to'lov sozlamalarini boshqaring.",
-        })}
+        layoutMode="page"
         searchPlaceholder={t('filters.searchRestaurantCashDesksPlaceholder', {
           defaultValue: "Kassa nomi yoki joylashuvi bo'yicha qidiring",
         })}
+        createDialogOpen={createDialogOpen}
+        onCreateDialogOpenChange={setCreateDialogOpen}
       />
     </MyRestaurantSectionLayout>
   );

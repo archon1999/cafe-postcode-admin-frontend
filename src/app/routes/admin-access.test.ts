@@ -53,6 +53,47 @@ describe('admin access', () => {
     expect(canAccessAdminPath(RoutePath.roleList, roleSnapshot)).toBe(true);
   });
 
+  it('keeps product-owner scope limited to business partners and tariffs', () => {
+    const snapshot = createSnapshot(['business_partners.view', 'tariffs.view']);
+
+    expect(getDefaultAdminPath(snapshot)).toBe(RoutePath.platformBusinessPartnerList);
+    expect(canAccessAdminPath(RoutePath.platformBusinessPartnerList, snapshot)).toBe(true);
+    expect(canAccessAdminPath(RoutePath.platformTariffList, snapshot)).toBe(true);
+    expect(canAccessAdminPath(RoutePath.organizationRestaurantList, snapshot)).toBe(false);
+    expect(canAccessAdminPath(RoutePath.userList, snapshot)).toBe(false);
+  });
+
+  it('keeps restaurant-admin scope away from roles and permissions pages', () => {
+    const snapshot = createSnapshot(['reports.view', 'employees.view', 'orders.view']);
+
+    expect(canAccessAdminPath(RoutePath.reports, snapshot)).toBe(true);
+    expect(canAccessAdminPath(RoutePath.employeeList, snapshot)).toBe(true);
+    expect(canAccessAdminPath(RoutePath.roleList, snapshot)).toBe(false);
+    expect(canAccessAdminPath(RoutePath.permissionList, snapshot)).toBe(false);
+  });
+
+  it('prefers reports as the restaurant-admin landing page', () => {
+    const snapshot = createSnapshot(['reports.view', 'restaurant_settings.view', 'cash_desks.view']);
+
+    expect(getDefaultAdminPath(snapshot)).toBe(RoutePath.reports);
+  });
+
+  it('keeps fast-food admin on restaurant management and catalog without floor access', () => {
+    const snapshot = createSnapshot([
+      'reports.view',
+      'employees.view',
+      'restaurant_settings.view',
+      'cash_desks.view',
+      'catalog_items.view',
+    ]);
+
+    expect(canAccessAdminPath(RoutePath.organizationMyRestaurantGeneral, snapshot)).toBe(true);
+    expect(canAccessAdminPath(RoutePath.organizationMyRestaurantCashDeskList, snapshot)).toBe(true);
+    expect(canAccessAdminPath(RoutePath.catalogBrowser, snapshot)).toBe(true);
+    expect(canAccessAdminPath(RoutePath.floorHallList, snapshot)).toBe(false);
+    expect(canAccessAdminPath(RoutePath.floorTableSessionList, snapshot)).toBe(false);
+  });
+
   it('does not unlock admin orders route with pos-only mutation permissions', () => {
     const snapshot = createSnapshot(['orders.create']);
     expect(canAccessOrders(snapshot)).toBe(false);

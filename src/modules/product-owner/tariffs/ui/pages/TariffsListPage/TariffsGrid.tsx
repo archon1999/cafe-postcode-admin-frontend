@@ -43,7 +43,6 @@ export function TariffsGrid() {
   const columns = useMemo<GridColDef<AdminTariff>[]>(
     () => [
       { field: 'name', headerName: t('fields.name'), minWidth: 200, flex: 1 },
-      { field: 'classification', headerName: t('fields.classification'), minWidth: 160, flex: 0.7 },
       {
         field: 'monthlyPrice',
         headerName: t('fields.monthlyPrice'),

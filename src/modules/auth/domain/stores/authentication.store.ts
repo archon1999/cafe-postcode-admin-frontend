@@ -24,8 +24,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   setAccessToken: (accessToken: string) => {
     sessionService.setAccessToken(accessToken);
     set({ isAuthenticated: true, isLoading: false });
-
-    void queryClient.invalidateQueries();
+    queryClient.clear();
   },
 
   logout: () => {

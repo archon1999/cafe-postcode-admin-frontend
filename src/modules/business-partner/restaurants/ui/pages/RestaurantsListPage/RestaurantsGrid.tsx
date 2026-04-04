@@ -6,7 +6,10 @@ import { useCallback, useMemo, useState } from 'react';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { RouterPathHelper } from 'app/routes';
-import { useResetRestaurantPasswordMutation } from 'modules/product-owner/business-partners/application';
+import {
+  useResetRestaurantPasswordMutation,
+  useRotateRestaurantAuthCodeMutation,
+} from 'modules/product-owner/business-partners/application';
 import type { AdminRestaurant } from 'shared/api/admin-types';
 import { DEFAULT_PAGINATION_MODEL, DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState } from 'shared/ui/CustomDataGrid';
@@ -33,6 +36,7 @@ export function RestaurantsGrid() {
   const { t: tPlatform } = useTranslate('platform');
   const { t: tCommon } = useTranslate('common');
   const resetPasswordMutation = useResetRestaurantPasswordMutation();
+  const rotateAuthCodeMutation = useRotateRestaurantAuthCodeMutation();
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
 
   const [paginationModel, setPaginationModel] = useState(DEFAULT_PAGINATION_MODEL);
@@ -100,7 +104,23 @@ export function RestaurantsGrid() {
               const result = await resetPasswordMutation.mutateAsync(params.row.id);
               setCredentialsDialogOpen({
                 credentials: { username: result.username, password: result.password },
+                authCode: null,
                 mode: 'reset',
+              });
+            }}
+          />,
+          <CustomGridActionsCellItem
+            actionKind="view"
+            key="rotate-auth-code"
+            label={tPlatform('actions.rotateAuthCode', { defaultValue: 'Aktivatsiya kodini yangilash' })}
+            icon={<Iconify icon="solar:refresh-bold" />}
+            showInMenu
+            onClick={async () => {
+              const result = await rotateAuthCodeMutation.mutateAsync(params.row.id);
+              setCredentialsDialogOpen({
+                credentials: null,
+                authCode: result.authCode ?? null,
+                mode: 'auth_code',
               });
             }}
           />,
@@ -128,7 +148,7 @@ export function RestaurantsGrid() {
         ],
       },
     ],
-    [resetPasswordMutation, t, tCommon, tPlatform],
+    [resetPasswordMutation, rotateAuthCodeMutation, t, tCommon, tPlatform],
   );
 
   return (
@@ -139,7 +159,7 @@ export function RestaurantsGrid() {
           rows={query.data?.data ?? []}
           columns={columns}
           rowCount={query.data?.total ?? 0}
-          loading={query.isLoading || resetPasswordMutation.isPending}
+          loading={query.isLoading || resetPasswordMutation.isPending || rotateAuthCodeMutation.isPending}
           localeText={localeText}
           paginationMode="server"
           sortingMode="server"
@@ -213,10 +233,11 @@ export function RestaurantsGrid() {
       <RestaurantActivateDialog
         open={rowToActivate}
         onClose={() => setRowToActivate(null)}
-        onSuccess={(credentials) => {
+        onSuccess={(result) => {
           setRowToActivate(null);
           setCredentialsDialogOpen({
-            credentials,
+            credentials: { username: result.username, password: result.password },
+            authCode: result.restaurant.authCode ?? null,
             mode: 'activation',
           });
         }}

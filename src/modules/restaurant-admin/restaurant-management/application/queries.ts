@@ -201,6 +201,16 @@ export function useGetRestaurantsQuery(options?: Omit<UseQueryOptions<AdminResta
   });
 }
 
+export function useGetMyRestaurantQuery(
+  options?: Omit<UseQueryOptions<AdminRestaurant>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: organizationsKeys.myRestaurant(),
+    queryFn: () => organizationsRepository.getMyRestaurant(),
+    ...options,
+  });
+}
+
 export function useGetRestaurantsListQuery(
   params: AdminRestaurantsQueryParams,
   options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminRestaurant>>, 'queryFn' | 'queryKey'>,

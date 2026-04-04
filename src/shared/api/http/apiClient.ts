@@ -61,6 +61,7 @@ import type {
   AdminRestaurantPayload,
   AdminSummaryReportQueryParams,
   AdminTariff,
+  AdminTariffOption,
   AdminTariffPayload,
   AdminTariffsQueryParams,
   AdminTopItemsReportQueryParams,
@@ -162,6 +163,10 @@ export const apiClient = {
     return instance.get<AdminSessionUser>('/api/v1/admin/auth/me/').then((response) => response.data);
   },
 
+  getAdminMyRestaurant() {
+    return instance.get<AdminRestaurant>('/api/v1/admin/constructor/my-restaurant/').then((response) => response.data);
+  },
+
   getAdminUsers(params: AdminUsersQueryParams) {
     return instance
       .get<AdminPaginatedResponse<AdminUser>>('/api/v1/admin/users/', {
@@ -218,13 +223,17 @@ export const apiClient = {
 
   getAdminRoles() {
     return instance
-      .get<AdminCollectionResponse<AdminRole> | AdminRole[]>('/api/v1/admin/users/roles/')
+      .get<AdminCollectionResponse<AdminRole> | AdminRole[]>('/api/v1/admin/users/roles/', {
+        params: { pageSize: 100 },
+      })
       .then((response) => extractCollectionData(response.data));
   },
 
   getAdminEmployeeRoles() {
     return instance
-      .get<AdminCollectionResponse<AdminRole> | AdminRole[]>('/api/v1/admin/employees/roles/')
+      .get<AdminCollectionResponse<AdminRole> | AdminRole[]>('/api/v1/admin/employees/roles/', {
+        params: { pageSize: 100 },
+      })
       .then((response) => extractCollectionData(response.data));
   },
 
@@ -658,6 +667,12 @@ export const apiClient = {
     return instance.get<AdminTariff>(`/api/v1/admin/platform/tariffs/${id}/`).then((response) => response.data);
   },
 
+  getAdminTariffOptions() {
+    return instance
+      .get<AdminCollectionResponse<AdminTariffOption> | AdminTariffOption[]>('/api/v1/admin/platform/tariff-options/')
+      .then((response) => extractCollectionData(response.data));
+  },
+
   createAdminTariff(payload: AdminTariffPayload) {
     return instance.post<AdminTariff>('/api/v1/admin/platform/tariffs/', payload).then((response) => response.data);
   },
@@ -741,6 +756,12 @@ export const apiClient = {
   activateAdminRestaurant(id: string, payload: AdminRestaurantActivationPayload) {
     return instance
       .post<AdminRestaurantActivationResult>(`/api/v1/admin/platform/restaurants/${id}/activate/`, payload)
+      .then((response) => response.data);
+  },
+
+  rotateAdminRestaurantAuthCode(id: string) {
+    return instance
+      .post<AdminRestaurant>(`/api/v1/admin/platform/restaurants/${id}/rotate-auth-code/`)
       .then((response) => response.data);
   },
 

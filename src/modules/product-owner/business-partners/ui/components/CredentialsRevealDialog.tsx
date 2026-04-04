@@ -8,13 +8,16 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import { useTranslate } from 'app/providers/locales';
-import type { AdminGeneratedCredentials } from 'shared/api/admin-types';
+export type CredentialsRevealField = {
+  label: string;
+  value: string | null | undefined;
+};
 
 type CredentialsRevealDialogProps = {
   open: boolean;
   title: string;
   description: string;
-  credentials: AdminGeneratedCredentials | null;
+  fields: CredentialsRevealField[];
   onClose: () => void;
 };
 
@@ -22,7 +25,7 @@ export function CredentialsRevealDialog({
   open,
   title,
   description,
-  credentials,
+  fields,
   onClose,
 }: CredentialsRevealDialogProps) {
   const { t } = useTranslate('platform');
@@ -34,22 +37,22 @@ export function CredentialsRevealDialog({
         <Stack spacing={2} sx={{ pt: 1 }}>
           <Alert severity="warning">{description}</Alert>
           <Stack spacing={1.5}>
-            <div>
-              <Typography variant="caption" color="text.secondary">
-                {t('fields.username')}
+            {fields.length ? (
+              fields.map((field) => (
+                <div key={field.label}>
+                  <Typography variant="caption" color="text.secondary">
+                    {field.label}
+                  </Typography>
+                  <Typography variant="body1" fontWeight={600}>
+                    {field.value ?? '-'}
+                  </Typography>
+                </div>
+              ))
+            ) : (
+              <Typography variant="body2" color="text.secondary">
+                {t('labels.notSelected')}
               </Typography>
-              <Typography variant="body1" fontWeight={600}>
-                {credentials?.username ?? '-'}
-              </Typography>
-            </div>
-            <div>
-              <Typography variant="caption" color="text.secondary">
-                {t('fields.password')}
-              </Typography>
-              <Typography variant="body1" fontWeight={600}>
-                {credentials?.password ?? '-'}
-              </Typography>
-            </div>
+            )}
           </Stack>
         </Stack>
       </DialogContent>

@@ -5,6 +5,7 @@ import type {
   AdminBusinessPartnersQueryParams,
   AdminPaginatedResponse,
   AdminTariff,
+  AdminTariffOption,
   AdminTariffsQueryParams,
 } from 'shared/api/admin-types';
 import { apiClient } from 'shared/api/http/apiClient';
@@ -53,6 +54,16 @@ export function useGetTariffByIdQuery(
     queryKey: platformKeys.tariffDetail(id),
     queryFn: () => apiClient.getAdminTariffById(id),
     enabled: Boolean(id),
+    ...options,
+  });
+}
+
+export function useGetTariffOptionsQuery(
+  options?: Omit<UseQueryOptions<AdminTariffOption[]>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: platformKeys.tariffOptions(),
+    queryFn: () => apiClient.getAdminTariffOptions(),
     ...options,
   });
 }

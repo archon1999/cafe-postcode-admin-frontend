@@ -18,6 +18,7 @@ const ACTION_TRANSLATION_KEYS: Record<string, string> = {
   activate: 'permissionActions.activate',
   deactivate: 'permissionActions.deactivate',
   reset_password: 'permissionActions.resetPassword',
+  rotate_auth_code: 'permissionActions.rotateAuthCode',
   open: 'permissionActions.open',
   close: 'permissionActions.close',
   refund: 'permissionActions.refund',

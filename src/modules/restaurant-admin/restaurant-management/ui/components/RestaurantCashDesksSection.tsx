@@ -10,7 +10,7 @@ import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import type { GridColDef, GridRowSelectionModel, GridSortModel } from '@mui/x-data-grid';
 import { gridClasses } from '@mui/x-data-grid';
-import { useMemo, useState, useEffect } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -159,12 +159,18 @@ export function RestaurantCashDesksSection({
   description,
   actionLabel,
   searchPlaceholder,
+  layoutMode = 'accordion',
+  createDialogOpen,
+  onCreateDialogOpenChange,
 }: {
   defaultExpanded?: boolean;
   title?: string;
   description?: string;
   actionLabel?: string;
   searchPlaceholder?: string;
+  layoutMode?: 'accordion' | 'page';
+  createDialogOpen?: boolean;
+  onCreateDialogOpenChange?: (open: boolean) => void;
 }) {
   const { t, currentLang } = useTranslate('organizations');
   const { t: tOrders } = useTranslate('orders');
@@ -180,7 +186,20 @@ export function RestaurantCashDesksSection({
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
   const [rowToDelete, setRowToDelete] = useState<AdminCashDesk | null>(null);
   const [editingRow, setEditingRow] = useState<AdminCashDesk | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+
+  const setDialogOpen = useCallback(
+    (open: boolean) => {
+      if (!open) {
+        return;
+      }
+      if (onCreateDialogOpenChange) {
+        onCreateDialogOpenChange(false);
+      }
+      setIsCreateDialogOpen(false);
+    },
+    [onCreateDialogOpenChange],
+  );
 
   const query = useGetCashDesksListQuery({
     page: paginationModel.page + 1,
@@ -261,129 +280,145 @@ export function RestaurantCashDesksSection({
         ],
       },
     ],
-    [t, tCommon, tOrders],
+    [setDialogOpen, t, tCommon, tOrders],
   );
 
   const hasActiveFilters = Boolean(search || statuses.length);
+  const isDialogOpen = Boolean(editingRow) || Boolean(createDialogOpen) || isCreateDialogOpen;
+
+  const openCreateDialog = () => {
+    setEditingRow(null);
+    if (onCreateDialogOpenChange) {
+      onCreateDialogOpenChange(true);
+      return;
+    }
+    setIsCreateDialogOpen(true);
+  };
+
+  const closeDialog = () => {
+    setEditingRow(null);
+    if (onCreateDialogOpenChange) {
+      onCreateDialogOpenChange(false);
+    }
+    setIsCreateDialogOpen(false);
+  };
+
+  const grid = (
+    <Card
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: 0,
+        overflow: 'hidden',
+        ...(layoutMode === 'page' ? { flex: 1 } : { height: { xs: 520, md: 600 } }),
+      }}>
+      <DataGrid
+        checkboxSelection
+        rows={query.data?.data ?? []}
+        columns={columns}
+        rowCount={query.data?.total ?? 0}
+        loading={query.isLoading}
+        localeText={localeText}
+        paginationMode="server"
+        sortingMode="server"
+        paginationModel={paginationModel}
+        onPaginationModelChange={setPaginationModel}
+        sortModel={sortModel}
+        onSortModelChange={setSortModel}
+        rowSelectionModel={selectedRows}
+        onRowSelectionModelChange={setSelectedRows}
+        columnVisibilityModel={columnVisibilityModel}
+        onColumnVisibilityModelChange={setColumnVisibilityModel}
+        disableColumnMenu
+        slots={{
+          noRowsOverlay: () => (
+            <DataGridEmptyState
+              hasActiveFilters={hasActiveFilters}
+              noData={{
+                title: t('empty.cashDesks.noData.title'),
+                description: t('empty.cashDesks.noData.description'),
+              }}
+              noResults={{
+                title: t('empty.cashDesks.noResults.title'),
+                description: t('empty.cashDesks.noResults.description'),
+              }}
+            />
+          ),
+          noResultsOverlay: () => (
+            <DataGridEmptyState
+              forceFiltered
+              noData={{
+                title: t('empty.cashDesks.noData.title'),
+                description: t('empty.cashDesks.noData.description'),
+              }}
+              noResults={{
+                title: t('empty.cashDesks.noResults.title'),
+                description: t('empty.cashDesks.noResults.description'),
+              }}
+            />
+          ),
+          toolbar: () => (
+            <OrganizationsGridToolbar
+              searchLabel={t('filters.search')}
+              searchPlaceholder={searchPlaceholder ?? t('filters.searchCashDesksPlaceholder')}
+              clearSearchLabel={t('filters.clearSearch')}
+              search={search}
+              onSearchChange={(value) => {
+                setSearch(value);
+                setPaginationModel((prev) => ({ ...prev, page: 0 }));
+              }}
+              onClearSearch={() => {
+                setSearch('');
+                setPaginationModel((prev) => ({ ...prev, page: 0 }));
+              }}
+              filters={[
+                {
+                  id: 'statuses',
+                  label: t('filters.status'),
+                  value: statuses,
+                  options: statusOptions,
+                  onApply: (values) => {
+                    setStatuses(values);
+                    setPaginationModel((prev) => ({ ...prev, page: 0 }));
+                  },
+                  testId: 'restaurant-cashdesks-status-filter',
+                  emptyLabel: t('filters.all'),
+                },
+              ]}
+              columns={columns}
+              columnVisibilityModel={columnVisibilityModel}
+              defaultColumnVisibilityModel={DEFAULT_COLUMN_VISIBILITY_MODEL}
+              onSave={setColumnVisibilityModel}
+            />
+          ),
+        }}
+        sx={{
+          border: 'none',
+          [`& .${gridClasses.cell}`]: { display: 'flex', alignItems: 'center' },
+          '& .MuiDataGrid-toolbarContainer': { px: 2.5, py: 2 },
+        }}
+      />
+    </Card>
+  );
 
   return (
     <>
-      <RestaurantManagementAccordion
-        icon="solar:wallet-money-bold-duotone"
-        title={title ?? t('pages.cashDesks.title')}
-        description={description ?? t('restaurantManagement.sections.cashDesks.description')}
-        total={query.data?.total ?? 0}
-        actionLabel={actionLabel ?? t('actions.createCashDesk')}
-        onActionClick={() => {
-          setEditingRow(null);
-          setDialogOpen(true);
-        }}
-        defaultExpanded={defaultExpanded}>
-        <Card
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            height: { xs: 520, md: 600 },
-            minHeight: 0,
-            overflow: 'hidden',
-          }}>
-          <DataGrid
-            checkboxSelection
-            rows={query.data?.data ?? []}
-            columns={columns}
-            rowCount={query.data?.total ?? 0}
-            loading={query.isLoading}
-            localeText={localeText}
-            paginationMode="server"
-            sortingMode="server"
-            paginationModel={paginationModel}
-            onPaginationModelChange={setPaginationModel}
-            sortModel={sortModel}
-            onSortModelChange={setSortModel}
-            rowSelectionModel={selectedRows}
-            onRowSelectionModelChange={setSelectedRows}
-            columnVisibilityModel={columnVisibilityModel}
-            onColumnVisibilityModelChange={setColumnVisibilityModel}
-            disableColumnMenu
-            slots={{
-              noRowsOverlay: () => (
-                <DataGridEmptyState
-                  hasActiveFilters={hasActiveFilters}
-                  noData={{
-                    title: t('empty.cashDesks.noData.title'),
-                    description: t('empty.cashDesks.noData.description'),
-                  }}
-                  noResults={{
-                    title: t('empty.cashDesks.noResults.title'),
-                    description: t('empty.cashDesks.noResults.description'),
-                  }}
-                />
-              ),
-              noResultsOverlay: () => (
-                <DataGridEmptyState
-                  forceFiltered
-                  noData={{
-                    title: t('empty.cashDesks.noData.title'),
-                    description: t('empty.cashDesks.noData.description'),
-                  }}
-                  noResults={{
-                    title: t('empty.cashDesks.noResults.title'),
-                    description: t('empty.cashDesks.noResults.description'),
-                  }}
-                />
-              ),
-              toolbar: () => (
-                <OrganizationsGridToolbar
-                  searchLabel={t('filters.search')}
-                  searchPlaceholder={searchPlaceholder ?? t('filters.searchCashDesksPlaceholder')}
-                  clearSearchLabel={t('filters.clearSearch')}
-                  search={search}
-                  onSearchChange={(value) => {
-                    setSearch(value);
-                    setPaginationModel((prev) => ({ ...prev, page: 0 }));
-                  }}
-                  onClearSearch={() => {
-                    setSearch('');
-                    setPaginationModel((prev) => ({ ...prev, page: 0 }));
-                  }}
-                  filters={[
-                    {
-                      id: 'statuses',
-                      label: t('filters.status'),
-                      value: statuses,
-                      options: statusOptions,
-                      onApply: (values) => {
-                        setStatuses(values);
-                        setPaginationModel((prev) => ({ ...prev, page: 0 }));
-                      },
-                      testId: 'restaurant-cashdesks-status-filter',
-                      emptyLabel: t('filters.all'),
-                    },
-                  ]}
-                  columns={columns}
-                  columnVisibilityModel={columnVisibilityModel}
-                  defaultColumnVisibilityModel={DEFAULT_COLUMN_VISIBILITY_MODEL}
-                  onSave={setColumnVisibilityModel}
-                />
-              ),
-            }}
-            sx={{
-              border: 'none',
-              [`& .${gridClasses.cell}`]: { display: 'flex', alignItems: 'center' },
-              '& .MuiDataGrid-toolbarContainer': { px: 2.5, py: 2 },
-            }}
-          />
-        </Card>
-      </RestaurantManagementAccordion>
+      {layoutMode === 'page' ? (
+        grid
+      ) : (
+        <RestaurantManagementAccordion
+          icon="solar:wallet-money-bold-duotone"
+          title={title ?? t('pages.cashDesks.title')}
+          description={description ?? t('restaurantManagement.sections.cashDesks.description')}
+          total={query.data?.total ?? 0}
+          actionLabel={actionLabel ?? t('actions.createCashDesk')}
+          onActionClick={openCreateDialog}
+          defaultExpanded={defaultExpanded}>
+          {grid}
+        </RestaurantManagementAccordion>
+      )}
 
-      <RestaurantCashDeskDialog
-        open={dialogOpen}
-        item={editingRow}
-        onClose={() => {
-          setDialogOpen(false);
-          setEditingRow(null);
-        }}
-      />
+      <RestaurantCashDeskDialog open={isDialogOpen} item={editingRow} onClose={closeDialog} />
 
       <ConfirmDialog
         open={Boolean(rowToDelete)}

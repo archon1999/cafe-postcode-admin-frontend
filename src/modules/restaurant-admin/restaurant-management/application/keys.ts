@@ -34,6 +34,7 @@ export const organizationsKeys = {
   prepStationDetail: prepStationKeys.id,
   restaurants: () => restaurantsKeys.all,
   restaurantsList: restaurantsKeys.list,
+  myRestaurant: () => [...restaurantKeys.all, 'me'] as const,
   restaurantDetail: restaurantKeys.id,
   restaurantFeatureConfig: (restaurantId: string) => [...restaurantKeys.id(restaurantId), 'featureConfig'] as const,
   halls: () => hallsKeys.all,

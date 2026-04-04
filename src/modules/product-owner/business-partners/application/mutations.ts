@@ -128,3 +128,14 @@ export function useResetRestaurantPasswordMutation() {
     },
   });
 }
+
+export function useRotateRestaurantAuthCodeMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => apiClient.rotateAdminRestaurantAuthCode(id),
+    onSuccess: async (_data, id) => {
+      await invalidate(queryClient, [organizationsKeys.restaurants(), organizationsKeys.restaurantDetail(id)]);
+    },
+  });
+}

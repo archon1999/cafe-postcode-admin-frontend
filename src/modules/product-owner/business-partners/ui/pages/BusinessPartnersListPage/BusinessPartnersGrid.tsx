@@ -223,7 +223,10 @@ export function BusinessPartnersGrid() {
         open={Boolean(credentials)}
         title={credentialsDialogTitle}
         description={credentialsDialogDescription}
-        credentials={credentials}
+        fields={[
+          { label: t('fields.username'), value: credentials?.username },
+          { label: t('fields.password'), value: credentials?.password },
+        ]}
         onClose={() => {
           setCredentials(null);
           setCredentialsDialogTitle('');

@@ -9,7 +9,7 @@ const EmployeesListPage = () => {
 
   return (
     <ListPageContent>
-      <CustomBreadcrumbs heading={t('pages.employees.title')} />
+      <CustomBreadcrumbs heading={t('pages.employeeList.title')} />
       <ListPageBody>
         <EmployeesGrid />
       </ListPageBody>

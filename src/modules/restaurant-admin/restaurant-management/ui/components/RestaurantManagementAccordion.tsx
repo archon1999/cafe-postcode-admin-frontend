@@ -1,7 +1,5 @@
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
 import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import { alpha } from '@mui/material/styles';
@@ -29,17 +27,15 @@ export function RestaurantManagementAccordion({
   actionLabel,
   onActionClick,
   children,
-  defaultExpanded = false,
 }: RestaurantManagementAccordionProps) {
   return (
-    <Accordion defaultExpanded={defaultExpanded} disableGutters>
-      <AccordionSummary expandIcon={<Iconify icon="solar:alt-arrow-down-outline" width={20} />}>
+    <Card sx={{ p: { xs: 2, md: 2.5 } }}>
+      <Stack spacing={2.5}>
         <Stack
           direction={{ xs: 'column', md: 'row' }}
           spacing={2}
           alignItems={{ xs: 'flex-start', md: 'center' }}
-          justifyContent="space-between"
-          sx={{ width: 1, pr: 1 }}>
+          justifyContent="space-between">
           <Stack direction="row" spacing={1.5} alignItems="flex-start" sx={{ minWidth: 0 }}>
             <Stack
               alignItems="center"
@@ -67,22 +63,18 @@ export function RestaurantManagementAccordion({
               </Typography>
             </Stack>
           </Stack>
-          <Stack direction="row" spacing={1.25} alignItems="center" sx={{ flexShrink: 0 }}>
-            <Button
-              variant="contained"
-              color="black"
-              startIcon={<Iconify icon="mingcute:add-line" />}
-              onClick={(event) => {
-                event.stopPropagation();
-                onActionClick();
-              }}
-              onFocus={(event) => event.stopPropagation()}>
-              {actionLabel}
-            </Button>
-          </Stack>
+
+          <Button
+            variant="contained"
+            color="black"
+            startIcon={<Iconify icon="mingcute:add-line" />}
+            onClick={onActionClick}>
+            {actionLabel}
+          </Button>
         </Stack>
-      </AccordionSummary>
-      <AccordionDetails sx={{ pt: 0, px: { xs: 2, md: 2.5 }, pb: { xs: 2, md: 2.5 } }}>{children}</AccordionDetails>
-    </Accordion>
+
+        {children}
+      </Stack>
+    </Card>
   );
 }

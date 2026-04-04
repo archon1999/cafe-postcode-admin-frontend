@@ -76,7 +76,7 @@ export function useCreateTariffMutation() {
   return useMutation({
     mutationFn: (payload: AdminTariffPayload) => apiClient.createAdminTariff(payload),
     onSuccess: async () => {
-      await invalidate(queryClient, [platformKeys.tariffs()]);
+      await invalidate(queryClient, [platformKeys.tariffs(), platformKeys.tariffOptions()]);
     },
   });
 }
@@ -87,7 +87,7 @@ export function useUpdateTariffMutation(id: string) {
   return useMutation({
     mutationFn: (payload: AdminTariffPayload) => apiClient.updateAdminTariff(id, payload),
     onSuccess: async () => {
-      await invalidate(queryClient, [platformKeys.tariffs(), platformKeys.tariffDetail(id)]);
+      await invalidate(queryClient, [platformKeys.tariffs(), platformKeys.tariffDetail(id), platformKeys.tariffOptions()]);
     },
   });
 }

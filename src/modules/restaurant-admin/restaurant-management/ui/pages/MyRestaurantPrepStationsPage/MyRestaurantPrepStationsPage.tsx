@@ -1,13 +1,15 @@
-import { useEffect } from 'react';
+import Button from '@mui/material/Button';
+import { useEffect, useState } from 'react';
 
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath, canAccessMyRestaurant } from 'app/routes';
 import { useCurrentUser } from 'modules/auth';
 import { useRouter } from 'shared/hooks/router';
+import { Iconify } from 'shared/ui/Iconify';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 
-import { RestaurantPrepStationsSection } from '../../components/RestaurantPrepStationsSection';
 import { MyRestaurantSectionLayout } from '../../components/MyRestaurantSectionLayout';
+import { RestaurantPrepStationsSection } from '../../components/RestaurantPrepStationsSection';
 
 const MyRestaurantPrepStationsPage = () => {
   const { t } = useTranslate('organizations');
@@ -15,6 +17,7 @@ const MyRestaurantPrepStationsPage = () => {
   const { replace } = useRouter();
   const restaurantId = profile?.restaurantId ?? null;
   const canManageMyRestaurant = canAccessMyRestaurant(profile);
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
 
   useEffect(() => {
     if (profile && (!canManageMyRestaurant || !restaurantId)) {
@@ -31,16 +34,25 @@ const MyRestaurantPrepStationsPage = () => {
   }
 
   return (
-    <MyRestaurantSectionLayout heading={t('pages.prepStations.title', { defaultValue: 'Tayyorlash stansiyalari' })}>
+    <MyRestaurantSectionLayout
+      heading={t('pages.prepStations.title', { defaultValue: 'Tayyorlash stansiyalari' })}
+      listPage
+      action={
+        <Button
+          variant="contained"
+          color="black"
+          startIcon={<Iconify icon="mingcute:add-line" />}
+          onClick={() => setCreateDialogOpen(true)}>
+          {t('actions.createPrepStation')}
+        </Button>
+      }>
       <RestaurantPrepStationsSection
-        defaultExpanded
-        title={t('pages.prepStations.title', { defaultValue: 'Tayyorlash stansiyalari' })}
-        description={t('sections.myRestaurantManagement.prepStationsDescription', {
-          defaultValue: 'Restorandagi tayyorlash stansiyalarini boshqaring.',
-        })}
+        layoutMode="page"
         searchPlaceholder={t('filters.searchRestaurantPrepStationsPlaceholder', {
           defaultValue: "Stansiya nomi bo'yicha qidiring",
         })}
+        createDialogOpen={createDialogOpen}
+        onCreateDialogOpenChange={setCreateDialogOpen}
       />
     </MyRestaurantSectionLayout>
   );

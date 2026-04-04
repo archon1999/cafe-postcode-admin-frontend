@@ -3,6 +3,7 @@ import { createKeyFactory } from 'shared/api';
 const platformBaseKeys = createKeyFactory('platform');
 const businessPartnersKeys = createKeyFactory('platform', 'businessPartners');
 const tariffsKeys = createKeyFactory('platform', 'tariffs');
+const tariffOptionsKeys = createKeyFactory('platform', 'tariffOptions');
 
 export const platformKeys = {
   all: platformBaseKeys.all,
@@ -12,4 +13,5 @@ export const platformKeys = {
   tariffs: () => tariffsKeys.all,
   tariffsList: tariffsKeys.list,
   tariffDetail: tariffsKeys.detail,
+  tariffOptions: () => tariffOptionsKeys.all,
 } as const;

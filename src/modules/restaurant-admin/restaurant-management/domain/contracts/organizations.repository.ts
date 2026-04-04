@@ -41,6 +41,7 @@ export interface OrganizationsRepository {
   updatePrepStation(id: string, payload: AdminPrepStationPayload): Promise<AdminPrepStation>;
   deletePrepStation(id: string): Promise<void>;
   getRestaurants(): Promise<AdminRestaurant[]>;
+  getMyRestaurant(): Promise<AdminRestaurant>;
   getRestaurantById(id: string): Promise<AdminRestaurant>;
   createRestaurant(payload: AdminRestaurantPayload): Promise<AdminRestaurant>;
   updateRestaurant(id: string, payload: AdminRestaurantPayload): Promise<AdminRestaurant>;

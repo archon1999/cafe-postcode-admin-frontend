@@ -24,6 +24,7 @@ const RESTAURANT_PERMISSION_CODES: PermissionCode[] = [
   'restaurants.activate',
   'restaurants.deactivate',
   'restaurants.reset_password',
+  'restaurants.rotate_auth_code',
 ];
 const REPORT_PERMISSION_CODES: PermissionCode[] = ['reports.view'];
 const ORDER_PERMISSION_CODES: PermissionCode[] = ['orders.view'];
@@ -87,8 +88,8 @@ const ADMIN_LANDING_CANDIDATES = [
   RoutePath.platformBusinessPartnerList,
   RoutePath.platformTariffList,
   RoutePath.organizationRestaurantList,
-  RoutePath.organizationMyRestaurant,
   RoutePath.reports,
+  RoutePath.organizationMyRestaurant,
   RoutePath.orderList,
   RoutePath.paymentList,
   RoutePath.kitchenTicketList,
