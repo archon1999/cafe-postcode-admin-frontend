@@ -42,7 +42,7 @@
   "labels": {
     "notSelected": "Танланмаган",
     "existingTariff": "Мавжуд тариф",
-    "customActivation": "Custom тариф",
+    "customActivation": "Махсус тариф",
     "selectedRolesCount": "Танланган роллар: {{count}}",
     "selectedPermissionsCount": "Танланган рухсатлар: {{count}}"
   },
@@ -92,7 +92,7 @@
     },
     "activateRestaurant": {
       "title": "Ресторанни активлаштириш",
-      "customDescription": "Custom тариф режимида роллар ва рухсатларни қўлда танлаб, ресторанни шу конфигурация билан активлаштирасиз."
+      "customDescription": "Махсус тариф режимида роллар ва рухсатларни қўлда танлаб, ресторанни шу конфигурация билан активлаштирасиз."
     }
   },
   "validation": {

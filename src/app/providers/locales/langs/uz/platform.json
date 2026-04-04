@@ -42,7 +42,7 @@
   "labels": {
     "notSelected": "Tanlanmagan",
     "existingTariff": "Mavjud tarif",
-    "customActivation": "Custom tarif",
+    "customActivation": "Maxsus tarif",
     "selectedRolesCount": "Tanlangan rollar: {{count}}",
     "selectedPermissionsCount": "Tanlangan ruxsatlar: {{count}}"
   },
@@ -92,7 +92,7 @@
     },
     "activateRestaurant": {
       "title": "Restoranni aktivlashtirish",
-      "customDescription": "Custom tarif rejimida rollar va ruxsatlarni qo'lda tanlab, restoranni shu konfiguratsiya bilan aktivlashtirasiz."
+      "customDescription": "Maxsus tarif rejimida rollar va ruxsatlarni qo'lda tanlab, restoranni shu konfiguratsiya bilan aktivlashtirasiz."
     }
   },
   "validation": {
