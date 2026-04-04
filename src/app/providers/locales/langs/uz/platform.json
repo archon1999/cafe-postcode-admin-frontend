@@ -28,7 +28,8 @@
     "tariff": "Tarif",
     "startsOn": "Boshlanish sanasi",
     "username": "Username",
-    "password": "Password"
+    "password": "Password",
+    "authCode": "Aktivatsiya kodi"
   },
   "filters": {
     "search": "Qidiruv",
@@ -54,10 +55,13 @@
     "activate": "Aktivlashtirish",
     "deactivate": "Deaktivlashtirish",
     "resetPassword": "Parolni yangilash",
+    "rotateAuthCode": "Aktivatsiya kodini yangilash",
     "createBusinessPartner": "Yangi biznes hamkor",
     "createTariff": "Yangi tarif",
     "cancel": "Bekor qilish",
-    "close": "Yopish"
+    "close": "Yopish",
+    "showAuthCode": "Kodni ko'rsatish",
+    "hideAuthCode": "Kodni yashirish"
   },
   "dialogs": {
     "deactivatePartner": {
@@ -66,8 +70,12 @@
     },
     "partnerCredentials": {
       "title": "Biznes hamkor kredensiallari",
-      "description": "Login va parol faqat bir marta ko'rsatiladi. Xavfsiz joyga yozib oling.",
+      "description": "Login, parol va aktivatsiya kodi faqat bir marta ko'rsatiladi. Xavfsiz joyga yozib oling.",
       "resetDescription": "Yangi parol faqat bir marta ko'rsatiladi. Xavfsiz joyga yozib oling."
+    },
+    "restaurantAuthCode": {
+      "title": "Restoran aktivatsiya kodi",
+      "description": "Aktivatsiya kodi faqat ishonchli xodimlar bilan ulashilishi kerak."
     },
     "deactivateRestaurant": {
       "title": "Restoranni deaktivlashtirish",

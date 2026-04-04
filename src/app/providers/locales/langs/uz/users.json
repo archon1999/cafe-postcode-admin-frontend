@@ -132,6 +132,7 @@
     "activate": "Aktivlashtirish",
     "deactivate": "Deaktivlashtirish",
     "resetPassword": "Parolni yangilash",
+    "rotateAuthCode": "Aktivatsiya kodini yangilash",
     "open": "Ochish",
     "close": "Yopish",
     "refund": "Qaytarish",

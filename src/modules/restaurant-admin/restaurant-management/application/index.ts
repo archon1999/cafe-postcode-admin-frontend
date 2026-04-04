@@ -33,6 +33,7 @@ export {
   useGetFeatureConfigsListQuery,
   useGetFeatureConfigsQuery,
   useGetOrganizationsHallsQuery,
+  useGetMyRestaurantQuery,
   useGetOrganizationsPrepStationByIdQuery,
   useGetPrepStationsListQuery,
   useGetPrepStationsQuery,
