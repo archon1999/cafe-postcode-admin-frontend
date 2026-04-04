@@ -415,6 +415,12 @@ export type AdminTariffOption = Pick<
   'id' | 'name' | 'description' | 'monthlyPrice' | 'yearlyPrice' | 'permissions' | 'allowedRoles'
 >;
 
+export type AdminRestaurantActivationOptions = {
+  tariffs: AdminTariffOption[];
+  roles: AdminRole[];
+  permissions: AdminPermission[];
+};
+
 export type AdminGeneratedCredentials = {
   username: string;
   password: string;
@@ -425,7 +431,10 @@ export type AdminPartnerActivationResult = AdminGeneratedCredentials & {
 };
 
 export type AdminRestaurantActivationPayload = {
-  tariffId: string;
+  activationType?: 'tariff' | 'custom';
+  tariffId?: string;
+  allowedRoleIds?: string[];
+  permissionIds?: string[];
   startsOn: string;
 };
 

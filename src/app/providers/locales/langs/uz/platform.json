@@ -24,7 +24,7 @@
     "permissions": "Ruxsatlar",
     "allowedRoles": "Ruxsat etilgan rollar",
     "operationalSettings": "Operatsion sozlamalar (JSON)",
-    "customTariff": "Custom tarif",
+    "customTariff": "Aktivlashtirish turi",
     "tariff": "Tarif",
     "startsOn": "Boshlanish sanasi",
     "username": "Username",
@@ -40,7 +40,11 @@
     "searchTariffsPlaceholder": "Tarif nomi yoki tasnifi bo'yicha qidiring"
   },
   "labels": {
-    "notSelected": "Tanlanmagan"
+    "notSelected": "Tanlanmagan",
+    "existingTariff": "Mavjud tarif",
+    "customActivation": "Custom tarif",
+    "selectedRolesCount": "Tanlangan rollar: {{count}}",
+    "selectedPermissionsCount": "Tanlangan ruxsatlar: {{count}}"
   },
   "classifications": {
     "basic": "Boshlang'ich",
@@ -83,11 +87,12 @@
     },
     "restaurantCredentials": {
       "title": "Restoran admini kredensiallari",
-      "description": "Login va parol faqat bir marta ko'rsatiladi. Xavfsiz joyga yozib oling.",
+      "description": "Login, parol va aktivatsiya kodi faqat bir marta ko'rsatiladi. Xavfsiz joyga yozib oling.",
       "resetDescription": "Yangi parol faqat bir marta ko'rsatiladi. Xavfsiz joyga yozib oling."
     },
     "activateRestaurant": {
-      "title": "Restoranni aktivlashtirish"
+      "title": "Restoranni aktivlashtirish",
+      "customDescription": "Custom tarif rejimida rollar va ruxsatlarni qo'lda tanlab, restoranni shu konfiguratsiya bilan aktivlashtirasiz."
     }
   },
   "validation": {

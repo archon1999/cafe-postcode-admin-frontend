@@ -4,6 +4,7 @@ import type {
   AdminBusinessPartner,
   AdminBusinessPartnersQueryParams,
   AdminPaginatedResponse,
+  AdminRestaurantActivationOptions,
   AdminTariff,
   AdminTariffsQueryParams,
 } from 'shared/api/admin-types';
@@ -53,6 +54,16 @@ export function useGetTariffByIdQuery(
     queryKey: platformKeys.tariffDetail(id),
     queryFn: () => apiClient.getAdminTariffById(id),
     enabled: Boolean(id),
+    ...options,
+  });
+}
+
+export function useGetRestaurantActivationOptionsQuery(
+  options?: Omit<UseQueryOptions<AdminRestaurantActivationOptions>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: platformKeys.restaurantActivationOptions(),
+    queryFn: () => apiClient.getAdminRestaurantActivationOptions(),
     ...options,
   });
 }

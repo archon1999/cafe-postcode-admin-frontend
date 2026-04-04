@@ -56,6 +56,7 @@ import type {
   AdminShiftReportRow,
   AdminRestaurant,
   AdminRestaurantActivationPayload,
+  AdminRestaurantActivationOptions,
   AdminRestaurantActivationResult,
   AdminRestaurantsQueryParams,
   AdminRestaurantPayload,
@@ -756,6 +757,12 @@ export const apiClient = {
   activateAdminRestaurant(id: string, payload: AdminRestaurantActivationPayload) {
     return instance
       .post<AdminRestaurantActivationResult>(`/api/v1/admin/platform/restaurants/${id}/activate/`, payload)
+      .then((response) => response.data);
+  },
+
+  getAdminRestaurantActivationOptions() {
+    return instance
+      .get<AdminRestaurantActivationOptions>('/api/v1/admin/platform/restaurants/activation-options/')
       .then((response) => response.data);
   },
 

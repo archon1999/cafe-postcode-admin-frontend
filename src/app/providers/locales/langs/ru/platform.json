@@ -24,11 +24,12 @@
     "permissions": "Разрешения",
     "allowedRoles": "Доступные роли",
     "operationalSettings": "Операционные настройки (JSON)",
-    "customTariff": "Кастомный тариф",
+    "customTariff": "Тип активации",
     "tariff": "Тариф",
     "startsOn": "Дата начала",
     "username": "Username",
-    "password": "Password"
+    "password": "Password",
+    "authCode": "Код активации"
   },
   "filters": {
     "search": "Поиск",
@@ -39,7 +40,11 @@
     "searchTariffsPlaceholder": "Ищите по названию или классификации тарифа"
   },
   "labels": {
-    "notSelected": "Не выбрано"
+    "notSelected": "Не выбрано",
+    "existingTariff": "Готовый тариф",
+    "customActivation": "Кастомный тариф",
+    "selectedRolesCount": "Выбрано ролей: {{count}}",
+    "selectedPermissionsCount": "Выбрано разрешений: {{count}}"
   },
   "classifications": {
     "basic": "Базовый",
@@ -54,10 +59,13 @@
     "activate": "Активировать",
     "deactivate": "Деактивировать",
     "resetPassword": "Сбросить пароль",
+    "rotateAuthCode": "Обновить код активации",
     "createBusinessPartner": "Новый бизнес-партнер",
     "createTariff": "Новый тариф",
     "cancel": "Отмена",
-    "close": "Закрыть"
+    "close": "Закрыть",
+    "showAuthCode": "Показать код",
+    "hideAuthCode": "Скрыть код"
   },
   "dialogs": {
     "deactivatePartner": {
@@ -66,8 +74,12 @@
     },
     "partnerCredentials": {
       "title": "Учетные данные бизнес-партнера",
-      "description": "Логин и пароль показываются только один раз. Сохраните их в безопасном месте.",
+      "description": "Логин, пароль и код активации показываются только один раз. Сохраните их в безопасном месте.",
       "resetDescription": "Новый пароль показывается только один раз. Сохраните его в безопасном месте."
+    },
+    "restaurantAuthCode": {
+      "title": "Код активации ресторана",
+      "description": "Код активации следует передавать только доверенным сотрудникам."
     },
     "deactivateRestaurant": {
       "title": "Деактивация ресторана",
@@ -75,11 +87,12 @@
     },
     "restaurantCredentials": {
       "title": "Учетные данные администратора ресторана",
-      "description": "Логин и пароль показываются только один раз. Сохраните их в безопасном месте.",
+      "description": "Логин, пароль и код активации показываются только один раз. Сохраните их в безопасном месте.",
       "resetDescription": "Новый пароль показывается только один раз. Сохраните его в безопасном месте."
     },
     "activateRestaurant": {
-      "title": "Активация ресторана"
+      "title": "Активация ресторана",
+      "customDescription": "В режиме кастомного тарифа вы вручную выбираете роли и разрешения и активируете ресторан с этой конфигурацией."
     }
   },
   "validation": {

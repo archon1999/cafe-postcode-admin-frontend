@@ -1,6 +1,8 @@
-import { useActivateRestaurantMutation } from 'modules/product-owner/business-partners/application';
+import {
+  useActivateRestaurantMutation,
+  useGetRestaurantActivationOptionsQuery,
+} from 'modules/product-owner/business-partners/application';
 import { RestaurantActivationDialog } from 'modules/product-owner/business-partners/ui/components/RestaurantActivationDialog.tsx';
-import { useGetTariffOptionsQuery } from 'modules/product-owner/tariffs/application';
 import type {
   AdminRestaurant,
   AdminRestaurantActivationPayload,
@@ -15,7 +17,7 @@ type RestaurantActivateDialogProps = {
 
 export function RestaurantActivateDialog({ open, onClose, onSuccess }: RestaurantActivateDialogProps) {
   const activateMutation = useActivateRestaurantMutation();
-  const tariffsQuery = useGetTariffOptionsQuery({ enabled: Boolean(open) });
+  const activationOptionsQuery = useGetRestaurantActivationOptionsQuery({ enabled: Boolean(open) });
 
   const handleSubmit = async (payload: AdminRestaurantActivationPayload) => {
     if (!open) {
@@ -29,7 +31,9 @@ export function RestaurantActivateDialog({ open, onClose, onSuccess }: Restauran
   return (
     <RestaurantActivationDialog
       open={Boolean(open)}
-      tariffs={tariffsQuery.data ?? []}
+      tariffs={activationOptionsQuery.data?.tariffs ?? []}
+      roles={activationOptionsQuery.data?.roles ?? []}
+      permissions={activationOptionsQuery.data?.permissions ?? []}
       isSubmitting={activateMutation.isPending}
       onClose={onClose}
       onSubmit={handleSubmit}

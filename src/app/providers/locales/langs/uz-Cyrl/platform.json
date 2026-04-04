@@ -24,11 +24,12 @@
     "permissions": "Рухсатлар",
     "allowedRoles": "Рухсат этилган роллар",
     "operationalSettings": "Операцион созламалар (JSON)",
-    "customTariff": "Custom тариф",
+    "customTariff": "Активлаштириш тури",
     "tariff": "Тариф",
     "startsOn": "Бошланиш санаси",
     "username": "Username",
-    "password": "Password"
+    "password": "Password",
+    "authCode": "Активатсия коди"
   },
   "filters": {
     "search": "Қидирув",
@@ -39,7 +40,11 @@
     "searchTariffsPlaceholder": "Тариф номи ёки таснифи бўйича қидиринг"
   },
   "labels": {
-    "notSelected": "Танланмаган"
+    "notSelected": "Танланмаган",
+    "existingTariff": "Мавжуд тариф",
+    "customActivation": "Custom тариф",
+    "selectedRolesCount": "Танланган роллар: {{count}}",
+    "selectedPermissionsCount": "Танланган рухсатлар: {{count}}"
   },
   "classifications": {
     "basic": "Бошланғич",
@@ -54,10 +59,13 @@
     "activate": "Активлаштириш",
     "deactivate": "Деактивлаштириш",
     "resetPassword": "Паролни янгилаш",
+    "rotateAuthCode": "Активатсия кодини янгилаш",
     "createBusinessPartner": "Янги бизнес ҳамкор",
     "createTariff": "Янги тариф",
     "cancel": "Бекор қилиш",
-    "close": "Ёпиш"
+    "close": "Ёпиш",
+    "showAuthCode": "Кодни кўрсатиш",
+    "hideAuthCode": "Кодни яшириш"
   },
   "dialogs": {
     "deactivatePartner": {
@@ -66,8 +74,12 @@
     },
     "partnerCredentials": {
       "title": "Бизнес ҳамкор креденциаллари",
-      "description": "Логин ва пароль фақат бир марта кўрсатилади. Хавфсиз жойга ёзиб олинг.",
-      "resetDescription": "Янги пароль фақат бир марта кўрсатилади. Хавфсиз жойга ёзиб олинг."
+      "description": "Логин, парол ва активатсия коди фақат бир марта кўрсатилади. Хавфсиз жойга ёзиб олинг.",
+      "resetDescription": "Янги парол фақат бир марта кўрсатилади. Хавфсиз жойга ёзиб олинг."
+    },
+    "restaurantAuthCode": {
+      "title": "Ресторан активатсия коди",
+      "description": "Активатсия коди фақат ишончли ходимлар билан улашилиши керак."
     },
     "deactivateRestaurant": {
       "title": "Ресторанни деактивлаштириш",
@@ -75,11 +87,12 @@
     },
     "restaurantCredentials": {
       "title": "Ресторан админи креденциаллари",
-      "description": "Логин ва пароль фақат бир марта кўрсатилади. Хавфсиз жойга ёзиб олинг.",
-      "resetDescription": "Янги пароль фақат бир марта кўрсатилади. Хавфсиз жойга ёзиб олинг."
+      "description": "Логин, парол ва активатсия коди фақат бир марта кўрсатилади. Хавфсиз жойга ёзиб олинг.",
+      "resetDescription": "Янги парол фақат бир марта кўрсатилади. Хавфсиз жойга ёзиб олинг."
     },
     "activateRestaurant": {
-      "title": "Ресторанни активлаштириш"
+      "title": "Ресторанни активлаштириш",
+      "customDescription": "Custom тариф режимида роллар ва рухсатларни қўлда танлаб, ресторанни шу конфигурация билан активлаштирасиз."
     }
   },
   "validation": {
