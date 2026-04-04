@@ -6,9 +6,14 @@ import { USER_EMPLOYMENT_STATUS_VALUES, USER_SALARY_TYPE_VALUES } from '../enums
 
 import type { UserManagementSurface } from './user.types';
 
+const numberFieldWithDefaultZero = z.preprocess(
+  (value) => (value === '' || value === null || value === undefined ? 0 : Number(value)),
+  z.number().min(0, { message: "Summa 0 dan kichik bo'lmasligi kerak" }),
+);
+
 const nullableNumberField = z.preprocess(
   (value) => (value === '' || value === null || value === undefined ? null : Number(value)),
-  z.number().nullable().optional(),
+  z.number().min(0, { message: "Qiymat 0 dan kichik bo'lmasligi kerak" }).nullable().optional(),
 );
 
 function createUserFormSchema(surface: UserManagementSurface) {
@@ -26,17 +31,12 @@ function createUserFormSchema(surface: UserManagementSurface) {
       passportSeries: z.string().optional(),
       pnfl: z.string().optional(),
       birthDate: z.string().optional().nullable(),
-      salaryType: z.enum(USER_SALARY_TYPE_VALUES).optional().nullable(),
-      baseAmount: nullableNumberField,
-      kpiPercent: nullableNumberField
-        .refine(
-          (value) => value === null || value === undefined || Number.isInteger(value),
-          'KPI foizi butun son bo‘lishi kerak',
-        )
-        .refine(
-          (value) => value === null || value === undefined || (value >= 0 && value <= 100),
-          'KPI foizi 0-100 oralig‘ida bo‘lishi kerak',
-        ),
+      salaryType: z.enum(USER_SALARY_TYPE_VALUES),
+      baseAmount: numberFieldWithDefaultZero,
+      kpiPercent: nullableNumberField.refine(
+        (value) => value === null || value === undefined || Number.isInteger(value),
+        "KPI foizi butun son bo'lishi kerak",
+      ),
       hallSwitchPermission: z.boolean(),
       primaryHallId: z.string().optional(),
       allowedHallIds: z.array(z.string()).default([]),
@@ -52,22 +52,11 @@ function createUserFormSchema(surface: UserManagementSurface) {
         });
       }
 
-      if (value.salaryType === 'kpi' && (value.kpiPercent === null || value.kpiPercent === undefined)) {
-        context.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ['kpiPercent'],
-          message: 'KPI foizi tanlangan bo‘lsa, KPI foizi talab qilinadi',
-        });
-      }
-
-      if (
-        (value.salaryType === 'hourly' || value.salaryType === 'daily') &&
-        (value.baseAmount === null || value.baseAmount === undefined || Number.isNaN(value.baseAmount))
-      ) {
+      if (Number.isNaN(value.baseAmount)) {
         context.addIssue({
           code: z.ZodIssueCode.custom,
           path: ['baseAmount'],
-          message: 'Tanlangan maosh turi uchun summa talab qilinadi',
+          message: 'Asosiy summa talab qilinadi',
         });
       }
     });
@@ -88,8 +77,8 @@ export const defaultUserFormValues: UserFormValues = {
   passportSeries: '',
   pnfl: '',
   birthDate: undefined,
-  salaryType: null,
-  baseAmount: null,
+  salaryType: 'monthly',
+  baseAmount: 0,
   kpiPercent: null,
   hallSwitchPermission: false,
   primaryHallId: '',
@@ -109,8 +98,8 @@ export function mapUserToFormValues(user: AdminUser): UserFormValues {
     passportSeries: user.passportSeries ?? '',
     pnfl: user.pnfl ?? '',
     birthDate: user.birthDate ?? undefined,
-    salaryType: user.salaryType ?? null,
-    baseAmount: user.baseAmount ?? null,
+    salaryType: user.salaryType ?? 'monthly',
+    baseAmount: user.baseAmount ?? 0,
     kpiPercent: user.kpiPercent ?? null,
     hallSwitchPermission: user.hallSwitchPermission ?? false,
     primaryHallId: user.primaryHallId ?? '',
@@ -133,9 +122,9 @@ export function buildUserPayload(values: UserFormValues, surface: UserManagement
     passportSeries: values.passportSeries?.trim() || '',
     pnfl: values.pnfl?.trim() || '',
     birthDate: values.birthDate || null,
-    salaryType: values.salaryType ?? null,
-    baseAmount: values.salaryType === 'hourly' || values.salaryType === 'daily' ? (values.baseAmount ?? null) : null,
-    kpiPercent: values.salaryType === 'kpi' ? (values.kpiPercent ?? null) : null,
+    salaryType: values.salaryType,
+    baseAmount: values.baseAmount ?? 0,
+    kpiPercent: values.kpiPercent ?? null,
     hallSwitchPermission: values.hallSwitchPermission,
     ...(values.primaryHallId ? { primaryHallId: values.primaryHallId } : { primaryHallId: null }),
     allowedHallIds: values.allowedHallIds,
@@ -177,6 +166,7 @@ export function buildUserPayloadFromUser(
         ? 'active'
         : 'inactive'
       : (user.employmentStatus ?? (user.isActive ? 'active' : 'inactive')));
+  const effectiveSalaryType = overrides?.salaryType ?? user.salaryType ?? 'monthly';
 
   const payload: AdminUserPayload = {
     fullName: user.fullName,
@@ -187,8 +177,8 @@ export function buildUserPayloadFromUser(
     passportSeries: overrides?.passportSeries ?? user.passportSeries ?? '',
     pnfl: overrides?.pnfl ?? user.pnfl ?? '',
     birthDate: overrides?.birthDate ?? user.birthDate ?? null,
-    salaryType: overrides?.salaryType ?? user.salaryType ?? null,
-    baseAmount: overrides?.baseAmount ?? user.baseAmount ?? null,
+    salaryType: effectiveSalaryType,
+    baseAmount: overrides?.baseAmount ?? user.baseAmount ?? 0,
     kpiPercent: overrides?.kpiPercent ?? user.kpiPercent ?? null,
     hallSwitchPermission: user.hallSwitchPermission ?? false,
     ...(user.primaryHallId ? { primaryHallId: user.primaryHallId } : { primaryHallId: null }),

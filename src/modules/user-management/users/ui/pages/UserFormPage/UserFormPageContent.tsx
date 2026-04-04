@@ -68,6 +68,7 @@ export const UserFormPageContent = ({ id, surface = 'user' }: UserFormPageConten
   const { handleSubmit, reset, watch, setValue, formState } = methods;
   const selectedRoleId = watch('roleId');
   const selectedSalaryType = watch('salaryType');
+  const baseAmount = watch('baseAmount');
   const selectedEmploymentStatus = watch('employmentStatus');
   const selectedPrimaryHallId = watch('primaryHallId');
   const selectedAllowedHallIds = watch('allowedHallIds');
@@ -75,9 +76,12 @@ export const UserFormPageContent = ({ id, surface = 'user' }: UserFormPageConten
   const halls = Array.isArray(hallsQuery.data) ? hallsQuery.data : [];
   const selectedRole = roles.find((role) => role.id === selectedRoleId) ?? null;
   const hasPosAccessPermission = Boolean(selectedRole?.permissions.some((permission) => permission.scope === 'pos'));
+  const showPinField = isEmployeeSurface || hasPosAccessPermission;
   const hasHallAccessPermission = Boolean(
     selectedRole?.permissions.some((permission) =>
-      ['hall.view', 'hall.manage', 'table.manage'].includes(permission.code),
+      ['pos_halls.view', 'pos_tables.manage', 'pos_table_menu.view', 'pos_table_reservations.manage'].includes(
+        permission.code,
+      ),
     ),
   );
 
@@ -97,14 +101,10 @@ export const UserFormPageContent = ({ id, surface = 'user' }: UserFormPageConten
   }, [selectedEmploymentStatus, setValue]);
 
   useEffect(() => {
-    if (selectedSalaryType !== 'kpi') {
-      setValue('kpiPercent', null);
+    if (selectedSalaryType && (baseAmount === null || baseAmount === undefined || Number.isNaN(baseAmount))) {
+      setValue('baseAmount', 0);
     }
-
-    if (selectedSalaryType !== 'hourly' && selectedSalaryType !== 'daily') {
-      setValue('baseAmount', null);
-    }
-  }, [selectedSalaryType, setValue]);
+  }, [baseAmount, selectedSalaryType, setValue]);
 
   useEffect(() => {
     if (selectedPrimaryHallId && !selectedAllowedHallIds.includes(selectedPrimaryHallId)) {
@@ -121,10 +121,10 @@ export const UserFormPageContent = ({ id, surface = 'user' }: UserFormPageConten
   }, [hasHallAccessPermission, setValue]);
 
   useEffect(() => {
-    if (!hasPosAccessPermission) {
+    if (!showPinField) {
       setValue('pin', '');
     }
-  }, [hasPosAccessPermission, setValue]);
+  }, [setValue, showPinField]);
 
   const hallOptions = halls.map((hall) => ({
     value: hall.id,
@@ -140,7 +140,7 @@ export const UserFormPageContent = ({ id, surface = 'user' }: UserFormPageConten
       payload.hallSwitchPermission = false;
     }
 
-    if (!hasPosAccessPermission) {
+    if (!showPinField) {
       delete payload.pin;
     }
 
@@ -196,7 +196,7 @@ export const UserFormPageContent = ({ id, surface = 'user' }: UserFormPageConten
             <UserFormFields
               hallOptions={hallOptions}
               hasHallAccessPermission={hasHallAccessPermission}
-              hasPosAccessPermission={hasPosAccessPermission}
+              showPinField={showPinField}
               isEditMode={isEditMode}
               isEmployeeSurface={isEmployeeSurface}
               isHallsLoading={hallsQuery.isLoading}

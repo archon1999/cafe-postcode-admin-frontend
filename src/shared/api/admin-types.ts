@@ -51,7 +51,6 @@ export type AdminReportKey =
   | 'shifts';
 export type AdminReportPeriodType = 'day' | 'month' | 'year';
 export type AdminBusinessPartnerStatus = 'draft' | 'active' | 'inactive';
-export type AdminTariffClassification = 'basic' | 'standard' | 'premium' | 'custom';
 
 export type AdminZoneOrCabinSummary = {
   id: string;
@@ -393,27 +392,28 @@ export type AdminBusinessPartnerLookupResult = {
 export type AdminTariff = {
   id: string;
   name: string;
-  classification: AdminTariffClassification;
   description: string;
   monthlyPrice: number;
   yearlyPrice: number;
   isActive: boolean;
-  operationalSettings?: Record<string, unknown>;
   permissions: AdminPermissionSummary[];
   allowedRoles: AdminRoleSummary[];
 };
 
 export type AdminTariffPayload = {
   name: string;
-  classification: AdminTariffClassification;
   description: string;
   monthlyPrice: number;
   yearlyPrice: number;
   isActive: boolean;
-  operationalSettings?: Record<string, unknown>;
+  allowedRoleIds: string[];
   permissionIds?: string[];
-  allowedRoleIds?: string[];
 };
+
+export type AdminTariffOption = Pick<
+  AdminTariff,
+  'id' | 'name' | 'description' | 'monthlyPrice' | 'yearlyPrice' | 'permissions' | 'allowedRoles'
+>;
 
 export type AdminGeneratedCredentials = {
   username: string;
@@ -425,14 +425,8 @@ export type AdminPartnerActivationResult = AdminGeneratedCredentials & {
 };
 
 export type AdminRestaurantActivationPayload = {
-  tariffId?: string | null;
-  customTariff?: boolean;
-  monthlyPrice?: number | null;
-  yearlyPrice?: number | null;
+  tariffId: string;
   startsOn: string;
-  permissionIds?: string[];
-  allowedRoleIds?: string[];
-  operationalSettings?: Record<string, unknown>;
 };
 
 export type AdminRestaurantActivationResult = AdminGeneratedCredentials & {
@@ -676,7 +670,7 @@ export type AdminUser = {
   passportSeries?: string;
   pnfl?: string;
   birthDate?: string | null;
-  salaryType?: 'hourly' | 'daily' | 'kpi' | null;
+  salaryType?: 'hourly' | 'daily' | 'monthly' | null;
   baseAmount?: number | null;
   kpiPercent?: number | null;
   isSuperuser?: boolean;
@@ -700,7 +694,7 @@ export type AdminUserPayload = {
   passportSeries?: string;
   pnfl?: string;
   birthDate?: string | null;
-  salaryType?: 'hourly' | 'daily' | 'kpi' | null;
+  salaryType?: 'hourly' | 'daily' | 'monthly' | null;
   baseAmount?: number | null;
   kpiPercent?: number | null;
   roleId: string;

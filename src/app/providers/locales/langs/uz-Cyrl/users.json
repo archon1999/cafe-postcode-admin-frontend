@@ -87,7 +87,7 @@
   "salaryType": {
     "hourly": "Соатбай",
     "daily": "Кунбай",
-    "kpi": "KPI бўйича"
+    "monthly": "Ойлик"
   },
   "labels": {
     "withoutRole": "Роль бириктирилмаган",

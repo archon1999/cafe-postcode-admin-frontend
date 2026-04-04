@@ -23,7 +23,7 @@ type RoleOption = {
 type UserFormFieldsProps = {
   hallOptions: Option[];
   hasHallAccessPermission: boolean;
-  hasPosAccessPermission: boolean;
+  showPinField: boolean;
   isEditMode: boolean;
   isEmployeeSurface: boolean;
   isHallsLoading: boolean;
@@ -37,7 +37,7 @@ type UserFormFieldsProps = {
 export const UserFormFields = ({
   hallOptions,
   hasHallAccessPermission,
-  hasPosAccessPermission,
+  showPinField,
   isEditMode,
   isEmployeeSurface,
   isHallsLoading,
@@ -91,7 +91,7 @@ export const UserFormFields = ({
           <MenuItem value="archived">{t('status.archived')}</MenuItem>
         </RHFSelect>
 
-        {hasPosAccessPermission && (
+        {showPinField && (
           <RHFTextField<UserFormValues>
             name="pin"
             label={t('fields.pin')}
@@ -165,13 +165,12 @@ export const UserFormFields = ({
         <RHFTextField<UserFormValues> name="pnfl" label={t('fields.pnfl')} />
 
         <RHFSelect<UserFormValues> name="salaryType" label={t('fields.salaryType')}>
-          <MenuItem value="">{t('labels.notSelected')}</MenuItem>
           <MenuItem value="hourly">{t('salaryType.hourly')}</MenuItem>
           <MenuItem value="daily">{t('salaryType.daily')}</MenuItem>
-          <MenuItem value="kpi">{t('salaryType.kpi')}</MenuItem>
+          <MenuItem value="monthly">{t('salaryType.monthly')}</MenuItem>
         </RHFSelect>
 
-        {(selectedSalaryType === 'hourly' || selectedSalaryType === 'daily') && (
+        {selectedSalaryType && (
           <RHFTextField<UserFormValues>
             name="baseAmount"
             label={t('fields.baseAmount')}
@@ -180,14 +179,12 @@ export const UserFormFields = ({
           />
         )}
 
-        {selectedSalaryType === 'kpi' && (
-          <RHFTextField<UserFormValues>
-            name="kpiPercent"
-            label={t('fields.kpiPercent')}
-            type="number"
-            inputProps={{ min: 0, max: 100, step: 1 }}
-          />
-        )}
+        <RHFTextField<UserFormValues>
+          name="kpiPercent"
+          label={t('fields.kpiPercent')}
+          type="number"
+          inputProps={{ min: 0, step: 1 }}
+        />
       </Box>
     </Stack>
   </>

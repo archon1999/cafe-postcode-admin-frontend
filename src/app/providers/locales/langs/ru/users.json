@@ -87,7 +87,7 @@
   "salaryType": {
     "hourly": "Почасовая",
     "daily": "Подневная",
-    "kpi": "По KPI"
+    "monthly": "Месячная"
   },
   "labels": {
     "withoutRole": "Роль не назначена",

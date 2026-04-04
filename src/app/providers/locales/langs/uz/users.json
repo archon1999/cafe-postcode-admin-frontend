@@ -87,7 +87,7 @@
   "salaryType": {
     "hourly": "Soatbay",
     "daily": "Kunbay",
-    "kpi": "KPI bo'yicha"
+    "monthly": "Oylik"
   },
   "labels": {
     "withoutRole": "Rol biriktirilmagan",
