@@ -21,8 +21,8 @@ import type {
   AdminTariffOption,
 } from 'shared/api/admin-types';
 import { Form, RHFDatePicker, RHFMultiSelect, RHFRadioGroup, RHFSelect } from 'shared/ui/HookForm';
-import { formatMoney } from 'shared/utils/format-money';
 import { getCurrentTashkentTime } from 'shared/utils/dayjs';
+import { formatMoney } from 'shared/utils/format-money';
 
 const activationSchema = z
   .object({

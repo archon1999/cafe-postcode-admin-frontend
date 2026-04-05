@@ -68,7 +68,7 @@ describe('apiClient query params', () => {
       ordering: '-total',
     });
 
-    expect(getMock).toHaveBeenCalledWith('/api/v1/admin/reports/sales/', {
+    expect(getMock).toHaveBeenCalledWith('/api/v1/admin/reporting/sales/', {
       params: {
         page: 1,
         pageSize: 10,
@@ -109,7 +109,7 @@ describe('apiClient query params', () => {
       isActive: true,
     });
 
-    expect(postMock).toHaveBeenCalledWith('/api/v1/admin/constructor/restaurants/', {
+    expect(postMock).toHaveBeenCalledWith('/api/v1/admin/restaurants/', {
       name: 'Cafe',
       legalName: '',
       taxNumber: '',

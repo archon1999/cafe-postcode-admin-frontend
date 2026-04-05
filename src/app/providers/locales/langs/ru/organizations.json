@@ -1,32 +1,65 @@
 {
   "pages": {
-    "branches": { "title": "Филиалы" },
-    "branchCreate": { "title": "Новый филиал" },
-    "branchEdit": { "title": "Редактирование филиала" },
-    "cashDesks": { "title": "Кассы" },
-    "cashDeskCreate": { "title": "Новая касса" },
-    "cashDeskEdit": { "title": "Редактирование кассы" },
-    "devices": { "title": "Устройства" },
-    "deviceCreate": { "title": "Новое устройство" },
-    "deviceEdit": { "title": "Редактирование устройства" },
-    "distributionPoints": { "title": "Точки продаж" },
-    "distributionPointCreate": { "title": "Новая точка продаж" },
-    "distributionPointEdit": { "title": "Редактирование точки продаж" },
-    "featureConfigs": { "title": "Настройки функций" },
-    "featureConfigCreate": { "title": "Новая настройка функции" },
-    "featureConfigEdit": { "title": "Редактирование настройки функции" },
-    "restaurantFeatureConfig": {
-      "title": "Конфигурация POS",
-      "description": "Настройки POS и конструктора для выбранного ресторана управляются на этой странице."
+    "branches": {
+      "title": "Филиалы"
     },
-    "prepStations": { "title": "Станции приготовления" },
-    "prepStationCreate": { "title": "Новая станция приготовления" },
-    "prepStationEdit": { "title": "Редактирование станции приготовления" },
-    "restaurants": { "title": "Рестораны" },
-    "restaurantCreate": { "title": "Новый ресторан" },
-    "restaurantEdit": { "title": "Редактирование ресторана" },
-    "myRestaurant": { "title": "Мой ресторан" },
-    "myRestaurantGeneral": { "title": "Общее" }
+    "branchCreate": {
+      "title": "Новый филиал"
+    },
+    "branchEdit": {
+      "title": "Редактирование филиала"
+    },
+    "cashDesks": {
+      "title": "Кассы"
+    },
+    "cashDeskCreate": {
+      "title": "Новая касса"
+    },
+    "cashDeskEdit": {
+      "title": "Редактирование кассы"
+    },
+    "devices": {
+      "title": "Устройства"
+    },
+    "deviceCreate": {
+      "title": "Новое устройство"
+    },
+    "deviceEdit": {
+      "title": "Редактирование устройства"
+    },
+    "distributionPoints": {
+      "title": "Точки продаж"
+    },
+    "distributionPointCreate": {
+      "title": "Новая точка продаж"
+    },
+    "distributionPointEdit": {
+      "title": "Редактирование точки продаж"
+    },
+    "prepStations": {
+      "title": "Станции приготовления"
+    },
+    "prepStationCreate": {
+      "title": "Новая станция приготовления"
+    },
+    "prepStationEdit": {
+      "title": "Редактирование станции приготовления"
+    },
+    "restaurants": {
+      "title": "Рестораны"
+    },
+    "restaurantCreate": {
+      "title": "Новый ресторан"
+    },
+    "restaurantEdit": {
+      "title": "Редактирование ресторана"
+    },
+    "myRestaurant": {
+      "title": "Мой ресторан"
+    },
+    "myRestaurantGeneral": {
+      "title": "Общее"
+    }
   },
   "fields": {
     "name": "Название",
@@ -65,7 +98,10 @@
     "hallEnabled": "Модуль залов включен",
     "kitchenEnabled": "Модуль кухни включен",
     "cashierEnabled": "Модуль кассы включен",
-    "ownerDashboardEnabled": "Панель руководителя включена"
+    "ownerDashboardEnabled": "Панель руководителя включена",
+    "tariff": "Тариф",
+    "tariffHint": "Выберите тариф, который определяет доступ ресторана.",
+    "tariffPlaceholder": "Выберите тариф"
   },
   "filters": {
     "all": "Все",
@@ -82,7 +118,6 @@
     "searchCashDesksPlaceholder": "Ищите по названию кассы, расположению или филиалу",
     "searchDevicesPlaceholder": "Ищите по названию устройства, филиалу или залу",
     "searchDistributionPointsPlaceholder": "Ищите по названию точки, каналу, филиалу или залу",
-    "searchFeatureConfigsPlaceholder": "Ищите по ресторану, модулю или роли",
     "searchPrepStationsPlaceholder": "Ищите по названию станции или филиалу",
     "searchRestaurantsPlaceholder": "Ищите по названию ресторана, юр. названию или телефону",
     "searchRestaurantPrepStationsPlaceholder": "Ищите по названию станции",
@@ -114,17 +149,22 @@
     "fiscalProfileDescription": "В этом разделе хранятся поля филиала, влияющие на кассу, такие как сервисный сбор, ИНН и НДС.",
     "branchFiscalProfile": "Фискальный профиль филиала"
   },
-  "helpers": {
-    "featureConfigMissing": "Для ресторана конфигурация POS пока не создана или не загружена."
-  },
   "restaurantManagement": {
     "title": "Управление рестораном",
     "description": "Управляйте операционными разделами, привязанными к ресторану \"{{name}}\".",
     "sections": {
-      "prepStations": { "description": "Управляйте кухонными и барными станциями ресторана." },
-      "cashDesks": { "description": "Управляйте кассами ресторана и их расположением." },
-      "devices": { "description": "Управляйте POS-устройствами, режимами и привязкой к залу." },
-      "distributionPoints": { "description": "Управляйте каналами заказов и точками распределения." }
+      "prepStations": {
+        "description": "Управляйте кухонными и барными станциями ресторана."
+      },
+      "cashDesks": {
+        "description": "Управляйте кассами ресторана и их расположением."
+      },
+      "devices": {
+        "description": "Управляйте POS-устройствами, режимами и привязкой к залу."
+      },
+      "distributionPoints": {
+        "description": "Управляйте каналами заказов и точками распределения."
+      }
     },
     "openList": "Открыть список",
     "createForRestaurant": "Создать для этого ресторана"
@@ -194,20 +234,35 @@
     "createCashDesk": "Новая касса",
     "createDevice": "Новое устройство",
     "createDistributionPoint": "Новая точка",
-    "createFeatureConfig": "Новая настройка",
-    "manageFeatureConfig": "Конфигурация POS",
     "createPrepStation": "Новая станция",
     "createRestaurant": "Новый ресторан",
     "editRestaurantProfile": "Редактировать профиль ресторана"
   },
   "dialogs": {
-    "deleteBranch": { "title": "Удалить филиал", "description": "Удалить филиал \"{{name}}\"?" },
-    "deleteCashDesk": { "title": "Удалить кассу", "description": "Удалить кассу \"{{name}}\"?" },
-    "deleteDevice": { "title": "Удалить устройство", "description": "Удалить устройство \"{{name}}\"?" },
-    "deleteDistributionPoint": { "title": "Удалить точку", "description": "Удалить точку \"{{name}}\"?" },
-    "deleteFeatureConfig": { "title": "Удалить настройку функции", "description": "Удалить эту настройку?" },
-    "deletePrepStation": { "title": "Удалить станцию", "description": "Удалить станцию \"{{name}}\"?" },
-    "deleteRestaurant": { "title": "Удалить ресторан", "description": "Удалить ресторан \"{{name}}\"?" }
+    "deleteBranch": {
+      "title": "Удалить филиал",
+      "description": "Удалить филиал \"{{name}}\"?"
+    },
+    "deleteCashDesk": {
+      "title": "Удалить кассу",
+      "description": "Удалить кассу \"{{name}}\"?"
+    },
+    "deleteDevice": {
+      "title": "Удалить устройство",
+      "description": "Удалить устройство \"{{name}}\"?"
+    },
+    "deleteDistributionPoint": {
+      "title": "Удалить точку",
+      "description": "Удалить точку \"{{name}}\"?"
+    },
+    "deletePrepStation": {
+      "title": "Удалить станцию",
+      "description": "Удалить станцию \"{{name}}\"?"
+    },
+    "deleteRestaurant": {
+      "title": "Удалить ресторан",
+      "description": "Удалить ресторан \"{{name}}\"?"
+    }
   },
   "empty": {
     "branches": {
@@ -248,16 +303,6 @@
       "noResults": {
         "title": "Точка продаж не найдена",
         "description": "Поиск или фильтры не дали результатов."
-      }
-    },
-    "featureConfigs": {
-      "noData": {
-        "title": "Настроек функций пока нет",
-        "description": "После создания новой настройки она появится здесь."
-      },
-      "noResults": {
-        "title": "Настройка функции не найдена",
-        "description": "По выбранным фильтрам подходящая настройка не найдена."
       }
     },
     "prepStations": {

@@ -21,13 +21,7 @@ type CredentialsRevealDialogProps = {
   onClose: () => void;
 };
 
-export function CredentialsRevealDialog({
-  open,
-  title,
-  description,
-  fields,
-  onClose,
-}: CredentialsRevealDialogProps) {
+export function CredentialsRevealDialog({ open, title, description, fields, onClose }: CredentialsRevealDialogProps) {
   const { t } = useTranslate('platform');
 
   return (

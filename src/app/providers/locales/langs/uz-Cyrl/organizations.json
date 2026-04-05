@@ -1,32 +1,65 @@
 {
   "pages": {
-    "branches": { "title": "Филиаллар" },
-    "branchCreate": { "title": "Янги филиал" },
-    "branchEdit": { "title": "Филиални таҳрирлаш" },
-    "cashDesks": { "title": "Кассалар" },
-    "cashDeskCreate": { "title": "Янги касса" },
-    "cashDeskEdit": { "title": "Кассани таҳрирлаш" },
-    "devices": { "title": "Қурилмалар" },
-    "deviceCreate": { "title": "Янги қурилма" },
-    "deviceEdit": { "title": "Қурилмани таҳрирлаш" },
-    "distributionPoints": { "title": "Тарқатиш нуқталари" },
-    "distributionPointCreate": { "title": "Янги тарқатиш нуқтаси" },
-    "distributionPointEdit": { "title": "Тарқатиш нуқтасини таҳрирлаш" },
-    "featureConfigs": { "title": "Функция созламалари" },
-    "featureConfigCreate": { "title": "Янги функция созламаси" },
-    "featureConfigEdit": { "title": "Функция созламасини таҳрирлаш" },
-    "restaurantFeatureConfig": {
-      "title": "POS конфигурацияси",
-      "description": "Танланган ресторан учун POS ва конструктор созламалари шу саҳифада бошқарилади."
+    "branches": {
+      "title": "Филиаллар"
     },
-    "prepStations": { "title": "Тайёрлаш станциялари" },
-    "prepStationCreate": { "title": "Янги тайёрлаш станцияси" },
-    "prepStationEdit": { "title": "Тайёрлаш станциясини таҳрирлаш" },
-    "restaurants": { "title": "Ресторанлар" },
-    "restaurantCreate": { "title": "Янги ресторан" },
-    "restaurantEdit": { "title": "Ресторанни таҳрирлаш" },
-    "myRestaurant": { "title": "Менинг рестораним" },
-    "myRestaurantGeneral": { "title": "Умумий" }
+    "branchCreate": {
+      "title": "Янги филиал"
+    },
+    "branchEdit": {
+      "title": "Филиални таҳрирлаш"
+    },
+    "cashDesks": {
+      "title": "Кассалар"
+    },
+    "cashDeskCreate": {
+      "title": "Янги касса"
+    },
+    "cashDeskEdit": {
+      "title": "Кассани таҳрирлаш"
+    },
+    "devices": {
+      "title": "Қурилмалар"
+    },
+    "deviceCreate": {
+      "title": "Янги қурилма"
+    },
+    "deviceEdit": {
+      "title": "Қурилмани таҳрирлаш"
+    },
+    "distributionPoints": {
+      "title": "Тарқатиш нуқталари"
+    },
+    "distributionPointCreate": {
+      "title": "Янги тарқатиш нуқтаси"
+    },
+    "distributionPointEdit": {
+      "title": "Тарқатиш нуқтасини таҳрирлаш"
+    },
+    "prepStations": {
+      "title": "Тайёрлаш станциялари"
+    },
+    "prepStationCreate": {
+      "title": "Янги тайёрлаш станцияси"
+    },
+    "prepStationEdit": {
+      "title": "Тайёрлаш станциясини таҳрирлаш"
+    },
+    "restaurants": {
+      "title": "Ресторанлар"
+    },
+    "restaurantCreate": {
+      "title": "Янги ресторан"
+    },
+    "restaurantEdit": {
+      "title": "Ресторанни таҳрирлаш"
+    },
+    "myRestaurant": {
+      "title": "Менинг рестораним"
+    },
+    "myRestaurantGeneral": {
+      "title": "Умумий"
+    }
   },
   "fields": {
     "name": "Номи",
@@ -65,7 +98,10 @@
     "hallEnabled": "Заллар модули ёқилган",
     "kitchenEnabled": "Ошхона модули ёқилган",
     "cashierEnabled": "Касса модули ёқилган",
-    "ownerDashboardEnabled": "Раҳбар панели ёқилган"
+    "ownerDashboardEnabled": "Раҳбар панели ёқилган",
+    "tariff": "Тариф",
+    "tariffHint": "Ресторан рухсатларини белгилайдиган тарифни танланг.",
+    "tariffPlaceholder": "Тарифни танланг"
   },
   "filters": {
     "all": "Барчаси",
@@ -82,7 +118,6 @@
     "searchCashDesksPlaceholder": "Касса номи, жойлашув ёки филиал бўйича қидиринг",
     "searchDevicesPlaceholder": "Қурилма номи, филиал ёки зал бўйича қидиринг",
     "searchDistributionPointsPlaceholder": "Нуқта номи, канал, филиал ёки зал бўйича қидиринг",
-    "searchFeatureConfigsPlaceholder": "Ресторан, модул ёки рол бўйича қидиринг",
     "searchPrepStationsPlaceholder": "Станция номи ёки филиал бўйича қидиринг",
     "searchRestaurantsPlaceholder": "Ресторан номи, юридик ном ёки телефон бўйича қидиринг",
     "searchRestaurantPrepStationsPlaceholder": "Станция номи бўйича қидиринг",
@@ -114,17 +149,22 @@
     "fiscalProfileDescription": "Филиалнинг хизмат ҳақи, СТИР ва QQS каби кассага таъсир қилувчи майдонлари шу бўлимда сақланади.",
     "branchFiscalProfile": "Филиал фискал профили"
   },
-  "helpers": {
-    "featureConfigMissing": "Ресторан учун POS конфигурацияси ҳали яратилмаган ёки юкланмаган."
-  },
   "restaurantManagement": {
     "title": "Ресторан бўйича бошқарув",
     "description": "\"{{name}}\" ресторанига тегишли операцион бўлимларни шу ердан бошқаринг.",
     "sections": {
-      "prepStations": { "description": "Ресторан ошхона ва бар станцияларини бошқаринг." },
-      "cashDesks": { "description": "Ресторандаги кассалар ва уларнинг жойлашувини бошқаринг." },
-      "devices": { "description": "POS қурилмалари, режимлари ва зал бирикмаларини бошқаринг." },
-      "distributionPoints": { "description": "Буюртма каналлари ва тарқатиш нуқталарини бошқаринг." }
+      "prepStations": {
+        "description": "Ресторан ошхона ва бар станцияларини бошқаринг."
+      },
+      "cashDesks": {
+        "description": "Ресторандаги кассалар ва уларнинг жойлашувини бошқаринг."
+      },
+      "devices": {
+        "description": "POS қурилмалари, режимлари ва зал бирикмаларини бошқаринг."
+      },
+      "distributionPoints": {
+        "description": "Буюртма каналлари ва тарқатиш нуқталарини бошқаринг."
+      }
     },
     "openList": "Рўйхатни очиш",
     "createForRestaurant": "Шу ресторан учун яратиш"
@@ -194,20 +234,35 @@
     "createCashDesk": "Янги касса",
     "createDevice": "Янги қурилма",
     "createDistributionPoint": "Янги нуқта",
-    "createFeatureConfig": "Янги созлама",
-    "manageFeatureConfig": "POS конфигурацияси",
     "createPrepStation": "Янги станция",
     "createRestaurant": "Янги ресторан",
     "editRestaurantProfile": "Ресторан профилини таҳрирлаш"
   },
   "dialogs": {
-    "deleteBranch": { "title": "Филиални ўчириш", "description": "\"{{name}}\" филиалини ўчирмоқчимисиз?" },
-    "deleteCashDesk": { "title": "Кассани ўчириш", "description": "\"{{name}}\" кассасини ўчирмоқчимисиз?" },
-    "deleteDevice": { "title": "Қурилмани ўчириш", "description": "\"{{name}}\" қурилмасини ўчирмоқчимисиз?" },
-    "deleteDistributionPoint": { "title": "Нуқтани ўчириш", "description": "\"{{name}}\" нуқтасини ўчирмоқчимисиз?" },
-    "deleteFeatureConfig": { "title": "Функция созламасини ўчириш", "description": "Бу созламани ўчирмоқчимисиз?" },
-    "deletePrepStation": { "title": "Станцияни ўчириш", "description": "\"{{name}}\" станциясини ўчирмоқчимисиз?" },
-    "deleteRestaurant": { "title": "Ресторанни ўчириш", "description": "\"{{name}}\" ресторанни ўчирмоқчимисиз?" }
+    "deleteBranch": {
+      "title": "Филиални ўчириш",
+      "description": "\"{{name}}\" филиалини ўчирмоқчимисиз?"
+    },
+    "deleteCashDesk": {
+      "title": "Кассани ўчириш",
+      "description": "\"{{name}}\" кассасини ўчирмоқчимисиз?"
+    },
+    "deleteDevice": {
+      "title": "Қурилмани ўчириш",
+      "description": "\"{{name}}\" қурилмасини ўчирмоқчимисиз?"
+    },
+    "deleteDistributionPoint": {
+      "title": "Нуқтани ўчириш",
+      "description": "\"{{name}}\" нуқтасини ўчирмоқчимисиз?"
+    },
+    "deletePrepStation": {
+      "title": "Станцияни ўчириш",
+      "description": "\"{{name}}\" станциясини ўчирмоқчимисиз?"
+    },
+    "deleteRestaurant": {
+      "title": "Ресторанни ўчириш",
+      "description": "\"{{name}}\" ресторанни ўчирмоқчимисиз?"
+    }
   },
   "empty": {
     "branches": {
@@ -248,16 +303,6 @@
       "noResults": {
         "title": "Тарқатиш нуқтаси топилмади",
         "description": "Қидирув ёки фильтрларга мос нуқта топилмади."
-      }
-    },
-    "featureConfigs": {
-      "noData": {
-        "title": "Функция созламалари ҳали йўқ",
-        "description": "Янги созлама яратилгандан кейин у шу ерда кўринади."
-      },
-      "noResults": {
-        "title": "Функция созламаси топилмади",
-        "description": "Танланган фильтрлар бўйича мос созлама топилмади."
       }
     },
     "prepStations": {

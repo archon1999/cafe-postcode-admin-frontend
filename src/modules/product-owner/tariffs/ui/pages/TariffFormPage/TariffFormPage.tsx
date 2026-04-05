@@ -68,10 +68,7 @@ const TariffFormPage = () => {
   const previousDerivedPermissionIdsRef = useRef<string[]>([]);
 
   const roles = useMemo(
-    () =>
-      (rolesQuery.data ?? []).filter(
-        (role) => role.isSystem && role.code && !PLATFORM_ROLE_CODES.has(role.code),
-      ),
+    () => (rolesQuery.data ?? []).filter((role) => role.isSystem && role.code && !PLATFORM_ROLE_CODES.has(role.code)),
     [rolesQuery.data],
   );
 

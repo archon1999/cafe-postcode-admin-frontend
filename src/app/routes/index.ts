@@ -6,7 +6,6 @@ export {
   canAccessBusinessPartners,
   canAccessCatalog,
   canAccessEmployees,
-  canAccessFeatureConfigs,
   canAccessFloor,
   canAccessKitchen,
   canAccessMyRestaurant,

@@ -48,21 +48,6 @@ export const organizationsRepository: OrganizationsRepository = {
   deleteDistributionPoint(id) {
     return apiClient.deleteAdminDistributionPoint(id);
   },
-  getFeatureConfigs() {
-    return apiClient.getAdminFeatureConfigs({ page: 1, pageSize: 500 }).then((response) => response.data);
-  },
-  getFeatureConfigById(id) {
-    return apiClient.getAdminFeatureConfigById(id);
-  },
-  createFeatureConfig(payload) {
-    return apiClient.createAdminFeatureConfig(payload);
-  },
-  updateFeatureConfig(id, payload) {
-    return apiClient.updateAdminFeatureConfig(id, payload);
-  },
-  deleteFeatureConfig(id) {
-    return apiClient.deleteAdminFeatureConfig(id);
-  },
   getPrepStations() {
     return apiClient.getAdminPrepStations({ page: 1, pageSize: 500 }).then((response) => response.data);
   },
@@ -95,12 +80,6 @@ export const organizationsRepository: OrganizationsRepository = {
   },
   deleteRestaurant(id) {
     return apiClient.deleteAdminRestaurant(id);
-  },
-  getRestaurantFeatureConfig(restaurantId) {
-    return apiClient.getAdminRestaurantFeatureConfig(restaurantId);
-  },
-  upsertRestaurantFeatureConfig(restaurantId, payload) {
-    return apiClient.upsertAdminRestaurantFeatureConfig(restaurantId, payload);
   },
   getHalls() {
     return apiClient.getAdminHalls({ page: 1, pageSize: 500 }).then((response) => response.data);

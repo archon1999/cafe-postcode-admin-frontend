@@ -4,7 +4,6 @@ import type {
   AdminCashDeskPayload,
   AdminDevicePayload,
   AdminDistributionPointPayload,
-  AdminFeatureConfigPayload,
   AdminPrepStationPayload,
   AdminRestaurantPayload,
 } from 'shared/api/admin-types';
@@ -111,39 +110,6 @@ export function useDeleteDistributionPointMutation() {
   });
 }
 
-export function useCreateFeatureConfigMutation() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (payload: AdminFeatureConfigPayload) => organizationsRepository.createFeatureConfig(payload),
-    onSuccess: async () => {
-      await invalidateQueryKeys(queryClient, [organizationsKeys.featureConfigs()]);
-    },
-  });
-}
-
-export function useUpdateFeatureConfigMutation(id: string) {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (payload: AdminFeatureConfigPayload) => organizationsRepository.updateFeatureConfig(id, payload),
-    onSuccess: async () => {
-      await invalidateQueryKeys(queryClient, [
-        organizationsKeys.featureConfigs(),
-        organizationsKeys.featureConfigDetail(id),
-      ]);
-    },
-  });
-}
-
-export function useDeleteFeatureConfigMutation() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (id: string) => organizationsRepository.deleteFeatureConfig(id),
-    onSuccess: async () => {
-      await invalidateQueryKeys(queryClient, [organizationsKeys.featureConfigs()]);
-    },
-  });
-}
-
 export function useCreatePrepStationMutation() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -203,21 +169,6 @@ export function useDeleteRestaurantMutation() {
     mutationFn: (id: string) => organizationsRepository.deleteRestaurant(id),
     onSuccess: async () => {
       await invalidateQueryKeys(queryClient, [organizationsKeys.restaurants()]);
-    },
-  });
-}
-
-export function useUpsertRestaurantFeatureConfigMutation(restaurantId: string) {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (payload: AdminFeatureConfigPayload) =>
-      organizationsRepository.upsertRestaurantFeatureConfig(restaurantId, payload),
-    onSuccess: async () => {
-      await invalidateQueryKeys(queryClient, [
-        organizationsKeys.restaurantFeatureConfig(restaurantId),
-        organizationsKeys.restaurantDetail(restaurantId),
-        organizationsKeys.restaurants(),
-      ]);
     },
   });
 }

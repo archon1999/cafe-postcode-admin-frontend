@@ -67,13 +67,7 @@ export function RolesSelect<T extends FieldValues = FieldValues>({
             noOptionsText={t('labels.noData')}
             renderTags={(value, getTagProps) =>
               value.map((option, index) => (
-                <Chip
-                  {...getTagProps({ index })}
-                  key={option.id}
-                  size="small"
-                  variant="soft"
-                  label={option.name}
-                />
+                <Chip {...getTagProps({ index })} key={option.id} size="small" variant="soft" label={option.name} />
               ))
             }
             renderOption={(props, option, { selected }) => (

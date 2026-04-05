@@ -7,8 +7,6 @@ import type {
   AdminDevicesQueryParams,
   AdminDistributionPoint,
   AdminDistributionPointsQueryParams,
-  AdminFeatureConfig,
-  AdminFeatureConfigsQueryParams,
   AdminHall,
   AdminPaginatedResponse,
   AdminPrepStation,
@@ -113,51 +111,6 @@ export function useGetDistributionPointByIdQuery(
     queryKey: organizationsKeys.distributionPointDetail(id),
     queryFn: () => organizationsRepository.getDistributionPointById(id),
     enabled: Boolean(id),
-    ...options,
-  });
-}
-
-export function useGetFeatureConfigsQuery(
-  options?: Omit<UseQueryOptions<AdminFeatureConfig[]>, 'queryFn' | 'queryKey'>,
-) {
-  return useQuery({
-    queryKey: organizationsKeys.featureConfigs(),
-    queryFn: () => organizationsRepository.getFeatureConfigs(),
-    ...options,
-  });
-}
-
-export function useGetFeatureConfigsListQuery(
-  params: AdminFeatureConfigsQueryParams,
-  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminFeatureConfig>>, 'queryFn' | 'queryKey'>,
-) {
-  return useQuery({
-    queryKey: organizationsKeys.featureConfigsList(params),
-    queryFn: () => apiClient.getAdminFeatureConfigs(params),
-    ...options,
-  });
-}
-
-export function useGetFeatureConfigByIdQuery(
-  id: string,
-  options?: Omit<UseQueryOptions<AdminFeatureConfig>, 'queryFn' | 'queryKey'>,
-) {
-  return useQuery({
-    queryKey: organizationsKeys.featureConfigDetail(id),
-    queryFn: () => organizationsRepository.getFeatureConfigById(id),
-    enabled: Boolean(id),
-    ...options,
-  });
-}
-
-export function useGetRestaurantFeatureConfigQuery(
-  restaurantId: string,
-  options?: Omit<UseQueryOptions<AdminFeatureConfig>, 'queryFn' | 'queryKey'>,
-) {
-  return useQuery({
-    queryKey: organizationsKeys.restaurantFeatureConfig(restaurantId),
-    queryFn: () => organizationsRepository.getRestaurantFeatureConfig(restaurantId),
-    enabled: Boolean(restaurantId),
     ...options,
   });
 }

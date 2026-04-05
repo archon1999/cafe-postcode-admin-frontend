@@ -5,8 +5,6 @@ import type {
   AdminDevicePayload,
   AdminDistributionPoint,
   AdminDistributionPointPayload,
-  AdminFeatureConfig,
-  AdminFeatureConfigPayload,
   AdminHall,
   AdminPrepStation,
   AdminPrepStationPayload,
@@ -30,11 +28,6 @@ export interface OrganizationsRepository {
   createDistributionPoint(payload: AdminDistributionPointPayload): Promise<AdminDistributionPoint>;
   updateDistributionPoint(id: string, payload: AdminDistributionPointPayload): Promise<AdminDistributionPoint>;
   deleteDistributionPoint(id: string): Promise<void>;
-  getFeatureConfigs(): Promise<AdminFeatureConfig[]>;
-  getFeatureConfigById(id: string): Promise<AdminFeatureConfig>;
-  createFeatureConfig(payload: AdminFeatureConfigPayload): Promise<AdminFeatureConfig>;
-  updateFeatureConfig(id: string, payload: AdminFeatureConfigPayload): Promise<AdminFeatureConfig>;
-  deleteFeatureConfig(id: string): Promise<void>;
   getPrepStations(): Promise<AdminPrepStation[]>;
   getPrepStationById(id: string): Promise<AdminPrepStation>;
   createPrepStation(payload: AdminPrepStationPayload): Promise<AdminPrepStation>;
@@ -46,6 +39,4 @@ export interface OrganizationsRepository {
   updateRestaurant(id: string, payload: AdminRestaurantPayload): Promise<AdminRestaurant>;
   deleteRestaurant(id: string): Promise<void>;
   getHalls(): Promise<AdminHall[]>;
-  getRestaurantFeatureConfig(restaurantId: string): Promise<AdminFeatureConfig>;
-  upsertRestaurantFeatureConfig(restaurantId: string, payload: AdminFeatureConfigPayload): Promise<AdminFeatureConfig>;
 }

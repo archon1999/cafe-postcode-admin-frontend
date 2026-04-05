@@ -13,9 +13,6 @@ import type {
   AdminDistributionPoint,
   AdminDistributionPointsQueryParams,
   AdminDistributionPointPayload,
-  AdminFeatureConfig,
-  AdminFeatureConfigsQueryParams,
-  AdminFeatureConfigPayload,
   AdminMxikLookupResult,
   AdminDiningTable,
   AdminDiningTablesQueryParams,
@@ -165,7 +162,7 @@ export const apiClient = {
   },
 
   getAdminMyRestaurant() {
-    return instance.get<AdminRestaurant>('/api/v1/admin/constructor/my-restaurant/').then((response) => response.data);
+    return instance.get<AdminRestaurant>('/api/v1/admin/restaurants/my-restaurant/').then((response) => response.data);
   },
 
   getAdminUsers(params: AdminUsersQueryParams) {
@@ -224,7 +221,7 @@ export const apiClient = {
 
   getAdminRoles() {
     return instance
-      .get<AdminCollectionResponse<AdminRole> | AdminRole[]>('/api/v1/admin/users/roles/', {
+      .get<AdminCollectionResponse<AdminRole> | AdminRole[]>('/api/v1/admin/roles/', {
         params: { pageSize: 100 },
       })
       .then((response) => extractCollectionData(response.data));
@@ -240,7 +237,7 @@ export const apiClient = {
 
   getAdminRolesPage(params: AdminRolesQueryParams) {
     return instance
-      .get<AdminPaginatedResponse<AdminRole>>('/api/v1/admin/users/roles/', {
+      .get<AdminPaginatedResponse<AdminRole>>('/api/v1/admin/roles/', {
         params: {
           page: params.page,
           pageSize: params.pageSize,
@@ -253,30 +250,30 @@ export const apiClient = {
   },
 
   getAdminRoleById(id: string) {
-    return instance.get<AdminRole>(`/api/v1/admin/users/roles/${id}/`).then((response) => response.data);
+    return instance.get<AdminRole>(`/api/v1/admin/roles/${id}/`).then((response) => response.data);
   },
 
   createAdminRole(payload: AdminRolePayload) {
-    return instance.post<AdminRole>('/api/v1/admin/users/roles/', payload).then((response) => response.data);
+    return instance.post<AdminRole>('/api/v1/admin/roles/', payload).then((response) => response.data);
   },
 
   updateAdminRole(id: string, payload: AdminRolePayload) {
-    return instance.put<AdminRole>(`/api/v1/admin/users/roles/${id}/`, payload).then((response) => response.data);
+    return instance.put<AdminRole>(`/api/v1/admin/roles/${id}/`, payload).then((response) => response.data);
   },
 
   deleteAdminRole(id: string) {
-    return instance.delete<void>(`/api/v1/admin/users/roles/${id}/`).then((response) => response.data);
+    return instance.delete<void>(`/api/v1/admin/roles/${id}/`).then((response) => response.data);
   },
 
   getAdminPermissions() {
     return instance
-      .get<AdminCollectionResponse<AdminPermission> | AdminPermission[]>('/api/v1/admin/users/permissions/options/')
+      .get<AdminCollectionResponse<AdminPermission> | AdminPermission[]>('/api/v1/admin/permissions/options/')
       .then((response) => extractCollectionData(response.data));
   },
 
   getAdminPermissionsPage(params: AdminPermissionsQueryParams) {
     return instance
-      .get<AdminPaginatedResponse<AdminPermission>>('/api/v1/admin/users/permissions/', {
+      .get<AdminPaginatedResponse<AdminPermission>>('/api/v1/admin/permissions/', {
         params: {
           page: params.page,
           pageSize: params.pageSize,
@@ -436,7 +433,7 @@ export const apiClient = {
 
   getAdminPrepStations(params?: AdminPrepStationsQueryParams) {
     return instance
-      .get<AdminPaginatedResponse<AdminPrepStation>>('/api/v1/admin/constructor/prep-stations/', {
+      .get<AdminPaginatedResponse<AdminPrepStation>>('/api/v1/admin/restaurants/prep-stations/', {
         params: {
           page: params?.page,
           pageSize: params?.pageSize,
@@ -451,29 +448,29 @@ export const apiClient = {
 
   getAdminPrepStationById(id: string) {
     return instance
-      .get<AdminPrepStation>(`/api/v1/admin/constructor/prep-stations/${id}/`)
+      .get<AdminPrepStation>(`/api/v1/admin/restaurants/prep-stations/${id}/`)
       .then((response) => response.data);
   },
 
   createAdminPrepStation(payload: AdminPrepStationPayload) {
     return instance
-      .post<AdminPrepStation>('/api/v1/admin/constructor/prep-stations/', payload)
+      .post<AdminPrepStation>('/api/v1/admin/restaurants/prep-stations/', payload)
       .then((response) => response.data);
   },
 
   updateAdminPrepStation(id: string, payload: AdminPrepStationPayload) {
     return instance
-      .put<AdminPrepStation>(`/api/v1/admin/constructor/prep-stations/${id}/`, payload)
+      .put<AdminPrepStation>(`/api/v1/admin/restaurants/prep-stations/${id}/`, payload)
       .then((response) => response.data);
   },
 
   deleteAdminPrepStation(id: string) {
-    return instance.delete<void>(`/api/v1/admin/constructor/prep-stations/${id}/`).then((response) => response.data);
+    return instance.delete<void>(`/api/v1/admin/restaurants/prep-stations/${id}/`).then((response) => response.data);
   },
 
   getAdminCashDesks(params?: AdminCashDesksQueryParams) {
     return instance
-      .get<AdminPaginatedResponse<AdminCashDesk>>('/api/v1/admin/constructor/cash-desks/', {
+      .get<AdminPaginatedResponse<AdminCashDesk>>('/api/v1/admin/restaurants/cash-desks/', {
         params: {
           page: params?.page,
           pageSize: params?.pageSize,
@@ -486,28 +483,28 @@ export const apiClient = {
   },
 
   getAdminCashDeskById(id: string) {
-    return instance.get<AdminCashDesk>(`/api/v1/admin/constructor/cash-desks/${id}/`).then((response) => response.data);
+    return instance.get<AdminCashDesk>(`/api/v1/admin/restaurants/cash-desks/${id}/`).then((response) => response.data);
   },
 
   createAdminCashDesk(payload: AdminCashDeskPayload) {
     return instance
-      .post<AdminCashDesk>('/api/v1/admin/constructor/cash-desks/', payload)
+      .post<AdminCashDesk>('/api/v1/admin/restaurants/cash-desks/', payload)
       .then((response) => response.data);
   },
 
   updateAdminCashDesk(id: string, payload: AdminCashDeskPayload) {
     return instance
-      .put<AdminCashDesk>(`/api/v1/admin/constructor/cash-desks/${id}/`, payload)
+      .put<AdminCashDesk>(`/api/v1/admin/restaurants/cash-desks/${id}/`, payload)
       .then((response) => response.data);
   },
 
   deleteAdminCashDesk(id: string) {
-    return instance.delete<void>(`/api/v1/admin/constructor/cash-desks/${id}/`).then((response) => response.data);
+    return instance.delete<void>(`/api/v1/admin/restaurants/cash-desks/${id}/`).then((response) => response.data);
   },
 
   getAdminDevices(params?: AdminDevicesQueryParams) {
     return instance
-      .get<AdminPaginatedResponse<AdminDevice>>('/api/v1/admin/constructor/devices/', {
+      .get<AdminPaginatedResponse<AdminDevice>>('/api/v1/admin/restaurants/devices/', {
         params: {
           page: params?.page,
           pageSize: params?.pageSize,
@@ -521,26 +518,26 @@ export const apiClient = {
   },
 
   getAdminDeviceById(id: string) {
-    return instance.get<AdminDevice>(`/api/v1/admin/constructor/devices/${id}/`).then((response) => response.data);
+    return instance.get<AdminDevice>(`/api/v1/admin/restaurants/devices/${id}/`).then((response) => response.data);
   },
 
   createAdminDevice(payload: AdminDevicePayload) {
-    return instance.post<AdminDevice>('/api/v1/admin/constructor/devices/', payload).then((response) => response.data);
+    return instance.post<AdminDevice>('/api/v1/admin/restaurants/devices/', payload).then((response) => response.data);
   },
 
   updateAdminDevice(id: string, payload: AdminDevicePayload) {
     return instance
-      .put<AdminDevice>(`/api/v1/admin/constructor/devices/${id}/`, payload)
+      .put<AdminDevice>(`/api/v1/admin/restaurants/devices/${id}/`, payload)
       .then((response) => response.data);
   },
 
   deleteAdminDevice(id: string) {
-    return instance.delete<void>(`/api/v1/admin/constructor/devices/${id}/`).then((response) => response.data);
+    return instance.delete<void>(`/api/v1/admin/restaurants/devices/${id}/`).then((response) => response.data);
   },
 
   getAdminDistributionPoints(params?: AdminDistributionPointsQueryParams) {
     return instance
-      .get<AdminPaginatedResponse<AdminDistributionPoint>>('/api/v1/admin/constructor/distribution-points/', {
+      .get<AdminPaginatedResponse<AdminDistributionPoint>>('/api/v1/admin/restaurants/distribution-points/', {
         params: {
           page: params?.page,
           pageSize: params?.pageSize,
@@ -555,40 +552,25 @@ export const apiClient = {
 
   getAdminDistributionPointById(id: string) {
     return instance
-      .get<AdminDistributionPoint>(`/api/v1/admin/constructor/distribution-points/${id}/`)
+      .get<AdminDistributionPoint>(`/api/v1/admin/restaurants/distribution-points/${id}/`)
       .then((response) => response.data);
   },
 
   createAdminDistributionPoint(payload: AdminDistributionPointPayload) {
     return instance
-      .post<AdminDistributionPoint>('/api/v1/admin/constructor/distribution-points/', payload)
+      .post<AdminDistributionPoint>('/api/v1/admin/restaurants/distribution-points/', payload)
       .then((response) => response.data);
   },
 
   updateAdminDistributionPoint(id: string, payload: AdminDistributionPointPayload) {
     return instance
-      .put<AdminDistributionPoint>(`/api/v1/admin/constructor/distribution-points/${id}/`, payload)
+      .put<AdminDistributionPoint>(`/api/v1/admin/restaurants/distribution-points/${id}/`, payload)
       .then((response) => response.data);
   },
 
   deleteAdminDistributionPoint(id: string) {
     return instance
-      .delete<void>(`/api/v1/admin/constructor/distribution-points/${id}/`)
-      .then((response) => response.data);
-  },
-
-  getAdminFeatureConfigs(params?: AdminFeatureConfigsQueryParams) {
-    return instance
-      .get<AdminPaginatedResponse<AdminFeatureConfig>>('/api/v1/admin/constructor/feature-configs/', {
-        params: {
-          page: params?.page,
-          pageSize: params?.pageSize,
-          search: params?.search,
-          orderEntryModeIn: params?.orderEntryModeIn,
-          kitchenModeIn: params?.kitchenModeIn,
-          ordering: params?.ordering,
-        },
-      })
+      .delete<void>(`/api/v1/admin/restaurants/distribution-points/${id}/`)
       .then((response) => response.data);
   },
 
@@ -684,31 +666,9 @@ export const apiClient = {
       .then((response) => response.data);
   },
 
-  getAdminFeatureConfigById(id: string) {
-    return instance
-      .get<AdminFeatureConfig>(`/api/v1/admin/constructor/feature-configs/${id}/`)
-      .then((response) => response.data);
-  },
-
-  createAdminFeatureConfig(payload: AdminFeatureConfigPayload) {
-    return instance
-      .post<AdminFeatureConfig>('/api/v1/admin/constructor/feature-configs/', payload)
-      .then((response) => response.data);
-  },
-
-  updateAdminFeatureConfig(id: string, payload: AdminFeatureConfigPayload) {
-    return instance
-      .put<AdminFeatureConfig>(`/api/v1/admin/constructor/feature-configs/${id}/`, payload)
-      .then((response) => response.data);
-  },
-
-  deleteAdminFeatureConfig(id: string) {
-    return instance.delete<void>(`/api/v1/admin/constructor/feature-configs/${id}/`).then((response) => response.data);
-  },
-
   getAdminRestaurants(params?: AdminRestaurantsQueryParams) {
     return instance
-      .get<AdminPaginatedResponse<AdminRestaurant>>('/api/v1/admin/constructor/restaurants/', {
+      .get<AdminPaginatedResponse<AdminRestaurant>>('/api/v1/admin/restaurants/', {
         params: {
           page: params?.page,
           pageSize: params?.pageSize,
@@ -721,37 +681,19 @@ export const apiClient = {
   },
 
   getAdminRestaurantById(id: string) {
-    return instance
-      .get<AdminRestaurant>(`/api/v1/admin/constructor/restaurants/${id}/`)
-      .then((response) => response.data);
-  },
-
-  getAdminRestaurantFeatureConfig(restaurantId: string) {
-    return instance
-      .get<AdminFeatureConfig>(`/api/v1/admin/restaurants/${restaurantId}/feature-config/`)
-      .then((response) => response.data);
+    return instance.get<AdminRestaurant>(`/api/v1/admin/restaurants/${id}/`).then((response) => response.data);
   },
 
   createAdminRestaurant(payload: AdminRestaurantPayload) {
-    return instance
-      .post<AdminRestaurant>('/api/v1/admin/constructor/restaurants/', payload)
-      .then((response) => response.data);
+    return instance.post<AdminRestaurant>('/api/v1/admin/restaurants/', payload).then((response) => response.data);
   },
 
   updateAdminRestaurant(id: string, payload: AdminRestaurantPayload) {
-    return instance
-      .put<AdminRestaurant>(`/api/v1/admin/constructor/restaurants/${id}/`, payload)
-      .then((response) => response.data);
-  },
-
-  upsertAdminRestaurantFeatureConfig(restaurantId: string, payload: AdminFeatureConfigPayload) {
-    return instance
-      .put<AdminFeatureConfig>(`/api/v1/admin/restaurants/${restaurantId}/feature-config/`, payload)
-      .then((response) => response.data);
+    return instance.put<AdminRestaurant>(`/api/v1/admin/restaurants/${id}/`, payload).then((response) => response.data);
   },
 
   deleteAdminRestaurant(id: string) {
-    return instance.delete<void>(`/api/v1/admin/constructor/restaurants/${id}/`).then((response) => response.data);
+    return instance.delete<void>(`/api/v1/admin/restaurants/${id}/`).then((response) => response.data);
   },
 
   activateAdminRestaurant(id: string, payload: AdminRestaurantActivationPayload) {
@@ -807,7 +749,7 @@ export const apiClient = {
 
   getAdminOrders(params: AdminOrdersQueryParams) {
     return instance
-      .get<AdminPaginatedResponse<AdminOrder>>('/api/v1/admin/orders/', {
+      .get<AdminPaginatedResponse<AdminOrder>>('/api/v1/admin/sales/orders/', {
         params: {
           page: params.page,
           pageSize: params.pageSize,
@@ -821,12 +763,12 @@ export const apiClient = {
   },
 
   getAdminOrderById(id: string) {
-    return instance.get<AdminOrder>(`/api/v1/admin/orders/${id}/`).then((response) => response.data);
+    return instance.get<AdminOrder>(`/api/v1/admin/sales/orders/${id}/`).then((response) => response.data);
   },
 
   getAdminOrderItems(params: AdminOrderItemsQueryParams) {
     return instance
-      .get<AdminPaginatedResponse<AdminOrderItem>>('/api/v1/admin/order-items/', {
+      .get<AdminPaginatedResponse<AdminOrderItem>>('/api/v1/admin/sales/order-items/', {
         params: {
           page: params.page,
           pageSize: params.pageSize,
@@ -839,12 +781,12 @@ export const apiClient = {
   },
 
   getAdminOrderItemById(id: string) {
-    return instance.get<AdminOrderItem>(`/api/v1/admin/order-items/${id}/`).then((response) => response.data);
+    return instance.get<AdminOrderItem>(`/api/v1/admin/sales/order-items/${id}/`).then((response) => response.data);
   },
 
   getAdminOrderItemNotes(params: AdminOrderItemNotesQueryParams) {
     return instance
-      .get<AdminPaginatedResponse<AdminOrderItemNote>>('/api/v1/admin/order-item-notes/', {
+      .get<AdminPaginatedResponse<AdminOrderItemNote>>('/api/v1/admin/sales/order-item-notes/', {
         params: {
           page: params.page,
           pageSize: params.pageSize,
@@ -856,12 +798,14 @@ export const apiClient = {
   },
 
   getAdminOrderItemNoteById(id: string) {
-    return instance.get<AdminOrderItemNote>(`/api/v1/admin/order-item-notes/${id}/`).then((response) => response.data);
+    return instance
+      .get<AdminOrderItemNote>(`/api/v1/admin/sales/order-item-notes/${id}/`)
+      .then((response) => response.data);
   },
 
   getAdminPayments(params: AdminPaymentsQueryParams) {
     return instance
-      .get<AdminPaginatedResponse<AdminPayment>>('/api/v1/admin/payments/', {
+      .get<AdminPaginatedResponse<AdminPayment>>('/api/v1/admin/billing/payments/', {
         params: {
           page: params.page,
           pageSize: params.pageSize,
@@ -875,12 +819,12 @@ export const apiClient = {
   },
 
   getAdminPaymentById(id: string) {
-    return instance.get<AdminPayment>(`/api/v1/admin/payments/${id}/`).then((response) => response.data);
+    return instance.get<AdminPayment>(`/api/v1/admin/billing/payments/${id}/`).then((response) => response.data);
   },
 
   getAdminReceipts(params: AdminReceiptsQueryParams) {
     return instance
-      .get<AdminPaginatedResponse<AdminReceipt>>('/api/v1/admin/receipts/', {
+      .get<AdminPaginatedResponse<AdminReceipt>>('/api/v1/admin/billing/receipts/', {
         params: {
           page: params.page,
           pageSize: params.pageSize,
@@ -894,7 +838,7 @@ export const apiClient = {
   },
 
   getAdminReceiptById(id: string) {
-    return instance.get<AdminReceipt>(`/api/v1/admin/receipts/${id}/`).then((response) => response.data);
+    return instance.get<AdminReceipt>(`/api/v1/admin/billing/receipts/${id}/`).then((response) => response.data);
   },
 
   getAdminCatalogCategories(params?: AdminCatalogCategoriesQueryParams) {
@@ -985,7 +929,7 @@ export const apiClient = {
 
   getAdminReportSummary(params: AdminSummaryReportQueryParams) {
     return instance
-      .get<AdminReportSummary>('/api/v1/admin/reports/summary/', {
+      .get<AdminReportSummary>('/api/v1/admin/reporting/summary/', {
         params: mapReportParams(params),
       })
       .then((response) => response.data);
@@ -993,7 +937,7 @@ export const apiClient = {
 
   exportAdminReportSummary(params: AdminSummaryReportQueryParams) {
     return instance
-      .get<Blob>('/api/v1/admin/reports/summary/export/', {
+      .get<Blob>('/api/v1/admin/reporting/summary/export/', {
         params: mapReportParams(params),
         responseType: 'blob',
       })
@@ -1005,7 +949,7 @@ export const apiClient = {
 
   getAdminSalesReport(params: AdminSalesReportQueryParams) {
     return instance
-      .get<AdminPaginatedResponse<AdminSalesReportRow>>('/api/v1/admin/reports/sales/', {
+      .get<AdminPaginatedResponse<AdminSalesReportRow>>('/api/v1/admin/reporting/sales/', {
         params: mapReportParams(params),
       })
       .then((response) => response.data);
@@ -1013,7 +957,7 @@ export const apiClient = {
 
   exportAdminSalesReport(params: AdminSalesReportQueryParams) {
     return instance
-      .get<Blob>('/api/v1/admin/reports/sales/export/', {
+      .get<Blob>('/api/v1/admin/reporting/sales/export/', {
         params: mapReportParams(params),
         responseType: 'blob',
       })
@@ -1025,7 +969,7 @@ export const apiClient = {
 
   getAdminOpenChecksReport(params: AdminOpenChecksReportQueryParams) {
     return instance
-      .get<AdminPaginatedResponse<AdminOpenChecksReportRow>>('/api/v1/admin/reports/open-checks/', {
+      .get<AdminPaginatedResponse<AdminOpenChecksReportRow>>('/api/v1/admin/reporting/open-checks/', {
         params: mapReportParams(params),
       })
       .then((response) => response.data);
@@ -1033,7 +977,7 @@ export const apiClient = {
 
   exportAdminOpenChecksReport(params: AdminOpenChecksReportQueryParams) {
     return instance
-      .get<Blob>('/api/v1/admin/reports/open-checks/export/', {
+      .get<Blob>('/api/v1/admin/reporting/open-checks/export/', {
         params: mapReportParams(params),
         responseType: 'blob',
       })
@@ -1045,7 +989,7 @@ export const apiClient = {
 
   getAdminTopItemsReport(params: AdminTopItemsReportQueryParams) {
     return instance
-      .get<AdminPaginatedResponse<AdminTopItemsReportRow>>('/api/v1/admin/reports/top-items/', {
+      .get<AdminPaginatedResponse<AdminTopItemsReportRow>>('/api/v1/admin/reporting/top-items/', {
         params: mapReportParams(params),
       })
       .then((response) => response.data);
@@ -1053,7 +997,7 @@ export const apiClient = {
 
   exportAdminTopItemsReport(params: AdminTopItemsReportQueryParams) {
     return instance
-      .get<Blob>('/api/v1/admin/reports/top-items/export/', {
+      .get<Blob>('/api/v1/admin/reporting/top-items/export/', {
         params: mapReportParams(params),
         responseType: 'blob',
       })
@@ -1065,7 +1009,7 @@ export const apiClient = {
 
   getAdminTopStaffReport(params: AdminTopStaffReportQueryParams) {
     return instance
-      .get<AdminPaginatedResponse<AdminTopStaffReportRow>>('/api/v1/admin/reports/top-staff/', {
+      .get<AdminPaginatedResponse<AdminTopStaffReportRow>>('/api/v1/admin/reporting/top-staff/', {
         params: mapReportParams(params),
       })
       .then((response) => response.data);
@@ -1073,7 +1017,7 @@ export const apiClient = {
 
   exportAdminTopStaffReport(params: AdminTopStaffReportQueryParams) {
     return instance
-      .get<Blob>('/api/v1/admin/reports/top-staff/export/', {
+      .get<Blob>('/api/v1/admin/reporting/top-staff/export/', {
         params: mapReportParams(params),
         responseType: 'blob',
       })
@@ -1085,7 +1029,7 @@ export const apiClient = {
 
   getAdminPaymentBreakdownReport(params: AdminPaymentBreakdownReportQueryParams) {
     return instance
-      .get<AdminPaginatedResponse<AdminPaymentBreakdownReportRow>>('/api/v1/admin/reports/payment-breakdown/', {
+      .get<AdminPaginatedResponse<AdminPaymentBreakdownReportRow>>('/api/v1/admin/reporting/payment-breakdown/', {
         params: mapReportParams(params),
       })
       .then((response) => response.data);
@@ -1093,7 +1037,7 @@ export const apiClient = {
 
   exportAdminPaymentBreakdownReport(params: AdminPaymentBreakdownReportQueryParams) {
     return instance
-      .get<Blob>('/api/v1/admin/reports/payment-breakdown/export/', {
+      .get<Blob>('/api/v1/admin/reporting/payment-breakdown/export/', {
         params: mapReportParams(params),
         responseType: 'blob',
       })
@@ -1105,7 +1049,7 @@ export const apiClient = {
 
   getAdminShiftReport(params: AdminShiftReportQueryParams) {
     return instance
-      .get<AdminPaginatedResponse<AdminShiftReportRow>>('/api/v1/admin/reports/shifts/', {
+      .get<AdminPaginatedResponse<AdminShiftReportRow>>('/api/v1/admin/reporting/shifts/', {
         params: mapReportParams(params),
       })
       .then((response) => response.data);
@@ -1113,7 +1057,7 @@ export const apiClient = {
 
   exportAdminShiftReport(params: AdminShiftReportQueryParams) {
     return instance
-      .get<Blob>('/api/v1/admin/reports/shifts/export/', {
+      .get<Blob>('/api/v1/admin/reporting/shifts/export/', {
         params: mapReportParams(params),
         responseType: 'blob',
       })

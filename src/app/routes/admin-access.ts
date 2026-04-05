@@ -49,25 +49,17 @@ const FLOOR_LAYOUT_PERMISSION_CODES: PermissionCode[] = [
   'tables.create',
   'tables.update',
 ];
-const TABLE_SESSION_PERMISSION_CODES: PermissionCode[] = [
-  'table_sessions.view',
-];
+const TABLE_SESSION_PERMISSION_CODES: PermissionCode[] = ['table_sessions.view'];
 const MY_RESTAURANT_GENERAL_PERMISSION_CODES: PermissionCode[] = [
   'restaurant_settings.view',
   'restaurant_settings.update',
-  'restaurant_feature_configs.view',
-  'restaurant_feature_configs.update',
 ];
 const MY_RESTAURANT_CASH_DESK_PERMISSION_CODES: PermissionCode[] = [
   'cash_desks.view',
   'cash_desks.create',
   'cash_desks.update',
 ];
-const MY_RESTAURANT_DEVICE_PERMISSION_CODES: PermissionCode[] = [
-  'devices.view',
-  'devices.create',
-  'devices.update',
-];
+const MY_RESTAURANT_DEVICE_PERMISSION_CODES: PermissionCode[] = ['devices.view', 'devices.create', 'devices.update'];
 const MY_RESTAURANT_PREP_STATION_PERMISSION_CODES: PermissionCode[] = [
   'prep_stations.view',
   'prep_stations.create',
@@ -78,11 +70,7 @@ const MY_RESTAURANT_DISTRIBUTION_POINT_PERMISSION_CODES: PermissionCode[] = [
   'distribution_points.create',
   'distribution_points.update',
 ];
-const EMPLOYEE_PERMISSION_CODES: PermissionCode[] = [
-  'employees.view',
-  'employees.create',
-  'employees.update',
-];
+const EMPLOYEE_PERMISSION_CODES: PermissionCode[] = ['employees.view', 'employees.create', 'employees.update'];
 
 const ADMIN_LANDING_CANDIDATES = [
   RoutePath.platformBusinessPartnerList,
@@ -179,10 +167,6 @@ export function canAccessRoles(snapshot?: AdminAccessSnapshot | null) {
 
 export function canAccessPermissions(snapshot?: AdminAccessSnapshot | null) {
   return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, ['permissions.view']);
-}
-
-export function canAccessFeatureConfigs(_snapshot?: AdminAccessSnapshot | null) {
-  return false;
 }
 
 export function canAccessMyRestaurant(snapshot?: AdminAccessSnapshot | null) {
@@ -303,10 +287,7 @@ export function canAccessAdminPath(pathname: string, snapshot?: AdminAccessSnaps
     return canAccessCatalog(snapshot);
   }
 
-  if (
-    matchesPrefix(pathname, RoutePath.floorHallList) ||
-    matchesPrefix(pathname, RoutePath.floorZoneList)
-  ) {
+  if (matchesPrefix(pathname, RoutePath.floorHallList) || matchesPrefix(pathname, RoutePath.floorZoneList)) {
     return canAccessFloor(snapshot);
   }
 

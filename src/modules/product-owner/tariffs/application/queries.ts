@@ -58,9 +58,7 @@ export function useGetTariffByIdQuery(
   });
 }
 
-export function useGetTariffOptionsQuery(
-  options?: Omit<UseQueryOptions<AdminTariffOption[]>, 'queryFn' | 'queryKey'>,
-) {
+export function useGetTariffOptionsQuery(options?: Omit<UseQueryOptions<AdminTariffOption[]>, 'queryFn' | 'queryKey'>) {
   return useQuery({
     queryKey: platformKeys.tariffOptions(),
     queryFn: () => apiClient.getAdminTariffOptions(),

@@ -7,8 +7,6 @@ import type {
   AdminDevicesQueryParams,
   AdminDistributionPoint,
   AdminDistributionPointsQueryParams,
-  AdminFeatureConfig,
-  AdminFeatureConfigsQueryParams,
   AdminHall,
   AdminPaginatedResponse,
   AdminPrepStation,
@@ -117,51 +115,6 @@ export function useGetDistributionPointByIdQuery(
   });
 }
 
-export function useGetFeatureConfigsQuery(
-  options?: Omit<UseQueryOptions<AdminFeatureConfig[]>, 'queryFn' | 'queryKey'>,
-) {
-  return useQuery({
-    queryKey: organizationsKeys.featureConfigs(),
-    queryFn: () => organizationsRepository.getFeatureConfigs(),
-    ...options,
-  });
-}
-
-export function useGetFeatureConfigsListQuery(
-  params: AdminFeatureConfigsQueryParams,
-  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminFeatureConfig>>, 'queryFn' | 'queryKey'>,
-) {
-  return useQuery({
-    queryKey: organizationsKeys.featureConfigsList(params),
-    queryFn: () => apiClient.getAdminFeatureConfigs(params),
-    ...options,
-  });
-}
-
-export function useGetFeatureConfigByIdQuery(
-  id: string,
-  options?: Omit<UseQueryOptions<AdminFeatureConfig>, 'queryFn' | 'queryKey'>,
-) {
-  return useQuery({
-    queryKey: organizationsKeys.featureConfigDetail(id),
-    queryFn: () => organizationsRepository.getFeatureConfigById(id),
-    enabled: Boolean(id),
-    ...options,
-  });
-}
-
-export function useGetRestaurantFeatureConfigQuery(
-  restaurantId: string,
-  options?: Omit<UseQueryOptions<AdminFeatureConfig>, 'queryFn' | 'queryKey'>,
-) {
-  return useQuery({
-    queryKey: organizationsKeys.restaurantFeatureConfig(restaurantId),
-    queryFn: () => organizationsRepository.getRestaurantFeatureConfig(restaurantId),
-    enabled: Boolean(restaurantId),
-    ...options,
-  });
-}
-
 export function useGetPrepStationsQuery(options?: Omit<UseQueryOptions<AdminPrepStation[]>, 'queryFn' | 'queryKey'>) {
   return useQuery({
     queryKey: organizationsKeys.prepStations(),
@@ -201,9 +154,7 @@ export function useGetRestaurantsQuery(options?: Omit<UseQueryOptions<AdminResta
   });
 }
 
-export function useGetMyRestaurantQuery(
-  options?: Omit<UseQueryOptions<AdminRestaurant>, 'queryFn' | 'queryKey'>,
-) {
+export function useGetMyRestaurantQuery(options?: Omit<UseQueryOptions<AdminRestaurant>, 'queryFn' | 'queryKey'>) {
   return useQuery({
     queryKey: organizationsKeys.myRestaurant(),
     queryFn: () => organizationsRepository.getMyRestaurant(),

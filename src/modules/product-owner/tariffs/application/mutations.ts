@@ -87,7 +87,11 @@ export function useUpdateTariffMutation(id: string) {
   return useMutation({
     mutationFn: (payload: AdminTariffPayload) => apiClient.updateAdminTariff(id, payload),
     onSuccess: async () => {
-      await invalidate(queryClient, [platformKeys.tariffs(), platformKeys.tariffDetail(id), platformKeys.tariffOptions()]);
+      await invalidate(queryClient, [
+        platformKeys.tariffs(),
+        platformKeys.tariffDetail(id),
+        platformKeys.tariffOptions(),
+      ]);
     },
   });
 }

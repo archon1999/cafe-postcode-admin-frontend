@@ -17,8 +17,6 @@ export type KitchenTicketStatus = 'new' | 'cooking' | 'done';
 export type KitchenTicketRouteMode = 'display' | 'printer' | 'both';
 export type AdminDeviceMode = 'admin' | 'waiter' | 'cashier' | 'kitchen_display' | 'owner_dashboard';
 export type AdminDistributionPointKind = 'hall' | 'online' | 'takeaway' | 'delivery';
-export type AdminFeatureOrderEntryMode = 'hall' | 'cashier_builder';
-export type AdminFeatureKitchenMode = 'display' | 'printer' | 'both';
 export type AdminDiningTableShape = 'square' | 'rectangle' | 'round' | 'oval';
 export type AdminTableShapeVariant =
   | 'seat2_horizontal'
@@ -287,33 +285,6 @@ export type AdminDistributionPointPayload = {
   isActive: boolean;
 };
 
-export type AdminFeatureConfig = {
-  id: string;
-  restaurant?: string | null;
-  restaurantName?: string | null;
-  hallEnabled: boolean;
-  kitchenEnabled: boolean;
-  cashierEnabled: boolean;
-  ownerDashboardEnabled: boolean;
-  orderEntryMode: AdminFeatureOrderEntryMode;
-  kitchenMode: AdminFeatureKitchenMode;
-  enabledModules: string[];
-  enabledRoles: string[];
-  enabledRoleDetails?: AdminRoleSummary[];
-};
-
-export type AdminFeatureConfigPayload = {
-  restaurant?: string;
-  hallEnabled: boolean;
-  kitchenEnabled: boolean;
-  cashierEnabled: boolean;
-  ownerDashboardEnabled: boolean;
-  orderEntryMode: AdminFeatureOrderEntryMode;
-  kitchenMode: AdminFeatureKitchenMode;
-  enabledModules: string[];
-  enabledRoles: string[];
-};
-
 export type AdminPrepStation = {
   id: string;
   name: string;
@@ -325,6 +296,13 @@ export type AdminPrepStationPayload = {
   name: string;
   kind: 'kitchen' | 'bar' | 'other';
   isActive: boolean;
+};
+
+export type AdminRestaurantTariff = {
+  id: string;
+  name: string;
+  permissionCodes: string[];
+  roleCodes: string[];
 };
 
 export type AdminRestaurant = {
@@ -339,6 +317,10 @@ export type AdminRestaurant = {
   currency: string;
   authCode?: string;
   isActive: boolean;
+  restaurantAccessActive?: boolean;
+  permissionCodes?: string[];
+  roleCodes?: string[];
+  tariff?: AdminRestaurantTariff | null;
   branches?: AdminBranch[];
 };
 
@@ -349,6 +331,7 @@ export type AdminRestaurantPayload = {
   phone: string;
   address: string;
   isActive: boolean;
+  tariffId?: string | null;
 };
 
 export type AdminBusinessPartner = {
@@ -885,11 +868,6 @@ export type AdminDevicesQueryParams = AdminListQueryParams & {
 export type AdminDistributionPointsQueryParams = AdminListQueryParams & {
   kindIn?: string;
   isActive?: boolean;
-};
-
-export type AdminFeatureConfigsQueryParams = AdminListQueryParams & {
-  orderEntryModeIn?: string;
-  kitchenModeIn?: string;
 };
 
 export type AdminPrepStationsQueryParams = AdminListQueryParams & {
