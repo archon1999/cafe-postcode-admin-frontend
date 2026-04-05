@@ -15,6 +15,8 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
+import { canAccessFloor } from 'app/routes';
+import { useCurrentUser } from 'modules/auth';
 import type { AdminDevice, AdminDevicePayload } from 'shared/api/admin-types';
 import { DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_PAGINATION_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState } from 'shared/ui/CustomDataGrid';
@@ -59,8 +61,10 @@ function RestaurantDeviceDialog({
 }) {
   const { t } = useTranslate('organizations');
   const { t: tCommon } = useTranslate('common');
+  const { profile } = useCurrentUser();
   const isEditMode = Boolean(item);
-  const hallsQuery = useGetOrganizationsHallsQuery();
+  const canManageHallAssignments = canAccessFloor(profile);
+  const hallsQuery = useGetOrganizationsHallsQuery({ enabled: open && canManageHallAssignments });
   const createMutation = useCreateDeviceMutation();
   const updateMutation = useUpdateDeviceMutation(item?.id ?? '');
 
@@ -83,17 +87,21 @@ function RestaurantDeviceDialog({
   }, [item, methods, open]);
 
   useEffect(() => {
-    if (selectedPrimaryHallId && !methods.getValues('allowedHallIds').includes(selectedPrimaryHallId)) {
+    if (
+      canManageHallAssignments &&
+      selectedPrimaryHallId &&
+      !methods.getValues('allowedHallIds').includes(selectedPrimaryHallId)
+    ) {
       methods.setValue('allowedHallIds', [...methods.getValues('allowedHallIds'), selectedPrimaryHallId]);
     }
-  }, [methods, selectedPrimaryHallId]);
+  }, [canManageHallAssignments, methods, selectedPrimaryHallId]);
 
   const onSubmit = methods.handleSubmit(async (values) => {
     const payload: AdminDevicePayload = {
       name: values.name.trim(),
       mode: values.mode,
-      primaryHallId: values.primaryHallId || null,
-      allowedHallIds: values.allowedHallIds,
+      primaryHallId: canManageHallAssignments ? values.primaryHallId || null : (item?.primaryHallId ?? null),
+      allowedHallIds: canManageHallAssignments ? values.allowedHallIds : (item?.allowedHallIds ?? []),
       isActive: values.isActive,
     };
 
@@ -120,29 +128,33 @@ function RestaurantDeviceDialog({
                 </MenuItem>
               ))}
             </RHFSelect>
-            <RHFSelect<Values>
-              name="primaryHallId"
-              label={t('fields.primaryHall')}
-              helperText={hallsQuery.isLoading ? tCommon('labels.loading') : t('fields.primaryHallHint')}>
-              <MenuItem value="">{t('labels.notSelected')}</MenuItem>
-              {hallOptions.map((hall) => (
-                <MenuItem key={hall.id} value={hall.id}>
-                  {formatHallDisplayName(hall.name, undefined, tCommon)}
-                </MenuItem>
-              ))}
-            </RHFSelect>
-            <RHFMultiSelect<Values>
-              name="allowedHallIds"
-              label={t('fields.allowedHalls')}
-              options={hallOptions.map((hall) => ({
-                value: hall.id,
-                label: formatHallDisplayName(hall.name, undefined, tCommon),
-              }))}
-              checkbox
-              chip
-              placeholder={t('labels.notSelected')}
-              helperText={hallsQuery.isLoading ? tCommon('labels.loading') : t('fields.allowedHallsHint')}
-            />
+            {canManageHallAssignments ? (
+              <>
+                <RHFSelect<Values>
+                  name="primaryHallId"
+                  label={t('fields.primaryHall')}
+                  helperText={hallsQuery.isLoading ? tCommon('labels.loading') : t('fields.primaryHallHint')}>
+                  <MenuItem value="">{t('labels.notSelected')}</MenuItem>
+                  {hallOptions.map((hall) => (
+                    <MenuItem key={hall.id} value={hall.id}>
+                      {formatHallDisplayName(hall.name, undefined, tCommon)}
+                    </MenuItem>
+                  ))}
+                </RHFSelect>
+                <RHFMultiSelect<Values>
+                  name="allowedHallIds"
+                  label={t('fields.allowedHalls')}
+                  options={hallOptions.map((hall) => ({
+                    value: hall.id,
+                    label: formatHallDisplayName(hall.name, undefined, tCommon),
+                  }))}
+                  checkbox
+                  chip
+                  placeholder={t('labels.notSelected')}
+                  helperText={hallsQuery.isLoading ? tCommon('labels.loading') : t('fields.allowedHallsHint')}
+                />
+              </>
+            ) : null}
             <RHFSwitch<Values> name="isActive" label={t('fields.status')} />
           </Stack>
         </DialogContent>

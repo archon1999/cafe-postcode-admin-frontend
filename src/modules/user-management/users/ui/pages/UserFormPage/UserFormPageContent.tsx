@@ -51,7 +51,6 @@ export const UserFormPageContent = ({ id, surface = 'user' }: UserFormPageConten
   const listPath = isEmployeeSurface ? RoutePath.employeeList : RoutePath.userList;
 
   const rolesQuery = useGetRolesQuery(surface);
-  const hallsQuery = useGetHallsQuery();
   const systemUserQuery = useGetUserByIdQuery(id ?? '', { enabled: isEditMode && !isEmployeeSurface });
   const employeeUserQuery = useGetEmployeeByIdQuery(id ?? '', { enabled: isEditMode && isEmployeeSurface });
   const userQuery = isEmployeeSurface ? employeeUserQuery : systemUserQuery;
@@ -73,7 +72,6 @@ export const UserFormPageContent = ({ id, surface = 'user' }: UserFormPageConten
   const selectedPrimaryHallId = watch('primaryHallId');
   const selectedAllowedHallIds = watch('allowedHallIds');
   const roles = Array.isArray(rolesQuery.data) ? rolesQuery.data : [];
-  const halls = Array.isArray(hallsQuery.data) ? hallsQuery.data : [];
   const selectedRole = roles.find((role) => role.id === selectedRoleId) ?? null;
   const hasPosAccessPermission = Boolean(selectedRole?.permissions.some((permission) => permission.scope === 'pos'));
   const showPinField = isEmployeeSurface || hasPosAccessPermission;
@@ -84,6 +82,8 @@ export const UserFormPageContent = ({ id, surface = 'user' }: UserFormPageConten
       ),
     ),
   );
+  const hallsQuery = useGetHallsQuery({ enabled: hasHallAccessPermission });
+  const halls = Array.isArray(hallsQuery.data) ? hallsQuery.data : [];
 
   useEffect(() => {
     if (userQuery.data) {

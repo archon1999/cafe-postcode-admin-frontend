@@ -11,7 +11,7 @@ import {
   useRotateRestaurantAuthCodeMutation,
 } from 'modules/product-owner/business-partners/application';
 import type { AdminRestaurant } from 'shared/api/admin-types';
-import { DEFAULT_PAGINATION_MODEL, DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
+import { DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_PAGINATION_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState } from 'shared/ui/CustomDataGrid';
 import { Iconify } from 'shared/ui/Iconify';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
@@ -20,9 +20,9 @@ import { useGetRestaurantsListQuery } from '../../../application';
 import {
   RestaurantActivateDialog,
   RestaurantCredentialsDialog,
+  type RestaurantCredentialsDialogState,
   RestaurantDeactivateDialog,
   RestaurantDeleteDialog,
-  type RestaurantCredentialsDialogState,
 } from '../../components';
 
 import {
@@ -115,6 +115,7 @@ export function RestaurantsGrid() {
             label={tPlatform('actions.rotateAuthCode', { defaultValue: 'Aktivatsiya kodini yangilash' })}
             icon={<Iconify icon="solar:refresh-bold" />}
             showInMenu
+            disabled={!params.row.isActive}
             onClick={async () => {
               const result = await rotateAuthCodeMutation.mutateAsync(params.row.id);
               setCredentialsDialogOpen({
@@ -243,10 +244,7 @@ export function RestaurantsGrid() {
         }}
       />
 
-      <RestaurantCredentialsDialog
-        open={credentialsDialogOpen}
-        onClose={() => setCredentialsDialogOpen(null)}
-      />
+      <RestaurantCredentialsDialog open={credentialsDialogOpen} onClose={() => setCredentialsDialogOpen(null)} />
     </>
   );
 }

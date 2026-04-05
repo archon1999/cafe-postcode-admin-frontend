@@ -15,6 +15,8 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
+import { canAccessFloor } from 'app/routes';
+import { useCurrentUser } from 'modules/auth';
 import type { AdminDistributionPoint, AdminDistributionPointPayload } from 'shared/api/admin-types';
 import { DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_PAGINATION_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState } from 'shared/ui/CustomDataGrid';
@@ -59,8 +61,10 @@ function RestaurantDistributionPointDialog({
 }) {
   const { t } = useTranslate('organizations');
   const { t: tCommon } = useTranslate('common');
+  const { profile } = useCurrentUser();
   const isEditMode = Boolean(item);
-  const hallsQuery = useGetOrganizationsHallsQuery();
+  const canManageHallAssignments = canAccessFloor(profile);
+  const hallsQuery = useGetOrganizationsHallsQuery({ enabled: open && canManageHallAssignments });
   const createMutation = useCreateDistributionPointMutation();
   const updateMutation = useUpdateDistributionPointMutation(item?.id ?? '');
 
@@ -86,7 +90,7 @@ function RestaurantDistributionPointDialog({
       name: values.name.trim(),
       kind: values.kind,
       integrationChannel: values.integrationChannel.trim(),
-      assignedHall: values.assignedHall || null,
+      assignedHall: canManageHallAssignments ? values.assignedHall || null : (item?.assignedHall ?? null),
       isActive: values.isActive,
     };
 
@@ -116,17 +120,19 @@ function RestaurantDistributionPointDialog({
               ))}
             </RHFSelect>
             <RHFTextField<Values> name="integrationChannel" label={t('fields.integrationChannel')} />
-            <RHFSelect<Values>
-              name="assignedHall"
-              label={t('fields.assignedHall')}
-              helperText={hallsQuery.isLoading ? tCommon('labels.loading') : t('fields.assignedHallHint')}>
-              <MenuItem value="">{t('labels.notSelected')}</MenuItem>
-              {hallOptions.map((hall) => (
-                <MenuItem key={hall.id} value={hall.id}>
-                  {formatHallDisplayName(hall.name, undefined, tCommon)}
-                </MenuItem>
-              ))}
-            </RHFSelect>
+            {canManageHallAssignments ? (
+              <RHFSelect<Values>
+                name="assignedHall"
+                label={t('fields.assignedHall')}
+                helperText={hallsQuery.isLoading ? tCommon('labels.loading') : t('fields.assignedHallHint')}>
+                <MenuItem value="">{t('labels.notSelected')}</MenuItem>
+                {hallOptions.map((hall) => (
+                  <MenuItem key={hall.id} value={hall.id}>
+                    {formatHallDisplayName(hall.name, undefined, tCommon)}
+                  </MenuItem>
+                ))}
+              </RHFSelect>
+            ) : null}
             <RHFSwitch<Values> name="isActive" label={t('fields.status')} />
           </Stack>
         </DialogContent>

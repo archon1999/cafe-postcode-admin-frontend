@@ -31,6 +31,13 @@ type UserEntry = {
   icon: IconifyName;
 };
 
+const HALL_ACCESS_PERMISSION_CODES = [
+  'pos_halls.view',
+  'pos_tables.manage',
+  'pos_table_menu.view',
+  'pos_table_reservations.manage',
+] as const;
+
 function getUserInitials(fullName: string) {
   return fullName
     .split(' ')
@@ -162,13 +169,15 @@ export const UserDetailPageContent = ({ id, surface = 'user' }: UserDetailPageCo
   const systemUserQuery = useGetUserByIdQuery(id ?? '', { enabled: Boolean(id) && !isEmployeeSurface });
   const employeeUserQuery = useGetEmployeeByIdQuery(id ?? '', { enabled: Boolean(id) && isEmployeeSurface });
   const userQuery = isEmployeeSurface ? employeeUserQuery : systemUserQuery;
-  const hallsQuery = useGetHallsQuery();
+  const user = userQuery.data;
+  const hasHallAccessPermission = Boolean(
+    user?.permissionCodes?.some((permissionCode) => HALL_ACCESS_PERMISSION_CODES.includes(permissionCode as never)),
+  );
+  const hallsQuery = useGetHallsQuery({ enabled: Boolean(user) && hasHallAccessPermission });
 
   if (userQuery.isLoading) {
     return <LoadingScreen />;
   }
-
-  const user = userQuery.data;
 
   if (!user) {
     return (
@@ -299,6 +308,11 @@ export const UserDetailPageContent = ({ id, surface = 'user' }: UserDetailPageCo
                 <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
                   {isEmployeeSurface ? null : <SummaryChip title={t('fields.username')}>@{user.username}</SummaryChip>}
                   <SummaryChip title={t('fields.role')}>{roleLabel}</SummaryChip>
+                  {hasHallAccessPermission ? (
+                    <SummaryChip title={t('fields.allowedHalls')} icon="solar:layers-bold-duotone">
+                      {allowedHalls.length ? `${allowedHalls.length} ta zal` : t('labels.notSelected')}
+                    </SummaryChip>
+                  ) : null}
                   {user.isSuperuser ? <SummaryChip title={t('labels.system')}>{t('labels.system')}</SummaryChip> : null}
                 </Stack>
               </Stack>
@@ -307,9 +321,6 @@ export const UserDetailPageContent = ({ id, surface = 'user' }: UserDetailPageCo
             <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
               <SummaryChip title={t('fields.phone')} icon="solar:phone-bold-duotone">
                 {renderEmptyValue(user.phone)}
-              </SummaryChip>
-              <SummaryChip title={t('fields.allowedHalls')} icon="solar:layers-bold-duotone">
-                {allowedHalls.length ? `${allowedHalls.length} ta zal` : t('labels.notSelected')}
               </SummaryChip>
               <SummaryChip title={t('fields.salaryType')} icon="solar:wallet-money-bold-duotone">
                 {renderEmptyValue(salaryTypeLabel)}
@@ -322,7 +333,7 @@ export const UserDetailPageContent = ({ id, surface = 'user' }: UserDetailPageCo
           <Grid size={{ xs: 12, xl: 8 }}>
             <Card sx={{ p: 0 }}>
               <Grid container>
-                <Grid size={{ xs: 12, md: 6 }}>
+                <Grid size={{ xs: 12, md: hasHallAccessPermission ? 6 : 12 }}>
                   <Box sx={{ p: 2.5 }}>
                     <Typography variant="subtitle1" sx={{ mb: 2 }}>
                       {t('sections.account')}
@@ -335,18 +346,20 @@ export const UserDetailPageContent = ({ id, surface = 'user' }: UserDetailPageCo
                   </Box>
                 </Grid>
 
-                <Grid size={{ xs: 12, md: 6 }}>
-                  <Box sx={{ p: 2.5 }}>
-                    <Typography variant="subtitle1" sx={{ mb: 2 }}>
-                      {t('sections.assignment')}
-                    </Typography>
-                    <Stack spacing={1.5} divider={<Divider flexItem />}>
-                      {hallEntries.map((item) => (
-                        <DenseRow key={item.label} {...item} />
-                      ))}
-                    </Stack>
-                  </Box>
-                </Grid>
+                {hasHallAccessPermission ? (
+                  <Grid size={{ xs: 12, md: 6 }}>
+                    <Box sx={{ p: 2.5 }}>
+                      <Typography variant="subtitle1" sx={{ mb: 2 }}>
+                        {t('sections.assignment')}
+                      </Typography>
+                      <Stack spacing={1.5} divider={<Divider flexItem />}>
+                        {hallEntries.map((item) => (
+                          <DenseRow key={item.label} {...item} />
+                        ))}
+                      </Stack>
+                    </Box>
+                  </Grid>
+                ) : null}
 
                 <Grid size={{ xs: 12 }}>
                   <Box sx={{ p: 2.5, borderTop: 1, borderColor: 'divider' }}>
@@ -376,9 +389,11 @@ export const UserDetailPageContent = ({ id, surface = 'user' }: UserDetailPageCo
                 </Stack>
               </SectionCard>
 
-              <SectionCard title={t('fields.allowedHalls')} icon="solar:layers-bold-duotone">
-                <HallChips halls={allowedHalls} />
-              </SectionCard>
+              {hasHallAccessPermission ? (
+                <SectionCard title={t('fields.allowedHalls')} icon="solar:layers-bold-duotone">
+                  <HallChips halls={allowedHalls} />
+                </SectionCard>
+              ) : null}
             </Stack>
           </Grid>
         </Grid>
