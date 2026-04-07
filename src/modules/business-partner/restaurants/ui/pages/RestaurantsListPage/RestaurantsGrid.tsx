@@ -2,6 +2,7 @@ import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import type { GridColDef, GridRowSelectionModel, GridSortModel } from '@mui/x-data-grid';
 import { gridClasses } from '@mui/x-data-grid';
+import type { ReactElement } from 'react';
 import { useCallback, useMemo, useState } from 'react';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
@@ -14,6 +15,7 @@ import type { AdminRestaurant } from 'shared/api/admin-types';
 import { DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_PAGINATION_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState } from 'shared/ui/CustomDataGrid';
 import { Iconify } from 'shared/ui/Iconify';
+import { formatDate, formatDateTime } from 'shared/utils/format-time';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 
 import { useGetRestaurantsListQuery } from '../../../application';
@@ -23,6 +25,7 @@ import {
   type RestaurantCredentialsDialogState,
   RestaurantDeactivateDialog,
   RestaurantDeleteDialog,
+  RestaurantExtendDialog,
 } from '../../components';
 
 import {
@@ -47,6 +50,7 @@ export function RestaurantsGrid() {
   const [rowToDelete, setRowToDelete] = useState<AdminRestaurant | null>(null);
   const [rowToDeactivate, setRowToDeactivate] = useState<AdminRestaurant | null>(null);
   const [rowToActivate, setRowToActivate] = useState<AdminRestaurant | null>(null);
+  const [rowToExtend, setRowToExtend] = useState<AdminRestaurant | null>(null);
   const [credentialsDialogOpen, setCredentialsDialogOpen] = useState<RestaurantCredentialsDialogState>(null);
   const query = useGetRestaurantsListQuery({
     page: paginationModel.page + 1,
@@ -67,6 +71,53 @@ export function RestaurantsGrid() {
       { field: 'legalName', headerName: t('fields.legalName'), minWidth: 200, flex: 1 },
       { field: 'phone', headerName: t('fields.phone'), minWidth: 160, flex: 0.7 },
       {
+        field: 'tariff',
+        headerName: t('fields.tariff', { defaultValue: 'Tarif' }),
+        minWidth: 180,
+        flex: 0.8,
+        sortable: false,
+        valueGetter: (_value, row) => {
+          if (row.tariff?.name) {
+            return row.tariff.name;
+          }
+
+          if (row.activationType === 'custom') {
+            return tPlatform('labels.customActivation', { defaultValue: 'Maxsus tarif' });
+          }
+
+          return null;
+        },
+      },
+      {
+        field: 'billingPeriod',
+        headerName: tPlatform('fields.billingPeriod', { defaultValue: 'Tarif muddati' }),
+        minWidth: 150,
+        flex: 0.65,
+        valueGetter: (_value, row) => {
+          if (row.billingPeriod === 'monthly') {
+            return tPlatform('labels.monthly', { defaultValue: 'Oylik' });
+          }
+          if (row.billingPeriod === 'yearly') {
+            return tPlatform('labels.yearly', { defaultValue: 'Yillik' });
+          }
+          return null;
+        },
+      },
+      {
+        field: 'activatedAt',
+        headerName: tPlatform('fields.activatedAt', { defaultValue: 'Aktivlashtirilgan sana' }),
+        minWidth: 180,
+        flex: 0.8,
+        renderCell: ({ row }) => (row.activatedAt ? formatDateTime(row.activatedAt, 'DD.MM.YYYY HH:mm') : '-'),
+      },
+      {
+        field: 'expiresOn',
+        headerName: tPlatform('fields.expiresOn', { defaultValue: 'Amal qilish muddati' }),
+        minWidth: 160,
+        flex: 0.7,
+        renderCell: ({ row }) => (row.expiresOn ? formatDate(row.expiresOn, 'DD.MM.YYYY') : '-'),
+      },
+      {
         field: 'isActive',
         headerName: t('fields.status'),
         minWidth: 120,
@@ -85,68 +136,79 @@ export function RestaurantsGrid() {
         field: 'actions',
         headerName: tCommon('actions.title'),
         minWidth: 90,
-        getActions: (params) => [
-          <CustomGridActionsCellItem
-            actionKind="edit"
-            key="edit"
-            label={t('actions.edit')}
-            icon={<Iconify icon="solar:pen-bold" />}
-            href={RouterPathHelper.organizationRestaurantEdit(params.row.id)}
-          />,
-          <CustomGridActionsCellItem
-            actionKind="view"
-            key="reset-password"
-            label={tPlatform('actions.resetPassword')}
-            icon={<Iconify icon="solar:refresh-bold" />}
-            showInMenu
-            disabled={!params.row.isActive}
-            onClick={async () => {
-              const result = await resetPasswordMutation.mutateAsync(params.row.id);
-              setCredentialsDialogOpen({
-                credentials: { username: result.username, password: result.password },
-                authCode: null,
-                mode: 'reset',
-              });
-            }}
-          />,
-          <CustomGridActionsCellItem
-            actionKind="view"
-            key="rotate-auth-code"
-            label={tPlatform('actions.rotateAuthCode', { defaultValue: 'Aktivatsiya kodini yangilash' })}
-            icon={<Iconify icon="solar:refresh-bold" />}
-            showInMenu
-            disabled={!params.row.isActive}
-            onClick={async () => {
-              const result = await rotateAuthCodeMutation.mutateAsync(params.row.id);
-              setCredentialsDialogOpen({
-                credentials: null,
-                authCode: result.authCode ?? null,
-                mode: 'auth_code',
-              });
-            }}
-          />,
-          <CustomGridActionsCellItem
-            actionKind={params.row.isActive ? 'delete' : 'view'}
-            key="activate"
-            label={params.row.isActive ? tPlatform('actions.deactivate') : tPlatform('actions.activate')}
-            icon={<Iconify icon={params.row.isActive ? 'solar:lock-keyhole-bold' : 'solar:play-bold'} />}
-            onClick={() => {
-              if (params.row.isActive) {
-                setRowToDeactivate(params.row);
-                return;
-              }
+        getActions: (params) =>
+          [
+            <CustomGridActionsCellItem
+              actionKind="edit"
+              key="edit"
+              label={t('actions.edit')}
+              icon={<Iconify icon="solar:pen-bold" />}
+              href={RouterPathHelper.organizationRestaurantEdit(params.row.id)}
+            />,
+            <CustomGridActionsCellItem
+              actionKind="view"
+              key="reset-password"
+              label={tPlatform('actions.resetPassword')}
+              icon={<Iconify icon="solar:refresh-bold" />}
+              showInMenu
+              disabled={!params.row.isActive}
+              onClick={async () => {
+                const result = await resetPasswordMutation.mutateAsync(params.row.id);
+                setCredentialsDialogOpen({
+                  credentials: { username: result.username, password: result.password },
+                  authCode: null,
+                  mode: 'reset',
+                });
+              }}
+            />,
+            <CustomGridActionsCellItem
+              actionKind="view"
+              key="rotate-auth-code"
+              label={tPlatform('actions.rotateAuthCode', { defaultValue: 'Aktivatsiya kodini yangilash' })}
+              icon={<Iconify icon="solar:refresh-bold" />}
+              showInMenu
+              disabled={!params.row.isActive}
+              onClick={async () => {
+                const result = await rotateAuthCodeMutation.mutateAsync(params.row.id);
+                setCredentialsDialogOpen({
+                  credentials: null,
+                  authCode: result.authCode ?? null,
+                  mode: 'auth_code',
+                });
+              }}
+            />,
+            params.row.billingPeriod ? (
+              <CustomGridActionsCellItem
+                actionKind="view"
+                key="extend"
+                label={tPlatform('actions.extend', { defaultValue: 'Muddatini uzaytirish' })}
+                icon={<Iconify icon="solar:calendar-add-bold" />}
+                showInMenu
+                onClick={() => setRowToExtend(params.row)}
+              />
+            ) : null,
+            <CustomGridActionsCellItem
+              actionKind={params.row.isActive ? 'delete' : 'view'}
+              key="activate"
+              label={params.row.isActive ? tPlatform('actions.deactivate') : tPlatform('actions.activate')}
+              icon={<Iconify icon={params.row.isActive ? 'solar:lock-keyhole-bold' : 'solar:play-bold'} />}
+              onClick={() => {
+                if (params.row.isActive) {
+                  setRowToDeactivate(params.row);
+                  return;
+                }
 
-              setRowToActivate(params.row);
-            }}
-          />,
-          <CustomGridActionsCellItem
-            actionKind="delete"
-            key="delete"
-            label={t('actions.delete')}
-            icon={<Iconify icon="solar:trash-bin-trash-bold" />}
-            onClick={() => setRowToDelete(params.row)}
-          />,
-        ],
+                setRowToActivate(params.row);
+              }}
+            />,
+            <CustomGridActionsCellItem
+              actionKind="delete"
+              key="delete"
+              label={t('actions.delete')}
+              icon={<Iconify icon="solar:trash-bin-trash-bold" />}
+              onClick={() => setRowToDelete(params.row)}
+            />,
+          ].filter(Boolean) as ReactElement[],
       },
     ],
     [resetPasswordMutation, rotateAuthCodeMutation, t, tCommon, tPlatform],
@@ -242,6 +304,12 @@ export function RestaurantsGrid() {
             mode: 'activation',
           });
         }}
+      />
+
+      <RestaurantExtendDialog
+        open={rowToExtend}
+        onClose={() => setRowToExtend(null)}
+        onSuccess={() => setRowToExtend(null)}
       />
 
       <RestaurantCredentialsDialog open={credentialsDialogOpen} onClose={() => setCredentialsDialogOpen(null)} />

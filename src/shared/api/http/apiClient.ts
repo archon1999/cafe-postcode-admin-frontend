@@ -720,6 +720,10 @@ export const apiClient = {
       .then((response) => response.data);
   },
 
+  extendAdminRestaurant(id: string) {
+    return instance.post<AdminRestaurant>(`/api/v1/admin/platform/restaurants/${id}/extend/`).then((response) => response.data);
+  },
+
   resetAdminRestaurantPassword(id: string) {
     return instance
       .post<AdminRestaurantActivationResult>(`/api/v1/admin/platform/restaurants/${id}/reset-password/`)

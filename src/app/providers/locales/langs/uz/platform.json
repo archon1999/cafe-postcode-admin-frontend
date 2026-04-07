@@ -26,7 +26,10 @@
     "operationalSettings": "Operatsion sozlamalar (JSON)",
     "customTariff": "Aktivlashtirish turi",
     "tariff": "Tarif",
+    "billingPeriod": "Tarif muddati",
     "startsOn": "Boshlanish sanasi",
+    "activatedAt": "Aktivlashtirilgan sana",
+    "expiresOn": "Amal qilish muddati",
     "username": "Username",
     "password": "Password",
     "authCode": "Aktivatsiya kodi"
@@ -43,6 +46,8 @@
     "notSelected": "Tanlanmagan",
     "existingTariff": "Mavjud tarif",
     "customActivation": "Maxsus tarif",
+    "monthly": "Oylik",
+    "yearly": "Yillik",
     "selectedRolesCount": "Tanlangan rollar: {{count}}",
     "selectedPermissionsCount": "Tanlangan ruxsatlar: {{count}}"
   },
@@ -58,6 +63,7 @@
     "edit": "Tahrirlash",
     "activate": "Aktivlashtirish",
     "deactivate": "Deaktivlashtirish",
+    "extend": "Muddatini uzaytirish",
     "resetPassword": "Parolni yangilash",
     "rotateAuthCode": "Aktivatsiya kodini yangilash",
     "createBusinessPartner": "Yangi biznes hamkor",
@@ -84,6 +90,10 @@
     "deactivateRestaurant": {
       "title": "Restoranni deaktivlashtirish",
       "description": "\"{{name}}\" restoranni deaktivlashtirmoqchimisiz?"
+    },
+    "extendRestaurant": {
+      "title": "Tarif muddatini uzaytirish",
+      "description": "\"{{name}}\" restoranining amal qilish muddatini uzaytirmoqchimisiz?"
     },
     "restaurantCredentials": {
       "title": "Restoran admini kredensiallari",

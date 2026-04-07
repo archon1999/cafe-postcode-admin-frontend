@@ -13,12 +13,14 @@ import { useRouter } from 'shared/hooks/router';
 import { Iconify } from 'shared/ui/Iconify';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 import { RouterLink } from 'shared/ui/RouterLink';
+import { formatDate, formatDateTime } from 'shared/utils/format-time';
 
 import { useGetMyRestaurantQuery } from '../../../application';
 import { MyRestaurantSectionLayout } from '../../components/MyRestaurantSectionLayout';
 
 const MyRestaurantGeneralPage = () => {
   const { t } = useTranslate('organizations');
+  const { t: tPlatform } = useTranslate('platform');
   const { t: tCommon } = useTranslate('common');
   const { profile } = useCurrentUser();
   const { replace } = useRouter();
@@ -45,6 +47,20 @@ const MyRestaurantGeneralPage = () => {
   }
 
   const restaurant = restaurantQuery.data;
+  const tariffName = restaurant.tariff?.name ?? (restaurant.activationType === 'custom'
+    ? tPlatform('labels.customActivation', { defaultValue: 'Maxsus tarif' })
+    : t('labels.notSelected'));
+  const billingPeriodLabel =
+    restaurant.billingPeriod === 'monthly'
+      ? tPlatform('labels.monthly', { defaultValue: 'Oylik' })
+      : restaurant.billingPeriod === 'yearly'
+        ? tPlatform('labels.yearly', { defaultValue: 'Yillik' })
+        : null;
+  const durationText = billingPeriodLabel
+    ? restaurant.expiresOn
+      ? `${billingPeriodLabel} · ${formatDate(restaurant.expiresOn, 'DD.MM.YYYY')}`
+      : billingPeriodLabel
+    : t('labels.notSelected');
 
   return (
     <MyRestaurantSectionLayout heading={t('pages.myRestaurant.title', { defaultValue: 'Mening restoranim' })}>
@@ -106,9 +122,25 @@ const MyRestaurantGeneralPage = () => {
               </Stack>
               <Stack spacing={0.5}>
                 <Typography variant="caption" color="text.secondary">
-                  {t('fields.currency')}
+                  {tPlatform('fields.activatedAt', { defaultValue: 'Aktivlashtirilgan sana' })}
                 </Typography>
-                <Typography variant="body2">{restaurant.currency || 'UZS'}</Typography>
+                <Typography variant="body2">
+                  {restaurant.activatedAt
+                    ? formatDateTime(restaurant.activatedAt, 'DD.MM.YYYY HH:mm')
+                    : t('labels.notSelected')}
+                </Typography>
+              </Stack>
+              <Stack spacing={0.5}>
+                <Typography variant="caption" color="text.secondary">
+                  {t('fields.tariff')}
+                </Typography>
+                <Typography variant="body2">{tariffName}</Typography>
+              </Stack>
+              <Stack spacing={0.5}>
+                <Typography variant="caption" color="text.secondary">
+                  {tPlatform('fields.billingPeriod', { defaultValue: 'Tarif muddati' })}
+                </Typography>
+                <Typography variant="body2">{durationText}</Typography>
               </Stack>
               <Stack spacing={0.75}>
                 <Typography variant="caption" color="text.secondary">

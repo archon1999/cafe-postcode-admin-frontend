@@ -15,6 +15,7 @@ import { z } from 'zod';
 
 import { useTranslate } from 'app/providers/locales';
 import type {
+  AdminBillingPeriod,
   AdminPermission,
   AdminRestaurantActivationPayload,
   AdminRole,
@@ -27,6 +28,7 @@ import { formatMoney } from 'shared/utils/format-money';
 const activationSchema = z
   .object({
     activationType: z.enum(['tariff', 'custom']).default('tariff'),
+    billingPeriod: z.enum(['monthly', 'yearly']),
     tariffId: z.string().default(''),
     allowedRoleIds: z.array(z.string()).default([]),
     permissionIds: z.array(z.string()).default([]),
@@ -66,6 +68,7 @@ type ActivationValues = z.output<typeof activationSchema>;
 
 const defaultValues: ActivationFormValues = {
   activationType: 'tariff',
+  billingPeriod: 'monthly',
   tariffId: '',
   allowedRoleIds: [],
   permissionIds: [],
@@ -87,6 +90,11 @@ const PLATFORM_ROLE_CODES = new Set(['product_owner', 'business_partner']);
 function uniqueIds(values: string[]) {
   return [...new Set(values)];
 }
+
+const BILLING_PERIOD_OPTIONS: Array<{ value: AdminBillingPeriod; labelKey: 'monthly' | 'yearly' }> = [
+  { value: 'monthly', labelKey: 'monthly' },
+  { value: 'yearly', labelKey: 'yearly' },
+];
 
 export function RestaurantActivationDialog({
   open,
@@ -172,6 +180,7 @@ export function RestaurantActivationDialog({
     if (values.activationType === 'custom') {
       await onSubmit({
         activationType: 'custom',
+        billingPeriod: values.billingPeriod,
         allowedRoleIds: values.allowedRoleIds,
         permissionIds: uniqueIds(values.permissionIds),
         startsOn: values.startsOn,
@@ -181,6 +190,7 @@ export function RestaurantActivationDialog({
 
     await onSubmit({
       activationType: 'tariff',
+      billingPeriod: values.billingPeriod,
       tariffId: values.tariffId,
       startsOn: values.startsOn,
     });
@@ -200,6 +210,18 @@ export function RestaurantActivationDialog({
                 { value: 'tariff', label: t('labels.existingTariff') },
                 { value: 'custom', label: t('labels.customActivation') },
               ]}
+            />
+
+            <RHFRadioGroup<ActivationValues>
+              name="billingPeriod"
+              label={t('fields.billingPeriod', { defaultValue: 'Tarif muddati' })}
+              row
+              options={BILLING_PERIOD_OPTIONS.map((option) => ({
+                value: option.value,
+                label: t(`labels.${option.labelKey}`, {
+                  defaultValue: option.labelKey === 'monthly' ? 'Oylik' : 'Yillik',
+                }),
+              }))}
             />
 
             {activationType === 'tariff' ? (

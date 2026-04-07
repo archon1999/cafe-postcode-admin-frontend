@@ -49,6 +49,7 @@ export type AdminReportKey =
   | 'shifts';
 export type AdminReportPeriodType = 'day' | 'month' | 'year';
 export type AdminBusinessPartnerStatus = 'draft' | 'active' | 'inactive';
+export type AdminBillingPeriod = 'monthly' | 'yearly';
 
 export type AdminZoneOrCabinSummary = {
   id: string;
@@ -317,6 +318,12 @@ export type AdminRestaurant = {
   currency: string;
   authCode?: string;
   isActive: boolean;
+  activatedAt?: string | null;
+  deactivatedAt?: string | null;
+  activationType?: 'tariff' | 'custom' | null;
+  startsOn?: string | null;
+  expiresOn?: string | null;
+  billingPeriod?: AdminBillingPeriod | null;
   restaurantAccessActive?: boolean;
   permissionCodes?: string[];
   roleCodes?: string[];
@@ -415,6 +422,7 @@ export type AdminPartnerActivationResult = AdminGeneratedCredentials & {
 
 export type AdminRestaurantActivationPayload = {
   activationType?: 'tariff' | 'custom';
+  billingPeriod: AdminBillingPeriod;
   tariffId?: string;
   allowedRoleIds?: string[];
   permissionIds?: string[];

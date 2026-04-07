@@ -139,4 +139,44 @@ describe('apiClient query params', () => {
       params: { inn: '123456789' },
     });
   });
+
+  it('sends billing period during restaurant activation', async () => {
+    postMock.mockResolvedValueOnce({
+      data: {
+        restaurant: { id: 'restaurant-1', name: 'Cafe', isActive: true },
+        username: 'admin-cafe',
+        password: 'secret123',
+      },
+    });
+
+    await apiClient.activateAdminRestaurant('restaurant-1', {
+      activationType: 'tariff',
+      billingPeriod: 'monthly',
+      tariffId: 'tariff-1',
+      startsOn: '2026-04-07',
+    });
+
+    expect(postMock).toHaveBeenCalledWith('/api/v1/admin/platform/restaurants/restaurant-1/activate/', {
+      activationType: 'tariff',
+      billingPeriod: 'monthly',
+      tariffId: 'tariff-1',
+      startsOn: '2026-04-07',
+    });
+  });
+
+  it('extends restaurant subscription without a payload body', async () => {
+    postMock.mockResolvedValueOnce({
+      data: {
+        id: 'restaurant-1',
+        name: 'Cafe',
+        isActive: true,
+        billingPeriod: 'monthly',
+        expiresOn: '2026-05-07',
+      },
+    });
+
+    await apiClient.extendAdminRestaurant('restaurant-1');
+
+    expect(postMock).toHaveBeenCalledWith('/api/v1/admin/platform/restaurants/restaurant-1/extend/');
+  });
 });
