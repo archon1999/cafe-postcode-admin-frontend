@@ -9,21 +9,30 @@ import { currentUserStore } from './current-user.store';
 export interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
+  isBootstrapping: boolean;
 
-  setAccessToken: (accessToken: string) => void;
+  setAccessToken: (accessToken: string, options?: { bootstrapping?: boolean }) => void;
   logout: () => void;
   checkAuth: () => void;
+  setBootstrapping: (isBootstrapping: boolean) => void;
 
   getAccessToken: () => string | null;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  isAuthenticated: sessionService.isSessionActive(),
-  isLoading: false,
+const hasActiveSession = sessionService.isSessionActive();
 
-  setAccessToken: (accessToken: string) => {
+export const useAuthStore = create<AuthState>((set) => ({
+  isAuthenticated: hasActiveSession,
+  isLoading: false,
+  isBootstrapping: hasActiveSession,
+
+  setAccessToken: (accessToken: string, options) => {
     sessionService.setAccessToken(accessToken);
-    set({ isAuthenticated: true, isLoading: false });
+    set({
+      isAuthenticated: true,
+      isLoading: false,
+      isBootstrapping: options?.bootstrapping ?? false,
+    });
     queryClient.clear();
   },
 
@@ -31,7 +40,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     sessionService.clearSession();
     adminScopeStore.getState().clearScope();
     currentUserStore.getState().clearCurrentUser();
-    set({ isAuthenticated: false, isLoading: false });
+    set({ isAuthenticated: false, isLoading: false, isBootstrapping: false });
     queryClient.clear();
   },
 
@@ -40,7 +49,12 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({
       isAuthenticated: isActive,
       isLoading: false,
+      isBootstrapping: false,
     });
+  },
+
+  setBootstrapping: (isBootstrapping: boolean) => {
+    set({ isBootstrapping });
   },
 
   getAccessToken: () => {

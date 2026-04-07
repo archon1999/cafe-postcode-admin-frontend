@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router';
 
 import { RoutePath, canAccessAdminPath, getDefaultAdminPath } from 'app/routes';
@@ -13,21 +12,10 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const location = useLocation();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isLoading = useAuthStore((state) => state.isLoading);
-  const checkAuth = useAuthStore((state) => state.checkAuth);
+  const isBootstrapping = useAuthStore((state) => state.isBootstrapping);
   const { profile } = useCurrentUser();
 
-  const [isChecking, setIsChecking] = useState(true);
-
-  useEffect(() => {
-    const performAuthCheck = async () => {
-      void checkAuth();
-      setIsChecking(false);
-    };
-
-    void performAuthCheck();
-  }, [checkAuth]);
-
-  if (isChecking || isLoading) {
+  if (isLoading || isBootstrapping) {
     return <SplashScreen />;
   }
 

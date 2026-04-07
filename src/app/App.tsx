@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 
+import { useAuthBootstrap } from 'modules/auth';
 import { MotionLazy } from 'shared/ui/Animate/motion-lazy.tsx';
 import { SettingsDrawer, defaultSettings, SettingsProvider } from 'shared/ui/Settings';
 import { Snackbar } from 'shared/ui/Snackbar';
@@ -13,9 +14,16 @@ type AppProps = {
   children: React.ReactNode;
 };
 
+const AuthBootstrap = () => {
+  useAuthBootstrap();
+
+  return null;
+};
+
 const App: FC<AppProps> = ({ children }) => {
   return (
     <ReactQueryClientProvider>
+      <AuthBootstrap />
       <I18nProvider>
         <SettingsProvider defaultSettings={defaultSettings}>
           <LocalizationProvider>

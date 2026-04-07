@@ -1,14 +1,16 @@
 import { useMutation, type UseMutationOptions } from '@tanstack/react-query';
 import { useNavigate } from 'react-router';
 
-import { RoutePath } from 'app/routes';
+import { RoutePath, getDefaultAdminPath } from 'app/routes';
 import type { AdminLoginRequest, AdminLoginResponse } from 'shared/api/admin-types';
 import { useSearchParams } from 'shared/hooks/router';
 
-import { getCurrentUserRequest, loginRequest, logoutRequest } from '../data-access';
+import { loginRequest, logoutRequest } from '../data-access';
 import { adminScopeStore } from '../domain/stores/admin-scope.store';
 import { useAuthStore } from '../domain/stores/authentication.store';
 import { currentUserStore } from '../domain/stores/current-user.store';
+
+import { syncCurrentUser } from './current-user';
 
 export const useLoginMutation = (
   options?: Omit<UseMutationOptions<AdminLoginResponse, Error, AdminLoginRequest, unknown>, 'mutationFn'>,
@@ -21,27 +23,26 @@ export const useLoginMutation = (
     mutationFn: (params: AdminLoginRequest) => loginRequest(params),
     onSuccess: async (data) => {
       if (data.token) {
-        setAccessToken(data.token);
+        currentUserStore.getState().clearCurrentUser();
+        setAccessToken(data.token, { bootstrapping: true });
 
-        const { clearCurrentUser, setCurrentUser } = currentUserStore.getState();
-        clearCurrentUser();
+        let profile = data.user;
 
         try {
-          const profile = await getCurrentUserRequest();
-          setCurrentUser(profile);
-          if (!profile.isSuperuser) {
-            adminScopeStore.getState().clearScope();
-          }
+          profile = await syncCurrentUser({ fallbackUser: data.user });
         } catch (error) {
           console.error('Failed to fetch current user profile', error);
-          setCurrentUser(data.user);
+
+          // Keep login flow usable even if profile hydration fails after token is issued.
           if (!data.user.isSuperuser) {
             adminScopeStore.getState().clearScope();
           }
+        } finally {
+          useAuthStore.getState().setBootstrapping(false);
         }
 
         const returnTo = searchParams.get('returnTo');
-        const redirectPath = returnTo || RoutePath.main;
+        const redirectPath = returnTo || getDefaultAdminPath(profile) || RoutePath.main;
 
         void navigate(redirectPath, { replace: true });
       }
