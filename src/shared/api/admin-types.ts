@@ -681,6 +681,15 @@ export type AdminUser = {
   primaryHallId?: string | null;
   allowedHallIds?: string[];
   permissionCodes: string[];
+  businessPartnersCount?: number | null;
+  companyName?: string | null;
+  inn?: string | null;
+  restaurantName?: string | null;
+  activatedAt?: string | null;
+  expiresOn?: string | null;
+  billingPeriod?: AdminBillingPeriod | null;
+  activationType?: 'tariff' | 'custom' | null;
+  tariff?: AdminRestaurantTariff | null;
 };
 
 export type AdminSessionUser = AdminUser;

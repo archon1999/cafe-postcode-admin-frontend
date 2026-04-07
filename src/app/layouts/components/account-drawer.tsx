@@ -16,6 +16,7 @@ import { LabelRowWithIcon } from 'shared/ui/LabelRowWithIcon/LabelRowWithIcon';
 import { Scrollbar } from 'shared/ui/Scrollbar';
 
 import { AccountButton } from './account-button';
+import { buildAccountDrawerContent } from './account-drawer.utils';
 import { SignOutButton } from './sign-out-button';
 
 export type AccountDrawerProps = IconButtonProps & {
@@ -29,15 +30,18 @@ export type AccountDrawerProps = IconButtonProps & {
 
 export function AccountDrawer({ sx, ...other }: AccountDrawerProps) {
   const { t } = useTranslate('common');
-  const { t: tUsers } = useTranslate('users');
   const { user, profile } = useCurrentUser();
   const { value: open, onFalse: onClose, onTrue: onOpen } = useBoolean();
 
   const displayName = user?.displayName ?? t('labels.user');
   const photoURL = user?.photoURL ?? '';
   const avatarFallback = displayName.charAt(0).toUpperCase() || '?';
-  const roleLabel = profile?.role?.name ?? user?.roleLabel ?? '-';
-  const permissions = profile?.permissionCodes ?? [];
+
+  const drawerContent = buildAccountDrawerContent({
+    profile,
+    user,
+    tCommon: t,
+  });
 
   return (
     <>
@@ -84,38 +88,27 @@ export function AccountDrawer({ sx, ...other }: AccountDrawerProps) {
             </Typography>
 
             <Stack direction="row" spacing={1} sx={{ mt: 1 }} flexWrap="wrap" justifyContent="center">
-              {roleLabel && roleLabel !== '-' && (
+              {drawerContent.badgeLabel && (
                 <Label color="info" variant="soft">
-                  {roleLabel}
-                </Label>
-              )}
-              {typeof user?.isActive === 'boolean' && (
-                <Label color={user.isActive ? 'success' : 'error'} variant="soft">
-                  {user.isActive ? t('status.active') : t('status.inactive')}
+                  {drawerContent.badgeLabel}
                 </Label>
               )}
             </Stack>
           </Box>
 
           <Box sx={{ px: 3, py: 3 }}>
+            <Typography variant="overline" sx={{ mb: 1.5, display: 'block', color: 'text.secondary' }}>
+              {drawerContent.sectionTitle}
+            </Typography>
             <Stack spacing={2.25}>
-              {user?.username && (
-                <LabelRowWithIcon label={t('labels.username')} value={user.username} icon="solar:user-bold-duotone" />
-              )}
-              <LabelRowWithIcon label={tUsers('fields.role')} value={roleLabel} icon="solar:shield-user-bold-duotone" />
-              {user?.phone && (
-                <LabelRowWithIcon label={t('labels.phone')} value={user.phone} icon="solar:phone-bold-duotone" />
-              )}
-              <LabelRowWithIcon
-                label={tUsers('fields.permissions')}
-                value={permissions.length ? permissions.join(', ') : '-'}
-                icon="solar:key-bold-duotone"
-              />
-              <LabelRowWithIcon
-                label={tUsers('fields.restaurantId')}
-                value={profile?.restaurantId ?? '-'}
-                icon="solar:shop-bold-duotone"
-              />
+              {drawerContent.rows.map((row) => (
+                <LabelRowWithIcon
+                  key={`${row.label}-${row.icon}`}
+                  label={row.label}
+                  value={row.value}
+                  icon={row.icon}
+                />
+              ))}
             </Stack>
           </Box>
         </Scrollbar>
