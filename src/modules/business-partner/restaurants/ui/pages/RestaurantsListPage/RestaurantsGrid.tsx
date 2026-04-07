@@ -68,7 +68,6 @@ export function RestaurantsGrid() {
   const columns = useMemo<GridColDef<AdminRestaurant>[]>(
     () => [
       { field: 'name', headerName: t('fields.name'), minWidth: 220, flex: 1 },
-      { field: 'legalName', headerName: t('fields.legalName'), minWidth: 200, flex: 1 },
       { field: 'phone', headerName: t('fields.phone'), minWidth: 160, flex: 0.7 },
       {
         field: 'tariff',

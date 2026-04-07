@@ -9,7 +9,6 @@ import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath, canAccessMyRestaurant, canAccessRestaurants } from 'app/routes';
 import { useCurrentUser } from 'modules/auth/domain/services/current-user';
-import { useGetRestaurantActivationOptionsQuery } from 'modules/product-owner/business-partners/application';
 import { useParams, useRedirectOnNotFound, useRouter } from 'shared/hooks/router';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { FormActions } from 'shared/ui/FormActions';
@@ -30,7 +29,6 @@ const schema = z.object({
   taxNumber: z.string(),
   phone: z.string(),
   address: z.string(),
-  tariffId: z.string().min(1),
   isActive: z.boolean(),
 });
 
@@ -47,7 +45,6 @@ const RestaurantFormPage = () => {
   const canAccessRestaurantForm = canManageRestaurants || canManageMyRestaurant;
   const backPath = canManageRestaurants ? RoutePath.organizationRestaurantList : RoutePath.organizationMyRestaurant;
   const query = useGetRestaurantByIdQuery(id ?? '', { enabled: isEditMode && canAccessRestaurantForm });
-  const activationOptionsQuery = useGetRestaurantActivationOptionsQuery({ enabled: canAccessRestaurantForm });
   const createMutation = useCreateRestaurantMutation();
   const updateMutation = useUpdateRestaurantMutation(id ?? '');
 
@@ -61,7 +58,6 @@ const RestaurantFormPage = () => {
       taxNumber: '',
       phone: '',
       address: '',
-      tariffId: '',
       isActive: false,
     },
   });
@@ -80,7 +76,6 @@ const RestaurantFormPage = () => {
       taxNumber: query.data.taxNumber,
       phone: query.data.phone,
       address: query.data.address,
-      tariffId: query.data.tariff?.id ?? '',
       isActive: query.data.isActive,
     });
   }, [methods, query.data]);
@@ -92,7 +87,6 @@ const RestaurantFormPage = () => {
       taxNumber: values.taxNumber.trim(),
       phone: values.phone.trim(),
       address: values.address.trim(),
-      tariffId: values.tariffId,
       isActive: isEditMode ? values.isActive : false,
     };
 
@@ -105,7 +99,7 @@ const RestaurantFormPage = () => {
     push(RoutePath.organizationRestaurantList);
   });
 
-  if ((isEditMode && query.isLoading) || activationOptionsQuery.isLoading || (profile && !canAccessRestaurantForm)) {
+  if ((isEditMode && query.isLoading) || (profile && !canAccessRestaurantForm)) {
     return <LoadingScreen />;
   }
 
@@ -124,11 +118,7 @@ const RestaurantFormPage = () => {
       <Card sx={{ p: 3 }}>
         <Form methods={methods} onSubmit={onSubmit}>
           <Stack spacing={3}>
-            <RestaurantFormFields
-              isEditMode={isEditMode}
-              tariffOptions={activationOptionsQuery.data?.tariffs ?? []}
-              t={t}
-            />
+            <RestaurantFormFields isEditMode={isEditMode} t={t} />
             <FormActions
               isSubmitting={methods.formState.isSubmitting}
               submitLabel={isEditMode ? t('actions.save') : t('actions.create')}
