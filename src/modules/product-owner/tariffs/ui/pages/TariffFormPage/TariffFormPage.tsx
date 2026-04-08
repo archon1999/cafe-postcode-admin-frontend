@@ -11,6 +11,7 @@ import { RoutePath, canAccessTariffs } from 'app/routes';
 import { useCurrentUser } from 'modules/auth/domain/services/current-user';
 import { useGetRolesQuery } from 'modules/user-management/roles/application';
 import { useParams, useRedirectOnNotFound, useRouter } from 'shared/hooks/router';
+import { usePageTitle } from 'shared/hooks/use-page-title';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { FormActions } from 'shared/ui/FormActions';
 import { Form } from 'shared/ui/HookForm';
@@ -50,8 +51,13 @@ const TariffFormPage = () => {
   const createMutation = useCreateTariffMutation();
   const updateMutation = useUpdateTariffMutation(id ?? '');
   const rolesQuery = useGetRolesQuery('user', { enabled: canManagePlatform });
+  const listTitle = t('pages.tariffs.title');
+  const editTitle = t('pages.tariffEdit.title');
+  const createTitle = t('pages.tariffCreate.title');
+  const entityTitle = query.data?.name;
 
   useRedirectOnNotFound(query.error, isEditMode);
+  usePageTitle(isEditMode ? (entityTitle ? [listTitle, entityTitle, editTitle] : [listTitle, editTitle]) : [listTitle, createTitle]);
 
   const methods = useForm<TariffFormValues, unknown, Values>({
     resolver: zodResolver(schema),
@@ -161,10 +167,10 @@ const TariffFormPage = () => {
   return (
     <Content>
       <CustomBreadcrumbs
-        heading={isEditMode ? t('pages.tariffEdit.title') : t('pages.tariffCreate.title')}
+        heading={isEditMode ? editTitle : createTitle}
         links={[
-          { name: t('pages.tariffs.title'), href: RoutePath.platformTariffList },
-          { name: isEditMode ? t('pages.tariffEdit.title') : t('pages.tariffCreate.title') },
+          { name: listTitle, href: RoutePath.platformTariffList },
+          { name: isEditMode ? editTitle : createTitle },
         ]}
       />
       <Card sx={{ p: 3 }}>

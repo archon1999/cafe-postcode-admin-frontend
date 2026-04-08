@@ -11,6 +11,7 @@ import { RoutePath, canAccessBusinessPartners } from 'app/routes';
 import { useCurrentUser } from 'modules/auth/domain/services/current-user';
 import { normalizeError, notifyError } from 'shared/api/errors/errorHandling';
 import { useParams, useRedirectOnNotFound, useRouter } from 'shared/hooks/router';
+import { usePageTitle } from 'shared/hooks/use-page-title';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { FormActions } from 'shared/ui/FormActions';
 import { Form } from 'shared/ui/HookForm';
@@ -49,8 +50,13 @@ const BusinessPartnerFormPage = () => {
   const createMutation = useCreateBusinessPartnerMutation();
   const lookupMutation = useLookupBusinessPartnerMutation();
   const updateMutation = useUpdateBusinessPartnerMutation(id ?? '');
+  const listTitle = t('pages.businessPartners.title');
+  const editTitle = t('pages.businessPartnerEdit.title');
+  const createTitle = t('pages.businessPartnerCreate.title');
+  const entityTitle = query.data?.companyName || query.data?.legalName;
 
   useRedirectOnNotFound(query.error, isEditMode);
+  usePageTitle(isEditMode ? (entityTitle ? [listTitle, entityTitle, editTitle] : [listTitle, editTitle]) : [listTitle, createTitle]);
 
   const methods = useForm<Values>({
     resolver: zodResolver(schema),
@@ -146,10 +152,10 @@ const BusinessPartnerFormPage = () => {
   return (
     <Content>
       <CustomBreadcrumbs
-        heading={isEditMode ? t('pages.businessPartnerEdit.title') : t('pages.businessPartnerCreate.title')}
+        heading={isEditMode ? editTitle : createTitle}
         links={[
-          { name: t('pages.businessPartners.title'), href: RoutePath.platformBusinessPartnerList },
-          { name: isEditMode ? t('pages.businessPartnerEdit.title') : t('pages.businessPartnerCreate.title') },
+          { name: listTitle, href: RoutePath.platformBusinessPartnerList },
+          { name: isEditMode ? editTitle : createTitle },
         ]}
       />
       <Card sx={{ p: 3 }}>

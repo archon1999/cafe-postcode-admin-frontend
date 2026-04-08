@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath, RouterPathHelper } from 'app/routes';
+import { usePageTitle } from 'shared/hooks/use-page-title';
 import { useRouter } from 'shared/hooks/router';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { FormActions } from 'shared/ui/FormActions';
@@ -49,6 +50,9 @@ export const UserFormPageContent = ({ id, surface = 'user' }: UserFormPageConten
   const isEmployeeSurface = surface === 'employee';
   const formSchema = useMemo(() => getUserFormSchema(surface), [surface]);
   const listPath = isEmployeeSurface ? RoutePath.employeeList : RoutePath.userList;
+  const listTitle = isEmployeeSurface ? t('pages.employeeList.title') : t('pages.list.title');
+  const editTitle = isEmployeeSurface ? t('pages.employeeEdit.title') : t('pages.edit.title');
+  const createTitle = isEmployeeSurface ? t('pages.employeeCreate.title') : t('pages.create.title');
 
   const rolesQuery = useGetRolesQuery(surface);
   const systemUserQuery = useGetUserByIdQuery(id ?? '', { enabled: isEditMode && !isEmployeeSurface });
@@ -84,6 +88,9 @@ export const UserFormPageContent = ({ id, surface = 'user' }: UserFormPageConten
   );
   const hallsQuery = useGetHallsQuery({ enabled: hasHallAccessPermission });
   const halls = Array.isArray(hallsQuery.data) ? hallsQuery.data : [];
+  const entityTitle = userQuery.data?.fullName;
+
+  usePageTitle(isEditMode ? (entityTitle ? [listTitle, entityTitle, editTitle] : [listTitle, editTitle]) : [listTitle, createTitle]);
 
   useEffect(() => {
     if (userQuery.data) {
@@ -167,25 +174,11 @@ export const UserFormPageContent = ({ id, surface = 'user' }: UserFormPageConten
   return (
     <Content>
       <CustomBreadcrumbs
-        heading={
-          isEmployeeSurface
-            ? isEditMode
-              ? t('pages.employeeEdit.title')
-              : t('pages.employeeCreate.title')
-            : isEditMode
-              ? t('pages.edit.title')
-              : t('pages.create.title')
-        }
+        heading={isEditMode ? editTitle : createTitle}
         links={[
-          { name: isEmployeeSurface ? t('pages.employeeList.title') : t('pages.list.title'), href: listPath },
+          { name: listTitle, href: listPath },
           {
-            name: isEmployeeSurface
-              ? isEditMode
-                ? t('pages.employeeEdit.title')
-                : t('pages.employeeCreate.title')
-              : isEditMode
-                ? t('pages.edit.title')
-                : t('pages.create.title'),
+            name: isEditMode ? editTitle : createTitle,
           },
         ]}
       />

@@ -14,7 +14,7 @@ type TitleRule = {
   resolve: (params: RouteParams, t: TFunction) => string[];
 };
 
-const toEntityIdTitle = (t: TFunction, id?: string): string => (id ? `#${id}` : t('common:labels.details'));
+const getEntityDetailsTitle = (t: TFunction): string => t('common:labels.details');
 const getReportTitle = (t: TFunction, reportKey?: string): string => {
   const reportTitles: Record<string, string> = {
     summary: t('reports:reports.summary.title'),
@@ -47,9 +47,9 @@ const TITLE_RULES: TitleRule[] = [
   {
     route: AppRoutes.PLATFORM_BUSINESS_PARTNER_EDIT,
     namespaces: ['platform', 'common'],
-    resolve: ({ id }, t) => [
+    resolve: (_params, t) => [
       t('platform:pages.businessPartners.title'),
-      toEntityIdTitle(t, id),
+      getEntityDetailsTitle(t),
       t('platform:pages.businessPartnerEdit.title'),
     ],
   },
@@ -66,9 +66,9 @@ const TITLE_RULES: TitleRule[] = [
   {
     route: AppRoutes.PLATFORM_TARIFF_EDIT,
     namespaces: ['platform', 'common'],
-    resolve: ({ id }, t) => [
+    resolve: (_params, t) => [
       t('platform:pages.tariffs.title'),
-      toEntityIdTitle(t, id),
+      getEntityDetailsTitle(t),
       t('platform:pages.tariffEdit.title'),
     ],
   },
@@ -146,22 +146,22 @@ const TITLE_RULES: TitleRule[] = [
   {
     route: AppRoutes.USER_EDIT,
     namespaces: ['users', 'common'],
-    resolve: ({ id }, t) => [t('users:pages.list.title'), toEntityIdTitle(t, id), t('users:actions.edit')],
+    resolve: (_params, t) => [t('users:pages.list.title'), getEntityDetailsTitle(t), t('users:actions.edit')],
   },
   {
     route: AppRoutes.EMPLOYEE_EDIT,
     namespaces: ['users', 'common'],
-    resolve: ({ id }, t) => [t('users:pages.employeeList.title'), toEntityIdTitle(t, id), t('users:actions.edit')],
+    resolve: (_params, t) => [t('users:pages.employeeList.title'), getEntityDetailsTitle(t), t('users:actions.edit')],
   },
   {
     route: AppRoutes.USER_VIEW,
     namespaces: ['users', 'common'],
-    resolve: ({ id }, t) => [t('users:pages.list.title'), toEntityIdTitle(t, id)],
+    resolve: (_params, t) => [t('users:pages.list.title'), getEntityDetailsTitle(t)],
   },
   {
     route: AppRoutes.EMPLOYEE_VIEW,
     namespaces: ['users', 'common'],
-    resolve: ({ id }, t) => [t('users:pages.employeeList.title'), toEntityIdTitle(t, id)],
+    resolve: (_params, t) => [t('users:pages.employeeList.title'), getEntityDetailsTitle(t)],
   },
   { route: AppRoutes.FLOOR_ZONE_LIST, namespaces: ['floor'], resolve: (_params, t) => [t('floor:pages.zones.title')] },
   {
@@ -172,7 +172,7 @@ const TITLE_RULES: TitleRule[] = [
   {
     route: AppRoutes.FLOOR_ZONE_EDIT,
     namespaces: ['floor', 'common'],
-    resolve: ({ id }, t) => [t('floor:pages.zones.title'), toEntityIdTitle(t, id), t('floor:pages.zoneEdit.title')],
+    resolve: (_params, t) => [t('floor:pages.zones.title'), getEntityDetailsTitle(t), t('floor:pages.zoneEdit.title')],
   },
   { route: AppRoutes.NOTFOUND, namespaces: ['common'], resolve: (_params, t) => [t('common:labels.notFound')] },
 ];

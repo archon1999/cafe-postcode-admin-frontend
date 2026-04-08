@@ -12,6 +12,7 @@ import { z } from 'zod';
 
 import { useTranslate } from 'app/providers/locales';
 import { useRedirectOnNotFound } from 'shared/hooks/router';
+import { usePageTitle } from 'shared/hooks/use-page-title';
 import { Form, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
 
 import { useCreateZoneMutation, useGetZoneByIdQuery, useUpdateZoneMutation } from '../../../application';
@@ -30,8 +31,15 @@ export function ZoneDialog({ open, zoneId, onClose }: { open: boolean; zoneId?: 
   const zoneQuery = useGetZoneByIdQuery(zoneId ?? '', { enabled: open && isEditMode });
   const createMutation = useCreateZoneMutation();
   const updateMutation = useUpdateZoneMutation(zoneId ?? '');
+  const listTitle = t('pages.zones.title');
+  const editTitle = t('pages.zoneEdit.title');
+  const createTitle = t('pages.zoneCreate.title');
+  const entityTitle = zoneQuery.data?.name;
 
   useRedirectOnNotFound(zoneQuery.error, open && isEditMode);
+  usePageTitle(isEditMode ? (entityTitle ? [listTitle, entityTitle, editTitle] : [listTitle, editTitle]) : [listTitle, createTitle], {
+    enabled: open,
+  });
 
   const methods = useForm<Values>({
     resolver: zodResolver(schema),
@@ -79,7 +87,7 @@ export function ZoneDialog({ open, zoneId, onClose }: { open: boolean; zoneId?: 
   return (
     <Dialog open={open} onClose={methods.formState.isSubmitting ? undefined : onClose} fullWidth maxWidth="sm">
       <Form methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>{isEditMode ? t('pages.zoneEdit.title') : t('pages.zoneCreate.title')}</DialogTitle>
+        <DialogTitle>{isEditMode ? editTitle : createTitle}</DialogTitle>
         <DialogContent>
           {isEditMode && zoneQuery.isLoading ? (
             <Stack alignItems="center" justifyContent="center" sx={{ minHeight: 240 }}>

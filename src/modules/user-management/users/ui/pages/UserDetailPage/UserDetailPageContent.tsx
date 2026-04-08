@@ -13,6 +13,7 @@ import type { ReactNode } from 'react';
 import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath, RouterPathHelper } from 'app/routes';
+import { usePageTitle } from 'shared/hooks/use-page-title';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { EmptyValueChip, renderEmptyValue } from 'shared/ui/EmptyValue';
 import { Iconify, type IconifyName } from 'shared/ui/Iconify';
@@ -170,10 +171,16 @@ export const UserDetailPageContent = ({ id, surface = 'user' }: UserDetailPageCo
   const employeeUserQuery = useGetEmployeeByIdQuery(id ?? '', { enabled: Boolean(id) && isEmployeeSurface });
   const userQuery = isEmployeeSurface ? employeeUserQuery : systemUserQuery;
   const user = userQuery.data;
+  const listTitle = isEmployeeSurface ? t('pages.employeeList.title') : t('pages.list.title');
+  const detailTitle = isEmployeeSurface
+    ? t('pages.employeeView.title', { defaultValue: 'Xodim tavsilotlari' })
+    : t('pages.view.title', { defaultValue: 'Foydalanuvchi tavsilotlari' });
   const hasHallAccessPermission = Boolean(
     user?.permissionCodes?.some((permissionCode) => HALL_ACCESS_PERMISSION_CODES.includes(permissionCode as never)),
   );
   const hallsQuery = useGetHallsQuery({ enabled: Boolean(user) && hasHallAccessPermission });
+
+  usePageTitle(user?.fullName ? [listTitle, user.fullName] : [listTitle, detailTitle]);
 
   if (userQuery.isLoading) {
     return <LoadingScreen />;
@@ -255,14 +262,10 @@ export const UserDetailPageContent = ({ id, surface = 'user' }: UserDetailPageCo
   return (
     <Content>
       <CustomBreadcrumbs
-        heading={
-          isEmployeeSurface
-            ? t('pages.employeeView.title', { defaultValue: 'Xodim tavsilotlari' })
-            : t('pages.view.title', { defaultValue: 'Foydalanuvchi tavsilotlari' })
-        }
+        heading={detailTitle}
         links={[
           {
-            name: isEmployeeSurface ? t('pages.employeeList.title') : t('pages.list.title'),
+            name: listTitle,
             href: isEmployeeSurface ? RoutePath.employeeList : RoutePath.userList,
           },
           { name: user.fullName },
