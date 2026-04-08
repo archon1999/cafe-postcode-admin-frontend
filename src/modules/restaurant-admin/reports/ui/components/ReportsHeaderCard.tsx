@@ -1,28 +1,24 @@
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Chip from '@mui/material/Chip';
+import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import type { GridColDef, GridColumnVisibilityModel } from '@mui/x-data-grid';
 
-import type { AdminReportPeriodType } from 'shared/api/admin-types';
-import { Iconify } from 'shared/ui/Iconify';
+import { useTranslate } from 'app/providers/locales';
 
 import type { ReportDefinition } from '../../domain';
 
 import { ReportsToolbar, type ReportsToolbarFilter } from './ReportsToolbar';
+import type { ReportsDatePreset } from './reportsDateRange';
 
 type ReportsHeaderCardProps = {
   report: ReportDefinition;
   title: string;
-  lastUpdatedLabel: string;
-  periodType: AdminReportPeriodType;
-  date: string;
-  month: string;
-  year: string;
-  onPeriodTypeChange: (value: AdminReportPeriodType) => void;
-  onDateChange: (value: string) => void;
-  onMonthChange: (value: string) => void;
-  onYearChange: (value: string) => void;
+  activePreset: ReportsDatePreset;
+  startDate: string;
+  endDate: string;
+  onPresetChange: (value: Exclude<ReportsDatePreset, 'custom'>) => void;
+  onRangeChange: (startDate: string, endDate: string) => void;
   search?: string;
   onSearchChange?: (value: string) => void;
   onClearSearch?: () => void;
@@ -42,15 +38,11 @@ type ReportsHeaderCardProps = {
 
 export function ReportsHeaderCard({
   title,
-  lastUpdatedLabel,
-  periodType,
-  date,
-  month,
-  year,
-  onPeriodTypeChange,
-  onDateChange,
-  onMonthChange,
-  onYearChange,
+  activePreset,
+  startDate,
+  endDate,
+  onPresetChange,
+  onRangeChange,
   search,
   onSearchChange,
   onClearSearch,
@@ -67,6 +59,13 @@ export function ReportsHeaderCard({
   showSearch,
   showColumns,
 }: ReportsHeaderCardProps) {
+  const { t } = useTranslate('reports');
+  const presets = [
+    { value: 'today', label: t('actions.today', { defaultValue: 'Today' }) },
+    { value: 'month', label: t('actions.monthly', { defaultValue: 'Monthly' }) },
+    { value: 'year', label: t('actions.yearly', { defaultValue: 'Yearly' }) },
+  ] as const;
+
   return (
     <Card sx={{ flexShrink: 0, p: 3, borderRadius: 3, boxShadow: (theme) => theme.customShadows.z8 }}>
       <Box
@@ -79,24 +78,35 @@ export function ReportsHeaderCard({
         }}>
         <Typography variant="h4">{title}</Typography>
 
-        <Chip
-          icon={<Iconify icon="solar:clock-circle-bold-duotone" width={18} />}
-          label={lastUpdatedLabel}
-          variant="soft"
-          color="default"
-        />
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            flexWrap: 'nowrap',
+            overflowX: 'auto',
+            scrollbarWidth: 'none',
+            '&::-webkit-scrollbar': { display: 'none' },
+          }}>
+          {presets.map((preset) => (
+            <Button
+              key={preset.value}
+              variant={activePreset === preset.value ? 'contained' : 'outlined'}
+              color={activePreset === preset.value ? 'black' : 'inherit'}
+              onClick={() => onPresetChange(preset.value)}
+              sx={{ whiteSpace: 'nowrap', flexShrink: 0 }}>
+              {preset.label}
+            </Button>
+          ))}
+        </Box>
       </Box>
 
       <Box sx={{ mt: 1, pt: 3, borderTop: (theme) => `1px solid ${theme.vars.palette.divider}` }}>
         <ReportsToolbar
-          periodType={periodType}
-          date={date}
-          month={month}
-          year={year}
-          onPeriodTypeChange={onPeriodTypeChange}
-          onDateChange={onDateChange}
-          onMonthChange={onMonthChange}
-          onYearChange={onYearChange}
+          activePreset={activePreset}
+          startDate={startDate}
+          endDate={endDate}
+          onRangeChange={onRangeChange}
           search={search}
           onSearchChange={showSearch ? onSearchChange : undefined}
           onClearSearch={showSearch ? onClearSearch : undefined}

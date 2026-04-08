@@ -8,16 +8,63 @@ import { useEffect, useMemo, useState } from 'react';
 import { ListPageBody, ListPageContent } from 'app/layouts/Dashboard';
 import { RoutePath, RouterPathHelper, canAccessReports } from 'app/routes';
 import { useCurrentUser } from 'modules/auth';
-import type { AdminReportKey, AdminReportPeriodType } from 'shared/api/admin-types';
+import type { AdminReportKey } from 'shared/api/admin-types';
 import { DEFAULT_PAGINATION_MODEL, DEFAULT_COLUMN_VISIBILITY_MODEL } from 'shared/constants';
 import { useParams, useRouter } from 'shared/hooks/router';
-import { getCurrentTashkentTime } from 'shared/utils/dayjs';
 
 import { DEFAULT_REPORT_KEY, getReportDefinition, REPORTS_REGISTRY } from '../../../domain';
 import { ReportsMobileTabs } from '../../components/ReportsMobileTabs';
 import { ReportsSidebar } from '../../components/ReportsSidebar';
 import { ReportsSummarySection } from '../../components/ReportsSummarySection';
 import { ReportsTableSection } from '../../components/ReportsTableSection';
+import {
+  createCustomRangeState,
+  createPresetRangeState,
+  isReportsDatePreset,
+  isValidReportsDate,
+  type ReportsDatePreset,
+  type ReportsDateRangeState,
+} from '../../components/reportsDateRange';
+
+const REPORTS_DATE_RANGE_STORAGE_KEY = 'restaurant-admin-reports-date-range';
+
+function getInitialReportsDateRangeState(): ReportsDateRangeState {
+  const fallbackState = createPresetRangeState('today');
+
+  if (typeof window === 'undefined') {
+    return fallbackState;
+  }
+
+  try {
+    const rawValue = window.sessionStorage.getItem(REPORTS_DATE_RANGE_STORAGE_KEY);
+
+    if (!rawValue) {
+      return fallbackState;
+    }
+
+    const parsed = JSON.parse(rawValue) as Partial<ReportsDateRangeState>;
+
+    if (
+      !isValidReportsDate(parsed.startDate) ||
+      !isValidReportsDate(parsed.endDate) ||
+      !isReportsDatePreset(parsed.activePreset)
+    ) {
+      return fallbackState;
+    }
+
+    if (parsed.activePreset === 'custom') {
+      return createCustomRangeState(parsed.startDate, parsed.endDate);
+    }
+
+    return {
+      startDate: parsed.startDate,
+      endDate: parsed.endDate,
+      activePreset: parsed.activePreset,
+    };
+  } catch {
+    return fallbackState;
+  }
+}
 
 const ReportsPage = () => {
   const { profile } = useCurrentUser();
@@ -46,10 +93,7 @@ const ReportsPage = () => {
     availableReports.find((report) => report.key === selectedReportKey) ?? getReportDefinition(fallbackReportKey);
   const canViewReports = canAccessReports(profile);
 
-  const [periodType, setPeriodType] = useState<AdminReportPeriodType>('day');
-  const [selectedDate, setSelectedDate] = useState(() => getCurrentTashkentTime().format('YYYY-MM-DD'));
-  const [selectedMonth, setSelectedMonth] = useState(() => getCurrentTashkentTime().format('YYYY-MM'));
-  const [selectedYear, setSelectedYear] = useState(() => getCurrentTashkentTime().format('YYYY'));
+  const [dateRangeState, setDateRangeState] = useState<ReportsDateRangeState>(getInitialReportsDateRangeState);
   const [search, setSearch] = useState('');
   const [paymentMethods, setPaymentMethods] = useState<string[]>([]);
   const [statuses, setStatuses] = useState<string[]>([]);
@@ -63,6 +107,7 @@ const ReportsPage = () => {
   const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(
     DEFAULT_COLUMN_VISIBILITY_MODEL,
   );
+  const { startDate, endDate, activePreset } = dateRangeState;
 
   useEffect(() => {
     if (profile && !canViewReports) {
@@ -75,6 +120,14 @@ const ReportsPage = () => {
       router.replace(RouterPathHelper.reportDetail(fallbackReportKey));
     }
   }, [availableReportKeys, fallbackReportKey, reportParam, router]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    window.sessionStorage.setItem(REPORTS_DATE_RANGE_STORAGE_KEY, JSON.stringify(dateRangeState));
+  }, [dateRangeState]);
 
   useEffect(() => {
     setSearch('');
@@ -106,24 +159,17 @@ const ReportsPage = () => {
     setPaginationModel((prev) => ({ ...prev, page: 0 }));
   };
 
-  const handlePeriodTypeChange = (value: AdminReportPeriodType) => {
-    setPeriodType(value);
+  const applyDateRangeState = (nextState: ReportsDateRangeState) => {
+    setDateRangeState(nextState);
     resetPage();
   };
 
-  const handleDateChange = (value: string) => {
-    setSelectedDate(value);
-    resetPage();
+  const handlePresetChange = (preset: Exclude<ReportsDatePreset, 'custom'>) => {
+    applyDateRangeState(createPresetRangeState(preset));
   };
 
-  const handleMonthChange = (value: string) => {
-    setSelectedMonth(value);
-    resetPage();
-  };
-
-  const handleYearChange = (value: string) => {
-    setSelectedYear(value);
-    resetPage();
+  const handleRangeChange = (nextStartDate: string, nextEndDate: string) => {
+    applyDateRangeState(createCustomRangeState(nextStartDate, nextEndDate));
   };
 
   const handleSearchChange = (value: string) => {
@@ -162,22 +208,18 @@ const ReportsPage = () => {
             {selectedReport.kind === 'summary' ? (
               <ReportsSummarySection
                 report={selectedReport}
-                periodType={periodType}
-                selectedDate={selectedDate}
-                selectedMonth={selectedMonth}
-                selectedYear={selectedYear}
-                onPeriodTypeChange={handlePeriodTypeChange}
-                onDateChange={handleDateChange}
-                onMonthChange={handleMonthChange}
-                onYearChange={handleYearChange}
+                startDate={startDate}
+                endDate={endDate}
+                activePreset={activePreset}
+                onPresetChange={handlePresetChange}
+                onRangeChange={handleRangeChange}
               />
             ) : (
               <ReportsTableSection
                 report={selectedReport}
-                periodType={periodType}
-                selectedDate={selectedDate}
-                selectedMonth={selectedMonth}
-                selectedYear={selectedYear}
+                startDate={startDate}
+                endDate={endDate}
+                activePreset={activePreset}
                 search={search}
                 paymentMethods={paymentMethods}
                 statuses={statuses}
@@ -189,10 +231,8 @@ const ReportsPage = () => {
                 paginationModel={paginationModel}
                 sortModel={sortModel}
                 columnVisibilityModel={columnVisibilityModel}
-                onPeriodTypeChange={handlePeriodTypeChange}
-                onDateChange={handleDateChange}
-                onMonthChange={handleMonthChange}
-                onYearChange={handleYearChange}
+                onPresetChange={handlePresetChange}
+                onRangeChange={handleRangeChange}
                 onSearchChange={handleSearchChange}
                 onClearSearch={handleClearSearch}
                 onPaymentMethodsChange={setPaymentMethods}

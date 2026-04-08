@@ -14,7 +14,15 @@ type ReportSummaryCardsProps = {
   loading?: boolean;
 };
 
-const SUMMARY_ITEMS = [
+type SummaryMetricKey = 'salesTotal' | 'ordersCount' | 'averageCheck' | 'openChecks' | 'activeTables';
+type SummaryItem = {
+  key: SummaryMetricKey;
+  labelKey: string;
+  icon: string;
+  isMoney?: boolean;
+};
+
+const SUMMARY_ITEMS: SummaryItem[] = [
   {
     key: 'salesTotal',
     labelKey: 'reports.summary.metrics.salesTotal',

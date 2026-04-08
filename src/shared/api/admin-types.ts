@@ -794,10 +794,8 @@ export type AdminListQueryParams = {
 };
 
 export type AdminReportPeriodQueryParams = {
-  periodType?: AdminReportPeriodType;
-  date?: string;
-  month?: string;
-  year?: string;
+  startDate?: string;
+  endDate?: string;
 };
 
 export type AdminUsersQueryParams = AdminListQueryParams & {

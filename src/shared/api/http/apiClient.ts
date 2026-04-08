@@ -113,10 +113,8 @@ function extractFilename(disposition?: string | null, fallback = 'report.xlsx') 
 }
 
 function mapReportParams(params: {
-  periodType?: string;
-  date?: string;
-  month?: string;
-  year?: string;
+  startDate?: string;
+  endDate?: string;
   search?: string;
   ordering?: string;
   page?: number;
@@ -130,10 +128,8 @@ function mapReportParams(params: {
   differenceOnly?: boolean;
 }) {
   return {
-    periodType: params.periodType,
-    date: params.date,
-    month: params.month,
-    year: params.year,
+    startDate: params.startDate,
+    endDate: params.endDate,
     search: params.search,
     ordering: params.ordering,
     page: params.page,

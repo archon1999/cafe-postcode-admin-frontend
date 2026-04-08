@@ -20,7 +20,6 @@ import type {
   AdminPaymentBreakdownReportQueryParams,
   AdminPaymentBreakdownReportRow,
   AdminReportKey,
-  AdminReportPeriodType,
   AdminSalesReportQueryParams,
   AdminSalesReportRow,
   AdminShiftReportQueryParams,
@@ -53,6 +52,7 @@ import type { ReportDefinition } from '../../domain';
 import { ReportsHeaderCard } from './ReportsHeaderCard';
 import type { ReportsToolbarFilter } from './ReportsToolbar';
 import { ReportTableCard } from './ReportTableCard';
+import type { ReportsDatePreset } from './reportsDateRange';
 
 type ReportTableRow =
   | AdminSalesReportRow
@@ -62,14 +62,25 @@ type ReportTableRow =
   | AdminPaymentBreakdownReportRow
   | AdminShiftReportRow;
 
+type TableReportKey = Exclude<AdminReportKey, 'summary'>;
+type ReportEmptyState = {
+  noData: {
+    title: string;
+    description: string;
+  };
+  noResults: {
+    title: string;
+    description: string;
+  };
+};
+
 const SINGLE_SELECT = (values: string[]) => values.slice(-1);
 
 type ReportsTableSectionProps = {
   report: ReportDefinition;
-  periodType: AdminReportPeriodType;
-  selectedDate: string;
-  selectedMonth: string;
-  selectedYear: string;
+  startDate: string;
+  endDate: string;
+  activePreset: ReportsDatePreset;
   search: string;
   paymentMethods: string[];
   statuses: string[];
@@ -81,10 +92,8 @@ type ReportsTableSectionProps = {
   paginationModel: GridPaginationModel;
   sortModel: GridSortModel;
   columnVisibilityModel: GridColumnVisibilityModel;
-  onPeriodTypeChange: (value: AdminReportPeriodType) => void;
-  onDateChange: (value: string) => void;
-  onMonthChange: (value: string) => void;
-  onYearChange: (value: string) => void;
+  onPresetChange: (value: Exclude<ReportsDatePreset, 'custom'>) => void;
+  onRangeChange: (startDate: string, endDate: string) => void;
   onSearchChange: (value: string) => void;
   onClearSearch: () => void;
   onPaymentMethodsChange: (values: string[]) => void;
@@ -107,12 +116,19 @@ function formatDateTime(value?: string | null) {
   return formatTashkentDateTime(value, 'DD.MM.YYYY HH:mm');
 }
 
+function castColumns<Row extends ReportTableRow>(columns: GridColDef<Row>[]) {
+  return columns as GridColDef<ReportTableRow>[];
+}
+
+function castRowIdGetter<Row extends ReportTableRow>(getter: GridRowIdGetter<Row>) {
+  return getter as GridRowIdGetter<ReportTableRow>;
+}
+
 export function ReportsTableSection({
   report,
-  periodType,
-  selectedDate,
-  selectedMonth,
-  selectedYear,
+  startDate,
+  endDate,
+  activePreset,
   search,
   paymentMethods,
   statuses,
@@ -124,10 +140,8 @@ export function ReportsTableSection({
   paginationModel,
   sortModel,
   columnVisibilityModel,
-  onPeriodTypeChange,
-  onDateChange,
-  onMonthChange,
-  onYearChange,
+  onPresetChange,
+  onRangeChange,
   onSearchChange,
   onClearSearch,
   onPaymentMethodsChange,
@@ -147,14 +161,13 @@ export function ReportsTableSection({
 
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
   const ordering = getOrderingFromSortModel(sortModel);
+  const tableReportKey = report.key as TableReportKey;
   const periodParams = useMemo(
     () => ({
-      periodType,
-      date: periodType === 'day' ? selectedDate : undefined,
-      month: periodType === 'month' ? selectedMonth : undefined,
-      year: periodType === 'year' ? selectedYear : undefined,
+      startDate,
+      endDate,
     }),
-    [periodType, selectedDate, selectedMonth, selectedYear],
+    [endDate, startDate],
   );
 
   const salesQuery = useGetSalesReportQuery(
@@ -240,7 +253,7 @@ export function ReportsTableSection({
     {
       page: 1,
       pageSize: 100,
-      isActive: true,
+      employmentStatusIn: 'active',
     },
     { enabled: report.key === 'shifts' },
   );
@@ -306,14 +319,10 @@ export function ReportsTableSection({
               ? shiftQuery
               : paymentBreakdownQuery;
 
-  const lastUpdatedLabel = activeTableQuery.dataUpdatedAt
-    ? t('workspace.lastUpdated', { value: formatTashkentDateTime(activeTableQuery.dataUpdatedAt, 'DD.MM.YYYY HH:mm') })
-    : t('workspace.awaitingData');
-
-  const activeColumns = useMemo<GridColDef<ReportTableRow>[]>(() => {
+  const activeColumns = useMemo(() => {
     switch (report.key) {
       case 'sales':
-        return [
+        return castColumns<AdminSalesReportRow>([
           {
             field: 'method',
             headerName: t('reports.sales.fields.method'),
@@ -329,9 +338,9 @@ export function ReportsTableSection({
             flex: 0.6,
             valueGetter: (_value, row: AdminSalesReportRow) => formatMoney(row.total),
           },
-        ];
+        ]);
       case 'openChecks':
-        return [
+        return castColumns<AdminOpenChecksReportRow>([
           {
             field: 'orderNumber',
             headerName: t('reports.openChecks.fields.orderNumber'),
@@ -344,7 +353,7 @@ export function ReportsTableSection({
             headerName: t('reports.openChecks.fields.status'),
             minWidth: 140,
             flex: 0.5,
-            renderCell: ({ row }: { row: AdminOpenChecksReportRow }) => (
+            renderCell: ({ row }) => (
               <Chip size="small" label={t(`statuses.${row.status}`)} color="warning" variant="soft" />
             ),
           },
@@ -377,9 +386,9 @@ export function ReportsTableSection({
             flex: 0.7,
             valueGetter: (_value, row: AdminOpenChecksReportRow) => formatDateTime(row.createdAt),
           },
-        ];
+        ]);
       case 'topItems':
-        return [
+        return castColumns<AdminTopItemsReportRow>([
           {
             field: 'catalogItemName',
             headerName: t('reports.topItems.fields.catalogItemName'),
@@ -401,9 +410,9 @@ export function ReportsTableSection({
             flex: 0.6,
             valueGetter: (_value, row: AdminTopItemsReportRow) => formatMoney(row.revenue),
           },
-        ];
+        ]);
       case 'topStaff':
-        return [
+        return castColumns<AdminTopStaffReportRow>([
           {
             field: 'staffName',
             headerName: t('reports.topStaff.fields.staffName'),
@@ -419,9 +428,9 @@ export function ReportsTableSection({
             flex: 0.7,
             valueGetter: (_value, row: AdminTopStaffReportRow) => formatMoney(row.totalSales),
           },
-        ];
+        ]);
       case 'paymentBreakdown':
-        return [
+        return castColumns<AdminPaymentBreakdownReportRow>([
           {
             field: 'method',
             headerName: t('reports.paymentBreakdown.fields.method'),
@@ -437,9 +446,9 @@ export function ReportsTableSection({
             flex: 0.6,
             valueGetter: (_value, row: AdminPaymentBreakdownReportRow) => formatMoney(row.total),
           },
-        ];
+        ]);
       case 'shifts':
-        return [
+        return castColumns<AdminShiftReportRow>([
           {
             field: 'cashierName',
             headerName: t('reports.shifts.fields.cashierName'),
@@ -459,7 +468,7 @@ export function ReportsTableSection({
             headerName: t('reports.shifts.fields.status'),
             minWidth: 140,
             flex: 0.5,
-            renderCell: ({ row }: { row: AdminShiftReportRow }) => (
+            renderCell: ({ row }) => (
               <Chip
                 size="small"
                 label={t(`statuses.${row.status}`)}
@@ -508,7 +517,7 @@ export function ReportsTableSection({
             headerName: t('reports.shifts.fields.cashDifferenceAmount'),
             minWidth: 160,
             flex: 0.6,
-            renderCell: ({ row }: { row: AdminShiftReportRow }) => (
+            renderCell: ({ row }) => (
               <Chip
                 size="small"
                 label={formatMoney(row.cashDifferenceAmount)}
@@ -557,26 +566,32 @@ export function ReportsTableSection({
             minWidth: 130,
             flex: 0.45,
           },
-        ];
+        ]);
       default:
-        return [{ field: 'method', headerName: '', minWidth: 120 }];
+        return castColumns<AdminSalesReportRow>([]);
     }
   }, [report.key, t, tCommon]);
 
-  const getReportRowId = useMemo<GridRowIdGetter<ReportTableRow>>(() => {
+  const getReportRowId = useMemo(() => {
     switch (report.key) {
       case 'sales':
+        return castRowIdGetter<AdminSalesReportRow>((row) => row.method);
       case 'paymentBreakdown':
-        return (row) => row.method;
+        return castRowIdGetter<AdminPaymentBreakdownReportRow>((row) => row.method);
       case 'openChecks':
+        return castRowIdGetter<AdminOpenChecksReportRow>((row) => row.id);
       case 'shifts':
-        return (row) => row.id;
+        return castRowIdGetter<AdminShiftReportRow>((row) => row.id);
       case 'topItems':
-        return (row) => `${row.catalogItemId ?? row.catalogItemName}-${row.categoryId ?? 'none'}`;
+        return castRowIdGetter<AdminTopItemsReportRow>(
+          (row) => `${row.catalogItemId ?? row.catalogItemName}-${row.categoryId ?? 'none'}`,
+        );
       case 'topStaff':
-        return (row) => `${row.staffId ?? row.staffName ?? 'unknown'}-${row.orderCount}-${row.totalSales}`;
+        return castRowIdGetter<AdminTopStaffReportRow>(
+          (row) => `${row.staffId ?? row.staffName ?? 'unknown'}-${row.orderCount}-${row.totalSales}`,
+        );
       default:
-        return (row) => JSON.stringify(row);
+        return ((row: ReportTableRow) => JSON.stringify(row)) as GridRowIdGetter<ReportTableRow>;
     }
   }, [report.key]);
 
@@ -724,8 +739,7 @@ export function ReportsTableSection({
     ],
   );
 
-  const searchPlaceholderMap: Record<AdminReportKey, string> = {
-    summary: t('filters.searchPlaceholder'),
+  const searchPlaceholderMap: Record<TableReportKey, string> = {
     sales: t('filters.searchSalesPlaceholder'),
     openChecks: t('filters.searchOpenChecksPlaceholder'),
     topItems: t('filters.searchTopItemsPlaceholder'),
@@ -734,7 +748,7 @@ export function ReportsTableSection({
     shifts: t('filters.searchShiftsPlaceholder'),
   };
 
-  const emptyStateMap = {
+  const emptyStateMap: Record<TableReportKey, ReportEmptyState> = {
     sales: {
       noData: { title: t('empty.sales.noData.title'), description: t('empty.sales.noData.description') },
       noResults: { title: t('empty.sales.noResults.title'), description: t('empty.sales.noResults.description') },
@@ -827,19 +841,15 @@ export function ReportsTableSection({
       <ReportsHeaderCard
         report={report}
         title={t(report.titleKey)}
-        lastUpdatedLabel={lastUpdatedLabel}
-        periodType={periodType}
-        date={selectedDate}
-        month={selectedMonth}
-        year={selectedYear}
-        onPeriodTypeChange={onPeriodTypeChange}
-        onDateChange={onDateChange}
-        onMonthChange={onMonthChange}
-        onYearChange={onYearChange}
+        activePreset={activePreset}
+        startDate={startDate}
+        endDate={endDate}
+        onPresetChange={onPresetChange}
+        onRangeChange={onRangeChange}
         search={search}
         onSearchChange={onSearchChange}
         onClearSearch={onClearSearch}
-        searchPlaceholder={searchPlaceholderMap[report.key]}
+        searchPlaceholder={searchPlaceholderMap[tableReportKey]}
         filters={toolbarFilters}
         onRefresh={handleRefresh}
         refreshLoading={activeTableQuery.isFetching}
@@ -883,7 +893,7 @@ export function ReportsTableSection({
               cashierIds.length ||
               differenceOnly.length,
           )}
-          emptyState={emptyStateMap[report.key]}
+          emptyState={emptyStateMap[tableReportKey]}
         />
       </Box>
     </>

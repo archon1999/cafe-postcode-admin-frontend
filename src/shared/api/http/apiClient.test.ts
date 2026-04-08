@@ -62,8 +62,8 @@ describe('apiClient query params', () => {
     await apiClient.getAdminSalesReport({
       page: 1,
       pageSize: 10,
-      periodType: 'month',
-      month: '2026-03',
+      startDate: '2026-03-01',
+      endDate: '2026-03-31',
       paymentMethod: 'card',
       ordering: '-total',
     });
@@ -72,16 +72,17 @@ describe('apiClient query params', () => {
       params: {
         page: 1,
         pageSize: 10,
-        periodType: 'month',
-        month: '2026-03',
+        startDate: '2026-03-01',
+        endDate: '2026-03-31',
         paymentMethod: 'card',
         ordering: '-total',
-        date: undefined,
-        year: undefined,
         search: undefined,
         status: undefined,
         hallId: undefined,
         categoryId: undefined,
+        cashDeskId: undefined,
+        cashierId: undefined,
+        differenceOnly: undefined,
       },
     });
   });
