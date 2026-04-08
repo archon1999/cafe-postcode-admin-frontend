@@ -52,6 +52,7 @@ import type {
   AdminShiftReportQueryParams,
   AdminShiftReportRow,
   AdminRestaurant,
+  AdminRestaurantLookupResult,
   AdminRestaurantActivationPayload,
   AdminRestaurantActivationOptions,
   AdminRestaurantActivationResult,
@@ -678,6 +679,14 @@ export const apiClient = {
 
   getAdminRestaurantById(id: string) {
     return instance.get<AdminRestaurant>(`/api/v1/admin/restaurants/${id}/`).then((response) => response.data);
+  },
+
+  lookupAdminRestaurant(taxNumber: string) {
+    return instance
+      .get<AdminRestaurantLookupResult>('/api/v1/admin/restaurants/lookup/', {
+        params: { taxNumber },
+      })
+      .then((response) => response.data);
   },
 
   createAdminRestaurant(payload: AdminRestaurantPayload) {

@@ -9,6 +9,7 @@ export {
   useDeleteDistributionPointMutation,
   useDeletePrepStationMutation,
   useDeleteRestaurantMutation,
+  useLookupRestaurantMutation,
   useUpdateCashDeskMutation,
   useUpdateDeviceMutation,
   useUpdateDistributionPointMutation,

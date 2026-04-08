@@ -1,4 +1,6 @@
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 
 import { RHFPhoneInput, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
 
@@ -8,15 +10,33 @@ type TranslateFn = (key: string, options?: Record<string, unknown>) => string;
 
 type RestaurantFormFieldsProps = {
   isEditMode: boolean;
+  isLookupPending: boolean;
+  isSubmitting: boolean;
+  onLookup: () => void | Promise<void>;
   t: TranslateFn;
 };
 
-export const RestaurantFormFields = ({ isEditMode, t }: RestaurantFormFieldsProps) => (
+export const RestaurantFormFields = ({ isEditMode, isLookupPending, isSubmitting, onLookup, t }: RestaurantFormFieldsProps) => (
   <>
     <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: 'repeat(2, minmax(0, 1fr))' }, gap: 3 }}>
       <RHFTextField<Values> name="name" label={t('fields.name')} />
       <RHFTextField<Values> name="legalName" label={t('fields.legalName')} />
-      <RHFTextField<Values> name="taxNumber" label={t('fields.taxNumber')} />
+      {isEditMode ? (
+        <RHFTextField<Values> name="taxNumber" label={t('fields.taxNumber')} />
+      ) : (
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ alignItems: { sm: 'flex-start' } }}>
+          <RHFTextField<Values> name="taxNumber" label={t('fields.taxNumber')} />
+          <Button
+            type="button"
+            variant="outlined"
+            onClick={onLookup}
+            loading={isLookupPending}
+            disabled={isLookupPending || isSubmitting}
+            sx={{ minWidth: { sm: 120 }, height: 56 }}>
+            {t('filters.search')}
+          </Button>
+        </Stack>
+      )}
       <RHFPhoneInput<Values>
         name="phone"
         label={t('fields.phone')}

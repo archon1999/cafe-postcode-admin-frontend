@@ -9,6 +9,7 @@ import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath, canAccessMyRestaurant, canAccessRestaurants } from 'app/routes';
 import { useCurrentUser } from 'modules/auth/domain/services/current-user';
+import { normalizeError, notifyError } from 'shared/api/errors/errorHandling';
 import { useParams, useRedirectOnNotFound, useRouter } from 'shared/hooks/router';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { FormActions } from 'shared/ui/FormActions';
@@ -18,6 +19,7 @@ import { LoadingScreen } from 'shared/ui/LoadingScreen';
 import {
   useCreateRestaurantMutation,
   useGetRestaurantByIdQuery,
+  useLookupRestaurantMutation,
   useUpdateRestaurantMutation,
 } from '../../../application';
 
@@ -29,6 +31,7 @@ const schema = z.object({
   taxNumber: z.string(),
   phone: z.string(),
   address: z.string(),
+  fakturaPayload: z.record(z.string(), z.unknown()).optional(),
   isActive: z.boolean(),
 });
 
@@ -46,6 +49,7 @@ const RestaurantFormPage = () => {
   const backPath = canManageRestaurants ? RoutePath.organizationRestaurantList : RoutePath.organizationMyRestaurant;
   const query = useGetRestaurantByIdQuery(id ?? '', { enabled: isEditMode && canAccessRestaurantForm });
   const createMutation = useCreateRestaurantMutation();
+  const lookupMutation = useLookupRestaurantMutation();
   const updateMutation = useUpdateRestaurantMutation(id ?? '');
 
   useRedirectOnNotFound(query.error, isEditMode);
@@ -58,6 +62,7 @@ const RestaurantFormPage = () => {
       taxNumber: '',
       phone: '',
       address: '',
+      fakturaPayload: {},
       isActive: false,
     },
   });
@@ -76,9 +81,39 @@ const RestaurantFormPage = () => {
       taxNumber: query.data.taxNumber,
       phone: query.data.phone,
       address: query.data.address,
+      fakturaPayload: query.data.fakturaPayload ?? {},
       isActive: query.data.isActive,
     });
   }, [methods, query.data]);
+
+  const handleLookup = async () => {
+    const taxNumber = methods.getValues('taxNumber').trim();
+
+    if (!taxNumber) {
+      methods.setError('taxNumber', { type: 'manual', message: 'Tax number is required.' });
+      return;
+    }
+
+    methods.clearErrors('taxNumber');
+
+    try {
+      const result = await lookupMutation.mutateAsync(taxNumber);
+
+      methods.setValue('taxNumber', result.taxNumber, { shouldDirty: true, shouldValidate: true });
+      methods.setValue('name', result.name, { shouldDirty: true, shouldValidate: true });
+      methods.setValue('legalName', result.legalName, { shouldDirty: true, shouldValidate: true });
+      methods.setValue('phone', result.phone, { shouldDirty: true, shouldValidate: true });
+      methods.setValue('address', result.address, { shouldDirty: true, shouldValidate: true });
+      methods.setValue('fakturaPayload', result.fakturaPayload, { shouldDirty: true });
+    } catch (error) {
+      const normalizedError = normalizeError(error);
+      methods.setError('taxNumber', {
+        type: 'manual',
+        message: normalizedError.message,
+      });
+      notifyError(normalizedError);
+    }
+  };
 
   const onSubmit = methods.handleSubmit(async (values) => {
     const payload = {
@@ -87,6 +122,7 @@ const RestaurantFormPage = () => {
       taxNumber: values.taxNumber.trim(),
       phone: values.phone.trim(),
       address: values.address.trim(),
+      fakturaPayload: values.fakturaPayload,
       isActive: isEditMode ? values.isActive : false,
     };
 
@@ -96,7 +132,7 @@ const RestaurantFormPage = () => {
       await createMutation.mutateAsync(payload);
     }
 
-    push(RoutePath.organizationRestaurantList);
+    push(backPath);
   });
 
   if ((isEditMode && query.isLoading) || (profile && !canAccessRestaurantForm)) {
@@ -118,7 +154,13 @@ const RestaurantFormPage = () => {
       <Card sx={{ p: 3 }}>
         <Form methods={methods} onSubmit={onSubmit}>
           <Stack spacing={3}>
-            <RestaurantFormFields isEditMode={isEditMode} t={t} />
+            <RestaurantFormFields
+              isEditMode={isEditMode}
+              isLookupPending={lookupMutation.isPending}
+              isSubmitting={methods.formState.isSubmitting}
+              onLookup={handleLookup}
+              t={t}
+            />
             <FormActions
               isSubmitting={methods.formState.isSubmitting}
               submitLabel={isEditMode ? t('actions.save') : t('actions.create')}

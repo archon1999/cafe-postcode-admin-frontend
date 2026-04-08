@@ -141,6 +141,25 @@ describe('apiClient query params', () => {
     });
   });
 
+  it('looks up restaurants by tax number through the backend proxy', async () => {
+    getMock.mockResolvedValueOnce({
+      data: {
+        taxNumber: '311926992',
+        name: 'GULISTON RESTAURANT',
+        legalName: 'GULISTON RESTAURANT',
+        phone: '+998337700586',
+        address: 'Buxoro',
+        fakturaPayload: { CompanyName: 'GULISTON RESTAURANT' },
+      },
+    });
+
+    await apiClient.lookupAdminRestaurant('311926992');
+
+    expect(getMock).toHaveBeenCalledWith('/api/v1/admin/restaurants/lookup/', {
+      params: { taxNumber: '311926992' },
+    });
+  });
+
   it('sends billing period during restaurant activation', async () => {
     postMock.mockResolvedValueOnce({
       data: {

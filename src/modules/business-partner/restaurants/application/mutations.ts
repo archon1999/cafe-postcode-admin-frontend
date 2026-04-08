@@ -7,6 +7,7 @@ import type {
   AdminPrepStationPayload,
   AdminRestaurantPayload,
 } from 'shared/api/admin-types';
+import { apiClient } from 'shared/api/http/apiClient';
 
 import { organizationsRepository } from '../data-access';
 
@@ -150,6 +151,12 @@ export function useCreateRestaurantMutation() {
     onSuccess: async () => {
       await invalidateQueryKeys(queryClient, [organizationsKeys.restaurants()]);
     },
+  });
+}
+
+export function useLookupRestaurantMutation() {
+  return useMutation({
+    mutationFn: (taxNumber: string) => apiClient.lookupAdminRestaurant(taxNumber),
   });
 }
 

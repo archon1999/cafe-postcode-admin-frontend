@@ -315,6 +315,7 @@ export type AdminRestaurant = {
   taxNumber: string;
   phone: string;
   address: string;
+  fakturaPayload?: Record<string, unknown>;
   currency: string;
   authCode?: string;
   isActive: boolean;
@@ -337,8 +338,18 @@ export type AdminRestaurantPayload = {
   taxNumber: string;
   phone: string;
   address: string;
+  fakturaPayload?: Record<string, unknown>;
   isActive: boolean;
   tariffId?: string | null;
+};
+
+export type AdminRestaurantLookupResult = {
+  taxNumber: string;
+  name: string;
+  legalName: string;
+  phone: string;
+  address: string;
+  fakturaPayload: Record<string, unknown>;
 };
 
 export type AdminBusinessPartner = {
