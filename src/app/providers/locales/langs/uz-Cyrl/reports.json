@@ -12,6 +12,7 @@
     "year": "Йиллик"
   },
   "actions": {
+    "applyRange": "Қўллаш",
     "refresh": "Янгилаш",
     "exportExcel": "Excel юклаб олиш",
     "today": "Бугунги",
@@ -23,6 +24,7 @@
     "table": "Жадвал"
   },
   "filters": {
+    "dateRange": "Сана оралиғи",
     "all": "Барчаси",
     "periodType": "Давр",
     "date": "Сана",

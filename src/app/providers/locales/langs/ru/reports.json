@@ -12,6 +12,7 @@
     "year": "За год"
   },
   "actions": {
+    "applyRange": "Применить",
     "refresh": "Обновить",
     "exportExcel": "Скачать Excel",
     "today": "Сегодня",
@@ -23,6 +24,7 @@
     "table": "Таблица"
   },
   "filters": {
+    "dateRange": "Диапазон дат",
     "all": "Все",
     "periodType": "Период",
     "date": "Дата",

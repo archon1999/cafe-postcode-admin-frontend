@@ -1,14 +1,19 @@
-import type { Dayjs } from 'dayjs';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import InputAdornment from '@mui/material/InputAdornment';
 import Popover from '@mui/material/Popover';
-import Stack from '@mui/material/Stack';
+import { alpha, useTheme } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import type { GridColDef, GridColumnVisibilityModel } from '@mui/x-data-grid';
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { useEffect, useMemo, useState } from 'react';
+import { enUS } from 'date-fns/locale/en-US';
+import { ru } from 'date-fns/locale/ru';
+import { uz } from 'date-fns/locale/uz';
+import { uzCyrl } from 'date-fns/locale/uz-Cyrl';
+import { useEffect, useMemo, useState, type MouseEvent } from 'react';
+import { DayPicker, TZDate, type DateRange } from 'react-day-picker';
+import 'react-day-picker/dist/style.css';
 
 import { useTranslate } from 'app/providers/locales';
 import {
@@ -22,7 +27,7 @@ import { Iconify } from 'shared/ui/Iconify';
 import { TableSearchInput } from 'shared/ui/TableSearchInput';
 import { TASHKENT_TIMEZONE, toTashkentCalendarDayjs } from 'shared/utils/dayjs';
 
-import { createCustomRangeState, type ReportsDatePreset, updateRangeStart } from './reportsDateRange';
+import { createCustomRangeState, type ReportsDatePreset } from './reportsDateRange';
 
 type ToolbarFilter = {
   label: string;
@@ -58,14 +63,25 @@ type ReportsToolbarProps = {
   showColumns?: boolean;
 };
 
-type SelectionStep = 'start' | 'end';
+const MIN_MONTH = new TZDate(2020, 0, 1, TASHKENT_TIMEZONE);
+const MAX_MONTH = new TZDate(2100, 11, 31, TASHKENT_TIMEZONE);
 
 function formatDisplayDate(value: string) {
   return toTashkentCalendarDayjs(value, 'YYYY-MM-DD').format('DD.MM.YYYY');
 }
 
+function toRangePickerDate(value: string) {
+  const date = toTashkentCalendarDayjs(value, 'YYYY-MM-DD');
+
+  return new TZDate(date.year(), date.month(), date.date(), TASHKENT_TIMEZONE);
+}
+
+function fromRangePickerDate(value: Date) {
+  return toTashkentCalendarDayjs(value).format('YYYY-MM-DD');
+}
+
 export function ReportsToolbar({
-  activePreset,
+  activePreset: _activePreset,
   startDate,
   endDate,
   onRangeChange,
@@ -85,72 +101,85 @@ export function ReportsToolbar({
   showSearch = false,
   showColumns = false,
 }: ReportsToolbarProps) {
-  const { t } = useTranslate('reports');
+  const { t, currentLang } = useTranslate('reports');
   const { t: tCommon } = useTranslate('common');
+  const theme = useTheme();
+  const mdUp = useMediaQuery(theme.breakpoints.up('md'));
+
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [draftStartDate, setDraftStartDate] = useState(startDate);
-  const [draftEndDate, setDraftEndDate] = useState(endDate);
-  const [selectionStep, setSelectionStep] = useState<SelectionStep>('start');
+  const [draftRange, setDraftRange] = useState<DateRange | undefined>(() => ({
+    from: toRangePickerDate(startDate),
+    to: toRangePickerDate(endDate),
+  }));
+  const [displayMonth, setDisplayMonth] = useState<Date>(() => toRangePickerDate(startDate));
 
   const open = Boolean(anchorEl);
-  const dateRangeLabel = t('filters.dateRange', { defaultValue: 'Sana oralig‘i' });
-  const startDateLabel = t('filters.startDate', { defaultValue: 'Boshlanish sanasi' });
-  const endDateLabel = t('filters.endDate', { defaultValue: 'Tugash sanasi' });
-  const applyLabel = t('actions.applyRange', { defaultValue: "Qo'llash" });
-  const helperText =
-    selectionStep === 'start'
-      ? t('filters.selectStartDate', { defaultValue: 'Boshlanish sanasini tanlang' })
-      : t('filters.selectEndDate', { defaultValue: 'Tugash sanasini tanlang' });
+  const dateRangeLabel = t('filters.dateRange', { defaultValue: 'Date range' });
+  const applyLabel = t('actions.applyRange', { defaultValue: 'Apply' });
 
   const displayValue = useMemo(
     () => `${formatDisplayDate(startDate)} - ${formatDisplayDate(endDate)}`,
     [endDate, startDate],
   );
 
+  const draftDisplayValue = useMemo(() => {
+    if (!draftRange?.from) {
+      return displayValue;
+    }
+
+    const draftStartDate = fromRangePickerDate(draftRange.from);
+    const draftEndDate = fromRangePickerDate(draftRange.to ?? draftRange.from);
+
+    return `${formatDisplayDate(draftStartDate)} - ${formatDisplayDate(draftEndDate)}`;
+  }, [displayValue, draftRange]);
+
+  const dayPickerLocale = useMemo(() => {
+    if (currentLang.value === 'ru') {
+      return ru;
+    }
+
+    if (currentLang.value === 'uz-Cyrl') {
+      return uzCyrl;
+    }
+
+    if (currentLang.value === 'uz') {
+      return uz;
+    }
+
+    return enUS;
+  }, [currentLang.value]);
+
   useEffect(() => {
     if (!open) {
       return;
     }
 
-    setDraftStartDate(startDate);
-    setDraftEndDate(endDate);
-    setSelectionStep(activePreset === 'custom' ? 'end' : 'start');
-  }, [activePreset, endDate, open, startDate]);
+    const nextFrom = toRangePickerDate(startDate);
+    const nextTo = toRangePickerDate(endDate);
+
+    setDraftRange({ from: nextFrom, to: nextTo });
+    setDisplayMonth(nextFrom);
+  }, [endDate, open, startDate]);
+
+  const handleOpen = (event: MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
 
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  const handleCalendarChange = (value: Dayjs | null) => {
-    if (!value) {
-      return;
-    }
-
-    const selectedDate = value.format('YYYY-MM-DD');
-
-    if (selectionStep === 'start') {
-      const nextState = updateRangeStart(
-        {
-          startDate: draftStartDate,
-          endDate: draftEndDate,
-          activePreset: 'custom',
-        },
-        selectedDate,
-      );
-
-      setDraftStartDate(nextState.startDate);
-      setDraftEndDate(nextState.endDate);
-      setSelectionStep('end');
-      return;
-    }
-
-    const nextState = createCustomRangeState(draftStartDate, selectedDate);
-    setDraftStartDate(nextState.startDate);
-    setDraftEndDate(nextState.endDate);
-  };
-
   const handleApply = () => {
-    onRangeChange(draftStartDate, draftEndDate);
+    if (!draftRange?.from) {
+      return;
+    }
+
+    const nextRangeState = createCustomRangeState(
+      fromRangePickerDate(draftRange.from),
+      fromRangePickerDate(draftRange.to ?? draftRange.from),
+    );
+
+    onRangeChange(nextRangeState.startDate, nextRangeState.endDate);
     handleClose();
   };
 
@@ -161,18 +190,16 @@ export function ReportsToolbar({
           size="small"
           label={dateRangeLabel}
           value={displayValue}
-          onClick={(event) => setAnchorEl(event.currentTarget)}
-          slotProps={{
-            input: {
-              readOnly: true,
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Iconify icon="solar:calendar-mark-bold" width={18} />
-                </InputAdornment>
-              ),
-            },
+          onClick={handleOpen}
+          InputProps={{
+            readOnly: true,
+            endAdornment: (
+              <InputAdornment position="end">
+                <Iconify icon="solar:calendar-mark-bold" width={18} />
+              </InputAdornment>
+            ),
           }}
-          sx={{ minWidth: { xs: '100%', md: 280 } }}
+          sx={{ minWidth: { xs: '100%', md: 320 } }}
         />
 
         {showSearch && onSearchChange ? (
@@ -208,44 +235,70 @@ export function ReportsToolbar({
         anchorEl={anchorEl}
         onClose={handleClose}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'left' }}>
-        <Box sx={{ p: 2, width: 360, maxWidth: '100%' }}>
-          <Stack spacing={2}>
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
-              <Button
-                size="small"
-                variant={selectionStep === 'start' ? 'contained' : 'outlined'}
-                color={selectionStep === 'start' ? 'black' : 'inherit'}
-                onClick={() => setSelectionStep('start')}
-                sx={{ justifyContent: 'flex-start', whiteSpace: 'nowrap' }}>
-                {`${startDateLabel}: ${formatDisplayDate(draftStartDate)}`}
-              </Button>
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        slotProps={{
+          paper: {
+            sx: {
+              width: 'fit-content',
+              maxWidth: 'calc(100vw - 32px)',
+            },
+          },
+        }}>
+        <Box
+          sx={{
+            p: 2,
+            '& .rdp-root': {
+              '--rdp-accent-color': theme.palette.primary.main,
+              '--rdp-accent-background-color': alpha(theme.palette.primary.main, 0.14),
+              margin: 0,
+            },
+            '& .rdp-months': {
+              justifyContent: 'center',
+            },
+            '& .rdp-day_button': {
+              width: 40,
+              height: 40,
+              borderRadius: 1.5,
+            },
+            '& .rdp-dropdown_root': {
+              borderRadius: 1,
+            },
+          }}>
+          <DayPicker
+            mode="range"
+            selected={draftRange}
+            onSelect={setDraftRange}
+            month={displayMonth}
+            onMonthChange={setDisplayMonth}
+            locale={dayPickerLocale}
+            timeZone={TASHKENT_TIMEZONE}
+            numberOfMonths={mdUp ? 2 : 1}
+            defaultMonth={toRangePickerDate(startDate)}
+            startMonth={MIN_MONTH}
+            endMonth={MAX_MONTH}
+            showOutsideDays
+            pagedNavigation
+            fixedWeeks
+            resetOnSelect
+            navLayout="after"
+            captionLayout="dropdown"
+          />
 
-              <Button
-                size="small"
-                variant={selectionStep === 'end' ? 'contained' : 'outlined'}
-                color={selectionStep === 'end' ? 'black' : 'inherit'}
-                onClick={() => setSelectionStep('end')}
-                sx={{ justifyContent: 'flex-start', whiteSpace: 'nowrap' }}>
-                {`${endDateLabel}: ${formatDisplayDate(draftEndDate)}`}
-              </Button>
-            </Stack>
-
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              {helperText}
+          <Box
+            sx={{
+              mt: 2,
+              pt: 2,
+              borderTop: (nextTheme) => `1px solid ${nextTheme.vars.palette.divider}`,
+              display: 'flex',
+              flexDirection: { xs: 'column', sm: 'row' },
+              alignItems: { xs: 'stretch', sm: 'center' },
+              gap: 1.5,
+            }}>
+            <Typography variant="body2" sx={{ color: 'text.secondary', flex: 1, minWidth: 0 }}>
+              {draftDisplayValue}
             </Typography>
 
-            <DateCalendar
-              value={toTashkentCalendarDayjs(
-                selectionStep === 'start' ? draftStartDate : draftEndDate,
-                'YYYY-MM-DD',
-              )}
-              onChange={handleCalendarChange}
-              timezone={TASHKENT_TIMEZONE}
-              sx={{ alignSelf: 'center' }}
-            />
-
-            <Stack direction="row" spacing={1} justifyContent="flex-end">
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
               <Button size="small" color="inherit" onClick={handleClose}>
                 {tCommon('actions.cancel')}
               </Button>
@@ -253,8 +306,8 @@ export function ReportsToolbar({
               <Button size="small" variant="contained" color="black" onClick={handleApply}>
                 {applyLabel}
               </Button>
-            </Stack>
-          </Stack>
+            </Box>
+          </Box>
         </Box>
       </Popover>
 
