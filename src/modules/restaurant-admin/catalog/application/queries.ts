@@ -3,6 +3,7 @@ import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
 import type {
   AdminCatalogCategoriesQueryParams,
   AdminCatalogItemsQueryParams,
+  AdminMxikDetails,
   AdminMxikLookupResult,
   AdminPaginatedResponse,
   AdminPrepStation,
@@ -11,7 +12,7 @@ import type {
 } from 'shared/api/admin-types';
 import { apiClient } from 'shared/api/http/apiClient';
 
-import { catalogRepository, searchMxik } from '../data-access';
+import { catalogRepository, getMxikDetails, searchMxik } from '../data-access';
 
 import { catalogKeys } from './keys';
 
@@ -93,6 +94,23 @@ export function useSearchMxikQuery(
     queryKey: catalogKeys.mxikSearch(params),
     queryFn: () => searchMxik({ query: params.query ?? '', lang: params.lang, limit: params.limit }),
     enabled: Boolean(params.query?.trim()) && (options?.enabled ?? true),
+    ...options,
+  });
+}
+
+type AdminMxikDetailsParams = {
+  code?: string;
+  lang?: string;
+};
+
+export function useGetMxikDetailsQuery(
+  params: AdminMxikDetailsParams,
+  options?: Omit<UseQueryOptions<AdminMxikDetails | null>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: catalogKeys.mxikDetail(params.code ?? '', params.lang),
+    queryFn: () => getMxikDetails(params.code ?? '', params.lang),
+    enabled: Boolean(params.code?.trim()) && (options?.enabled ?? true),
     ...options,
   });
 }

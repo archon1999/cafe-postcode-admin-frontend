@@ -12,7 +12,7 @@ vi.mock('axios', () => ({
   },
 }));
 
-import { getMxikPrimaryPictureUrl, searchMxik } from './mxikClient';
+import { getMxikDetails, getMxikPrimaryPictureUrl, searchMxik } from './mxikClient';
 
 afterEach(() => {
   getMock.mockReset();
@@ -90,6 +90,126 @@ describe('searchMxik', () => {
     await expect(searchMxik({ query: '   ' })).resolves.toEqual([]);
 
     expect(getMock).not.toHaveBeenCalled();
+  });
+
+  it('loads MXIK details with package, label, and useCard metadata', async () => {
+    getMock.mockResolvedValueOnce({
+      data: {
+        mxikCode: '02202002006000000',
+        mxikName: 'Mors',
+        shortName: 'Mors',
+        label: 1,
+        useCard: 0,
+        unitName: null,
+        commonUnitName: null,
+        packages: [
+          {
+            code: 1378885,
+            name: 'litr',
+            unitName: 'litr',
+            parentCode: null,
+            isUnitPackage: '1',
+          },
+          {
+            code: 1860960,
+            name: '2 litr',
+            unitName: 'dona',
+            parentCode: 1378885,
+            isUnitPackage: '2',
+          },
+        ],
+      },
+    });
+
+    const result = await getMxikDetails('02202002006000000', 'uz');
+
+    expect(getMock).toHaveBeenCalledWith('mxik/get/by-mxik', {
+      params: {
+        mxikCode: '02202002006000000',
+        lang: 'uz_latn',
+      },
+    });
+    expect(result).toEqual({
+      code: '02202002006000000',
+      name: 'Mors',
+      shortName: 'Mors',
+      unitName: '',
+      commonUnitName: '',
+      useCard: 0,
+      labelStatus: 1,
+      primaryPackage: {
+        code: '1378885',
+        name: 'litr',
+        unitName: 'litr',
+        containerName: '',
+        parentCode: '',
+        isUnitPackage: '1',
+        raw: {
+          code: 1378885,
+          name: 'litr',
+          unitName: 'litr',
+          parentCode: null,
+          isUnitPackage: '1',
+        },
+      },
+      packages: [
+        {
+          code: '1378885',
+          name: 'litr',
+          unitName: 'litr',
+          containerName: '',
+          parentCode: '',
+          isUnitPackage: '1',
+          raw: {
+            code: 1378885,
+            name: 'litr',
+            unitName: 'litr',
+            parentCode: null,
+            isUnitPackage: '1',
+          },
+        },
+        {
+          code: '1860960',
+          name: '2 litr',
+          unitName: 'dona',
+          containerName: '',
+          parentCode: '1378885',
+          isUnitPackage: '2',
+          raw: {
+            code: 1860960,
+            name: '2 litr',
+            unitName: 'dona',
+            parentCode: 1378885,
+            isUnitPackage: '2',
+          },
+        },
+      ],
+      raw: {
+        mxikCode: '02202002006000000',
+        mxikName: 'Mors',
+        shortName: 'Mors',
+        label: 1,
+        useCard: 0,
+        unitName: null,
+        commonUnitName: null,
+        packages: [
+          {
+            code: 1378885,
+            name: 'litr',
+            unitName: 'litr',
+            parentCode: null,
+            isUnitPackage: '1',
+          },
+          {
+            code: 1860960,
+            name: '2 litr',
+            unitName: 'dona',
+            parentCode: 1378885,
+            isUnitPackage: '2',
+          },
+        ],
+      },
+    });
   });
 
   it('loads the primary MXIK image URL directly through the public API', async () => {

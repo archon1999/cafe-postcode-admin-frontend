@@ -25,7 +25,7 @@ const CategoriesListPage = () => {
             color="black"
             startIcon={<Iconify icon="mingcute:add-line" />}
             disabled={isCreateDisabled}>
-            {t('actions.createCategory', { defaultValue: 'Yangi kategoriya' })}
+            {t('actions.createCategory')}
           </Button>
         }
       />

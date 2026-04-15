@@ -28,13 +28,10 @@ export function RestaurantOperationalManagementCard({
       <Stack spacing={3}>
         <Stack spacing={0.75}>
           <Typography variant="h6">
-            {t('sections.myRestaurantManagement.title', { defaultValue: "Restoran bo'yicha boshqaruv" })}
+            {t('sections.myRestaurantManagement.title')}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {t('sections.myRestaurantManagement.description', {
-              defaultValue:
-                'Kassalar, tayyorlash stansiyalari va tarqatish nuqtalarini shu yerda boshqaring.',
-            })}
+            {t('sections.myRestaurantManagement.description')}
           </Typography>
         </Stack>
 
@@ -43,36 +40,24 @@ export function RestaurantOperationalManagementCard({
             <RestaurantPrepStationsSection
               defaultExpanded
               title={t('pages.prepStations.title')}
-              description={t('sections.myRestaurantManagement.prepStationsDescription', {
-                defaultValue: 'Restorandagi tayyorlash stansiyalarini boshqaring.',
-              })}
-              searchPlaceholder={t('filters.searchRestaurantPrepStationsPlaceholder', {
-                defaultValue: "Stansiya nomi bo'yicha qidiring",
-              })}
+              description={t('sections.myRestaurantManagement.prepStationsDescription')}
+              searchPlaceholder={t('filters.searchRestaurantPrepStationsPlaceholder')}
             />
           ) : null}
 
           {showCashDeskManagement ? (
             <RestaurantCashDesksSection
               title={t('pages.cashDesks.title')}
-              description={t('sections.myRestaurantManagement.cashDesksDescription', {
-                defaultValue: "Restorandagi kassalar va to'lov sozlamalarini boshqaring.",
-              })}
-              searchPlaceholder={t('filters.searchRestaurantCashDesksPlaceholder', {
-                defaultValue: "Kassa nomi yoki joylashuvi bo'yicha qidiring",
-              })}
+              description={t('sections.myRestaurantManagement.cashDesksDescription')}
+              searchPlaceholder={t('filters.searchRestaurantCashDesksPlaceholder')}
             />
           ) : null}
 
           {showIntegrationsManagement ? (
             <RestaurantDistributionPointsSection
               title={t('pages.distributionPoints.title')}
-              description={t('sections.myRestaurantManagement.distributionPointsDescription', {
-                defaultValue: 'Restorandagi buyurtma kanallari va tarqatish nuqtalarini boshqaring.',
-              })}
-              searchPlaceholder={t('filters.searchRestaurantDistributionPointsPlaceholder', {
-                defaultValue: "Nuqta nomi yoki kanal bo'yicha qidiring",
-              })}
+              description={t('sections.myRestaurantManagement.distributionPointsDescription')}
+              searchPlaceholder={t('filters.searchRestaurantDistributionPointsPlaceholder')}
             />
           ) : null}
         </Stack>

@@ -19,6 +19,7 @@ type MxikAutocompleteFieldProps<TForm extends FieldValues> = {
   helperText?: string;
   placeholder?: string;
   required?: boolean;
+  onPicked?: (picked: MxikOption | null) => void;
 };
 
 export function buildMxikOption(
@@ -49,6 +50,7 @@ export function MxikAutocompleteField<TForm extends FieldValues>({
   helperText,
   placeholder,
   required,
+  onPicked,
 }: MxikAutocompleteFieldProps<TForm>) {
   const { t: tCatalog, currentLang } = useTranslate('catalog');
   const providerLang = currentLang.value === 'ru' ? 'ru' : 'uz';
@@ -75,6 +77,7 @@ export function MxikAutocompleteField<TForm extends FieldValues>({
           }))
           .filter((item) => Boolean(item.value))
       }
+      onPicked={onPicked}
       loadingText={tCatalog('labels.mxikLoading')}
       noOptionsText={tCatalog('labels.mxikNotFound')}
     />

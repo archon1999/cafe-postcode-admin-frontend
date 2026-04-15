@@ -48,13 +48,13 @@ const MyRestaurantGeneralPage = () => {
 
   const restaurant = restaurantQuery.data;
   const tariffName = restaurant.tariff?.name ?? (restaurant.activationType === 'custom'
-    ? tPlatform('labels.customActivation', { defaultValue: 'Maxsus tarif' })
+    ? tPlatform('labels.customActivation')
     : t('labels.notSelected'));
   const billingPeriodLabel =
     restaurant.billingPeriod === 'monthly'
-      ? tPlatform('labels.monthly', { defaultValue: 'Oylik' })
+      ? tPlatform('labels.monthly')
       : restaurant.billingPeriod === 'yearly'
-        ? tPlatform('labels.yearly', { defaultValue: 'Yillik' })
+        ? tPlatform('labels.yearly')
         : null;
   const durationText = billingPeriodLabel
     ? restaurant.expiresOn
@@ -63,18 +63,16 @@ const MyRestaurantGeneralPage = () => {
     : t('labels.notSelected');
 
   return (
-    <MyRestaurantSectionLayout heading={t('pages.myRestaurant.title', { defaultValue: 'Mening restoranim' })}>
+    <MyRestaurantSectionLayout heading={t('pages.myRestaurant.title')}>
       <Box sx={{ display: 'grid', gridTemplateColumns: '1fr', gap: 3 }}>
         <Card sx={{ p: 3 }}>
           <Stack spacing={3}>
             <Stack spacing={0.75}>
               <Typography variant="h6">
-                {t('sections.myRestaurantProfile.title', { defaultValue: 'Restoran profili' })}
+                {t('sections.myRestaurantProfile.title')}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {t('sections.myRestaurantProfile.description', {
-                  defaultValue: "Restoranning asosiy yuridik va aloqa ma'lumotlari shu yerda ko'rinadi.",
-                })}
+                {t('sections.myRestaurantProfile.description')}
               </Typography>
             </Stack>
 
@@ -122,7 +120,7 @@ const MyRestaurantGeneralPage = () => {
               </Stack>
               <Stack spacing={0.5}>
                 <Typography variant="caption" color="text.secondary">
-                  {tPlatform('fields.activatedAt', { defaultValue: 'Aktivlashtirilgan sana' })}
+                  {tPlatform('fields.activatedAt')}
                 </Typography>
                 <Typography variant="body2">
                   {restaurant.activatedAt
@@ -138,13 +136,13 @@ const MyRestaurantGeneralPage = () => {
               </Stack>
               <Stack spacing={0.5}>
                 <Typography variant="caption" color="text.secondary">
-                  {tPlatform('fields.billingPeriod', { defaultValue: 'Tarif muddati' })}
+                  {tPlatform('fields.billingPeriod')}
                 </Typography>
                 <Typography variant="body2">{durationText}</Typography>
               </Stack>
               <Stack spacing={0.75}>
                 <Typography variant="caption" color="text.secondary">
-                  {t('fields.authCode', { defaultValue: 'Aktivatsiya kodi' })}
+                  {t('fields.authCode')}
                 </Typography>
                 <Stack direction="row" spacing={1.5} alignItems="center" flexWrap="wrap">
                   <Typography variant="body2" sx={{ letterSpacing: '0.18em', fontWeight: 700 }}>
@@ -158,8 +156,8 @@ const MyRestaurantGeneralPage = () => {
                     }
                     onClick={() => setIsAuthCodeVisible((prev) => !prev)}>
                     {isAuthCodeVisible
-                      ? t('actions.hideAuthCode', { defaultValue: 'Yashirish' })
-                      : t('actions.showAuthCode', { defaultValue: "Ko'rsatish" })}
+                      ? t('actions.hideAuthCode')
+                      : t('actions.showAuthCode')}
                   </Button>
                 </Stack>
               </Stack>

@@ -4,7 +4,8 @@
     "cancel": "Отмена",
     "back": "Назад",
     "logout": "Выйти",
-    "clear": "Очистить"
+    "clear": "Очистить",
+    "viewAll": "Показать все"
   },
   "labels": {
     "details": "Подробности",
@@ -14,32 +15,36 @@
     "phone": "Телефон",
     "yes": "Да",
     "no": "Нет",
-    "loading": "Загрузка"
+    "loading": "Загрузка",
+    "contacts": "Контакты",
+    "notifications": "Уведомления",
+    "permissionsAutoSelected": "Из выбранных ролей автоматически назначено {{count}} разрешений, при необходимости измените вручную",
+    "search": "Поиск..."
   },
   "accountDrawer": {
     "roles": {
-      "superadmin": "\u0421\u0443\u043f\u0435\u0440\u0430\u0434\u043c\u0438\u043d",
-      "productOwner": "\u041f\u0440\u043e\u0434\u0443\u043a\u0442-\u043e\u0443\u043d\u0435\u0440",
-      "businessPartner": "\u0411\u0438\u0437\u043d\u0435\u0441-\u043f\u0430\u0440\u0442\u043d\u0435\u0440",
-      "restaurantAdmin": "\u0410\u0434\u043c\u0438\u043d\u0438\u0441\u0442\u0440\u0430\u0442\u043e\u0440 \u0440\u0435\u0441\u0442\u043e\u0440\u0430\u043d\u0430"
+      "superadmin": "Суперадмин",
+      "productOwner": "Продукт-оунер",
+      "businessPartner": "Бизнес-партнер",
+      "restaurantAdmin": "Администратор ресторана"
     },
     "sections": {
-      "superadmin": "\u0421\u0438\u0441\u0442\u0435\u043c\u043d\u043e\u0435 \u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435",
-      "productOwner": "\u0423\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u043f\u043b\u0430\u0442\u0444\u043e\u0440\u043c\u043e\u0439",
-      "businessPartner": "\u041a\u043e\u043d\u0442\u0435\u043a\u0441\u0442 \u0431\u0438\u0437\u043d\u0435\u0441-\u043f\u0430\u0440\u0442\u043d\u0435\u0440\u0430",
-      "restaurantAdmin": "\u041a\u043e\u043d\u0442\u0435\u043a\u0441\u0442 \u0440\u0435\u0441\u0442\u043e\u0440\u0430\u043d\u0430"
+      "superadmin": "Системное управление",
+      "productOwner": "Управление платформой",
+      "businessPartner": "Контекст бизнес-партнера",
+      "restaurantAdmin": "Контекст ресторана"
     },
     "labels": {
-      "activatedAt": "\u0414\u0430\u0442\u0430 \u0430\u043a\u0442\u0438\u0432\u0430\u0446\u0438\u0438",
-      "businessPartnersCount": "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0431\u0438\u0437\u043d\u0435\u0441-\u043f\u0430\u0440\u0442\u043d\u0435\u0440\u043e\u0432",
-      "businessPartnerId": "ID \u0431\u0438\u0437\u043d\u0435\u0441-\u043f\u0430\u0440\u0442\u043d\u0435\u0440\u0430",
-      "companyName": "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u043a\u043e\u043c\u043f\u0430\u043d\u0438\u0438",
-      "customTariff": "\u041a\u0430\u0441\u0442\u043e\u043c\u043d\u044b\u0439 \u0442\u0430\u0440\u0438\u0444",
-      "expiresOn": "\u0421\u0440\u043e\u043a \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044f",
-      "inn": "\u0418\u041d\u041d",
-      "restaurantId": "ID \u0440\u0435\u0441\u0442\u043e\u0440\u0430\u043d\u0430",
-      "restaurantName": "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u0440\u0435\u0441\u0442\u043e\u0440\u0430\u043d\u0430",
-      "tariff": "\u0422\u0430\u0440\u0438\u0444"
+      "activatedAt": "Дата активации",
+      "businessPartnersCount": "Количество бизнес-партнеров",
+      "businessPartnerId": "ID бизнес-партнера",
+      "companyName": "Название компании",
+      "customTariff": "Кастомный тариф",
+      "expiresOn": "Срок действия",
+      "inn": "ИНН",
+      "restaurantId": "ID ресторана",
+      "restaurantName": "Название ресторана",
+      "tariff": "Тариф"
     }
   },
   "status": {
@@ -51,7 +56,8 @@
   },
   "auth": {
     "infoAlert": "Для входа в админ-панель используйте admin-аккаунт.",
-    "needHelp": "Нужна помощь?"
+    "needHelp": "Нужна помощь?",
+    "signIn": "Войти"
   },
   "empty": {
     "noData": "Данные не найдены",
@@ -86,5 +92,22 @@
     "title": "Страница не найдена",
     "description": "Запрошенная страница не существует или была перемещена.",
     "action": "Вернуться на главную"
+  },
+  "accessControlSection": "Пользователи и разрешения",
+  "browser": "Каталог",
+  "businessPartnerSection": "Бизнес-партнер",
+  "general": "Общее",
+  "integrations": "Интеграции",
+  "productOwnerSection": "Владелец продукта",
+  "restaurantAdminSection": "Администратор ресторана",
+  "restaurantManagement": "Управление рестораном",
+  "scope": {
+    "allRestaurants": "Все рестораны",
+    "restaurant": "Ресторан",
+    "selectRestaurantDescription": "Чтобы продолжить, выберите ресторан в верхней панели.",
+    "selectRestaurantTitle": "Выберите ресторан"
+  },
+  "workspace": {
+    "create": "Создать рабочее пространство"
   }
 }

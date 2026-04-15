@@ -179,8 +179,8 @@ export const UserDetailPageContent = ({ id, surface = 'user' }: UserDetailPageCo
   const user = userQuery.data;
   const listTitle = isEmployeeSurface ? t('pages.employeeList.title') : t('pages.list.title');
   const detailTitle = isEmployeeSurface
-    ? t('pages.employeeView.title', { defaultValue: 'Xodim tavsilotlari' })
-    : t('pages.view.title', { defaultValue: 'Foydalanuvchi tavsilotlari' });
+    ? t('pages.employeeView.title')
+    : t('pages.view.title');
   const hasHallAccessPermission = Boolean(
     user?.permissionCodes?.some((permissionCode) => HALL_ACCESS_PERMISSION_CODES.includes(permissionCode as never)),
   );
@@ -200,8 +200,8 @@ export const UserDetailPageContent = ({ id, surface = 'user' }: UserDetailPageCo
     );
   }
 
-  const yesLabel = tCommon('labels.yes', { defaultValue: 'Ha' });
-  const noLabel = tCommon('labels.no', { defaultValue: "Yo'q" });
+  const yesLabel = tCommon('labels.yes');
+  const noLabel = tCommon('labels.no');
   const currentStatus = user.employmentStatus ?? (user.isActive ? 'active' : 'inactive');
   const roleLabel = user.role?.name ?? t('labels.withoutRole');
   const primaryHall = (hallsQuery.data ?? []).find((hall) => hall.id === user.primaryHallId);

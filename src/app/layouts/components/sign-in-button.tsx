@@ -10,7 +10,7 @@ export function SignInButton({ sx, ...other }: ButtonProps) {
 
   return (
     <Button component={RouterLink} href={CONFIG.auth.redirectPath} variant="outlined" sx={sx} {...other}>
-      {t('auth.signIn', { defaultValue: 'Sign in' })}
+      {t('auth.signIn')}
     </Button>
   );
 }

@@ -87,40 +87,40 @@ const TITLE_RULES: TitleRule[] = [
     route: AppRoutes.ORGANIZATION_MY_RESTAURANT_GENERAL,
     namespaces: ['organizations'],
     resolve: (_params, t) => [
-      t('organizations:pages.myRestaurant.title', { defaultValue: 'Mening restoranim' }),
-      t('organizations:pages.myRestaurantGeneral.title', { defaultValue: 'Umumiy' }),
+      t('organizations:pages.myRestaurant.title'),
+      t('organizations:pages.myRestaurantGeneral.title'),
     ],
   },
   {
     route: AppRoutes.ORGANIZATION_MY_RESTAURANT_CASH_DESK_LIST,
     namespaces: ['organizations'],
     resolve: (_params, t) => [
-      t('organizations:pages.myRestaurant.title', { defaultValue: 'Mening restoranim' }),
-      t('organizations:pages.cashDesks.title', { defaultValue: 'Kassalar' }),
+      t('organizations:pages.myRestaurant.title'),
+      t('organizations:pages.cashDesks.title'),
     ],
   },
   {
     route: AppRoutes.ORGANIZATION_MY_RESTAURANT_PREP_STATION_LIST,
     namespaces: ['organizations'],
     resolve: (_params, t) => [
-      t('organizations:pages.myRestaurant.title', { defaultValue: 'Mening restoranim' }),
-      t('organizations:pages.prepStations.title', { defaultValue: 'Tayyorlash stansiyalari' }),
+      t('organizations:pages.myRestaurant.title'),
+      t('organizations:pages.prepStations.title'),
     ],
   },
   {
     route: AppRoutes.ORGANIZATION_MY_RESTAURANT_DISTRIBUTION_POINT_LIST,
     namespaces: ['organizations'],
     resolve: (_params, t) => [
-      t('organizations:pages.myRestaurant.title', { defaultValue: 'Mening restoranim' }),
-      t('organizations:pages.distributionPoints.title', { defaultValue: 'Tarqatish nuqtalari' }),
+      t('organizations:pages.myRestaurant.title'),
+      t('organizations:pages.distributionPoints.title'),
     ],
   },
   {
     route: AppRoutes.ORGANIZATION_MY_RESTAURANT_INTEGRATION_CONFIG_LIST,
     namespaces: ['organizations'],
     resolve: (_params, t) => [
-      t('organizations:pages.myRestaurant.title', { defaultValue: 'Mening restoranim' }),
-      t('organizations:pages.integrations.title', { defaultValue: 'Integratsiyalar' }),
+      t('organizations:pages.myRestaurant.title'),
+      t('organizations:pages.integrations.title'),
     ],
   },
   {

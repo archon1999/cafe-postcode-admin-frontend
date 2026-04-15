@@ -50,6 +50,15 @@
     },
     "myRestaurantGeneral": {
       "title": "Общее"
+    },
+    "integrationCreate": {
+      "title": "Новая интеграция"
+    },
+    "integrationEdit": {
+      "title": "Редактирование интеграции"
+    },
+    "integrations": {
+      "title": "Интеграции"
     }
   },
   "fields": {
@@ -92,7 +101,8 @@
     "ownerDashboardEnabled": "Панель руководителя включена",
     "tariff": "Тариф",
     "tariffHint": "Выберите тариф, который определяет доступ ресторана.",
-    "tariffPlaceholder": "Выберите тариф"
+    "tariffPlaceholder": "Выберите тариф",
+    "authCode": "Код активации"
   },
   "filters": {
     "all": "Все",
@@ -112,7 +122,8 @@
     "searchRestaurantsPlaceholder": "Ищите по названию ресторана, юр. названию или телефону",
     "searchRestaurantPrepStationsPlaceholder": "Ищите по названию станции",
     "searchRestaurantCashDesksPlaceholder": "Ищите по названию кассы или расположению",
-    "searchRestaurantDistributionPointsPlaceholder": "Ищите по названию точки или каналу"
+    "searchRestaurantDistributionPointsPlaceholder": "Ищите по названию точки или каналу",
+    "searchIntegrationsPlaceholder": "Ищите по типу, провайдеру или имени принтера"
   },
   "labels": {
     "defaultBranch": "Основной филиал",
@@ -149,6 +160,9 @@
       },
       "distributionPoints": {
         "description": "Управляйте каналами заказов и точками распределения."
+      },
+      "integrations": {
+        "description": "Управляйте настройками принтера, платежных и фискальных провайдеров."
       }
     },
     "openList": "Открыть список",
@@ -213,7 +227,10 @@
     "createDistributionPoint": "Новая точка",
     "createPrepStation": "Новая станция",
     "createRestaurant": "Новый ресторан",
-    "editRestaurantProfile": "Редактировать профиль ресторана"
+    "editRestaurantProfile": "Редактировать профиль ресторана",
+    "createIntegration": "Новая интеграция",
+    "hideAuthCode": "Скрыть код",
+    "showAuthCode": "Показать код"
   },
   "dialogs": {
     "deleteBranch": {
@@ -287,6 +304,46 @@
         "title": "Ресторан не найден",
         "description": "Поиск или фильтры не дали результатов."
       }
+    },
+    "integrations": {
+      "noData": {
+        "description": "После добавления принтерной, платежной или фискальной интеграции она появится здесь.",
+        "title": "Интеграций пока нет"
+      },
+      "noResults": {
+        "description": "Измените поиск или фильтры и попробуйте снова.",
+        "title": "Интеграция не найдена"
+      }
+    }
+  },
+  "integrations": {
+    "fields": {
+      "apiKey": "API key",
+      "cashboxId": "ID кассы",
+      "connectionType": "Тип подключения принтера",
+      "cutAfterPrint": "Обрезать после печати",
+      "encoding": "Кодировка",
+      "endpointUrl": "Endpoint URL",
+      "merchantId": "Merchant ID",
+      "paperWidthMm": "Ширина бумаги",
+      "paymentQrUrl": "URL QR-оплаты",
+      "paymentQrUrlHint": "На следующем этапе QR для кассового чека будет браться из этого источника.",
+      "printerHost": "IP-адрес принтера",
+      "printerHostHint": "IP-адрес для LAN-принтера. Например: 192.168.123.100.",
+      "printerName": "Имя принтера Windows",
+      "printerNameHint": "Имя очереди, под которым USB-принтер отображается в Windows. Например: POS-80 USB.",
+      "printerPort": "Порт",
+      "printerPortHint": "Обычно 9100.",
+      "provider": "Провайдер",
+      "settings": "Настройки"
+    },
+    "sections": {
+      "fiscal": "Фискальные настройки",
+      "payment": "Платежные настройки",
+      "printer": "Настройки принтера"
+    },
+    "units": {
+      "millimeter": "{{value}} мм"
     }
   }
 }

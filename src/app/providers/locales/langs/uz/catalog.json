@@ -1,116 +1,128 @@
 {
-  "pages": {
-    "browser": {
-      "title": "Menu Catalog",
-      "subtitle": "Kategoriyalar va mahsulotlarni bitta ekranda tez boshqaring.",
-      "categoriesCount": "Kategoriyalar: {{count}}",
-      "itemsCount": "Mahsulotlar: {{count}}",
-      "categoriesPanelSubtitle": "{{count}} ta kategoriya mavjud",
-      "itemsPanelSubtitle": "Mahsulotlarni ko'rish uchun chap tomondan kategoriya tanlang."
-    },
-    "categories": {
-      "title": "Menyu kategoriyalari"
-    },
-    "categoryCreate": {
-      "title": "Yangi kategoriya"
-    },
-    "categoryEdit": {
-      "title": "Kategoriyani tahrirlash"
-    },
-    "items": {
-      "title": "Menyu mahsulotlari"
-    },
-    "itemCreate": {
-      "title": "Yangi mahsulot"
-    },
-    "itemEdit": {
-      "title": "Mahsulotni tahrirlash"
-    }
-  },
-  "fields": {
-    "name": "Nomi",
-    "kind": "Turi",
-    "sortOrder": "Tartib",
-    "status": "Holat",
-    "category": "Kategoriya",
-    "prepStation": "Tayyorlash stansiyasi",
-    "sku": "SKU",
-    "stoplist": "Stop-list",
-    "description": "Tavsif",
-    "price": "Narx",
-    "mxikCode": "MXIK kodi",
-    "mxikName": "MXIK nomi"
-  },
-  "filters": {
-    "all": "Barchasi",
-    "search": "Qidiruv",
-    "clearSearch": "Qidiruvni tozalash",
-    "searchCategoriesPlaceholder": "Kategoriya nomi yoki MXIK kodi bo'yicha qidiring",
-    "searchItemsPlaceholder": "Mahsulot, MXIK, kategoriya yoki SKU bo'yicha qidiring",
-    "kind": "Turi",
-    "status": "Holat",
-    "category": "Kategoriya",
-    "stoplist": "Stop-list"
-  },
-  "labels": {
-    "stoplisted": "Stop-listda",
-    "available": "Mavjud",
-    "mxikImagePreview": "MXIK rasmi",
-    "mxikImagePreviewDescription": "Kategoriya rasmi MXIK kodi bo'yicha avtomatik sinxronlangan.",
-    "mxikImageSource": "MXIK orqali yangilangan",
-    "mxikNotAssigned": "MXIK biriktirilmagan",
-    "mxikRequired": "Kategoriya uchun MXIK kodi majburiy.",
-    "mxikOptional": "Mahsulot uchun MXIK kodi ixtiyoriy.",
-    "mxikLoading": "MXIK qidirilmoqda...",
-    "mxikNotFound": "MXIK topilmadi"
-  },
-  "kinds": {
-    "dish": "Taom",
-    "drink": "Ichimlik",
-    "service": "Xizmat",
-    "penalty": "Jarima"
-  },
-  "actions": {
-    "create": "Yaratish",
-    "save": "Saqlash",
-    "edit": "Tahrirlash",
-    "delete": "O'chirish",
-    "activeOnly": "Faqat faol",
-    "inactiveOnly": "Nofaol",
-    "createCategory": "Yangi kategoriya",
-    "createItem": "Yangi mahsulot",
-    "searchMxik": "MXIK bo'yicha qidiring"
-  },
-  "dialogs": {
-    "deleteCategory": {
-      "title": "Kategoriyani o'chirish",
-      "description": "\"{{name}}\" kategoriyasi o'chiriladi. Davom etilsinmi?"
-    },
-    "deleteItem": {
-      "title": "Mahsulotni o'chirish",
-      "description": "\"{{name}}\" mahsuloti o'chiriladi. Davom etilsinmi?"
-    }
-  },
-  "empty": {
-    "categories": {
-      "noData": {
-        "title": "Kategoriyalar hali yo'q",
-        "description": "Kategoriyalar qo'shilgandan keyin ular shu jadvalda chiqadi."
-      },
-      "noResults": {
-        "title": "Kategoriyalar topilmadi",
-        "description": "Qidiruv yoki filterlarga mos kategoriya topilmadi."
-      }
-    },
-    "items": {
-      "noData": {
-        "title": "Mahsulotlar hali yo'q",
-        "description": "Mahsulotlar yaratilgandan keyin ular shu jadvalda chiqadi."
-      },
-      "noResults": {
-        "title": "Mahsulotlar topilmadi",
-        "description": "Tanlangan filterlar bo'yicha mahsulot topilmadi."
-      }
-    }
-  }
+    "pages":  {
+                  "browser":  {
+                                  "title":  "Menu Catalog",
+                                  "subtitle":  "Kategoriyalar va mahsulotlarni bitta ekranda tez boshqaring.",
+                                  "categoriesCount":  "Kategoriyalar: {{count}}",
+                                  "itemsCount":  "Mahsulotlar: {{count}}",
+                                  "categoriesPanelSubtitle":  "{{count}} ta kategoriya mavjud",
+                                  "itemsPanelSubtitle":  "Mahsulotlarni ko\u0027rish uchun chap tomondan kategoriya tanlang."
+                              },
+                  "categories":  {
+                                     "title":  "Menyu kategoriyalari"
+                                 },
+                  "categoryCreate":  {
+                                         "title":  "Yangi kategoriya"
+                                     },
+                  "categoryEdit":  {
+                                       "title":  "Kategoriyani tahrirlash"
+                                   },
+                  "items":  {
+                                "title":  "Menyu mahsulotlari"
+                            },
+                  "itemCreate":  {
+                                     "title":  "Yangi mahsulot"
+                                 },
+                  "itemEdit":  {
+                                   "title":  "Mahsulotni tahrirlash"
+                               }
+              },
+    "fields":  {
+                   "name":  "Nomi",
+                   "kind":  "Turi",
+                   "sortOrder":  "Tartib",
+                   "status":  "Holat",
+                   "category":  "Kategoriya",
+                   "prepStation":  "Tayyorlash stansiyasi",
+                   "sku":  "SKU",
+                   "stoplist":  "Stop-list",
+                   "description":  "Tavsif",
+                   "price":  "Narx",
+                   "mxikCode":  "MXIK kodi",
+                   "mxikName":  "MXIK nomi",
+                   "cashSale":  "Sotish turi",
+                   "labelStatus":  "Markirovka statusi",
+                   "packageCode":  "O\u0027lchov birligi",
+                   "labelStatusWithField":  "Markirovka statusi (label)",
+                   "packageCodeWithField":  "O\u0027lchov birligi (package_code)",
+                   "useCardStatus":  "Tovar kartasi statusi (useCard)",
+                   "mxikProductName":  "Tovar nomi"
+               },
+    "filters":  {
+                    "all":  "Barchasi",
+                    "search":  "Qidiruv",
+                    "clearSearch":  "Qidiruvni tozalash",
+                    "searchCategoriesPlaceholder":  "Kategoriya nomi yoki MXIK kodi bo\u0027yicha qidiring",
+                    "searchItemsPlaceholder":  "Mahsulot, MXIK, kategoriya yoki SKU bo\u0027yicha qidiring",
+                    "kind":  "Turi",
+                    "status":  "Holat",
+                    "category":  "Kategoriya",
+                    "stoplist":  "Stop-list"
+                },
+    "labels":  {
+                   "stoplisted":  "Stop-listda",
+                   "available":  "Mavjud",
+                   "mxikImagePreview":  "MXIK rasmi",
+                   "mxikImagePreviewDescription":  "Kategoriya rasmi MXIK kodi bo\u0027yicha avtomatik sinxronlangan.",
+                   "mxikImageSource":  "MXIK orqali yangilangan",
+                   "mxikNotAssigned":  "MXIK biriktirilmagan",
+                   "mxikRequired":  "Kategoriya uchun MXIK kodi majburiy.",
+                   "mxikOptional":  "Mahsulot uchun MXIK kodi ixtiyoriy.",
+                   "mxikLoading":  "MXIK qidirilmoqda...",
+                   "mxikNotFound":  "MXIK topilmadi",
+                   "mxikDetails":  "MXIK ma\u0027lumotlari"
+               },
+    "kinds":  {
+                  "dish":  "Taom",
+                  "drink":  "Ichimlik",
+                  "service":  "Xizmat",
+                  "penalty":  "Jarima"
+              },
+    "actions":  {
+                    "create":  "Yaratish",
+                    "save":  "Saqlash",
+                    "edit":  "Tahrirlash",
+                    "delete":  "O\u0027chirish",
+                    "activeOnly":  "Faqat faol",
+                    "inactiveOnly":  "Nofaol",
+                    "createCategory":  "Yangi kategoriya",
+                    "createItem":  "Yangi mahsulot",
+                    "searchMxik":  "MXIK bo\u0027yicha qidiring"
+                },
+    "dialogs":  {
+                    "deleteCategory":  {
+                                           "title":  "Kategoriyani o\u0027chirish",
+                                           "description":  "\"{{name}}\" kategoriyasi o\u0027chiriladi. Davom etilsinmi?"
+                                       },
+                    "deleteItem":  {
+                                       "title":  "Mahsulotni o\u0027chirish",
+                                       "description":  "\"{{name}}\" mahsuloti o\u0027chiriladi. Davom etilsinmi?"
+                                   }
+                },
+    "empty":  {
+                  "categories":  {
+                                     "noData":  {
+                                                    "title":  "Kategoriyalar hali yo\u0027q",
+                                                    "description":  "Kategoriyalar qo\u0027shilgandan keyin ular shu jadvalda chiqadi."
+                                                },
+                                     "noResults":  {
+                                                       "title":  "Kategoriyalar topilmadi",
+                                                       "description":  "Qidiruv yoki filterlarga mos kategoriya topilmadi."
+                                                   }
+                                 },
+                  "items":  {
+                                "noData":  {
+                                               "title":  "Mahsulotlar hali yo\u0027q",
+                                               "description":  "Mahsulotlar yaratilgandan keyin ular shu jadvalda chiqadi."
+                                           },
+                                "noResults":  {
+                                                  "title":  "Mahsulotlar topilmadi",
+                                                  "description":  "Tanlangan filterlar bo\u0027yicha mahsulot topilmadi."
+                                              }
+                            },
+                  "browser":  {
+                                  "noCategoryDescription":  "Mahsulotlarni ko\u0027rish uchun chap tomondan kategoriya tanlang.",
+                                  "noCategoryTitle":  "Kategoriya tanlanmagan"
+                              }
+              }
 }

@@ -35,7 +35,7 @@ const MyRestaurantPrepStationsPage = () => {
 
   return (
     <MyRestaurantSectionLayout
-      heading={t('pages.prepStations.title', { defaultValue: 'Tayyorlash stansiyalari' })}
+      heading={t('pages.prepStations.title')}
       listPage
       action={
         <Button
@@ -48,9 +48,7 @@ const MyRestaurantPrepStationsPage = () => {
       }>
       <RestaurantPrepStationsSection
         layoutMode="page"
-        searchPlaceholder={t('filters.searchRestaurantPrepStationsPlaceholder', {
-          defaultValue: "Stansiya nomi bo'yicha qidiring",
-        })}
+        searchPlaceholder={t('filters.searchRestaurantPrepStationsPlaceholder')}
         createDialogOpen={createDialogOpen}
         onCreateDialogOpenChange={setCreateDialogOpen}
       />

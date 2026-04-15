@@ -13,6 +13,7 @@ export {
   useGetCatalogItemByIdQuery,
   useGetCatalogItemsListQuery,
   useGetCatalogItemsQuery,
+  useGetMxikDetailsQuery,
   useGetPrepStationsQuery,
   useSearchMxikQuery,
 } from './queries';

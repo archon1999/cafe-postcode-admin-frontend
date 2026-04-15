@@ -27,15 +27,15 @@ const CategoryFormPage = () => {
       <CustomBreadcrumbs
         heading={
           isEditMode
-            ? t('pages.categoryEdit.title', { defaultValue: 'Kategoriyani tahrirlash' })
-            : t('pages.categoryCreate.title', { defaultValue: 'Yangi kategoriya' })
+            ? t('pages.categoryEdit.title')
+            : t('pages.categoryCreate.title')
         }
         links={[
           { name: t('pages.categories.title'), href: RoutePath.catalogCategoryList },
           {
             name: isEditMode
-              ? t('pages.categoryEdit.title', { defaultValue: 'Kategoriyani tahrirlash' })
-              : t('pages.categoryCreate.title', { defaultValue: 'Yangi kategoriya' }),
+              ? t('pages.categoryEdit.title')
+              : t('pages.categoryCreate.title'),
           },
         ]}
       />

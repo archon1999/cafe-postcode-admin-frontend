@@ -27,15 +27,15 @@ const ProductFormPage = () => {
       <CustomBreadcrumbs
         heading={
           isEditMode
-            ? t('pages.itemEdit.title', { defaultValue: 'Mahsulotni tahrirlash' })
-            : t('pages.itemCreate.title', { defaultValue: 'Yangi mahsulot' })
+            ? t('pages.itemEdit.title')
+            : t('pages.itemCreate.title')
         }
         links={[
           { name: t('pages.items.title'), href: RoutePath.catalogItemList },
           {
             name: isEditMode
-              ? t('pages.itemEdit.title', { defaultValue: 'Mahsulotni tahrirlash' })
-              : t('pages.itemCreate.title', { defaultValue: 'Yangi mahsulot' }),
+              ? t('pages.itemEdit.title')
+              : t('pages.itemCreate.title'),
           },
         ]}
       />

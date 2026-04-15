@@ -86,15 +86,15 @@ const RoleFormPage = () => {
       <CustomBreadcrumbs
         heading={
           isEditMode
-            ? t('pages.roleEdit.title', { defaultValue: 'Rolni tahrirlash' })
-            : t('pages.roleCreate.title', { defaultValue: 'Yangi rol' })
+            ? t('pages.roleEdit.title')
+            : t('pages.roleCreate.title')
         }
         links={[
           { name: t('pages.roles.title'), href: RoutePath.roleList },
           {
             name: isEditMode
-              ? t('pages.roleEdit.title', { defaultValue: 'Rolni tahrirlash' })
-              : t('pages.roleCreate.title', { defaultValue: 'Yangi rol' }),
+              ? t('pages.roleEdit.title')
+              : t('pages.roleCreate.title'),
           },
         ]}
       />
@@ -107,7 +107,7 @@ const RoleFormPage = () => {
             <FormActions
               isSubmitting={formState.isSubmitting}
               submitLabel={
-                isEditMode ? t('actions.save') : t('actions.roleCreateSubmit', { defaultValue: 'Rolni saqlash' })
+                isEditMode ? t('actions.save') : t('actions.roleCreateSubmit')
               }
               onCancel={() => push(RoutePath.roleList)}
             />

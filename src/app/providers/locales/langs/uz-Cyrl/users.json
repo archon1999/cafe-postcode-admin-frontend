@@ -1,206 +1,207 @@
 {
-    "pages":  {
-                  "list":  {
-                               "title":  "Фойдаланувчилар",
-                               "description":  "Тизимга логин ва пароль билан кирадиган фойдаланувчиларни бошқаринг."
-                           },
-                  "employeeList":  {
-                                       "title":  "Ходимлар",
-                                       "description":  "Ресторан ходимларини PIN-код ва роль бўйича бошқаринг."
-                                   },
-                  "roles":  {
-                                "title":  "Роллар"
-                            },
-                  "roleCreate":  {
-                                     "title":  "Янги роль"
-                                 },
-                  "roleEdit":  {
-                                   "title":  "Ролни таҳрирлаш"
-                               },
-                  "permissions":  {
-                                      "title":  "Рухсатлар"
-                                  },
-                  "create":  {
-                                 "title":  "Янги фойдаланувчи",
-                                 "description":  "Янги фойдаланувчини логин ва асосий маълумотлари билан яратинг."
-                             },
-                  "edit":  {
-                               "title":  "Фойдаланувчини таҳрирлаш",
-                               "description":  "Фойдаланувчининг ҳолати ва маълумотларини янгиланг."
-                           },
-                  "view":  {
-                               "title":  "Фойдаланувчи тафсилотлари"
-                           },
-                  "employeeCreate":  {
-                                         "title":  "Янги ходим",
-                                         "description":  "Ресторан ходимини PIN-код ва роль билан яратинг."
-                                     },
-                  "employeeEdit":  {
-                                       "title":  "Ходимни таҳрирлаш",
-                                       "description":  "Ходимнинг ҳолати ва маълумотларини янгиланг."
-                                   },
-                  "employeeView":  {
-                                       "title":  "Ходим тафсилотлари"
-                                   }
-              },
-    "fields":  {
-                   "username":  "Логин",
-                   "fullName":  "Тўлиқ исм",
-                   "permission":  "Рухсат",
-                   "phone":  "Телефон",
-                   "phonePlaceholder":  "+998 90 123 45 67",
-                   "role":  "Роль",
-                   "status":  "Ҳолат",
-                   "statusToggle":  "Фаол",
-                   "code":  "Техник код",
-                   "name":  "Номи",
-                   "type":  "Тури",
-                   "scope":  "Бўлим",
-                   "action":  "Амал",
-                   "description":  "Тавсиф",
-                   "permissionsCount":  "Рухсатлар сони",
-                   "hallSwitchPermission":  "Зал алмаштириш рухсати",
-                   "primaryHall":  "Асосий зал",
-                   "primaryHallHint":  "Ихтиёрий. Ходим учун асосий зални танланг.",
-                   "password":  "Пароль",
-                   "passwordCreateHint":  "Ихтиёрий. Киритилса, фойдаланувчи учун пароль ўрнатилади.",
-                   "passwordEditHint":  "Бўш қолдирилса, жорий пароль ўзгармайди.",
-                   "pin":  "PIN-код",
-                   "pinHint":  "POS ходими учун 4 хонали PIN-код.",
-                   "permissions":  "Рухсатлар",
-                   "allowedHalls":  "Рухсат этилган заллар",
-                   "allowedHallsHint":  "Керак бўлса ходимга бир нечта зал бириктиринг.",
-                   "passportSeries":  "Паспорт серияси",
-                   "pnfl":  "ЖШШИР",
-                   "birthDate":  "Туғилган сана",
-                   "birthDateHint":  "Ихтиёрий. Ходимнинг туғилган санасини киритинг.",
-                   "employmentStatus":  "Иш ҳолати",
-                   "salaryType":  "Маош тури",
-                   "baseAmount":  "Асосий сумма",
-                   "kpiPercent":  "KPI фоизи"
-               },
-    "status":  {
-                   "active":  "Фаол",
-                   "inactive":  "Нофаол",
-                   "archived":  "Архивланган"
-               },
-    "salaryType":  {
-                       "hourly":  "Соатбай",
-                       "daily":  "Кунбай",
-                       "monthly":  "Ойлик"
-                   },
-    "labels":  {
-                   "withoutRole":  "Роль бириктирилмаган",
-                   "notSelected":  "Танланмаган",
-                   "system":  "Тизимли",
-                   "custom":  "Махсус",
-                   "morePermissions":  "Яна рухсатлар"
-               },
-    "filters":  {
-                    "all":  "Барчаси",
-                    "search":  "Қидирув",
-                    "searchPlaceholder":  "Логин, исм ёки телефон бўйича қидиринг",
-                    "employeeSearchPlaceholder":  "Исм ёки телефон бўйича қидиринг",
-                    "searchRolesPlaceholder":  "Роль номи, тавсиф ёки рухсат бўйича қидиринг",
-                    "searchPermissionsPlaceholder":  "Код, ном ёки тавсиф бўйича қидиринг",
-                    "clearSearch":  "Қидирувни тозалаш",
-                    "role":  "Роль",
-                    "permission":  "Рухсат",
-                    "type":  "Тури",
-                    "scope":  "Бўлим",
-                    "action":  "Амал",
-                    "status":  "Ҳолат",
-                    "showArchived":  "Архивдагиларни кўрсатиш"
-                },
-    "sections":  {
-                     "account":  "Кириш ва асосий маълумотлар",
-                     "assignment":  "Залга бириктириш",
-                     "payroll":  "Меҳнат ва маош"
-                 },
-    "permissionScopes":  {
-                             "admin":  "Админ",
-                             "pos":  "POS",
-                             "dashboard":  "Dashboard"
-                         },
-    "permissionActions":  {
-                              "list":  "Рўйхатни кўриш",
-                              "delete":  "Ўчириш",
-                              "view":  "Кўриш",
-                              "manage":  "Бошқариш",
-                              "create":  "Яратиш",
-                              "update":  "Янгилаш",
-                              "activate":  "Активлаштириш",
-                              "deactivate":  "Деактивлаштириш",
-                              "resetPassword":  "Паролни янгилаш",
-                              "open":  "Очиш",
-                              "close":  "Ёпиш",
-                              "refund":  "Қайтариш",
-                              "reprint":  "Қайта чоп этиш"
-                          },
-    "actions":  {
-                    "create":  "Янги фойдаланувчи",
-                    "createEmployee":  "Янги ходим",
-                    "edit":  "Таҳрирлаш",
-                    "save":  "Сақлаш",
-                    "archive":  "Архивлаш",
-                    "delete":  "Ўчириш",
-                    "roleCreate":  "Янги роль",
-                    "roleCreateSubmit":  "Ролни сақлаш",
-                    "changePin":  "PIN-кодни ўзгартириш",
-                    "savePin":  "PIN-кодни сақлаш"
-                },
-    "dialogs":  {
-                    "deleteRole":  {
-                                       "title":  "Ролни ўчириш",
-                                       "description":  "\"{{name}}\" роли ўчирилади. Давом этилсинми?"
-                                   },
-                    "changePin":  {
-                                      "title":  "PIN-кодни ўзгартириш"
-                                  }
-                },
-    "empty":  {
-                  "users":  {
-                                "noData":  {
-                                               "title":  "Фойдаланувчилар ҳали йўқ",
-                                               "description":  "Биринчи фойдаланувчи қўшилгач, рўйхат шу ерда кўринади."
-                                           },
-                                "noResults":  {
-                                                  "title":  "Фойдаланувчилар топилмади",
-                                                  "description":  "Қидирув ёки фильтрни ўзгартириб қайта уриниб кўринг."
-                                              }
-                            },
-                  "employees":  {
-                                    "noData":  {
-                                                   "title":  "Ходимлар ҳали йўқ",
-                                                   "description":  "Биринчи ходим қўшилгач, рўйхат шу ерда кўринади."
-                                               },
-                                    "noResults":  {
-                                                      "title":  "Ходимлар топилмади",
-                                                      "description":  "Қидирув ёки фильтрни ўзгартириб қайта уриниб кўринг."
-                                                  }
-                                },
-                  "roles":  {
-                                "noData":  {
-                                               "title":  "Роллар ҳали йўқ",
-                                               "description":  "Роллар яратилгандан кейин улар шу жадвалда кўринади."
-                                           },
-                                "noResults":  {
-                                                  "title":  "Роллар топилмади",
-                                                  "description":  "Танланган фильтрлар бўйича ҳеч нарса топилмади."
-                                              }
-                            },
-                  "permissions":  {
-                                      "noData":  {
-                                                     "title":  "Рухсатлар ҳали йўқ",
-                                                     "description":  "Рухсатлар мавжуд бўлганда улар шу жадвалда кўринади."
-                                                 },
-                                      "noResults":  {
-                                                        "title":  "Рухсатлар топилмади",
-                                                        "description":  "Қидирув ёки фильтр натижасида мос рухсат топилмади."
-                                                    }
-                                  }
-              },
-    "messages":  {
-                     "pinUpdated":  "PIN-код муваффақиятли янгиланди."
-                 }
+  "pages": {
+    "list": {
+      "title": "Фойдаланувчилар",
+      "description": "Тизимга логин ва пароль билан кирадиган фойдаланувчиларни бошқаринг."
+    },
+    "employeeList": {
+      "title": "Ходимлар",
+      "description": "Ресторан ходимларини PIN-код ва роль бўйича бошқаринг."
+    },
+    "roles": {
+      "title": "Роллар"
+    },
+    "roleCreate": {
+      "title": "Янги роль"
+    },
+    "roleEdit": {
+      "title": "Ролни таҳрирлаш"
+    },
+    "permissions": {
+      "title": "Рухсатлар"
+    },
+    "create": {
+      "title": "Янги фойдаланувчи",
+      "description": "Янги фойдаланувчини логин ва асосий маълумотлари билан яратинг."
+    },
+    "edit": {
+      "title": "Фойдаланувчини таҳрирлаш",
+      "description": "Фойдаланувчининг ҳолати ва маълумотларини янгиланг."
+    },
+    "view": {
+      "title": "Фойдаланувчи тафсилотлари"
+    },
+    "employeeCreate": {
+      "title": "Янги ходим",
+      "description": "Ресторан ходимини PIN-код ва роль билан яратинг."
+    },
+    "employeeEdit": {
+      "title": "Ходимни таҳрирлаш",
+      "description": "Ходимнинг ҳолати ва маълумотларини янгиланг."
+    },
+    "employeeView": {
+      "title": "Ходим тафсилотлари"
+    }
+  },
+  "fields": {
+    "username": "Логин",
+    "fullName": "Тўлиқ исм",
+    "permission": "Рухсат",
+    "phone": "Телефон",
+    "phonePlaceholder": "+998 90 123 45 67",
+    "role": "Роль",
+    "status": "Ҳолат",
+    "statusToggle": "Фаол",
+    "code": "Техник код",
+    "name": "Номи",
+    "type": "Тури",
+    "scope": "Бўлим",
+    "action": "Амал",
+    "description": "Тавсиф",
+    "permissionsCount": "Рухсатлар сони",
+    "hallSwitchPermission": "Зал алмаштириш рухсати",
+    "primaryHall": "Асосий зал",
+    "primaryHallHint": "Ихтиёрий. Ходим учун асосий зални танланг.",
+    "password": "Пароль",
+    "passwordCreateHint": "Ихтиёрий. Киритилса, фойдаланувчи учун пароль ўрнатилади.",
+    "passwordEditHint": "Бўш қолдирилса, жорий пароль ўзгармайди.",
+    "pin": "PIN-код",
+    "pinHint": "POS ходими учун 4 хонали PIN-код.",
+    "permissions": "Рухсатлар",
+    "allowedHalls": "Рухсат этилган заллар",
+    "allowedHallsHint": "Керак бўлса ходимга бир нечта зал бириктиринг.",
+    "passportSeries": "Паспорт серияси",
+    "pnfl": "ЖШШИР",
+    "birthDate": "Туғилган сана",
+    "birthDateHint": "Ихтиёрий. Ходимнинг туғилган санасини киритинг.",
+    "employmentStatus": "Иш ҳолати",
+    "salaryType": "Маош тури",
+    "baseAmount": "Асосий сумма",
+    "kpiPercent": "KPI фоизи"
+  },
+  "status": {
+    "active": "Фаол",
+    "inactive": "Нофаол",
+    "archived": "Архивланган"
+  },
+  "salaryType": {
+    "hourly": "Соатбай",
+    "daily": "Кунбай",
+    "monthly": "Ойлик"
+  },
+  "labels": {
+    "withoutRole": "Роль бириктирилмаган",
+    "notSelected": "Танланмаган",
+    "system": "Тизимли",
+    "custom": "Махсус",
+    "morePermissions": "Яна рухсатлар",
+    "permissionsSelectedCount": "{{count}} та рухсат танланган"
+  },
+  "filters": {
+    "all": "Барчаси",
+    "search": "Қидирув",
+    "searchPlaceholder": "Логин, исм ёки телефон бўйича қидиринг",
+    "employeeSearchPlaceholder": "Исм ёки телефон бўйича қидиринг",
+    "searchRolesPlaceholder": "Роль номи, тавсиф ёки рухсат бўйича қидиринг",
+    "searchPermissionsPlaceholder": "Код, ном ёки тавсиф бўйича қидиринг",
+    "clearSearch": "Қидирувни тозалаш",
+    "role": "Роль",
+    "permission": "Рухсат",
+    "type": "Тури",
+    "scope": "Бўлим",
+    "action": "Амал",
+    "status": "Ҳолат",
+    "showArchived": "Архивдагиларни кўрсатиш"
+  },
+  "sections": {
+    "account": "Кириш ва асосий маълумотлар",
+    "assignment": "Залга бириктириш",
+    "payroll": "Меҳнат ва маош"
+  },
+  "permissionScopes": {
+    "admin": "Админ",
+    "pos": "POS",
+    "dashboard": "Dashboard"
+  },
+  "permissionActions": {
+    "list": "Рўйхатни кўриш",
+    "delete": "Ўчириш",
+    "view": "Кўриш",
+    "manage": "Бошқариш",
+    "create": "Яратиш",
+    "update": "Янгилаш",
+    "activate": "Активлаштириш",
+    "deactivate": "Деактивлаштириш",
+    "resetPassword": "Паролни янгилаш",
+    "open": "Очиш",
+    "close": "Ёпиш",
+    "refund": "Қайтариш",
+    "reprint": "Қайта чоп этиш"
+  },
+  "actions": {
+    "create": "Янги фойдаланувчи",
+    "createEmployee": "Янги ходим",
+    "edit": "Таҳрирлаш",
+    "save": "Сақлаш",
+    "archive": "Архивлаш",
+    "delete": "Ўчириш",
+    "roleCreate": "Янги роль",
+    "roleCreateSubmit": "Ролни сақлаш",
+    "changePin": "PIN-кодни ўзгартириш",
+    "savePin": "PIN-кодни сақлаш"
+  },
+  "dialogs": {
+    "deleteRole": {
+      "title": "Ролни ўчириш",
+      "description": "\"{{name}}\" роли ўчирилади. Давом этилсинми?"
+    },
+    "changePin": {
+      "title": "PIN-кодни ўзгартириш"
+    }
+  },
+  "empty": {
+    "users": {
+      "noData": {
+        "title": "Фойдаланувчилар ҳали йўқ",
+        "description": "Биринчи фойдаланувчи қўшилгач, рўйхат шу ерда кўринади."
+      },
+      "noResults": {
+        "title": "Фойдаланувчилар топилмади",
+        "description": "Қидирув ёки фильтрни ўзгартириб қайта уриниб кўринг."
+      }
+    },
+    "employees": {
+      "noData": {
+        "title": "Ходимлар ҳали йўқ",
+        "description": "Биринчи ходим қўшилгач, рўйхат шу ерда кўринади."
+      },
+      "noResults": {
+        "title": "Ходимлар топилмади",
+        "description": "Қидирув ёки фильтрни ўзгартириб қайта уриниб кўринг."
+      }
+    },
+    "roles": {
+      "noData": {
+        "title": "Роллар ҳали йўқ",
+        "description": "Роллар яратилгандан кейин улар шу жадвалда кўринади."
+      },
+      "noResults": {
+        "title": "Роллар топилмади",
+        "description": "Танланган фильтрлар бўйича ҳеч нарса топилмади."
+      }
+    },
+    "permissions": {
+      "noData": {
+        "title": "Рухсатлар ҳали йўқ",
+        "description": "Рухсатлар мавжуд бўлганда улар шу жадвалда кўринади."
+      },
+      "noResults": {
+        "title": "Рухсатлар топилмади",
+        "description": "Қидирув ёки фильтр натижасида мос рухсат топилмади."
+      }
+    }
+  },
+  "messages": {
+    "pinUpdated": "PIN-код муваффақиятли янгиланди."
+  }
 }

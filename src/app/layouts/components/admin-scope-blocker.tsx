@@ -12,10 +12,8 @@ type AdminScopeBlockerProps = {
 export function AdminScopeBlocker({ requirement: _requirement }: AdminScopeBlockerProps) {
   const { t } = useTranslate('common');
 
-  const title = t('scope.selectRestaurantTitle', { defaultValue: 'Restoranni tanlang' });
-  const description = t('scope.selectRestaurantDescription', {
-    defaultValue: 'Davom etish uchun headerdagi restoranni tanlang.',
-  });
+  const title = t('scope.selectRestaurantTitle');
+  const description = t('scope.selectRestaurantDescription');
 
   return (
     <Card sx={{ p: 3 }}>

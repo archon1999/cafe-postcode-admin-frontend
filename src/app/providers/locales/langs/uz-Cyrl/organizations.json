@@ -50,6 +50,15 @@
     },
     "myRestaurantGeneral": {
       "title": "Умумий"
+    },
+    "integrationCreate": {
+      "title": "Янги интегратсия"
+    },
+    "integrationEdit": {
+      "title": "Интегратсияни таҳрирлаш"
+    },
+    "integrations": {
+      "title": "Интегратсиялар"
     }
   },
   "fields": {
@@ -92,7 +101,8 @@
     "ownerDashboardEnabled": "Раҳбар панели ёқилган",
     "tariff": "Тариф",
     "tariffHint": "Ресторан рухсатларини белгилайдиган тарифни танланг.",
-    "tariffPlaceholder": "Тарифни танланг"
+    "tariffPlaceholder": "Тарифни танланг",
+    "authCode": "Активатсия коди"
   },
   "filters": {
     "all": "Барчаси",
@@ -112,7 +122,8 @@
     "searchRestaurantsPlaceholder": "Ресторан номи, юридик ном ёки телефон бўйича қидиринг",
     "searchRestaurantPrepStationsPlaceholder": "Станция номи бўйича қидиринг",
     "searchRestaurantCashDesksPlaceholder": "Касса номи ёки жойлашуви бўйича қидиринг",
-    "searchRestaurantDistributionPointsPlaceholder": "Нуқта номи ёки канал бўйича қидиринг"
+    "searchRestaurantDistributionPointsPlaceholder": "Нуқта номи ёки канал бўйича қидиринг",
+    "searchIntegrationsPlaceholder": "Тури, провайдер ёки принтер номи бўйича қидиринг"
   },
   "labels": {
     "defaultBranch": "Асосий филиал",
@@ -149,6 +160,9 @@
       },
       "distributionPoints": {
         "description": "Буюртма каналлари ва тарқатиш нуқталарини бошқаринг."
+      },
+      "integrations": {
+        "description": "Принтер, тўлов ва фискал провайдер созламаларини бошқаринг."
       }
     },
     "openList": "Рўйхатни очиш",
@@ -213,7 +227,10 @@
     "createDistributionPoint": "Янги нуқта",
     "createPrepStation": "Янги станция",
     "createRestaurant": "Янги ресторан",
-    "editRestaurantProfile": "Ресторан профилини таҳрирлаш"
+    "editRestaurantProfile": "Ресторан профилини таҳрирлаш",
+    "createIntegration": "Янги интегратсия",
+    "hideAuthCode": "Кодни яшириш",
+    "showAuthCode": "Кодни кўрсатиш"
   },
   "dialogs": {
     "deleteBranch": {
@@ -287,6 +304,46 @@
         "title": "Ресторан топилмади",
         "description": "Қидирув ёки фильтрларга мос ресторан топилмади."
       }
+    },
+    "integrations": {
+      "noData": {
+        "description": "Принтер, тўлов ёки фискал интегратсия қўшилгач шу йерда кўринади.",
+        "title": "Интегратсиялар ҳали ё'қ"
+      },
+      "noResults": {
+        "description": "Қидирув ёки филтерларни ўзгартириб қайта уриниб кўринг.",
+        "title": "Интегратсия топилмади"
+      }
+    }
+  },
+  "integrations": {
+    "fields": {
+      "apiKey": "API key",
+      "cashboxId": "Касса ID",
+      "connectionType": "Принтер уланиш тури",
+      "cutAfterPrint": "Чоп етилгандан кейин кесиш",
+      "encoding": "Кодировка",
+      "endpointUrl": "Endpoint URL",
+      "merchantId": "Merchant ID",
+      "paperWidthMm": "Қоғоз кенглиги",
+      "paymentQrUrl": "Тўлов QR URL",
+      "paymentQrUrlHint": "Кейинги босқичда кассир чеки учун ҚР шу манбадан олинади.",
+      "printerHost": "Принтер IP манзили",
+      "printerHostHint": "LAN принтер учун IP манзил. Масалан: 192.168.123.100.",
+      "printerName": "Windows принтер номи",
+      "printerNameHint": "USB принтер Windows'да кўринган навбат номи. Масалан: POS-80 USB.",
+      "printerPort": "Порт",
+      "printerPortHint": "Одатда 9100.",
+      "provider": "Провайдер",
+      "settings": "Созламалар"
+    },
+    "sections": {
+      "fiscal": "Фискал созламалар",
+      "payment": "Тўлов созламалари",
+      "printer": "Принтер созламалари"
+    },
+    "units": {
+      "millimeter": "{{value}} mm"
     }
   }
 }

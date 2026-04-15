@@ -35,7 +35,7 @@ const MyRestaurantCashDesksPage = () => {
 
   return (
     <MyRestaurantSectionLayout
-      heading={t('pages.cashDesks.title', { defaultValue: 'Kassalar' })}
+      heading={t('pages.cashDesks.title')}
       listPage
       action={
         <Button
@@ -48,9 +48,7 @@ const MyRestaurantCashDesksPage = () => {
       }>
       <RestaurantCashDesksSection
         layoutMode="page"
-        searchPlaceholder={t('filters.searchRestaurantCashDesksPlaceholder', {
-          defaultValue: "Kassa nomi yoki joylashuvi bo'yicha qidiring",
-        })}
+        searchPlaceholder={t('filters.searchRestaurantCashDesksPlaceholder')}
         createDialogOpen={createDialogOpen}
         onCreateDialogOpenChange={setCreateDialogOpen}
       />

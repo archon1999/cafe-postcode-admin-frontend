@@ -43,7 +43,7 @@ export function CatalogBrowserProductCard({ product, onEdit }: CatalogBrowserPro
           {product.name}
         </Typography>
 
-        <Tooltip title={t('actions.edit', { defaultValue: 'Tahrirlash' })}>
+        <Tooltip title={t('actions.edit')}>
           <IconButton size="small" onClick={() => onEdit(product)} sx={{ flexShrink: 0 }}>
             <Iconify icon="solar:pen-bold" width={18} />
           </IconButton>

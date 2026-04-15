@@ -122,8 +122,8 @@ function CatalogCategoryFormInner({
   });
 
   const title = isEditMode
-    ? t('pages.categoryEdit.title', { defaultValue: 'Kategoriyani tahrirlash' })
-    : t('pages.categoryCreate.title', { defaultValue: 'Yangi kategoriya' });
+    ? t('pages.categoryEdit.title')
+    : t('pages.categoryCreate.title');
 
   const fields = (
     <Stack spacing={3} sx={isDialog ? { pt: 1 } : undefined}>
@@ -158,7 +158,7 @@ function CatalogCategoryFormInner({
           <Stack spacing={1.25}>
             <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap>
               <Typography variant="subtitle1">
-                {t('labels.mxikImagePreview', { defaultValue: 'MXIK rasmi' })}
+                {t('labels.mxikImagePreview')}
               </Typography>
               {category.imageSource ? (
                 <Chip
@@ -167,16 +167,14 @@ function CatalogCategoryFormInner({
                   color={category.imageSource === 'mxik-cache' ? 'info' : 'default'}
                   label={
                     category.imageSource === 'mxik-cache'
-                      ? t('labels.mxikImageSource', { defaultValue: 'MXIK orqali yangilangan' })
+                      ? t('labels.mxikImageSource')
                       : category.imageSource
                   }
                 />
               ) : null}
             </Stack>
             <Typography variant="body2" color="text.secondary">
-              {t('labels.mxikImagePreviewDescription', {
-                defaultValue: 'Kategoriya rasmi MXIK kodi bo‘yicha avtomatik sinxronlangan.',
-              })}
+              {t('labels.mxikImagePreviewDescription')}
             </Typography>
           </Stack>
         </Box>
@@ -214,8 +212,8 @@ function CatalogCategoryFormInner({
           </Button>
           <Button type="submit" variant="contained" color="black" loading={isSubmitting}>
             {isEditMode
-              ? t('actions.save', { defaultValue: 'Saqlash' })
-              : t('actions.create', { defaultValue: 'Yaratish' })}
+              ? t('actions.save')
+              : t('actions.create')}
           </Button>
         </DialogActions>
       </Form>
@@ -230,8 +228,8 @@ function CatalogCategoryFormInner({
           isSubmitting={isSubmitting}
           submitLabel={
             isEditMode
-              ? t('actions.save', { defaultValue: 'Saqlash' })
-              : t('actions.create', { defaultValue: 'Yaratish' })
+              ? t('actions.save')
+              : t('actions.create')
           }
           onCancel={onCancel}
         />

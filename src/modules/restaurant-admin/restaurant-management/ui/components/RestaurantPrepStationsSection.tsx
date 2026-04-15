@@ -105,7 +105,7 @@ function RestaurantPrepStationDialog({
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 3 }}>
           <Button color="inherit" variant="outlined" onClick={onClose} disabled={methods.formState.isSubmitting}>
-            {t('actions.cancel', { ns: 'common', defaultValue: 'Bekor qilish' })}
+            {t('actions.cancel', { ns: 'common'})}
           </Button>
           <Button type="submit" variant="contained" color="black" loading={methods.formState.isSubmitting}>
             {isEditMode ? t('actions.save') : t('actions.create')}

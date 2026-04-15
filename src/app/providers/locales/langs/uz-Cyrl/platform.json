@@ -1,11 +1,23 @@
 {
   "pages": {
-    "businessPartners": { "title": "Бизнес ҳамкорлар" },
-    "businessPartnerCreate": { "title": "Янги бизнес ҳамкор" },
-    "businessPartnerEdit": { "title": "Бизнес ҳамкорни таҳрирлаш" },
-    "tariffs": { "title": "Тарифлар" },
-    "tariffCreate": { "title": "Янги тариф" },
-    "tariffEdit": { "title": "Тарифни таҳрирлаш" }
+    "businessPartners": {
+      "title": "Бизнес ҳамкорлар"
+    },
+    "businessPartnerCreate": {
+      "title": "Янги бизнес ҳамкор"
+    },
+    "businessPartnerEdit": {
+      "title": "Бизнес ҳамкорни таҳрирлаш"
+    },
+    "tariffs": {
+      "title": "Тарифлар"
+    },
+    "tariffCreate": {
+      "title": "Янги тариф"
+    },
+    "tariffEdit": {
+      "title": "Тарифни таҳрирлаш"
+    }
   },
   "fields": {
     "inn": "ИНН",
@@ -29,7 +41,10 @@
     "startsOn": "Бошланиш санаси",
     "username": "Username",
     "password": "Password",
-    "authCode": "Активатсия коди"
+    "authCode": "Активатсия коди",
+    "activatedAt": "Активлаштирилган сана",
+    "billingPeriod": "Тариф муддати",
+    "expiresOn": "Амал қилиш муддати"
   },
   "filters": {
     "search": "Қидирув",
@@ -44,7 +59,9 @@
     "existingTariff": "Мавжуд тариф",
     "customActivation": "Махсус тариф",
     "selectedRolesCount": "Танланган роллар: {{count}}",
-    "selectedPermissionsCount": "Танланган рухсатлар: {{count}}"
+    "selectedPermissionsCount": "Танланган рухсатлар: {{count}}",
+    "monthly": "Ойлик",
+    "yearly": "Йиллик"
   },
   "classifications": {
     "basic": "Бошланғич",
@@ -65,7 +82,8 @@
     "cancel": "Бекор қилиш",
     "close": "Ёпиш",
     "showAuthCode": "Кодни кўрсатиш",
-    "hideAuthCode": "Кодни яшириш"
+    "hideAuthCode": "Кодни яшириш",
+    "extend": "Муддатини узайтириш"
   },
   "dialogs": {
     "deactivatePartner": {
@@ -93,6 +111,10 @@
     "activateRestaurant": {
       "title": "Ресторанни активлаштириш",
       "customDescription": "Махсус тариф режимида роллар ва рухсатларни қўлда танлаб, ресторанни шу конфигурация билан активлаштирасиз."
+    },
+    "extendRestaurant": {
+      "description": "\"{{name}}\" ресторанининг амал қилиш муддатини узайтирмоқчимисиз?",
+      "title": "Тариф муддатини узайтириш"
     }
   },
   "validation": {

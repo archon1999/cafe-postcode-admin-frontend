@@ -214,7 +214,7 @@ export function RestaurantActivationDialog({
 
             <RHFRadioGroup<ActivationValues>
               name="billingPeriod"
-              label={t('fields.billingPeriod', { defaultValue: 'Tarif muddati' })}
+              label={t('fields.billingPeriod')}
               row
               options={BILLING_PERIOD_OPTIONS.map((option) => ({
                 value: option.value,

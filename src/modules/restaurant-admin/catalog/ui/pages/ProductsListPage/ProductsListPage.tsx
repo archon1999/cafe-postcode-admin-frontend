@@ -26,7 +26,7 @@ const ProductsListPage = () => {
             color="black"
             startIcon={<Iconify icon="mingcute:add-line" />}
             disabled={isCreateDisabled}>
-            {t('actions.createItem', { defaultValue: 'Yangi mahsulot' })}
+            {t('actions.createItem')}
           </Button>
         }
       />

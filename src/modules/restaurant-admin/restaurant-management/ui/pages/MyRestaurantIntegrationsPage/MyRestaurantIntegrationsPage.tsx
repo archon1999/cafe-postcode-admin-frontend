@@ -35,7 +35,7 @@ const MyRestaurantIntegrationsPage = () => {
 
   return (
     <MyRestaurantSectionLayout
-      heading={t('pages.integrations.title', { defaultValue: 'Integratsiyalar' })}
+      heading={t('pages.integrations.title')}
       listPage
       action={
         <Button
@@ -43,14 +43,12 @@ const MyRestaurantIntegrationsPage = () => {
           color="black"
           startIcon={<Iconify icon="mingcute:add-line" />}
           onClick={() => setCreateDialogOpen(true)}>
-          {t('actions.createIntegration', { defaultValue: 'Yangi integratsiya' })}
+          {t('actions.createIntegration')}
         </Button>
       }>
       <RestaurantIntegrationsSection
         layoutMode="page"
-        searchPlaceholder={t('filters.searchIntegrationsPlaceholder', {
-          defaultValue: "Turi, provayder yoki printer nomi bo'yicha qidiring",
-        })}
+        searchPlaceholder={t('filters.searchIntegrationsPlaceholder')}
         createDialogOpen={createDialogOpen}
         onCreateDialogOpenChange={setCreateDialogOpen}
       />

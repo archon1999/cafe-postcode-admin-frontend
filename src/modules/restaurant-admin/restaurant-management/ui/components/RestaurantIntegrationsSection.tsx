@@ -406,8 +406,8 @@ function RestaurantIntegrationDialog({
       <Form methods={methods} onSubmit={onSubmit}>
         <DialogTitle>
           {isEditMode
-            ? t('pages.integrationEdit.title', { defaultValue: 'Integratsiyani tahrirlash' })
-            : t('pages.integrationCreate.title', { defaultValue: 'Yangi integratsiya' })}
+            ? t('pages.integrationEdit.title')
+            : t('pages.integrationCreate.title')}
         </DialogTitle>
         <DialogContent>
           <Stack spacing={3} sx={{ pt: 1 }}>
@@ -428,7 +428,7 @@ function RestaurantIntegrationDialog({
               </RHFSelect>
             </Stack>
 
-            <RHFSelect<Values> name="provider" label={t('integrations.fields.provider', { defaultValue: 'Provayder' })}>
+            <RHFSelect<Values> name="provider" label={t('integrations.fields.provider')}>
               {providerOptions.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
@@ -440,13 +440,13 @@ function RestaurantIntegrationDialog({
               <>
                 <Divider />
                 <Typography variant="subtitle2">
-                  {t('integrations.sections.printer', { defaultValue: 'Printer sozlamalari' })}
+                  {t('integrations.sections.printer')}
                 </Typography>
                 {selectedProvider === 'qz-tray' ? (
                   <>
                     <RHFSelect<Values>
                       name="connectionType"
-                      label={t('integrations.fields.connectionType', { defaultValue: 'Printer ulanish turi' })}>
+                      label={t('integrations.fields.connectionType')}>
                       {PRINTER_CONNECTION_TYPE_VALUES.map((connectionType) => (
                         <MenuItem key={connectionType} value={connectionType}>
                           {getPrinterConnectionLabel(connectionType)}
@@ -457,24 +457,20 @@ function RestaurantIntegrationDialog({
                       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
                         <RHFTextField<Values>
                           name="printerHost"
-                          label={t('integrations.fields.printerHost', { defaultValue: 'Printer IP manzili' })}
-                          helperText={t('integrations.fields.printerHostHint', {
-                            defaultValue: 'LAN printer uchun IP manzil. Masalan: 192.168.123.100.',
-                          })}
+                          label={t('integrations.fields.printerHost')}
+                          helperText={t('integrations.fields.printerHostHint')}
                         />
                         <RHFTextField<Values>
                           name="printerPort"
-                          label={t('integrations.fields.printerPort', { defaultValue: 'Port' })}
-                          helperText={t('integrations.fields.printerPortHint', { defaultValue: 'Odatda 9100.' })}
+                          label={t('integrations.fields.printerPort')}
+                          helperText={t('integrations.fields.printerPortHint')}
                         />
                       </Stack>
                     ) : (
                       <RHFTextField<Values>
                         name="printerName"
-                        label={t('integrations.fields.printerName', { defaultValue: 'Windows printer nomi' })}
-                        helperText={t('integrations.fields.printerNameHint', {
-                          defaultValue: "USB printer Windows'da ko'ringan queue nomi. Masalan: POS-80 USB.",
-                        })}
+                        label={t('integrations.fields.printerName')}
+                        helperText={t('integrations.fields.printerNameHint')}
                       />
                     )}
                   </>
@@ -482,11 +478,8 @@ function RestaurantIntegrationDialog({
                 {selectedProvider === 'windows-raw' ? (
                   <RHFTextField<Values>
                     name="printerName"
-                    label={t('integrations.fields.printerName', { defaultValue: 'Windows printer nomi' })}
-                    helperText={t('integrations.fields.printerNameHint', {
-                      defaultValue:
-                        "USB yoki LAN printer Windows'da ko'ringan queue nomini yozing. Masalan: POS-80 USB.",
-                    })}
+                    label={t('integrations.fields.printerName')}
+                    helperText={t('integrations.fields.printerNameHint')}
                   />
                 ) : null}
                 {selectedProvider !== 'mock-printer' ? (
@@ -494,21 +487,21 @@ function RestaurantIntegrationDialog({
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
                       <RHFSelect<Values>
                         name="paperWidthMm"
-                        label={t('integrations.fields.paperWidthMm', { defaultValue: "Qog'oz kengligi" })}>
+                        label={t('integrations.fields.paperWidthMm')}>
                         {PAPER_WIDTH_VALUES.map((width) => (
                           <MenuItem key={width} value={width}>
-                            {t('integrations.units.millimeter', { value: width, defaultValue: `${width} mm` })}
+                            {t('integrations.units.millimeter', { value: width})}
                           </MenuItem>
                         ))}
                       </RHFSelect>
                       <RHFTextField<Values>
                         name="encoding"
-                        label={t('integrations.fields.encoding', { defaultValue: 'Kodirovka' })}
+                        label={t('integrations.fields.encoding')}
                       />
                     </Stack>
                     <RHFSwitch<Values>
                       name="cutAfterPrint"
-                      label={t('integrations.fields.cutAfterPrint', { defaultValue: 'Chop etilgandan keyin kesish' })}
+                      label={t('integrations.fields.cutAfterPrint')}
                     />
                   </>
                 ) : null}
@@ -519,30 +512,28 @@ function RestaurantIntegrationDialog({
               <>
                 <Divider />
                 <Typography variant="subtitle2">
-                  {t('integrations.sections.payment', { defaultValue: "To'lov sozlamalari" })}
+                  {t('integrations.sections.payment')}
                 </Typography>
                 <RHFTextField<Values>
                   name="terminalId"
-                  label={t('fields.terminalId', { defaultValue: 'Terminal ID' })}
+                  label={t('fields.terminalId')}
                 />
                 <RHFTextField<Values>
                   name="merchantId"
-                  label={t('integrations.fields.merchantId', { defaultValue: 'Merchant ID' })}
+                  label={t('integrations.fields.merchantId')}
                 />
                 <RHFTextField<Values>
                   name="endpointUrl"
-                  label={t('integrations.fields.endpointUrl', { defaultValue: 'Endpoint URL' })}
+                  label={t('integrations.fields.endpointUrl')}
                 />
                 <RHFTextField<Values>
                   name="paymentQrUrl"
-                  label={t('integrations.fields.paymentQrUrl', { defaultValue: "To'lov QR URL" })}
-                  helperText={t('integrations.fields.paymentQrUrlHint', {
-                    defaultValue: 'Keyingi bosqichda kassir cheki uchun QR shu manbadan olinadi.',
-                  })}
+                  label={t('integrations.fields.paymentQrUrl')}
+                  helperText={t('integrations.fields.paymentQrUrlHint')}
                 />
                 <RHFTextField<Values>
                   name="apiKey"
-                  label={t('integrations.fields.apiKey', { defaultValue: 'API key' })}
+                  label={t('integrations.fields.apiKey')}
                   type="password"
                 />
               </>
@@ -552,24 +543,24 @@ function RestaurantIntegrationDialog({
               <>
                 <Divider />
                 <Typography variant="subtitle2">
-                  {t('integrations.sections.fiscal', { defaultValue: 'Fiskal sozlamalar' })}
+                  {t('integrations.sections.fiscal')}
                 </Typography>
                 <RHFTextField<Values>
                   name="terminalId"
-                  label={t('fields.terminalId', { defaultValue: 'Terminal ID' })}
+                  label={t('fields.terminalId')}
                 />
                 <RHFTextField<Values>
                   name="cashboxId"
-                  label={t('integrations.fields.cashboxId', { defaultValue: 'Kassa ID' })}
+                  label={t('integrations.fields.cashboxId')}
                 />
-                <RHFTextField<Values> name="taxNumber" label={t('fields.taxNumber', { defaultValue: 'STIR' })} />
+                <RHFTextField<Values> name="taxNumber" label={t('fields.taxNumber')} />
                 <RHFTextField<Values>
                   name="endpointUrl"
-                  label={t('integrations.fields.endpointUrl', { defaultValue: 'Endpoint URL' })}
+                  label={t('integrations.fields.endpointUrl')}
                 />
                 <RHFTextField<Values>
                   name="apiKey"
-                  label={t('integrations.fields.apiKey', { defaultValue: 'API key' })}
+                  label={t('integrations.fields.apiKey')}
                   type="password"
                 />
               </>
@@ -581,7 +572,7 @@ function RestaurantIntegrationDialog({
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 3 }}>
           <Button color="inherit" variant="outlined" onClick={onClose} disabled={methods.formState.isSubmitting}>
-            {t('actions.cancel', { ns: 'common', defaultValue: 'Bekor qilish' })}
+            {t('actions.cancel', { ns: 'common'})}
           </Button>
           <Button type="submit" variant="contained" color="black" loading={methods.formState.isSubmitting}>
             {isEditMode ? t('actions.save') : t('actions.create')}
@@ -676,7 +667,7 @@ export function RestaurantIntegrationsSection({
       },
       {
         field: 'provider',
-        headerName: t('integrations.fields.provider', { defaultValue: 'Provayder' }),
+        headerName: t('integrations.fields.provider'),
         minWidth: 180,
         flex: 0.8,
       },
@@ -696,7 +687,7 @@ export function RestaurantIntegrationsSection({
       },
       {
         field: 'settings',
-        headerName: t('integrations.fields.settings', { defaultValue: 'Sozlamalar' }),
+        headerName: t('integrations.fields.settings'),
         minWidth: 300,
         flex: 1.3,
         sortable: false,
@@ -794,16 +785,12 @@ export function RestaurantIntegrationsSection({
             <DataGridEmptyState
               hasActiveFilters={hasActiveFilters}
               noData={{
-                title: t('empty.integrations.noData.title', { defaultValue: "Integratsiyalar hali yo'q" }),
-                description: t('empty.integrations.noData.description', {
-                  defaultValue: "Printer, to'lov yoki fiskal integratsiya qo'shilgach shu yerda ko'rinadi.",
-                }),
+                title: t('empty.integrations.noData.title'),
+                description: t('empty.integrations.noData.description'),
               }}
               noResults={{
-                title: t('empty.integrations.noResults.title', { defaultValue: 'Integratsiya topilmadi' }),
-                description: t('empty.integrations.noResults.description', {
-                  defaultValue: "Qidiruv yoki filterlarni o'zgartirib qayta urinib ko'ring.",
-                }),
+                title: t('empty.integrations.noResults.title'),
+                description: t('empty.integrations.noResults.description'),
               }}
             />
           ),
@@ -811,16 +798,12 @@ export function RestaurantIntegrationsSection({
             <DataGridEmptyState
               forceFiltered
               noData={{
-                title: t('empty.integrations.noData.title', { defaultValue: "Integratsiyalar hali yo'q" }),
-                description: t('empty.integrations.noData.description', {
-                  defaultValue: "Printer, to'lov yoki fiskal integratsiya qo'shilgach shu yerda ko'rinadi.",
-                }),
+                title: t('empty.integrations.noData.title'),
+                description: t('empty.integrations.noData.description'),
               }}
               noResults={{
-                title: t('empty.integrations.noResults.title', { defaultValue: 'Integratsiya topilmadi' }),
-                description: t('empty.integrations.noResults.description', {
-                  defaultValue: "Qidiruv yoki filterlarni o'zgartirib qayta urinib ko'ring.",
-                }),
+                title: t('empty.integrations.noResults.title'),
+                description: t('empty.integrations.noResults.description'),
               }}
             />
           ),
@@ -829,9 +812,7 @@ export function RestaurantIntegrationsSection({
               searchLabel={t('filters.search')}
               searchPlaceholder={
                 searchPlaceholder ??
-                t('filters.searchIntegrationsPlaceholder', {
-                  defaultValue: "Turi, provayder yoki printer nomi bo'yicha qidiring",
-                })
+                t('filters.searchIntegrationsPlaceholder')
               }
               clearSearchLabel={t('filters.clearSearch')}
               search={search}
@@ -904,15 +885,13 @@ export function RestaurantIntegrationsSection({
       ) : (
         <RestaurantManagementAccordion
           icon="solar:plug-circle-bold-duotone"
-          title={title ?? t('pages.integrations.title', { defaultValue: 'Integratsiyalar' })}
+          title={title ?? t('pages.integrations.title')}
           description={
             description ??
-            t('restaurantManagement.sections.integrations.description', {
-              defaultValue: "Printer, to'lov va fiskal provayder sozlamalarini boshqaring.",
-            })
+            t('restaurantManagement.sections.integrations.description')
           }
           total={query.data?.total ?? 0}
-          actionLabel={actionLabel ?? t('actions.createIntegration', { defaultValue: 'Yangi integratsiya' })}
+          actionLabel={actionLabel ?? t('actions.createIntegration')}
           onActionClick={openCreateDialog}
           defaultExpanded={defaultExpanded}>
           {grid}

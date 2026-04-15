@@ -113,7 +113,7 @@ export const RolesGrid = () => {
               <CustomGridActionsCellItem
                 actionKind="delete"
                 key="delete"
-                label={t('actions.delete', { defaultValue: "O'chirish" })}
+                label={t('actions.delete')}
                 icon={<Iconify icon="solar:trash-bin-trash-bold" />}
                 onClick={() => setRoleToDelete(params.row)}
               />,
@@ -213,9 +213,8 @@ export const RolesGrid = () => {
       <ConfirmDialog
         open={Boolean(roleToDelete)}
         onClose={() => setRoleToDelete(null)}
-        title={t('dialogs.deleteRole.title', { defaultValue: "Rolni o'chirish" })}
+        title={t('dialogs.deleteRole.title')}
         content={t('dialogs.deleteRole.description', {
-          defaultValue: `"{{name}}" roli o'chiriladi. Davom etilsinmi?`,
           name: roleToDelete?.name ?? '',
         })}
         action={
@@ -228,7 +227,7 @@ export const RolesGrid = () => {
               await deleteRoleMutation.mutateAsync(roleToDelete.id);
               setRoleToDelete(null);
             }}>
-            {t('actions.delete', { defaultValue: "O'chirish" })}
+            {t('actions.delete')}
           </Button>
         }
       />

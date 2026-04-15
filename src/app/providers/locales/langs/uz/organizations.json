@@ -50,6 +50,15 @@
     },
     "myRestaurantGeneral": {
       "title": "Umumiy"
+    },
+    "integrationCreate": {
+      "title": "Yangi integratsiya"
+    },
+    "integrationEdit": {
+      "title": "Integratsiyani tahrirlash"
+    },
+    "integrations": {
+      "title": "Integratsiyalar"
     }
   },
   "fields": {
@@ -113,7 +122,8 @@
     "searchRestaurantsPlaceholder": "Restoran nomi, yuridik nom yoki telefon bo'yicha qidiring",
     "searchRestaurantPrepStationsPlaceholder": "Stansiya nomi bo'yicha qidiring",
     "searchRestaurantCashDesksPlaceholder": "Kassa nomi yoki joylashuvi bo'yicha qidiring",
-    "searchRestaurantDistributionPointsPlaceholder": "Nuqta nomi yoki kanal bo'yicha qidiring"
+    "searchRestaurantDistributionPointsPlaceholder": "Nuqta nomi yoki kanal bo'yicha qidiring",
+    "searchIntegrationsPlaceholder": "Turi, provayder yoki printer nomi bo'yicha qidiring"
   },
   "labels": {
     "defaultBranch": "Asosiy filial",
@@ -150,6 +160,9 @@
       },
       "distributionPoints": {
         "description": "Buyurtma kanallari va tarqatish nuqtalarini boshqaring."
+      },
+      "integrations": {
+        "description": "Printer, to'lov va fiskal provayder sozlamalarini boshqaring."
       }
     },
     "openList": "Ro'yxatni ochish",
@@ -216,7 +229,8 @@
     "createRestaurant": "Yangi restoran",
     "editRestaurantProfile": "Restoran profilini tahrirlash",
     "showAuthCode": "Kodni ko'rsatish",
-    "hideAuthCode": "Kodni yashirish"
+    "hideAuthCode": "Kodni yashirish",
+    "createIntegration": "Yangi integratsiya"
   },
   "dialogs": {
     "deleteBranch": {
@@ -290,6 +304,46 @@
         "title": "Restoran topilmadi",
         "description": "Qidiruv yoki filterlarga mos restoran topilmadi."
       }
+    },
+    "integrations": {
+      "noData": {
+        "description": "Printer, to'lov yoki fiskal integratsiya qo'shilgach shu yerda ko'rinadi.",
+        "title": "Integratsiyalar hali yo'q"
+      },
+      "noResults": {
+        "description": "Qidiruv yoki filterlarni o'zgartirib qayta urinib ko'ring.",
+        "title": "Integratsiya topilmadi"
+      }
+    }
+  },
+  "integrations": {
+    "fields": {
+      "apiKey": "API key",
+      "cashboxId": "Kassa ID",
+      "connectionType": "Printer ulanish turi",
+      "cutAfterPrint": "Chop etilgandan keyin kesish",
+      "encoding": "Kodirovka",
+      "endpointUrl": "Endpoint URL",
+      "merchantId": "Merchant ID",
+      "paperWidthMm": "Qog'oz kengligi",
+      "paymentQrUrl": "To'lov QR URL",
+      "paymentQrUrlHint": "Keyingi bosqichda kassir cheki uchun QR shu manbadan olinadi.",
+      "printerHost": "Printer IP manzili",
+      "printerHostHint": "LAN printer uchun IP manzil. Masalan: 192.168.123.100.",
+      "printerName": "Windows printer nomi",
+      "printerNameHint": "USB printer Windows'da ko'ringan navbat nomi. Masalan: POS-80 USB.",
+      "printerPort": "Port",
+      "printerPortHint": "Odatda 9100.",
+      "provider": "Provayder",
+      "settings": "Sozlamalar"
+    },
+    "sections": {
+      "fiscal": "Fiskal sozlamalar",
+      "payment": "To'lov sozlamalari",
+      "printer": "Printer sozlamalari"
+    },
+    "units": {
+      "millimeter": "{{value}} mm"
     }
   }
 }

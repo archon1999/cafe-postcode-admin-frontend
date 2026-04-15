@@ -60,7 +60,7 @@ export function NotificationsDrawer({ data = [], sx, ...other }: NotificationsDr
         alignItems: 'center',
       }}>
       <Typography variant="h6" sx={{ flexGrow: 1 }}>
-        {t('labels.notifications', { defaultValue: 'Notifications' })}
+        {t('labels.notifications')}
       </Typography>
 
       {!!totalUnRead && (
@@ -143,7 +143,7 @@ export function NotificationsDrawer({ data = [], sx, ...other }: NotificationsDr
 
         <Box sx={{ p: 1 }}>
           <Button fullWidth size="large">
-            {t('actions.viewAll', { defaultValue: 'View all' })}
+            {t('actions.viewAll')}
           </Button>
         </Box>
       </Drawer>

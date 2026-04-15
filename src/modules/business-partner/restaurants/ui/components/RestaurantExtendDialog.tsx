@@ -19,9 +19,8 @@ export function RestaurantExtendDialog({ open, onClose, onSuccess }: RestaurantE
     <ConfirmDialog
       open={Boolean(open)}
       onClose={onClose}
-      title={t('dialogs.extendRestaurant.title', { defaultValue: 'Tarif muddatini uzaytirish' })}
+      title={t('dialogs.extendRestaurant.title')}
       content={t('dialogs.extendRestaurant.description', {
-        defaultValue: '"{{name}}" restoranining amal qilish muddatini uzaytirmoqchimisiz?',
         name: open?.name ?? '',
       })}
       action={
@@ -34,7 +33,7 @@ export function RestaurantExtendDialog({ open, onClose, onSuccess }: RestaurantE
             await extendMutation.mutateAsync(open.id);
             onSuccess?.();
           }}>
-          {t('actions.extend', { defaultValue: 'Muddatini uzaytirish' })}
+          {t('actions.extend')}
         </Button>
       }
     />

@@ -23,7 +23,7 @@ const RolesListPage = () => {
             variant="contained"
             color="black"
             startIcon={<Iconify icon="mingcute:add-line" />}>
-            {t('actions.roleCreate', { defaultValue: 'Yangi rol' })}
+            {t('actions.roleCreate')}
           </Button>
         }
       />

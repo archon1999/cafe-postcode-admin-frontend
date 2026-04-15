@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import type { AdminMxikLookupResult } from 'shared/api/admin-types';
+import type { AdminMxikDetails, AdminMxikLookupResult, AdminMxikPackage } from 'shared/api/admin-types';
 
 type MxikSearchParams = {
   query: string;
@@ -24,6 +24,10 @@ function normalizePictureLang(lang?: string) {
   return lang === 'ru' ? 'ru' : 'uz_cyrl';
 }
 
+function normalizeDetailLang(lang?: string) {
+  return lang === 'ru' ? 'ru' : 'uz_latn';
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -34,6 +38,25 @@ function asString(value: unknown) {
   }
 
   return '';
+}
+
+function asNumber(value: unknown): number | null {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return value;
+  }
+
+  if (typeof value === 'string') {
+    const normalized = value.trim();
+
+    if (!normalized) {
+      return null;
+    }
+
+    const parsed = Number(normalized);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+
+  return null;
 }
 
 function extractItems(payload: unknown): Record<string, unknown>[] {
@@ -103,6 +126,84 @@ export async function searchMxik(params: MxikSearchParams): Promise<AdminMxikLoo
   return extractItems(response.data)
     .map(normalizeItem)
     .filter((item) => Boolean(item.code));
+}
+
+function normalizePackage(payload: Record<string, unknown>): AdminMxikPackage {
+  const code = asString(payload.code);
+  const preferredName =
+    asString(payload.nameLat) ||
+    asString(payload.name) ||
+    asString(payload.nameUz) ||
+    asString(payload.nameRu) ||
+    asString(payload.unitName);
+
+  return {
+    code,
+    name: preferredName,
+    unitName: asString(payload.unitName),
+    containerName: asString(payload.containerName),
+    parentCode: asString(payload.parentCode),
+    isUnitPackage: asString(payload.isUnitPackage),
+    raw: payload,
+  };
+}
+
+function extractPackages(payload: unknown): AdminMxikPackage[] {
+  if (!Array.isArray(payload)) {
+    return [];
+  }
+
+  return payload
+    .filter(isRecord)
+    .map(normalizePackage)
+    .filter((item) => Boolean(item.code));
+}
+
+function pickPrimaryPackage(packages: AdminMxikPackage[]) {
+  return (
+    packages.find((item) => item.isUnitPackage === '1') ??
+    packages.find((item) => !item.parentCode) ??
+    packages[0] ??
+    null
+  );
+}
+
+function normalizeDetails(payload: Record<string, unknown>): AdminMxikDetails {
+  const packages = extractPackages(payload.packages);
+
+  return {
+    code: asString(payload.mxikCode) || asString(payload.code),
+    name: asString(payload.mxikName) || asString(payload.name) || asString(payload.shortName),
+    shortName: asString(payload.shortName),
+    unitName: asString(payload.unitName),
+    commonUnitName: asString(payload.commonUnitName),
+    useCard: asNumber(payload.useCard) ?? asNumber(payload.cashSale),
+    labelStatus: asNumber(payload.label),
+    primaryPackage: pickPrimaryPackage(packages),
+    packages,
+    raw: payload,
+  };
+}
+
+export async function getMxikDetails(code: string, lang?: string): Promise<AdminMxikDetails | null> {
+  const normalizedCode = code.trim();
+
+  if (!normalizedCode) {
+    return null;
+  }
+
+  const response = await mxikHttp.get('mxik/get/by-mxik', {
+    params: {
+      mxikCode: normalizedCode,
+      lang: normalizeDetailLang(lang),
+    },
+  });
+
+  if (!isRecord(response.data)) {
+    return null;
+  }
+
+  return normalizeDetails(response.data);
 }
 
 function extractPictureNames(payload: unknown): string[] {

@@ -1,207 +1,208 @@
 {
-    "pages":  {
-                  "list":  {
-                               "title":  "Foydalanuvchilar",
-                               "description":  "Tizimga login va parol bilan kiradigan foydalanuvchilarni boshqaring."
-                           },
-                  "employeeList":  {
-                                       "title":  "Xodimlar",
-                                       "description":  "Restoran xodimlarini PIN va rol bo\u0027yicha boshqaring."
-                                   },
-                  "roles":  {
-                                "title":  "Rollar"
-                            },
-                  "roleCreate":  {
-                                     "title":  "Yangi rol"
-                                 },
-                  "roleEdit":  {
-                                   "title":  "Rolni tahrirlash"
-                               },
-                  "permissions":  {
-                                      "title":  "Ruxsatlar"
-                                  },
-                  "create":  {
-                                 "title":  "Yangi foydalanuvchi",
-                                 "description":  "Yangi foydalanuvchini login va asosiy ma\u0027lumotlari bilan yarating."
-                             },
-                  "edit":  {
-                               "title":  "Foydalanuvchini tahrirlash",
-                               "description":  "Foydalanuvchining holati va ma\u0027lumotlarini yangilang."
-                           },
-                  "view":  {
-                               "title":  "Foydalanuvchi tavsilotlari"
-                           },
-                  "employeeCreate":  {
-                                         "title":  "Yangi xodim",
-                                         "description":  "Restoran xodimini PIN va rol bilan yarating."
-                                     },
-                  "employeeEdit":  {
-                                       "title":  "Xodimni tahrirlash",
-                                       "description":  "Xodimning holati va ma\u0027lumotlarini yangilang."
-                                   },
-                  "employeeView":  {
-                                       "title":  "Xodim tavsilotlari"
-                                   }
-              },
-    "fields":  {
-                   "username":  "Login",
-                   "fullName":  "To\u0027liq ism",
-                   "permission":  "Ruxsat",
-                   "phone":  "Telefon",
-                   "phonePlaceholder":  "+998 90 123 45 67",
-                   "role":  "Rol",
-                   "status":  "Holat",
-                   "statusToggle":  "Faol",
-                   "code":  "Texnik kod",
-                   "name":  "Nomi",
-                   "type":  "Turi",
-                   "scope":  "Bo\u0027lim",
-                   "action":  "Amal",
-                   "description":  "Tavsif",
-                   "permissionsCount":  "Ruxsatlar soni",
-                   "hallSwitchPermission":  "Zal almashtirish ruxsati",
-                   "primaryHall":  "Asosiy zal",
-                   "primaryHallHint":  "Ixtiyoriy. Xodim uchun asosiy zalni tanlang.",
-                   "password":  "Parol",
-                   "passwordCreateHint":  "Ixtiyoriy. Kiritilsa, foydalanuvchi uchun parol o\u0027rnatiladi.",
-                   "passwordEditHint":  "Bo\u0027sh qoldirilsa, joriy parol o\u0027zgarmaydi.",
-                   "pin":  "PIN-kod",
-                   "pinHint":  "POS xodimi uchun 4 xonali PIN-kod.",
-                   "permissions":  "Ruxsatlar",
-                   "allowedHalls":  "Ruxsat etilgan zallar",
-                   "allowedHallsHint":  "Kerak bo\u0027lsa xodimga bir nechta zal biriktiring.",
-                   "passportSeries":  "Pasport seriyasi",
-                   "pnfl":  "PNFL",
-                   "birthDate":  "Tug\u0027ilgan sana",
-                   "birthDateHint":  "Ixtiyoriy. Xodim tug\u0027ilgan sanasini kiriting.",
-                   "employmentStatus":  "Ish holati",
-                   "salaryType":  "Maosh turi",
-                   "baseAmount":  "Asosiy summa",
-                   "kpiPercent":  "KPI foizi"
-               },
-    "status":  {
-                   "active":  "Faol",
-                   "inactive":  "Nofaol",
-                   "archived":  "Arxivlangan"
-               },
-    "salaryType":  {
-                       "hourly":  "Soatbay",
-                       "daily":  "Kunbay",
-                       "monthly":  "Oylik"
-                   },
-    "labels":  {
-                   "withoutRole":  "Rol biriktirilmagan",
-                   "notSelected":  "Tanlanmagan",
-                   "system":  "Tizimli",
-                   "custom":  "Maxsus",
-                   "morePermissions":  "Yana ruxsatlar"
-               },
-    "filters":  {
-                    "all":  "Barchasi",
-                    "search":  "Qidiruv",
-                    "searchPlaceholder":  "Login, ism yoki telefon bo\u0027yicha qidiring",
-                    "employeeSearchPlaceholder":  "Ism yoki telefon bo\u0027yicha qidiring",
-                    "searchRolesPlaceholder":  "Rol nomi, tavsif yoki ruxsat bo\u0027yicha qidiring",
-                    "searchPermissionsPlaceholder":  "Kod, nom yoki tavsif bo\u0027yicha qidiring",
-                    "clearSearch":  "Qidiruvni tozalash",
-                    "role":  "Rol",
-                    "permission":  "Ruxsat",
-                    "type":  "Turi",
-                    "scope":  "Bo\u0027lim",
-                    "action":  "Amal",
-                    "status":  "Holat",
-                    "showArchived":  "Arxivdagilarni ko\u0027rsatish"
-                },
-    "sections":  {
-                     "account":  "Kirish va asosiy ma\u0027lumotlar",
-                     "assignment":  "Zalga biriktirish",
-                     "payroll":  "Mehnat va maosh"
-                 },
-    "permissionScopes":  {
-                             "admin":  "Admin",
-                             "pos":  "POS",
-                             "dashboard":  "Dashboard"
-                         },
-    "permissionActions":  {
-                              "list":  "Ro\u0027yxatni ko\u0027rish",
-                              "view":  "Ko\u0027rish",
-                              "manage":  "Boshqarish",
-                              "create":  "Yaratish",
-                              "update":  "Yangilash",
-                              "delete":  "O\u0027chirish",
-                              "activate":  "Aktivlashtirish",
-                              "deactivate":  "Deaktivlashtirish",
-                              "resetPassword":  "Parolni yangilash",
-                              "rotateAuthCode":  "Aktivatsiya kodini yangilash",
-                              "open":  "Ochish",
-                              "close":  "Yopish",
-                              "refund":  "Qaytarish",
-                              "reprint":  "Qayta chop etish"
-                          },
-    "actions":  {
-                    "create":  "Yangi foydalanuvchi",
-                    "createEmployee":  "Yangi xodim",
-                    "edit":  "Tahrirlash",
-                    "save":  "Saqlash",
-                    "archive":  "Arxivlash",
-                    "delete":  "O\u0027chirish",
-                    "roleCreate":  "Yangi rol",
-                    "roleCreateSubmit":  "Rolni saqlash",
-                    "changePin":  "PIN-kodni o\u0027zgartirish",
-                    "savePin":  "PIN-kodni saqlash"
-                },
-    "dialogs":  {
-                    "changePin":  {
-                                      "title":  "PIN-kodni o\u0027zgartirish"
-                                  },
-                    "deleteRole":  {
-                                       "title":  "Rolni o\u0027chirish",
-                                       "description":  "\"{{name}}\" roli o\u0027chiriladi. Davom etilsinmi?"
-                                   }
-                },
-    "messages":  {
-                     "pinUpdated":  "PIN-kod muvaffaqiyatli yangilandi."
-                 },
-    "empty":  {
-                  "users":  {
-                                "noData":  {
-                                               "title":  "Foydalanuvchilar hali yo\u0027q",
-                                               "description":  "Birinchi foydalanuvchi qo\u0027shilgach, ro\u0027yxat shu yerda ko\u0027rinadi."
-                                           },
-                                "noResults":  {
-                                                  "title":  "Foydalanuvchilar topilmadi",
-                                                  "description":  "Qidiruv yoki filterni o\u0027zgartirib qayta urinib ko\u0027ring."
-                                              }
-                            },
-                  "employees":  {
-                                    "noData":  {
-                                                   "title":  "Xodimlar hali yo\u0027q",
-                                                   "description":  "Birinchi xodim qo\u0027shilgach, ro\u0027yxat shu yerda ko\u0027rinadi."
-                                               },
-                                    "noResults":  {
-                                                      "title":  "Xodimlar topilmadi",
-                                                      "description":  "Qidiruv yoki filterni o\u0027zgartirib qayta urinib ko\u0027ring."
-                                                  }
-                                },
-                  "roles":  {
-                                "noData":  {
-                                               "title":  "Rollar hali yo\u0027q",
-                                               "description":  "Rollar yaratilgandan keyin ular shu jadvalda ko\u0027rinadi."
-                                           },
-                                "noResults":  {
-                                                  "title":  "Rollar topilmadi",
-                                                  "description":  "Tanlangan filterlar bo\u0027yicha hech narsa topilmadi."
-                                              }
-                            },
-                  "permissions":  {
-                                      "noData":  {
-                                                     "title":  "Ruxsatlar hali yo\u0027q",
-                                                     "description":  "Ruxsatlar mavjud bo\u0027lganda ular shu jadvalda ko\u0027rinadi."
-                                                 },
-                                      "noResults":  {
-                                                        "title":  "Ruxsatlar topilmadi",
-                                                        "description":  "Qidiruv yoki filter natijasida mos ruxsat topilmadi."
-                                                    }
-                                  }
-              }
+  "pages": {
+    "list": {
+      "title": "Foydalanuvchilar",
+      "description": "Tizimga login va parol bilan kiradigan foydalanuvchilarni boshqaring."
+    },
+    "employeeList": {
+      "title": "Xodimlar",
+      "description": "Restoran xodimlarini PIN va rol bo'yicha boshqaring."
+    },
+    "roles": {
+      "title": "Rollar"
+    },
+    "roleCreate": {
+      "title": "Yangi rol"
+    },
+    "roleEdit": {
+      "title": "Rolni tahrirlash"
+    },
+    "permissions": {
+      "title": "Ruxsatlar"
+    },
+    "create": {
+      "title": "Yangi foydalanuvchi",
+      "description": "Yangi foydalanuvchini login va asosiy ma'lumotlari bilan yarating."
+    },
+    "edit": {
+      "title": "Foydalanuvchini tahrirlash",
+      "description": "Foydalanuvchining holati va ma'lumotlarini yangilang."
+    },
+    "view": {
+      "title": "Foydalanuvchi tavsilotlari"
+    },
+    "employeeCreate": {
+      "title": "Yangi xodim",
+      "description": "Restoran xodimini PIN va rol bilan yarating."
+    },
+    "employeeEdit": {
+      "title": "Xodimni tahrirlash",
+      "description": "Xodimning holati va ma'lumotlarini yangilang."
+    },
+    "employeeView": {
+      "title": "Xodim tavsilotlari"
+    }
+  },
+  "fields": {
+    "username": "Login",
+    "fullName": "To'liq ism",
+    "permission": "Ruxsat",
+    "phone": "Telefon",
+    "phonePlaceholder": "+998 90 123 45 67",
+    "role": "Rol",
+    "status": "Holat",
+    "statusToggle": "Faol",
+    "code": "Texnik kod",
+    "name": "Nomi",
+    "type": "Turi",
+    "scope": "Bo'lim",
+    "action": "Amal",
+    "description": "Tavsif",
+    "permissionsCount": "Ruxsatlar soni",
+    "hallSwitchPermission": "Zal almashtirish ruxsati",
+    "primaryHall": "Asosiy zal",
+    "primaryHallHint": "Ixtiyoriy. Xodim uchun asosiy zalni tanlang.",
+    "password": "Parol",
+    "passwordCreateHint": "Ixtiyoriy. Kiritilsa, foydalanuvchi uchun parol o'rnatiladi.",
+    "passwordEditHint": "Bo'sh qoldirilsa, joriy parol o'zgarmaydi.",
+    "pin": "PIN-kod",
+    "pinHint": "POS xodimi uchun 4 xonali PIN-kod.",
+    "permissions": "Ruxsatlar",
+    "allowedHalls": "Ruxsat etilgan zallar",
+    "allowedHallsHint": "Kerak bo'lsa xodimga bir nechta zal biriktiring.",
+    "passportSeries": "Pasport seriyasi",
+    "pnfl": "PNFL",
+    "birthDate": "Tug'ilgan sana",
+    "birthDateHint": "Ixtiyoriy. Xodim tug'ilgan sanasini kiriting.",
+    "employmentStatus": "Ish holati",
+    "salaryType": "Maosh turi",
+    "baseAmount": "Asosiy summa",
+    "kpiPercent": "KPI foizi"
+  },
+  "status": {
+    "active": "Faol",
+    "inactive": "Nofaol",
+    "archived": "Arxivlangan"
+  },
+  "salaryType": {
+    "hourly": "Soatbay",
+    "daily": "Kunbay",
+    "monthly": "Oylik"
+  },
+  "labels": {
+    "withoutRole": "Rol biriktirilmagan",
+    "notSelected": "Tanlanmagan",
+    "system": "Tizimli",
+    "custom": "Maxsus",
+    "morePermissions": "Yana ruxsatlar",
+    "permissionsSelectedCount": "{{count}} ta ruxsat tanlangan"
+  },
+  "filters": {
+    "all": "Barchasi",
+    "search": "Qidiruv",
+    "searchPlaceholder": "Login, ism yoki telefon bo'yicha qidiring",
+    "employeeSearchPlaceholder": "Ism yoki telefon bo'yicha qidiring",
+    "searchRolesPlaceholder": "Rol nomi, tavsif yoki ruxsat bo'yicha qidiring",
+    "searchPermissionsPlaceholder": "Kod, nom yoki tavsif bo'yicha qidiring",
+    "clearSearch": "Qidiruvni tozalash",
+    "role": "Rol",
+    "permission": "Ruxsat",
+    "type": "Turi",
+    "scope": "Bo'lim",
+    "action": "Amal",
+    "status": "Holat",
+    "showArchived": "Arxivdagilarni ko'rsatish"
+  },
+  "sections": {
+    "account": "Kirish va asosiy ma'lumotlar",
+    "assignment": "Zalga biriktirish",
+    "payroll": "Mehnat va maosh"
+  },
+  "permissionScopes": {
+    "admin": "Admin",
+    "pos": "POS",
+    "dashboard": "Dashboard"
+  },
+  "permissionActions": {
+    "list": "Ro'yxatni ko'rish",
+    "view": "Ko'rish",
+    "manage": "Boshqarish",
+    "create": "Yaratish",
+    "update": "Yangilash",
+    "delete": "O'chirish",
+    "activate": "Aktivlashtirish",
+    "deactivate": "Deaktivlashtirish",
+    "resetPassword": "Parolni yangilash",
+    "rotateAuthCode": "Aktivatsiya kodini yangilash",
+    "open": "Ochish",
+    "close": "Yopish",
+    "refund": "Qaytarish",
+    "reprint": "Qayta chop etish"
+  },
+  "actions": {
+    "create": "Yangi foydalanuvchi",
+    "createEmployee": "Yangi xodim",
+    "edit": "Tahrirlash",
+    "save": "Saqlash",
+    "archive": "Arxivlash",
+    "delete": "O'chirish",
+    "roleCreate": "Yangi rol",
+    "roleCreateSubmit": "Rolni saqlash",
+    "changePin": "PIN-kodni o'zgartirish",
+    "savePin": "PIN-kodni saqlash"
+  },
+  "dialogs": {
+    "changePin": {
+      "title": "PIN-kodni o'zgartirish"
+    },
+    "deleteRole": {
+      "title": "Rolni o'chirish",
+      "description": "\"{{name}}\" roli o'chiriladi. Davom etilsinmi?"
+    }
+  },
+  "messages": {
+    "pinUpdated": "PIN-kod muvaffaqiyatli yangilandi."
+  },
+  "empty": {
+    "users": {
+      "noData": {
+        "title": "Foydalanuvchilar hali yo'q",
+        "description": "Birinchi foydalanuvchi qo'shilgach, ro'yxat shu yerda ko'rinadi."
+      },
+      "noResults": {
+        "title": "Foydalanuvchilar topilmadi",
+        "description": "Qidiruv yoki filterni o'zgartirib qayta urinib ko'ring."
+      }
+    },
+    "employees": {
+      "noData": {
+        "title": "Xodimlar hali yo'q",
+        "description": "Birinchi xodim qo'shilgach, ro'yxat shu yerda ko'rinadi."
+      },
+      "noResults": {
+        "title": "Xodimlar topilmadi",
+        "description": "Qidiruv yoki filterni o'zgartirib qayta urinib ko'ring."
+      }
+    },
+    "roles": {
+      "noData": {
+        "title": "Rollar hali yo'q",
+        "description": "Rollar yaratilgandan keyin ular shu jadvalda ko'rinadi."
+      },
+      "noResults": {
+        "title": "Rollar topilmadi",
+        "description": "Tanlangan filterlar bo'yicha hech narsa topilmadi."
+      }
+    },
+    "permissions": {
+      "noData": {
+        "title": "Ruxsatlar hali yo'q",
+        "description": "Ruxsatlar mavjud bo'lganda ular shu jadvalda ko'rinadi."
+      },
+      "noResults": {
+        "title": "Ruxsatlar topilmadi",
+        "description": "Qidiruv yoki filter natijasida mos ruxsat topilmadi."
+      }
+    }
+  }
 }

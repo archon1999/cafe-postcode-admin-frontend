@@ -47,8 +47,7 @@ export const TariffFormFields = ({
         label={t('fields.permissions')}
         enabled={canManagePlatform}
         helperText={t('labels.permissionsAutoSelected', {
-          count: derivedPermissionCount,
-          defaultValue: `${derivedPermissionCount} ta ruxsat tanlangan rollardan avtomatik belgilandi, xohlasangiz qo'lda o'zgartiring`,
+          count: derivedPermissionCount
         })}
       />
     </Box>

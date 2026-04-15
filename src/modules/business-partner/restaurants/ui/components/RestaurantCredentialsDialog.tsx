@@ -20,25 +20,23 @@ export function RestaurantCredentialsDialog({ open, onClose }: RestaurantCredent
   const fields = [
     ...(open?.credentials
       ? [
-          { label: t('fields.username', { defaultValue: 'Username' }), value: open.credentials.username },
-          { label: t('fields.password', { defaultValue: 'Password' }), value: open.credentials.password },
+          { label: t('fields.username'), value: open.credentials.username },
+          { label: t('fields.password'), value: open.credentials.password },
         ]
       : []),
     ...(open?.authCode
-      ? [{ label: t('fields.authCode', { defaultValue: 'Activation code' }), value: open.authCode }]
+      ? [{ label: t('fields.authCode'), value: open.authCode }]
       : []),
   ];
   const title =
     open?.mode === 'auth_code'
-      ? t('dialogs.restaurantAuthCode.title', { defaultValue: 'Restaurant activation code' })
+      ? t('dialogs.restaurantAuthCode.title')
       : t('dialogs.restaurantCredentials.title');
   const description =
     open?.mode === 'reset'
       ? t('dialogs.restaurantCredentials.resetDescription')
       : open?.mode === 'auth_code'
-        ? t('dialogs.restaurantAuthCode.description', {
-            defaultValue: 'Aktivatsiya kodi faqat ishonchli xodimlar bilan ulashilishi kerak.',
-          })
+        ? t('dialogs.restaurantAuthCode.description')
         : t('dialogs.restaurantCredentials.description');
 
   return (

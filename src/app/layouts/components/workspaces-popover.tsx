@@ -151,7 +151,7 @@ export function WorkspacesPopover({ data = [], sx, ...other }: WorkspacesPopover
             justifyContent: 'center',
           },
         }}>
-        {t('workspace.create', { defaultValue: 'Create workspace' })}
+        {t('workspace.create')}
       </Button>
     </CustomPopover>
   );

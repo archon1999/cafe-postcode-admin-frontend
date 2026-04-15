@@ -133,14 +133,14 @@ export const ProductsGrid = () => {
           <CustomGridActionsCellItem
             actionKind="edit"
             key="edit"
-            label={t('actions.edit', { defaultValue: 'Tahrirlash' })}
+            label={t('actions.edit')}
             icon={<Iconify icon="solar:pen-bold" />}
             href={RouterPathHelper.catalogItemEdit(params.row.id)}
           />,
           <CustomGridActionsCellItem
             actionKind="delete"
             key="delete"
-            label={t('actions.delete', { defaultValue: "O'chirish" })}
+            label={t('actions.delete')}
             icon={<Iconify icon="solar:trash-bin-trash-bold" />}
             onClick={() => setItemToDelete(params.row)}
           />,
@@ -223,9 +223,8 @@ export const ProductsGrid = () => {
       <ConfirmDialog
         open={Boolean(itemToDelete)}
         onClose={() => setItemToDelete(null)}
-        title={t('dialogs.deleteItem.title', { defaultValue: "Mahsulotni o'chirish" })}
+        title={t('dialogs.deleteItem.title')}
         content={t('dialogs.deleteItem.description', {
-          defaultValue: `"{{name}}" mahsuloti o'chiriladi. Davom etilsinmi?`,
           name: itemToDelete?.name ?? '',
         })}
         action={
@@ -238,7 +237,7 @@ export const ProductsGrid = () => {
               await deleteItemMutation.mutateAsync(itemToDelete.id);
               setItemToDelete(null);
             }}>
-            {t('actions.delete', { defaultValue: "O'chirish" })}
+            {t('actions.delete')}
           </Button>
         }
       />

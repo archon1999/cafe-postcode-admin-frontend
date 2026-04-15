@@ -71,7 +71,7 @@ export function RestaurantsGrid() {
       { field: 'phone', headerName: t('fields.phone'), minWidth: 160, flex: 0.7 },
       {
         field: 'tariff',
-        headerName: t('fields.tariff', { defaultValue: 'Tarif' }),
+        headerName: t('fields.tariff'),
         minWidth: 180,
         flex: 0.8,
         sortable: false,
@@ -81,7 +81,7 @@ export function RestaurantsGrid() {
           }
 
           if (row.activationType === 'custom') {
-            return tPlatform('labels.customActivation', { defaultValue: 'Maxsus tarif' });
+            return tPlatform('labels.customActivation');
           }
 
           return null;
@@ -89,29 +89,29 @@ export function RestaurantsGrid() {
       },
       {
         field: 'billingPeriod',
-        headerName: tPlatform('fields.billingPeriod', { defaultValue: 'Tarif muddati' }),
+        headerName: tPlatform('fields.billingPeriod'),
         minWidth: 150,
         flex: 0.65,
         valueGetter: (_value, row) => {
           if (row.billingPeriod === 'monthly') {
-            return tPlatform('labels.monthly', { defaultValue: 'Oylik' });
+            return tPlatform('labels.monthly');
           }
           if (row.billingPeriod === 'yearly') {
-            return tPlatform('labels.yearly', { defaultValue: 'Yillik' });
+            return tPlatform('labels.yearly');
           }
           return null;
         },
       },
       {
         field: 'activatedAt',
-        headerName: tPlatform('fields.activatedAt', { defaultValue: 'Aktivlashtirilgan sana' }),
+        headerName: tPlatform('fields.activatedAt'),
         minWidth: 180,
         flex: 0.8,
         renderCell: ({ row }) => (row.activatedAt ? formatDateTime(row.activatedAt, 'DD.MM.YYYY HH:mm') : '-'),
       },
       {
         field: 'expiresOn',
-        headerName: tPlatform('fields.expiresOn', { defaultValue: 'Amal qilish muddati' }),
+        headerName: tPlatform('fields.expiresOn'),
         minWidth: 160,
         flex: 0.7,
         renderCell: ({ row }) => (row.expiresOn ? formatDate(row.expiresOn, 'DD.MM.YYYY') : '-'),
@@ -163,7 +163,7 @@ export function RestaurantsGrid() {
             <CustomGridActionsCellItem
               actionKind="view"
               key="rotate-auth-code"
-              label={tPlatform('actions.rotateAuthCode', { defaultValue: 'Aktivatsiya kodini yangilash' })}
+              label={tPlatform('actions.rotateAuthCode')}
               icon={<Iconify icon="solar:refresh-bold" />}
               showInMenu
               disabled={!params.row.isActive}
@@ -180,7 +180,7 @@ export function RestaurantsGrid() {
               <CustomGridActionsCellItem
                 actionKind="view"
                 key="extend"
-                label={tPlatform('actions.extend', { defaultValue: 'Muddatini uzaytirish' })}
+                label={tPlatform('actions.extend')}
                 icon={<Iconify icon="solar:calendar-add-bold" />}
                 showInMenu
                 onClick={() => setRowToExtend(params.row)}

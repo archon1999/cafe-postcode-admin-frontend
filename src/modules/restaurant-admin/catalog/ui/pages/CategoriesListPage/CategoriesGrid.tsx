@@ -91,14 +91,14 @@ export function CategoriesGrid() {
           <CustomGridActionsCellItem
             actionKind="edit"
             key="edit"
-            label={t('actions.edit', { defaultValue: 'Tahrirlash' })}
+            label={t('actions.edit')}
             icon={<Iconify icon="solar:pen-bold" />}
             href={RouterPathHelper.catalogCategoryEdit(params.row.id)}
           />,
           <CustomGridActionsCellItem
             actionKind="delete"
             key="delete"
-            label={t('actions.delete', { defaultValue: "O'chirish" })}
+            label={t('actions.delete')}
             icon={<Iconify icon="solar:trash-bin-trash-bold" />}
             onClick={() => setCategoryToDelete(params.row)}
           />,
@@ -180,9 +180,8 @@ export function CategoriesGrid() {
       <ConfirmDialog
         open={Boolean(categoryToDelete)}
         onClose={() => setCategoryToDelete(null)}
-        title={t('dialogs.deleteCategory.title', { defaultValue: "Kategoriyani o'chirish" })}
+        title={t('dialogs.deleteCategory.title')}
         content={t('dialogs.deleteCategory.description', {
-          defaultValue: `"{{name}}" kategoriyasi o'chiriladi. Davom etilsinmi?`,
           name: categoryToDelete?.name ?? '',
         })}
         action={
@@ -195,7 +194,7 @@ export function CategoriesGrid() {
               await deleteCategoryMutation.mutateAsync(categoryToDelete.id);
               setCategoryToDelete(null);
             }}>
-            {t('actions.delete', { defaultValue: "O'chirish" })}
+            {t('actions.delete')}
           </Button>
         }
       />

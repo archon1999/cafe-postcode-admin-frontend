@@ -26,7 +26,7 @@ export function AdminScopeSelector() {
     <TextField
       select
       size="small"
-      label={t('scope.restaurant', { defaultValue: 'Restoran' })}
+      label={t('scope.restaurant')}
       value={selectedRestaurantId ?? ''}
       onChange={(event) => {
         const nextRestaurantId = event.target.value || null;
@@ -42,7 +42,7 @@ export function AdminScopeSelector() {
           endAdornment: isLoading ? <CircularProgress size={16} sx={{ mr: 1 }} /> : null,
         },
       }}>
-      <MenuItem value="">{t('scope.allRestaurants', { defaultValue: 'Barcha restoranlar' })}</MenuItem>
+      <MenuItem value="">{t('scope.allRestaurants')}</MenuItem>
       {(restaurantsQuery.data ?? []).map((restaurant) => (
         <MenuItem key={restaurant.id} value={restaurant.id}>
           {restaurant.name}

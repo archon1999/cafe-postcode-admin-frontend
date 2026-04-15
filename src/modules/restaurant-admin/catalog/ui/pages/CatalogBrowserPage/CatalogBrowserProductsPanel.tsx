@@ -55,7 +55,7 @@ export function CatalogBrowserProductsPanel({
             startIcon={<Iconify icon="mingcute:add-line" />}
             disabled={isCreateProductDisabled || !selectedCategory}
             onClick={onCreateProduct}>
-            {t('actions.createItem', { defaultValue: 'Yangi mahsulot' })}
+            {t('actions.createItem')}
           </Button>
         </Stack>
       </Box>
@@ -64,10 +64,8 @@ export function CatalogBrowserProductsPanel({
         {!selectedCategoryId ? (
           <EmptyContent
             filled
-            title={t('empty.browser.noCategoryTitle', { defaultValue: 'Kategoriya tanlanmagan' })}
-            description={t('empty.browser.noCategoryDescription', {
-              defaultValue: "Mahsulotlarni ko'rish uchun chap tomondan kategoriya tanlang.",
-            })}
+            title={t('empty.browser.noCategoryTitle')}
+            description={t('empty.browser.noCategoryDescription')}
           />
         ) : isLoading ? (
           <Box
@@ -113,7 +111,7 @@ export function CatalogBrowserProductsPanel({
                   disabled={isCreateProductDisabled}
                   onClick={onCreateProduct}
                   sx={{ mt: 3 }}>
-                  {t('actions.createItem', { defaultValue: 'Yangi mahsulot' })}
+                  {t('actions.createItem')}
                 </Button>
               ) : null
             }

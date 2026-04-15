@@ -1,11 +1,23 @@
 {
   "pages": {
-    "businessPartners": { "title": "Бизнес-партнеры" },
-    "businessPartnerCreate": { "title": "Новый бизнес-партнер" },
-    "businessPartnerEdit": { "title": "Редактирование бизнес-партнера" },
-    "tariffs": { "title": "Тарифы" },
-    "tariffCreate": { "title": "Новый тариф" },
-    "tariffEdit": { "title": "Редактирование тарифа" }
+    "businessPartners": {
+      "title": "Бизнес-партнеры"
+    },
+    "businessPartnerCreate": {
+      "title": "Новый бизнес-партнер"
+    },
+    "businessPartnerEdit": {
+      "title": "Редактирование бизнес-партнера"
+    },
+    "tariffs": {
+      "title": "Тарифы"
+    },
+    "tariffCreate": {
+      "title": "Новый тариф"
+    },
+    "tariffEdit": {
+      "title": "Редактирование тарифа"
+    }
   },
   "fields": {
     "inn": "ИНН",
@@ -29,7 +41,10 @@
     "startsOn": "Дата начала",
     "username": "Username",
     "password": "Password",
-    "authCode": "Код активации"
+    "authCode": "Код активации",
+    "activatedAt": "Дата активации",
+    "billingPeriod": "Срок тарифа",
+    "expiresOn": "Срок действия"
   },
   "filters": {
     "search": "Поиск",
@@ -44,7 +59,9 @@
     "existingTariff": "Готовый тариф",
     "customActivation": "Кастомный тариф",
     "selectedRolesCount": "Выбрано ролей: {{count}}",
-    "selectedPermissionsCount": "Выбрано разрешений: {{count}}"
+    "selectedPermissionsCount": "Выбрано разрешений: {{count}}",
+    "monthly": "Ежемесячный",
+    "yearly": "Ежегодный"
   },
   "classifications": {
     "basic": "Базовый",
@@ -65,7 +82,8 @@
     "cancel": "Отмена",
     "close": "Закрыть",
     "showAuthCode": "Показать код",
-    "hideAuthCode": "Скрыть код"
+    "hideAuthCode": "Скрыть код",
+    "extend": "Продлить"
   },
   "dialogs": {
     "deactivatePartner": {
@@ -93,6 +111,10 @@
     "activateRestaurant": {
       "title": "Активация ресторана",
       "customDescription": "В режиме кастомного тарифа вы вручную выбираете роли и разрешения и активируете ресторан с этой конфигурацией."
+    },
+    "extendRestaurant": {
+      "description": "Продлить срок действия ресторана \"{{name}}\"?",
+      "title": "Продление срока тарифа"
     }
   },
   "validation": {

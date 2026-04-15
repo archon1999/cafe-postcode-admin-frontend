@@ -5,19 +5,23 @@ import Card from '@mui/material/Card';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { useTranslate } from 'app/providers/locales';
-import type { CatalogItem } from 'shared/api/admin-types';
+import type { AdminMxikDetails, AdminMxikPackage, CatalogItem } from 'shared/api/admin-types';
 import { FormActions } from 'shared/ui/FormActions';
 import { Form, RHFSelect, RHFSumCurrencyField, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
+import { LabelRow } from 'shared/ui/LabelRow/LabelRow';
 
 import {
   useCreateCatalogItemMutation,
+  useGetMxikDetailsQuery,
   useGetCatalogCategoriesQuery,
   useGetPrepStationsQuery,
   useUpdateCatalogItemMutation,
@@ -70,6 +74,52 @@ const defaultValues: ItemFormValues = {
   isStoplisted: false,
 };
 
+function getMxikDetailLang(lang: string) {
+  return lang === 'ru' ? 'ru' : 'uz_latn';
+}
+
+function formatMxikFlag(value: number | null | undefined, yesLabel: string, noLabel: string) {
+  if (value === null || value === undefined) {
+    return '';
+  }
+
+  if (value === 1) {
+    return `${yesLabel} (${value})`;
+  }
+
+  if (value === 0) {
+    return `${noLabel} (${value})`;
+  }
+
+  return String(value);
+}
+
+function formatPackageValue(pkg: AdminMxikPackage | null | undefined) {
+  if (!pkg) {
+    return '';
+  }
+
+  return [pkg.code, pkg.name || pkg.unitName || pkg.containerName].filter(Boolean).join(' - ');
+}
+
+function getLabelStatus(details: AdminMxikDetails | null | undefined, fallbackRaw?: Record<string, unknown>) {
+  if (details?.labelStatus !== null && details?.labelStatus !== undefined) {
+    return details.labelStatus;
+  }
+
+  const rawValue = fallbackRaw?.label;
+  return typeof rawValue === 'number' ? rawValue : null;
+}
+
+function getUseCardStatus(details: AdminMxikDetails | null | undefined, fallbackRaw?: Record<string, unknown>) {
+  if (details?.useCard !== null && details?.useCard !== undefined) {
+    return details.useCard;
+  }
+
+  const rawValue = fallbackRaw?.useCard ?? fallbackRaw?.cashSale;
+  return typeof rawValue === 'number' ? rawValue : null;
+}
+
 function CatalogItemFormInner({
   item,
   defaultCategoryId,
@@ -77,7 +127,7 @@ function CatalogItemFormInner({
   onSuccess,
   isDialog,
 }: CatalogItemFormProps & { isDialog: boolean }) {
-  const { t } = useTranslate('catalog');
+  const { t, currentLang } = useTranslate('catalog');
   const { t: tCommon } = useTranslate('common');
   const isEditMode = Boolean(item?.id);
 
@@ -91,8 +141,17 @@ function CatalogItemFormInner({
     defaultValues,
   });
 
-  const { handleSubmit, reset, formState } = methods;
+  const { handleSubmit, reset, formState, watch, setValue } = methods;
+  const selectedMxik = watch('mxik');
+  const mxikDetailsQuery = useGetMxikDetailsQuery(
+    { code: selectedMxik?.code, lang: getMxikDetailLang(currentLang.value) },
+    { enabled: Boolean(selectedMxik?.code) },
+  );
   const isSubmitting = formState.isSubmitting || createMutation.isPending || updateMutation.isPending;
+  const mxikNameValue = mxikDetailsQuery.data?.name || selectedMxik?.name || '';
+  const primaryPackage = mxikDetailsQuery.data?.primaryPackage ?? null;
+  const useCardStatus = getUseCardStatus(mxikDetailsQuery.data, selectedMxik?.raw);
+  const labelStatus = getLabelStatus(mxikDetailsQuery.data, selectedMxik?.raw);
 
   useEffect(() => {
     reset({
@@ -127,9 +186,7 @@ function CatalogItemFormInner({
     onSuccess?.(savedItem);
   });
 
-  const title = isEditMode
-    ? t('pages.itemEdit.title', { defaultValue: 'Mahsulotni tahrirlash' })
-    : t('pages.itemCreate.title', { defaultValue: 'Yangi mahsulot' });
+  const title = isEditMode ? t('pages.itemEdit.title') : t('pages.itemCreate.title');
 
   const fields = (
     <Stack spacing={3} sx={isDialog ? { pt: 1 } : undefined}>
@@ -167,7 +224,59 @@ function CatalogItemFormInner({
           label={t('fields.mxikCode')}
           helperText={t('labels.mxikOptional')}
           placeholder={t('actions.searchMxik')}
+          onPicked={(picked) => {
+            if (!picked?.name) {
+              return;
+            }
+
+            setValue('name', picked.name, { shouldDirty: true, shouldValidate: true });
+          }}
         />
+        {selectedMxik?.code ? (
+          <Box
+            sx={{
+              gridColumn: { xs: 'auto', md: '1 / -1' },
+              border: '1px solid',
+              borderColor: 'divider',
+              borderRadius: 1,
+              bgcolor: 'background.neutral',
+              p: 2,
+            }}>
+            <Stack spacing={1.25} divider={<Divider flexItem />}>
+              <Typography variant="subtitle2">
+                {t('labels.mxikDetails')}
+              </Typography>
+              <LabelRow
+                label={t('fields.mxikProductName')}
+                value={mxikDetailsQuery.isLoading && !mxikNameValue ? tCommon('labels.loading') : mxikNameValue}
+              />
+              <LabelRow
+                label={t('fields.packageCodeWithField')}
+                value={
+                  mxikDetailsQuery.isLoading && !primaryPackage
+                    ? tCommon('labels.loading')
+                    : formatPackageValue(primaryPackage)
+                }
+              />
+              <LabelRow
+                label={t('fields.useCardStatus')}
+                value={
+                  mxikDetailsQuery.isLoading && useCardStatus === null
+                    ? tCommon('labels.loading')
+                    : formatMxikFlag(useCardStatus, tCommon('labels.yes'), tCommon('labels.no'))
+                }
+              />
+              <LabelRow
+                label={t('fields.labelStatusWithField')}
+                value={
+                  mxikDetailsQuery.isLoading && labelStatus === null
+                    ? tCommon('labels.loading')
+                    : formatMxikFlag(labelStatus, tCommon('labels.yes'), tCommon('labels.no'))
+                }
+              />
+            </Stack>
+          </Box>
+        ) : null}
         <RHFSumCurrencyField<ItemFormValues> name="price" label={t('fields.price')} />
         <RHFTextField<ItemFormValues>
           name="description"
@@ -195,9 +304,7 @@ function CatalogItemFormInner({
             {tCommon('actions.cancel')}
           </Button>
           <Button type="submit" variant="contained" color="black" loading={isSubmitting}>
-            {isEditMode
-              ? t('actions.save', { defaultValue: 'Saqlash' })
-              : t('actions.create', { defaultValue: 'Yaratish' })}
+            {isEditMode ? t('actions.save') : t('actions.create')}
           </Button>
         </DialogActions>
       </Form>
@@ -210,11 +317,7 @@ function CatalogItemFormInner({
         {fields}
         <FormActions
           isSubmitting={isSubmitting}
-          submitLabel={
-            isEditMode
-              ? t('actions.save', { defaultValue: 'Saqlash' })
-              : t('actions.create', { defaultValue: 'Yaratish' })
-          }
+          submitLabel={isEditMode ? t('actions.save') : t('actions.create')}
           onCancel={onCancel}
         />
       </Form>

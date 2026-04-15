@@ -70,7 +70,7 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
   ].filter(Boolean) as NavSectionProps['data'][number]['items'];
 
   pushSection(
-    isSuperuser ? t('productOwnerSection', { defaultValue: 'Mahsulot egasi' }) : undefined,
+    isSuperuser ? t('productOwnerSection') : undefined,
     productOwnerItems,
   );
 
@@ -85,7 +85,7 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
   ].filter(Boolean) as NavSectionProps['data'][number]['items'];
 
   pushSection(
-    isSuperuser ? t('businessPartnerSection', { defaultValue: 'Biznes hamkor' }) : undefined,
+    isSuperuser ? t('businessPartnerSection') : undefined,
     businessPartnerItems,
   );
 
@@ -126,7 +126,7 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
   const catalogChildren = [
     canAccess(RoutePath.catalogBrowser)
       ? {
-          title: t('browser', { defaultValue: 'Katalog' }),
+          title: t('browser'),
           path: RoutePath.catalogBrowser,
           icon: ICONS.browser,
         }
@@ -174,7 +174,7 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
   const myRestaurantChildren = [
     canAccess(RoutePath.organizationMyRestaurantGeneral)
       ? {
-          title: t('general', { defaultValue: 'Umumiy' }),
+          title: t('general'),
           path: RoutePath.organizationMyRestaurantGeneral,
           icon: ICONS.general,
         }
@@ -202,7 +202,7 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
       : null,
     canAccess(RoutePath.organizationMyRestaurantIntegrationConfigList)
       ? {
-          title: t('integrations', { defaultValue: 'Integratsiyalar' }),
+          title: t('integrations'),
           path: RoutePath.organizationMyRestaurantIntegrationConfigList,
           icon: ICONS.integrations,
         }
@@ -226,7 +226,7 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
       : null,
     myRestaurantChildren.length
       ? {
-          title: t('restaurantManagement', { defaultValue: 'Restoran boshqaruvi' }),
+          title: t('restaurantManagement'),
           path: RoutePath.organizationMyRestaurant,
           icon: ICONS.restaurantManagement,
           children: myRestaurantChildren,
@@ -267,7 +267,7 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
   ].filter(Boolean) as NavSectionProps['data'][number]['items'];
 
   pushSection(
-    isSuperuser ? t('restaurantAdminSection', { defaultValue: 'Restoran admini' }) : undefined,
+    isSuperuser ? t('restaurantAdminSection') : undefined,
     restaurantAdminItems,
   );
 
@@ -297,7 +297,7 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
 
   if (isSuperuser || canAccessAccessControl(options)) {
     pushSection(
-      isSuperuser ? t('accessControlSection', { defaultValue: 'Foydalanuvchilar va ruxsatlar' }) : undefined,
+      isSuperuser ? t('accessControlSection') : undefined,
       accessControlItems,
     );
   }

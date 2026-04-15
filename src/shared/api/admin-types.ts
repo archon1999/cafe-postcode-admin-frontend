@@ -648,6 +648,29 @@ export type AdminMxikLookupResult = {
   raw?: Record<string, unknown>;
 };
 
+export type AdminMxikPackage = {
+  code: string;
+  name: string;
+  unitName?: string;
+  containerName?: string;
+  parentCode?: string;
+  isUnitPackage?: string;
+  raw?: Record<string, unknown>;
+};
+
+export type AdminMxikDetails = {
+  code: string;
+  name: string;
+  shortName?: string;
+  unitName?: string;
+  commonUnitName?: string;
+  useCard?: number | null;
+  labelStatus?: number | null;
+  primaryPackage?: AdminMxikPackage | null;
+  packages: AdminMxikPackage[];
+  raw?: Record<string, unknown>;
+};
+
 export type CatalogItem = {
   id: string;
   category?: string | null;

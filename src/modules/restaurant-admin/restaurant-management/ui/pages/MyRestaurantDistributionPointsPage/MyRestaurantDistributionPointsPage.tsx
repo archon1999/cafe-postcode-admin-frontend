@@ -35,7 +35,7 @@ const MyRestaurantDistributionPointsPage = () => {
 
   return (
     <MyRestaurantSectionLayout
-      heading={t('pages.distributionPoints.title', { defaultValue: 'Tarqatish nuqtalari' })}
+      heading={t('pages.distributionPoints.title')}
       listPage
       action={
         <Button
@@ -48,9 +48,7 @@ const MyRestaurantDistributionPointsPage = () => {
       }>
       <RestaurantDistributionPointsSection
         layoutMode="page"
-        searchPlaceholder={t('filters.searchRestaurantDistributionPointsPlaceholder', {
-          defaultValue: "Nuqta nomi yoki kanal bo'yicha qidiring",
-        })}
+        searchPlaceholder={t('filters.searchRestaurantDistributionPointsPlaceholder')}
         createDialogOpen={createDialogOpen}
         onCreateDialogOpenChange={setCreateDialogOpen}
       />

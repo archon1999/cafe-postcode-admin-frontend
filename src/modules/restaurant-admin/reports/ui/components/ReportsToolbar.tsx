@@ -126,10 +126,10 @@ export function ReportsToolbar({
   const [displayMonth, setDisplayMonth] = useState<Date>(() => toRangePickerDate(startDate));
 
   const open = Boolean(anchorEl);
-  const dateRangeLabel = t('filters.dateRange', { defaultValue: 'Date range' });
-  const quickSelectLabel = t('dateRangePicker.quickSelect', { defaultValue: 'Quick Select' });
-  const fromLabel = t('dateRangePicker.from', { defaultValue: 'From' });
-  const toLabel = t('dateRangePicker.to', { defaultValue: 'To' });
+  const dateRangeLabel = t('filters.dateRange');
+  const quickSelectLabel = t('dateRangePicker.quickSelect');
+  const fromLabel = t('dateRangePicker.from');
+  const toLabel = t('dateRangePicker.to');
 
   const displayValue = useMemo(
     () => `${formatDisplayDate(startDate)} - ${formatDisplayDate(endDate)}`,
@@ -161,24 +161,24 @@ export function ReportsToolbar({
         value: preset,
         label:
           preset === 'today'
-            ? t('dateRangePicker.presets.today', { defaultValue: t('actions.today', { defaultValue: 'Today' }) })
+            ? t('dateRangePicker.presets.today')
             : preset === 'weekToDate'
-              ? t('dateRangePicker.presets.weekToDate', { defaultValue: 'Week to date' })
+              ? t('dateRangePicker.presets.weekToDate')
               : preset === 'quarterToDate'
-                ? t('dateRangePicker.presets.quarterToDate', { defaultValue: 'Quarter to date' })
+                ? t('dateRangePicker.presets.quarterToDate')
                 : preset === 'monthToDate'
-                  ? t('dateRangePicker.presets.monthToDate', { defaultValue: 'Month to date' })
+                  ? t('dateRangePicker.presets.monthToDate')
                   : preset === 'yearToDate'
-                    ? t('dateRangePicker.presets.yearToDate', { defaultValue: 'Year to date' })
+                    ? t('dateRangePicker.presets.yearToDate')
                     : preset === 'last7Days'
-                      ? t('dateRangePicker.presets.last7Days', { defaultValue: 'Last 7 days' })
+                      ? t('dateRangePicker.presets.last7Days')
                       : preset === 'lastWeek'
-                        ? t('dateRangePicker.presets.lastWeek', { defaultValue: 'Last week' })
+                        ? t('dateRangePicker.presets.lastWeek')
                         : preset === 'lastMonth'
-                          ? t('dateRangePicker.presets.lastMonth', { defaultValue: 'Last month' })
+                          ? t('dateRangePicker.presets.lastMonth')
                           : preset === 'lastQuarter'
-                            ? t('dateRangePicker.presets.lastQuarter', { defaultValue: 'Last quarter' })
-                            : t('dateRangePicker.presets.lastYear', { defaultValue: 'Last year' }),
+                            ? t('dateRangePicker.presets.lastQuarter')
+                            : t('dateRangePicker.presets.lastYear'),
       })),
     [t],
   );

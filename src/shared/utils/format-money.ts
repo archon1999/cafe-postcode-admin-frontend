@@ -43,7 +43,7 @@ function resolveNumber(inputValue: InputMoneyValue): number | null {
 }
 
 export function getMoneySuffix() {
-  return i18next.t('common:currency.som', { defaultValue: "so'm" });
+  return i18next.t('common:currency.som');
 }
 
 export function formatMoneyNumber(inputValue: InputMoneyValue, options: Pick<FormatMoneyOptions, 'fallback'> = {}) {

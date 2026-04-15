@@ -45,7 +45,7 @@ export function CatalogBrowserCategoriesPanel({
           <Typography variant="h6">{t('pages.categories.title')}</Typography>
 
           <Stack direction="row" spacing={0.5}>
-            <Tooltip title={t('actions.createCategory', { defaultValue: 'Yangi kategoriya' })}>
+            <Tooltip title={t('actions.createCategory')}>
               <span>
                 <IconButton onClick={onCreateCategory} disabled={isCreateCategoryDisabled}>
                   <Iconify icon="mingcute:add-line" width={20} />
@@ -53,7 +53,7 @@ export function CatalogBrowserCategoriesPanel({
               </span>
             </Tooltip>
 
-            <Tooltip title={t('actions.edit', { defaultValue: 'Tahrirlash' })}>
+            <Tooltip title={t('actions.edit')}>
               <span>
                 <IconButton onClick={onEditCategory} disabled={!canEditCategory}>
                   <Iconify icon="solar:pen-bold" width={18} />
@@ -100,7 +100,7 @@ export function CatalogBrowserCategoriesPanel({
                 disabled={isCreateCategoryDisabled}
                 onClick={onCreateCategory}
                 sx={{ mt: 3 }}>
-                {t('actions.createCategory', { defaultValue: 'Yangi kategoriya' })}
+                {t('actions.createCategory')}
               </Button>
             }
           />

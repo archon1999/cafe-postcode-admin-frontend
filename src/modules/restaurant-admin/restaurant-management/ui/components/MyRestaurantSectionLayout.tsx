@@ -19,7 +19,7 @@ export function MyRestaurantSectionLayout({
   listPage = false,
 }: MyRestaurantSectionLayoutProps) {
   const { t } = useTranslate('organizations');
-  const rootTitle = t('pages.myRestaurant.title', { defaultValue: 'Mening restoranim' });
+  const rootTitle = t('pages.myRestaurant.title');
   const Layout = listPage ? ListPageContent : Content;
   const content = listPage ? <ListPageBody>{children}</ListPageBody> : children;
 
