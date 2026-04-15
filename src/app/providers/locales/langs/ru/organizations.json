@@ -18,15 +18,6 @@
     "cashDeskEdit": {
       "title": "Редактирование кассы"
     },
-    "devices": {
-      "title": "Устройства"
-    },
-    "deviceCreate": {
-      "title": "Новое устройство"
-    },
-    "deviceEdit": {
-      "title": "Редактирование устройства"
-    },
     "distributionPoints": {
       "title": "Точки продаж"
     },
@@ -78,9 +69,9 @@
     "assignedHall": "Назначенный зал",
     "assignedHallHint": "Необязательно. При необходимости привяжите зал.",
     "primaryHall": "Основной зал",
-    "primaryHallHint": "Выберите основной зал для устройства.",
+    "primaryHallHint": "Выберите основной зал для сотрудника.",
     "allowedHalls": "Разрешенные залы",
-    "allowedHallsHint": "Список залов, в которых может работать устройство.",
+    "allowedHallsHint": "Список залов, в которых может работать сотрудник.",
     "mode": "Режим",
     "kind": "Тип",
     "status": "Статус",
@@ -116,13 +107,11 @@
     "kitchenMode": "Режим кухни",
     "searchBranchesPlaceholder": "Ищите по названию филиала, адресу или телефону",
     "searchCashDesksPlaceholder": "Ищите по названию кассы, расположению или филиалу",
-    "searchDevicesPlaceholder": "Ищите по названию устройства, филиалу или залу",
     "searchDistributionPointsPlaceholder": "Ищите по названию точки, каналу, филиалу или залу",
     "searchPrepStationsPlaceholder": "Ищите по названию станции или филиалу",
     "searchRestaurantsPlaceholder": "Ищите по названию ресторана, юр. названию или телефону",
     "searchRestaurantPrepStationsPlaceholder": "Ищите по названию станции",
     "searchRestaurantCashDesksPlaceholder": "Ищите по названию кассы или расположению",
-    "searchRestaurantDevicesPlaceholder": "Ищите по названию устройства или залу",
     "searchRestaurantDistributionPointsPlaceholder": "Ищите по названию точки или каналу"
   },
   "labels": {
@@ -139,10 +128,9 @@
     },
     "myRestaurantManagement": {
       "title": "Управление рестораном",
-      "description": "Управляйте кассами, устройствами, станциями приготовления и точками продаж ресторана в одном месте.",
+      "description": "Управляйте кассами, станциями приготовления и точками продаж ресторана в одном месте.",
       "prepStationsDescription": "Управляйте станциями приготовления ресторана.",
       "cashDesksDescription": "Управляйте кассами ресторана и их платежными настройками.",
-      "devicesDescription": "Управляйте POS-устройствами ресторана и привязкой к залам.",
       "distributionPointsDescription": "Управляйте каналами заказов и точками продаж ресторана."
     },
     "fiscalProfile": "Фискальный профиль",
@@ -159,22 +147,12 @@
       "cashDesks": {
         "description": "Управляйте кассами ресторана и их расположением."
       },
-      "devices": {
-        "description": "Управляйте POS-устройствами, режимами и привязкой к залу."
-      },
       "distributionPoints": {
         "description": "Управляйте каналами заказов и точками распределения."
       }
     },
     "openList": "Открыть список",
     "createForRestaurant": "Создать для этого ресторана"
-  },
-  "deviceModes": {
-    "admin": "Админ",
-    "waiter": "Официант",
-    "cashier": "Кассир",
-    "kitchen_display": "Экран кухни",
-    "owner_dashboard": "Панель руководителя"
   },
   "distributionPointKinds": {
     "hall": "Зал",
@@ -232,7 +210,6 @@
     "delete": "Удалить",
     "createBranch": "Новый филиал",
     "createCashDesk": "Новая касса",
-    "createDevice": "Новое устройство",
     "createDistributionPoint": "Новая точка",
     "createPrepStation": "Новая станция",
     "createRestaurant": "Новый ресторан",
@@ -246,10 +223,6 @@
     "deleteCashDesk": {
       "title": "Удалить кассу",
       "description": "Удалить кассу \"{{name}}\"?"
-    },
-    "deleteDevice": {
-      "title": "Удалить устройство",
-      "description": "Удалить устройство \"{{name}}\"?"
     },
     "deleteDistributionPoint": {
       "title": "Удалить точку",
@@ -283,16 +256,6 @@
       "noResults": {
         "title": "Касса не найдена",
         "description": "По выбранным фильтрам подходящая касса не найдена."
-      }
-    },
-    "devices": {
-      "noData": {
-        "title": "Устройств пока нет",
-        "description": "После добавления устройств они появятся в этой таблице."
-      },
-      "noResults": {
-        "title": "Устройство не найдено",
-        "description": "По выбранным фильтрам подходящее устройство не найдено."
       }
     },
     "distributionPoints": {

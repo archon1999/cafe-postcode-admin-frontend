@@ -18,15 +18,6 @@
     "cashDeskEdit": {
       "title": "Кассани таҳрирлаш"
     },
-    "devices": {
-      "title": "Қурилмалар"
-    },
-    "deviceCreate": {
-      "title": "Янги қурилма"
-    },
-    "deviceEdit": {
-      "title": "Қурилмани таҳрирлаш"
-    },
     "distributionPoints": {
       "title": "Тарқатиш нуқталари"
     },
@@ -78,9 +69,9 @@
     "assignedHall": "Бириктирилган зал",
     "assignedHallHint": "Ихтиёрий. Зарур бўлса зални бириктиринг.",
     "primaryHall": "Асосий зал",
-    "primaryHallHint": "Қурилма учун асосий зални танланг.",
+    "primaryHallHint": "Ходим учун асосий зални танланг.",
     "allowedHalls": "Рухсат этилган заллар",
-    "allowedHallsHint": "Қурилма ишлаши мумкин бўлган заллар рўйхати.",
+    "allowedHallsHint": "Ходим ишлаши мумкин бўлган заллар рўйхати.",
     "mode": "Режим",
     "kind": "Тури",
     "status": "Ҳолат",
@@ -116,13 +107,11 @@
     "kitchenMode": "Ошхона режими",
     "searchBranchesPlaceholder": "Филиал номи, манзил ёки телефон бўйича қидиринг",
     "searchCashDesksPlaceholder": "Касса номи, жойлашув ёки филиал бўйича қидиринг",
-    "searchDevicesPlaceholder": "Қурилма номи, филиал ёки зал бўйича қидиринг",
     "searchDistributionPointsPlaceholder": "Нуқта номи, канал, филиал ёки зал бўйича қидиринг",
     "searchPrepStationsPlaceholder": "Станция номи ёки филиал бўйича қидиринг",
     "searchRestaurantsPlaceholder": "Ресторан номи, юридик ном ёки телефон бўйича қидиринг",
     "searchRestaurantPrepStationsPlaceholder": "Станция номи бўйича қидиринг",
     "searchRestaurantCashDesksPlaceholder": "Касса номи ёки жойлашуви бўйича қидиринг",
-    "searchRestaurantDevicesPlaceholder": "Қурилма номи ёки зал бўйича қидиринг",
     "searchRestaurantDistributionPointsPlaceholder": "Нуқта номи ёки канал бўйича қидиринг"
   },
   "labels": {
@@ -139,10 +128,9 @@
     },
     "myRestaurantManagement": {
       "title": "Ресторан бўйича бошқарув",
-      "description": "Кассалар, қурилмалар, тайёрлаш станциялари ва тарқатиш нуқталарини шу ерда бошқаринг.",
+      "description": "Кассалар, тайёрлаш станциялари ва тарқатиш нуқталарини шу ерда бошқаринг.",
       "prepStationsDescription": "Ресторандаги тайёрлаш станцияларини бошқаринг.",
       "cashDesksDescription": "Ресторандаги кассалар ва тўлов созламаларини бошқаринг.",
-      "devicesDescription": "Ресторандаги POS қурилмалари ва зал бирикмаларини бошқаринг.",
       "distributionPointsDescription": "Ресторандаги буюртма каналлари ва тарқатиш нуқталарини бошқаринг."
     },
     "fiscalProfile": "Фискал профил",
@@ -159,22 +147,12 @@
       "cashDesks": {
         "description": "Ресторандаги кассалар ва уларнинг жойлашувини бошқаринг."
       },
-      "devices": {
-        "description": "POS қурилмалари, режимлари ва зал бирикмаларини бошқаринг."
-      },
       "distributionPoints": {
         "description": "Буюртма каналлари ва тарқатиш нуқталарини бошқаринг."
       }
     },
     "openList": "Рўйхатни очиш",
     "createForRestaurant": "Шу ресторан учун яратиш"
-  },
-  "deviceModes": {
-    "admin": "Админ",
-    "waiter": "Официант",
-    "cashier": "Кассир",
-    "kitchen_display": "Ошхона экрани",
-    "owner_dashboard": "Раҳбар панели"
   },
   "distributionPointKinds": {
     "hall": "Зал",
@@ -232,7 +210,6 @@
     "delete": "Ўчириш",
     "createBranch": "Янги филиал",
     "createCashDesk": "Янги касса",
-    "createDevice": "Янги қурилма",
     "createDistributionPoint": "Янги нуқта",
     "createPrepStation": "Янги станция",
     "createRestaurant": "Янги ресторан",
@@ -246,10 +223,6 @@
     "deleteCashDesk": {
       "title": "Кассани ўчириш",
       "description": "\"{{name}}\" кассасини ўчирмоқчимисиз?"
-    },
-    "deleteDevice": {
-      "title": "Қурилмани ўчириш",
-      "description": "\"{{name}}\" қурилмасини ўчирмоқчимисиз?"
     },
     "deleteDistributionPoint": {
       "title": "Нуқтани ўчириш",
@@ -283,16 +256,6 @@
       "noResults": {
         "title": "Касса топилмади",
         "description": "Танланган фильтрлар бўйича мос касса топилмади."
-      }
-    },
-    "devices": {
-      "noData": {
-        "title": "Қурилмалар ҳали йўқ",
-        "description": "Қурилмалар қўшилгач улар шу жадвалда чиқади."
-      },
-      "noResults": {
-        "title": "Қурилма топилмади",
-        "description": "Танланган фильтрлар бўйича мос қурилма топилмади."
       }
     },
     "distributionPoints": {

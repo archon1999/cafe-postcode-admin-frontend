@@ -97,10 +97,6 @@ const MyRestaurantCashDesksPage = lazy(
       'modules/restaurant-admin/restaurant-management/ui/pages/MyRestaurantCashDesksPage/MyRestaurantCashDesksPage'
     ),
 );
-const MyRestaurantDevicesPage = lazy(
-  () =>
-    import('modules/restaurant-admin/restaurant-management/ui/pages/MyRestaurantDevicesPage/MyRestaurantDevicesPage'),
-);
 const MyRestaurantPrepStationsPage = lazy(
   () =>
     import(
@@ -305,10 +301,6 @@ const mainChildren: RouteObject[] = [
   {
     path: RoutePath.organizationMyRestaurantCashDeskList,
     element: <MyRestaurantCashDesksPage />,
-  },
-  {
-    path: RoutePath.organizationMyRestaurantDeviceList,
-    element: <MyRestaurantDevicesPage />,
   },
   {
     path: RoutePath.organizationMyRestaurantPrepStationList,

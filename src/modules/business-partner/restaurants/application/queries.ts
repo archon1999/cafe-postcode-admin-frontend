@@ -3,8 +3,6 @@ import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
 import type {
   AdminCashDesk,
   AdminCashDesksQueryParams,
-  AdminDevice,
-  AdminDevicesQueryParams,
   AdminDistributionPoint,
   AdminDistributionPointsQueryParams,
   AdminHall,
@@ -46,37 +44,6 @@ export function useGetCashDeskByIdQuery(
   return useQuery({
     queryKey: organizationsKeys.cashDeskDetail(id),
     queryFn: () => organizationsRepository.getCashDeskById(id),
-    enabled: Boolean(id),
-    ...options,
-  });
-}
-
-export function useGetDevicesQuery(options?: Omit<UseQueryOptions<AdminDevice[]>, 'queryFn' | 'queryKey'>) {
-  return useQuery({
-    queryKey: organizationsKeys.devices(),
-    queryFn: () => organizationsRepository.getDevices(),
-    ...options,
-  });
-}
-
-export function useGetDevicesListQuery(
-  params: AdminDevicesQueryParams,
-  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminDevice>>, 'queryFn' | 'queryKey'>,
-) {
-  return useQuery({
-    queryKey: organizationsKeys.devicesList(params),
-    queryFn: () => apiClient.getAdminDevices(params),
-    ...options,
-  });
-}
-
-export function useGetDeviceByIdQuery(
-  id: string,
-  options?: Omit<UseQueryOptions<AdminDevice>, 'queryFn' | 'queryKey'>,
-) {
-  return useQuery({
-    queryKey: organizationsKeys.deviceDetail(id),
-    queryFn: () => organizationsRepository.getDeviceById(id),
     enabled: Boolean(id),
     ...options,
   });

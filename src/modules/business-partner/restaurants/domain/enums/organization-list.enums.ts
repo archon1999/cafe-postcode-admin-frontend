@@ -13,14 +13,6 @@ export const ORGANIZATION_FEATURE_ROLE_VALUES = [
   'universal_operator',
 ] as const;
 
-export const ORGANIZATION_DEVICE_MODE_VALUES = [
-  'admin',
-  'waiter',
-  'cashier',
-  'kitchen_display',
-  'owner_dashboard',
-] as const;
-
 export const ORGANIZATION_DISTRIBUTION_POINT_KIND_VALUES = ['hall', 'online', 'takeaway', 'delivery'] as const;
 
 export const ORGANIZATION_PREP_STATION_KIND_VALUES = ['kitchen', 'bar', 'other'] as const;

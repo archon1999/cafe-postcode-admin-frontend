@@ -18,15 +18,6 @@
     "cashDeskEdit": {
       "title": "Kassani tahrirlash"
     },
-    "devices": {
-      "title": "Qurilmalar"
-    },
-    "deviceCreate": {
-      "title": "Yangi qurilma"
-    },
-    "deviceEdit": {
-      "title": "Qurilmani tahrirlash"
-    },
     "distributionPoints": {
       "title": "Tarqatish nuqtalari"
     },
@@ -78,9 +69,9 @@
     "assignedHall": "Biriktirilgan zal",
     "assignedHallHint": "Ixtiyoriy. Zarur bo'lsa zalni biriktiring.",
     "primaryHall": "Asosiy zal",
-    "primaryHallHint": "Qurilma uchun asosiy zalni tanlang.",
+    "primaryHallHint": "Xodim uchun asosiy zalni tanlang.",
     "allowedHalls": "Ruxsat etilgan zallar",
-    "allowedHallsHint": "Qurilma ishlashi mumkin bo'lgan zallar ro'yxati.",
+    "allowedHallsHint": "Xodim ishlashi mumkin bo'lgan zallar ro'yxati.",
     "mode": "Rejim",
     "kind": "Turi",
     "status": "Holat",
@@ -117,13 +108,11 @@
     "kitchenMode": "Oshxona rejimi",
     "searchBranchesPlaceholder": "Filial nomi, manzil yoki telefon bo'yicha qidiring",
     "searchCashDesksPlaceholder": "Kassa nomi, joylashuv yoki filial bo'yicha qidiring",
-    "searchDevicesPlaceholder": "Qurilma nomi, filial yoki zal bo'yicha qidiring",
     "searchDistributionPointsPlaceholder": "Nuqta nomi, kanal, filial yoki zal bo'yicha qidiring",
     "searchPrepStationsPlaceholder": "Stansiya nomi yoki filial bo'yicha qidiring",
     "searchRestaurantsPlaceholder": "Restoran nomi, yuridik nom yoki telefon bo'yicha qidiring",
     "searchRestaurantPrepStationsPlaceholder": "Stansiya nomi bo'yicha qidiring",
     "searchRestaurantCashDesksPlaceholder": "Kassa nomi yoki joylashuvi bo'yicha qidiring",
-    "searchRestaurantDevicesPlaceholder": "Qurilma nomi yoki zal bo'yicha qidiring",
     "searchRestaurantDistributionPointsPlaceholder": "Nuqta nomi yoki kanal bo'yicha qidiring"
   },
   "labels": {
@@ -140,10 +129,9 @@
     },
     "myRestaurantManagement": {
       "title": "Restoran bo'yicha boshqaruv",
-      "description": "Kassalar, qurilmalar, tayyorlash stansiyalari va tarqatish nuqtalarini shu yerda boshqaring.",
+      "description": "Kassalar, tayyorlash stansiyalari va tarqatish nuqtalarini shu yerda boshqaring.",
       "prepStationsDescription": "Restorandagi tayyorlash stansiyalarini boshqaring.",
       "cashDesksDescription": "Restorandagi kassalar va to'lov sozlamalarini boshqaring.",
-      "devicesDescription": "Restorandagi POS qurilmalari va zal birikmalarini boshqaring.",
       "distributionPointsDescription": "Restorandagi buyurtma kanallari va tarqatish nuqtalarini boshqaring."
     },
     "fiscalProfile": "Fiskal profil",
@@ -160,22 +148,12 @@
       "cashDesks": {
         "description": "Restorandagi kassalar va ularning joylashuvini boshqaring."
       },
-      "devices": {
-        "description": "POS qurilmalari, rejimlari va zal birikmalarini boshqaring."
-      },
       "distributionPoints": {
         "description": "Buyurtma kanallari va tarqatish nuqtalarini boshqaring."
       }
     },
     "openList": "Ro'yxatni ochish",
     "createForRestaurant": "Shu restoran uchun yaratish"
-  },
-  "deviceModes": {
-    "admin": "Admin",
-    "waiter": "Ofitsiant",
-    "cashier": "Kassir",
-    "kitchen_display": "Oshxona ekrani",
-    "owner_dashboard": "Rahbar paneli"
   },
   "distributionPointKinds": {
     "hall": "Zal",
@@ -233,7 +211,6 @@
     "delete": "O'chirish",
     "createBranch": "Yangi filial",
     "createCashDesk": "Yangi kassa",
-    "createDevice": "Yangi qurilma",
     "createDistributionPoint": "Yangi nuqta",
     "createPrepStation": "Yangi stansiya",
     "createRestaurant": "Yangi restoran",
@@ -249,10 +226,6 @@
     "deleteCashDesk": {
       "title": "Kassani o'chirish",
       "description": "\"{{name}}\" kassasini o'chirmoqchimisiz?"
-    },
-    "deleteDevice": {
-      "title": "Qurilmani o'chirish",
-      "description": "\"{{name}}\" qurilmasini o'chirmoqchimisiz?"
     },
     "deleteDistributionPoint": {
       "title": "Nuqtani o'chirish",
@@ -286,16 +259,6 @@
       "noResults": {
         "title": "Kassa topilmadi",
         "description": "Tanlangan filterlar bo'yicha mos kassa topilmadi."
-      }
-    },
-    "devices": {
-      "noData": {
-        "title": "Qurilmalar hali yo'q",
-        "description": "Qurilmalar qo'shilgach ular shu jadvalda chiqadi."
-      },
-      "noResults": {
-        "title": "Qurilma topilmadi",
-        "description": "Tanlangan filterlar bo'yicha mos qurilma topilmadi."
       }
     },
     "distributionPoints": {

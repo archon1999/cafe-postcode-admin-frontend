@@ -7,9 +7,6 @@ import type {
   AdminCashDesksQueryParams,
   AdminCashDeskPayload,
   AdminCollectionResponse,
-  AdminDevice,
-  AdminDevicesQueryParams,
-  AdminDevicePayload,
   AdminDistributionPoint,
   AdminDistributionPointsQueryParams,
   AdminDistributionPointPayload,
@@ -497,39 +494,6 @@ export const apiClient = {
 
   deleteAdminCashDesk(id: string) {
     return instance.delete<void>(`/api/v1/admin/restaurants/cash-desks/${id}/`).then((response) => response.data);
-  },
-
-  getAdminDevices(params?: AdminDevicesQueryParams) {
-    return instance
-      .get<AdminPaginatedResponse<AdminDevice>>('/api/v1/admin/restaurants/devices/', {
-        params: {
-          page: params?.page,
-          pageSize: params?.pageSize,
-          search: params?.search,
-          modeIn: params?.modeIn,
-          isActive: params?.isActive,
-          ordering: params?.ordering,
-        },
-      })
-      .then((response) => response.data);
-  },
-
-  getAdminDeviceById(id: string) {
-    return instance.get<AdminDevice>(`/api/v1/admin/restaurants/devices/${id}/`).then((response) => response.data);
-  },
-
-  createAdminDevice(payload: AdminDevicePayload) {
-    return instance.post<AdminDevice>('/api/v1/admin/restaurants/devices/', payload).then((response) => response.data);
-  },
-
-  updateAdminDevice(id: string, payload: AdminDevicePayload) {
-    return instance
-      .put<AdminDevice>(`/api/v1/admin/restaurants/devices/${id}/`, payload)
-      .then((response) => response.data);
-  },
-
-  deleteAdminDevice(id: string) {
-    return instance.delete<void>(`/api/v1/admin/restaurants/devices/${id}/`).then((response) => response.data);
   },
 
   getAdminDistributionPoints(params?: AdminDistributionPointsQueryParams) {

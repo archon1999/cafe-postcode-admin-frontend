@@ -100,14 +100,6 @@ const TITLE_RULES: TitleRule[] = [
     ],
   },
   {
-    route: AppRoutes.ORGANIZATION_MY_RESTAURANT_DEVICE_LIST,
-    namespaces: ['organizations'],
-    resolve: (_params, t) => [
-      t('organizations:pages.myRestaurant.title', { defaultValue: 'Mening restoranim' }),
-      t('organizations:pages.devices.title', { defaultValue: 'Qurilmalar' }),
-    ],
-  },
-  {
     route: AppRoutes.ORGANIZATION_MY_RESTAURANT_PREP_STATION_LIST,
     namespaces: ['organizations'],
     resolve: (_params, t) => [

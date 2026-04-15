@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import type {
   AdminCashDeskPayload,
-  AdminDevicePayload,
   AdminDistributionPointPayload,
   AdminPrepStationPayload,
   AdminRestaurantPayload,
@@ -43,36 +42,6 @@ export function useDeleteCashDeskMutation() {
     mutationFn: (id: string) => organizationsRepository.deleteCashDesk(id),
     onSuccess: async () => {
       await invalidateQueryKeys(queryClient, [organizationsKeys.cashDesks()]);
-    },
-  });
-}
-
-export function useCreateDeviceMutation() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (payload: AdminDevicePayload) => organizationsRepository.createDevice(payload),
-    onSuccess: async () => {
-      await invalidateQueryKeys(queryClient, [organizationsKeys.devices()]);
-    },
-  });
-}
-
-export function useUpdateDeviceMutation(id: string) {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (payload: AdminDevicePayload) => organizationsRepository.updateDevice(id, payload),
-    onSuccess: async () => {
-      await invalidateQueryKeys(queryClient, [organizationsKeys.devices(), organizationsKeys.deviceDetail(id)]);
-    },
-  });
-}
-
-export function useDeleteDeviceMutation() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (id: string) => organizationsRepository.deleteDevice(id),
-    onSuccess: async () => {
-      await invalidateQueryKeys(queryClient, [organizationsKeys.devices()]);
     },
   });
 }

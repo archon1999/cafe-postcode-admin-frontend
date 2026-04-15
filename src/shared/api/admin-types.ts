@@ -15,7 +15,6 @@ export type AdminRoleSummary = {
 
 export type KitchenTicketStatus = 'new' | 'cooking' | 'done';
 export type KitchenTicketRouteMode = 'display' | 'printer' | 'both';
-export type AdminDeviceMode = 'admin' | 'waiter' | 'cashier' | 'kitchen_display' | 'owner_dashboard';
 export type AdminDistributionPointKind = 'hall' | 'online' | 'takeaway' | 'delivery';
 export type AdminDiningTableShape = 'square' | 'rectangle' | 'round' | 'oval';
 export type AdminTableShapeVariant =
@@ -247,24 +246,6 @@ export type AdminCashDeskPayload = {
   receiptPrinterEnabled: boolean;
   terminalId: string;
   externalCashboxId: string;
-  isActive: boolean;
-};
-
-export type AdminDevice = {
-  id: string;
-  name: string;
-  mode: AdminDeviceMode;
-  primaryHallId?: string | null;
-  primaryHallName?: string | null;
-  allowedHallIds?: string[];
-  isActive: boolean;
-};
-
-export type AdminDevicePayload = {
-  name: string;
-  mode: AdminDeviceMode;
-  primaryHallId?: string | null;
-  allowedHallIds?: string[];
   isActive: boolean;
 };
 
@@ -883,11 +864,6 @@ export type AdminTableSessionsQueryParams = AdminListQueryParams & {
 };
 
 export type AdminCashDesksQueryParams = AdminListQueryParams & {
-  isActive?: boolean;
-};
-
-export type AdminDevicesQueryParams = AdminListQueryParams & {
-  modeIn?: string;
   isActive?: boolean;
 };
 

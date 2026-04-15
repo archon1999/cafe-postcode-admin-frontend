@@ -1,8 +1,6 @@
 import type {
   AdminCashDesk,
   AdminCashDeskPayload,
-  AdminDevice,
-  AdminDevicePayload,
   AdminDistributionPoint,
   AdminDistributionPointPayload,
   AdminHall,
@@ -18,11 +16,6 @@ export interface OrganizationsRepository {
   createCashDesk(payload: AdminCashDeskPayload): Promise<AdminCashDesk>;
   updateCashDesk(id: string, payload: AdminCashDeskPayload): Promise<AdminCashDesk>;
   deleteCashDesk(id: string): Promise<void>;
-  getDevices(): Promise<AdminDevice[]>;
-  getDeviceById(id: string): Promise<AdminDevice>;
-  createDevice(payload: AdminDevicePayload): Promise<AdminDevice>;
-  updateDevice(id: string, payload: AdminDevicePayload): Promise<AdminDevice>;
-  deleteDevice(id: string): Promise<void>;
   getDistributionPoints(): Promise<AdminDistributionPoint[]>;
   getDistributionPointById(id: string): Promise<AdminDistributionPoint>;
   createDistributionPoint(payload: AdminDistributionPointPayload): Promise<AdminDistributionPoint>;

@@ -59,7 +59,6 @@ const MY_RESTAURANT_CASH_DESK_PERMISSION_CODES: PermissionCode[] = [
   'cash_desks.create',
   'cash_desks.update',
 ];
-const MY_RESTAURANT_DEVICE_PERMISSION_CODES: PermissionCode[] = ['devices.view', 'devices.create', 'devices.update'];
 const MY_RESTAURANT_PREP_STATION_PERMISSION_CODES: PermissionCode[] = [
   'prep_stations.view',
   'prep_stations.create',
@@ -173,7 +172,6 @@ export function canAccessMyRestaurant(snapshot?: AdminAccessSnapshot | null) {
   return (
     canAccessMyRestaurantGeneral(snapshot) ||
     canAccessMyRestaurantCashDesks(snapshot) ||
-    canAccessMyRestaurantDevices(snapshot) ||
     canAccessMyRestaurantPrepStations(snapshot) ||
     canAccessMyRestaurantDistributionPoints(snapshot)
   );
@@ -191,10 +189,6 @@ export function canAccessMyRestaurantCashDesks(snapshot?: AdminAccessSnapshot | 
   return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, MY_RESTAURANT_CASH_DESK_PERMISSION_CODES);
 }
 
-export function canAccessMyRestaurantDevices(snapshot?: AdminAccessSnapshot | null) {
-  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, MY_RESTAURANT_DEVICE_PERMISSION_CODES);
-}
-
 export function canAccessMyRestaurantPrepStations(snapshot?: AdminAccessSnapshot | null) {
   return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, MY_RESTAURANT_PREP_STATION_PERMISSION_CODES);
 }
@@ -208,7 +202,6 @@ export function canAccessMyRestaurantDistributionPoints(snapshot?: AdminAccessSn
 const MY_RESTAURANT_LANDING_CANDIDATES = [
   RoutePath.organizationMyRestaurantGeneral,
   RoutePath.organizationMyRestaurantCashDeskList,
-  RoutePath.organizationMyRestaurantDeviceList,
   RoutePath.organizationMyRestaurantPrepStationList,
   RoutePath.organizationMyRestaurantDistributionPointList,
 ] as const;
@@ -240,10 +233,6 @@ export function canAccessAdminPath(pathname: string, snapshot?: AdminAccessSnaps
 
   if (matchesPrefix(pathname, RoutePath.organizationMyRestaurantCashDeskList)) {
     return canAccessMyRestaurantCashDesks(snapshot);
-  }
-
-  if (matchesPrefix(pathname, RoutePath.organizationMyRestaurantDeviceList)) {
-    return canAccessMyRestaurantDevices(snapshot);
   }
 
   if (matchesPrefix(pathname, RoutePath.organizationMyRestaurantPrepStationList)) {

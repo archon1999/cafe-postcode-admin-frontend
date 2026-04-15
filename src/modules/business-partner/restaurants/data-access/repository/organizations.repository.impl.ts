@@ -18,21 +18,6 @@ export const organizationsRepository: OrganizationsRepository = {
   deleteCashDesk(id) {
     return apiClient.deleteAdminCashDesk(id);
   },
-  getDevices() {
-    return apiClient.getAdminDevices({ page: 1, pageSize: 500 }).then((response) => response.data);
-  },
-  getDeviceById(id) {
-    return apiClient.getAdminDeviceById(id);
-  },
-  createDevice(payload) {
-    return apiClient.createAdminDevice(payload);
-  },
-  updateDevice(id, payload) {
-    return apiClient.updateAdminDevice(id, payload);
-  },
-  deleteDevice(id) {
-    return apiClient.deleteAdminDevice(id);
-  },
   getDistributionPoints() {
     return apiClient.getAdminDistributionPoints({ page: 1, pageSize: 500 }).then((response) => response.data);
   },

@@ -32,7 +32,6 @@ const ICONS = {
   restaurantManagement: <Iconify icon="solar:settings-bold-duotone" width={20} />,
   general: <Iconify icon="solar:widget-6-bold-duotone" width={20} />,
   cashDesks: <Iconify icon="solar:wallet-money-bold-duotone" width={20} />,
-  devices: <Iconify icon="solar:smartphone-2-bold-duotone" width={20} />,
   prepStations: <Iconify icon="solar:chef-hat-bold-duotone" width={20} />,
   distributionPoints: <Iconify icon="solar:shop-bold-duotone" width={20} />,
   accessControl: <Iconify icon="solar:settings-bold-duotone" width={24} />,
@@ -198,13 +197,6 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
           title: t('distributionPoints'),
           path: RoutePath.organizationMyRestaurantDistributionPointList,
           icon: ICONS.distributionPoints,
-        }
-      : null,
-    canAccess(RoutePath.organizationMyRestaurantDeviceList)
-      ? {
-          title: t('devices'),
-          path: RoutePath.organizationMyRestaurantDeviceList,
-          icon: ICONS.devices,
         }
       : null,
   ].filter(Boolean) as NavSectionProps['data'][number]['items'];

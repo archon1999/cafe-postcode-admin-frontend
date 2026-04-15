@@ -10,7 +10,6 @@ export {
   canAccessKitchen,
   canAccessMyRestaurant,
   canAccessMyRestaurantCashDesks,
-  canAccessMyRestaurantDevices,
   canAccessMyRestaurantDistributionPoints,
   canAccessMyRestaurantGeneral,
   canAccessMyRestaurantPrepStations,
