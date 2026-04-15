@@ -6,6 +6,12 @@ import { USER_EMPLOYMENT_STATUS_VALUES, USER_SALARY_TYPE_VALUES } from '../enums
 
 import type { UserManagementSurface } from './user.types';
 
+export const PIN_CODE_ERROR_MESSAGE = "PIN 4 ta raqamdan iborat bo'lishi kerak";
+
+export function isValidPinCode(value: string) {
+  return /^\d{4}$/.test(value);
+}
+
 const numberFieldWithDefaultZero = z.preprocess(
   (value) => (value === '' || value === null || value === undefined ? 0 : Number(value)),
   z.number().min(0, { message: "Summa 0 dan kichik bo'lmasligi kerak" }),
@@ -44,11 +50,11 @@ function createUserFormSchema(surface: UserManagementSurface) {
       pin: z.string().optional(),
     })
     .superRefine((value, context) => {
-      if (value.pin && !/^\d{4}$/.test(value.pin)) {
+      if (value.pin && !isValidPinCode(value.pin)) {
         context.addIssue({
           code: z.ZodIssueCode.custom,
           path: ['pin'],
-          message: "PIN 4 ta raqamdan iborat bo'lishi kerak",
+          message: PIN_CODE_ERROR_MESSAGE,
         });
       }
 

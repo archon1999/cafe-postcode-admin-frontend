@@ -48,6 +48,18 @@ export const organizationsRepository: OrganizationsRepository = {
   deletePrepStation(id) {
     return apiClient.deleteAdminPrepStation(id);
   },
+  getIntegrationConfigs() {
+    return apiClient.getAdminIntegrationConfigs({ page: 1, pageSize: 500 }).then((response) => response.data);
+  },
+  getIntegrationConfigById(id) {
+    return apiClient.getAdminIntegrationConfigById(id);
+  },
+  createIntegrationConfig(payload) {
+    return apiClient.createAdminIntegrationConfig(payload);
+  },
+  updateIntegrationConfig(id, payload) {
+    return apiClient.updateAdminIntegrationConfig(id, payload);
+  },
   getRestaurants() {
     return apiClient.getAdminRestaurants({ page: 1, pageSize: 500 }).then((response) => response.data);
   },

@@ -22,6 +22,7 @@ import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 import {
   useArchiveEmployeeMutation,
   useArchiveUserMutation,
+  useEmployeeUpdateAccess,
   useGetEmployeesQuery,
   useGetRolesQuery,
   useGetUsersQuery,
@@ -30,6 +31,8 @@ import {
 } from '../../../application';
 import type { UserManagementSurface } from '../../../domain';
 
+import { ChangeEmployeePinDialog } from './ChangeEmployeePinDialog';
+import { getUsersGridActionKeys } from './users-grid.actions';
 import { DEFAULT_USERS_GRID_FILTERS, type UsersGridFilters, UsersGridToolbar } from './UsersGridToolbar';
 
 function getEmploymentStatusChipColor(status?: AdminUser['employmentStatus']) {
@@ -52,7 +55,9 @@ export function UsersGrid({ surface = 'user' }: UsersGridProps) {
     DEFAULT_COLUMN_VISIBILITY_MODEL,
   );
   const [selectedRows, setSelectedRows] = useState<GridRowSelectionModel>(DEFAULT_SELECTION_MODEL);
+  const [pinChangeEmployeeId, setPinChangeEmployeeId] = useState<string | null>(null);
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
+  const canEditEmployee = useEmployeeUpdateAccess();
 
   const rolesQuery = useGetRolesQuery(surface);
   const queryParams = {
@@ -180,42 +185,65 @@ export function UsersGrid({ surface = 'user' }: UsersGridProps) {
         minWidth: 90,
         flex: 0,
         getActions: (params) => {
-          const actions = [
-            <CustomGridActionsCellItem
-              actionKind="view"
-              key="view"
-              label={tCommon('labels.details')}
-              icon={<Iconify icon="solar:eye-bold" />}
-              href={viewHref(params.row.id)}
-            />,
-            <CustomGridActionsCellItem
-              actionKind="edit"
-              key="edit"
-              label={t('actions.edit')}
-              icon={<Iconify icon="solar:pen-bold" />}
-              href={editHref(params.row.id)}
-            />,
-          ];
+          const actionKeys = getUsersGridActionKeys({
+            surface,
+            canEditEmployee,
+            employmentStatus: params.row.employmentStatus,
+          });
 
-          if (params.row.employmentStatus !== 'archived') {
-            actions.push(
+          return actionKeys.map((actionKey) => {
+            if (actionKey === 'view') {
+              return (
+                <CustomGridActionsCellItem
+                  actionKind="view"
+                  key="view"
+                  label={tCommon('labels.details')}
+                  icon={<Iconify icon="solar:eye-bold" />}
+                  href={viewHref(params.row.id)}
+                />
+              );
+            }
+
+            if (actionKey === 'edit') {
+              return (
+                <CustomGridActionsCellItem
+                  actionKind="edit"
+                  key="edit"
+                  label={t('actions.edit')}
+                  icon={<Iconify icon="solar:pen-bold" />}
+                  href={editHref(params.row.id)}
+                />
+              );
+            }
+
+            if (actionKey === 'change-pin') {
+              return (
+                <CustomGridActionsCellItem
+                  actionKind="edit"
+                  key="change-pin"
+                  label={t('actions.changePin')}
+                  icon={<Iconify icon="solar:key-bold" />}
+                  onClick={() => setPinChangeEmployeeId(params.row.id)}
+                />
+              );
+            }
+
+            return (
               <CustomGridActionsCellItem
                 actionKind="delete"
                 key="archive"
                 label={t('actions.archive')}
                 icon={<Iconify icon="solar:archive-bold" />}
                 onClick={() => archiveMutation.mutate(params.row)}
-              />,
+              />
             );
-          }
-
-          return actions;
+          });
         },
       },
     );
 
     return nextColumns;
-  }, [archiveMutation, editHref, surface, t, tCommon, toggleStatusMutation, viewHref]);
+  }, [archiveMutation, canEditEmployee, editHref, surface, t, tCommon, toggleStatusMutation, viewHref]);
 
   const emptyStateMessages = useMemo(
     () => ({
@@ -290,6 +318,12 @@ export function UsersGrid({ surface = 'user' }: UsersGridProps) {
             />
           ),
         }}
+      />
+
+      <ChangeEmployeePinDialog
+        open={Boolean(pinChangeEmployeeId)}
+        employeeId={pinChangeEmployeeId}
+        onClose={() => setPinChangeEmployeeId(null)}
       />
     </Card>
   );

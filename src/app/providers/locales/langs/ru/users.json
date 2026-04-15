@@ -1,198 +1,206 @@
 {
-  "pages": {
-    "list": {
-      "title": "Пользователи",
-      "description": "Управляйте пользователями, которые входят в систему по логину и паролю."
-    },
-    "employeeList": {
-      "title": "Сотрудники",
-      "description": "Управляйте сотрудниками ресторана по PIN-коду и роли."
-    },
-    "roles": {
-      "title": "Роли"
-    },
-    "roleCreate": {
-      "title": "Новая роль"
-    },
-    "roleEdit": {
-      "title": "Редактирование роли"
-    },
-    "permissions": {
-      "title": "Права"
-    },
-    "create": {
-      "title": "Новый пользователь",
-      "description": "Создайте нового пользователя с логином и основными данными."
-    },
-    "edit": {
-      "title": "Редактирование пользователя",
-      "description": "Обновите статус и данные пользователя."
-    },
-    "view": {
-      "title": "Детали пользователя"
-    },
-    "employeeCreate": {
-      "title": "Новый сотрудник",
-      "description": "Создайте сотрудника ресторана с PIN-кодом и ролью."
-    },
-    "employeeEdit": {
-      "title": "Редактирование сотрудника",
-      "description": "Обновите статус и данные сотрудника."
-    },
-    "employeeView": {
-      "title": "Детали сотрудника"
-    }
-  },
-  "fields": {
-    "username": "Логин",
-    "fullName": "Полное имя",
-    "permission": "Право",
-    "phone": "Телефон",
-    "phonePlaceholder": "+998 90 123 45 67",
-    "role": "Роль",
-    "status": "Статус",
-    "statusToggle": "Активен",
-    "code": "Технический код",
-    "name": "Название",
-    "type": "Тип",
-    "scope": "Раздел",
-    "action": "Действие",
-    "description": "Описание",
-    "permissionsCount": "Количество прав",
-    "hallSwitchPermission": "Разрешение на смену зала",
-    "primaryHall": "Основной зал",
-    "primaryHallHint": "Необязательно. Выберите основной зал для сотрудника.",
-    "password": "Пароль",
-    "passwordCreateHint": "Необязательно. Если указать, для пользователя будет установлен пароль.",
-    "passwordEditHint": "Если оставить пустым, текущий пароль не изменится.",
-    "pin": "PIN-код",
-    "pinHint": "4-значный PIN-код для POS сотрудника.",
-    "permissions": "Права",
-    "allowedHalls": "Разрешённые залы",
-    "allowedHallsHint": "При необходимости назначьте сотруднику несколько залов.",
-    "passportSeries": "Серия паспорта",
-    "pnfl": "ПИНФЛ",
-    "birthDate": "Дата рождения",
-    "birthDateHint": "Необязательно. Укажите дату рождения сотрудника.",
-    "employmentStatus": "Статус работы",
-    "salaryType": "Тип зарплаты",
-    "baseAmount": "Базовая сумма",
-    "kpiPercent": "Процент KPI"
-  },
-  "status": {
-    "active": "Активен",
-    "inactive": "Неактивен",
-    "archived": "В архиве"
-  },
-  "salaryType": {
-    "hourly": "Почасовая",
-    "daily": "Подневная",
-    "monthly": "Месячная"
-  },
-  "labels": {
-    "withoutRole": "Роль не назначена",
-    "notSelected": "Не выбрано",
-    "system": "Системный",
-    "custom": "Пользовательский",
-    "morePermissions": "Ещё права"
-  },
-  "filters": {
-    "all": "Все",
-    "search": "Поиск",
-    "searchPlaceholder": "Ищите по логину, имени или телефону",
-    "employeeSearchPlaceholder": "Ищите по имени или телефону",
-    "searchRolesPlaceholder": "Ищите по названию роли, описанию или праву",
-    "searchPermissionsPlaceholder": "Ищите по коду, названию или описанию",
-    "clearSearch": "Очистить поиск",
-    "role": "Роль",
-    "permission": "Право",
-    "type": "Тип",
-    "scope": "Раздел",
-    "action": "Действие",
-    "status": "Статус",
-    "showArchived": "Показывать архивных"
-  },
-  "sections": {
-    "account": "Доступ и основные данные",
-    "assignment": "Привязка к залу",
-    "payroll": "Работа и зарплата"
-  },
-  "permissionScopes": {
-    "admin": "Админ",
-    "pos": "POS",
-    "dashboard": "Dashboard"
-  },
-  "permissionActions": {
-    "list": "Просмотр списка",
-    "delete": "Удаление",
-    "view": "Просмотр",
-    "manage": "Управление",
-    "create": "Создание",
-    "update": "Обновление",
-    "activate": "Активация",
-    "deactivate": "Деактивация",
-    "resetPassword": "Сброс пароля",
-    "open": "Открытие",
-    "close": "Закрытие",
-    "refund": "Возврат",
-    "reprint": "Повторная печать"
-  },
-  "actions": {
-    "create": "Новый пользователь",
-    "createEmployee": "Новый сотрудник",
-    "edit": "Редактировать",
-    "save": "Сохранить",
-    "archive": "Архивировать",
-    "delete": "Удалить",
-    "roleCreate": "Новая роль",
-    "roleCreateSubmit": "Сохранить роль"
-  },
-  "dialogs": {
-    "deleteRole": {
-      "title": "Удаление роли",
-      "description": "Роль \"{{name}}\" будет удалена. Продолжить?"
-    }
-  },
-  "empty": {
-    "users": {
-      "noData": {
-        "title": "Пользователей пока нет",
-        "description": "После добавления первого пользователя список появится здесь."
-      },
-      "noResults": {
-        "title": "Пользователи не найдены",
-        "description": "Измените поиск или фильтры и попробуйте снова."
-      }
-    },
-    "employees": {
-      "noData": {
-        "title": "Сотрудников пока нет",
-        "description": "После добавления первого сотрудника список появится здесь."
-      },
-      "noResults": {
-        "title": "Сотрудники не найдены",
-        "description": "Измените поиск или фильтры и попробуйте снова."
-      }
-    },
-    "roles": {
-      "noData": {
-        "title": "Ролей пока нет",
-        "description": "После создания ролей они появятся в этой таблице."
-      },
-      "noResults": {
-        "title": "Роли не найдены",
-        "description": "По выбранным фильтрам ничего не найдено."
-      }
-    },
-    "permissions": {
-      "noData": {
-        "title": "Права пока не найдены",
-        "description": "Когда права будут доступны, они появятся в этой таблице."
-      },
-      "noResults": {
-        "title": "Права не найдены",
-        "description": "Поиск или фильтры не дали подходящих прав."
-      }
-    }
-  }
+    "pages":  {
+                  "list":  {
+                               "title":  "Пользователи",
+                               "description":  "Управляйте пользователями, которые входят в систему по логину и паролю."
+                           },
+                  "employeeList":  {
+                                       "title":  "Сотрудники",
+                                       "description":  "Управляйте сотрудниками ресторана по PIN-коду и роли."
+                                   },
+                  "roles":  {
+                                "title":  "Роли"
+                            },
+                  "roleCreate":  {
+                                     "title":  "Новая роль"
+                                 },
+                  "roleEdit":  {
+                                   "title":  "Редактирование роли"
+                               },
+                  "permissions":  {
+                                      "title":  "Права"
+                                  },
+                  "create":  {
+                                 "title":  "Новый пользователь",
+                                 "description":  "Создайте нового пользователя с логином и основными данными."
+                             },
+                  "edit":  {
+                               "title":  "Редактирование пользователя",
+                               "description":  "Обновите статус и данные пользователя."
+                           },
+                  "view":  {
+                               "title":  "Детали пользователя"
+                           },
+                  "employeeCreate":  {
+                                         "title":  "Новый сотрудник",
+                                         "description":  "Создайте сотрудника ресторана с PIN-кодом и ролью."
+                                     },
+                  "employeeEdit":  {
+                                       "title":  "Редактирование сотрудника",
+                                       "description":  "Обновите статус и данные сотрудника."
+                                   },
+                  "employeeView":  {
+                                       "title":  "Детали сотрудника"
+                                   }
+              },
+    "fields":  {
+                   "username":  "Логин",
+                   "fullName":  "Полное имя",
+                   "permission":  "Право",
+                   "phone":  "Телефон",
+                   "phonePlaceholder":  "+998 90 123 45 67",
+                   "role":  "Роль",
+                   "status":  "Статус",
+                   "statusToggle":  "Активен",
+                   "code":  "Технический код",
+                   "name":  "Название",
+                   "type":  "Тип",
+                   "scope":  "Раздел",
+                   "action":  "Действие",
+                   "description":  "Описание",
+                   "permissionsCount":  "Количество прав",
+                   "hallSwitchPermission":  "Разрешение на смену зала",
+                   "primaryHall":  "Основной зал",
+                   "primaryHallHint":  "Необязательно. Выберите основной зал для сотрудника.",
+                   "password":  "Пароль",
+                   "passwordCreateHint":  "Необязательно. Если указать, для пользователя будет установлен пароль.",
+                   "passwordEditHint":  "Если оставить пустым, текущий пароль не изменится.",
+                   "pin":  "PIN-код",
+                   "pinHint":  "4-значный PIN-код для POS сотрудника.",
+                   "permissions":  "Права",
+                   "allowedHalls":  "Разрешённые залы",
+                   "allowedHallsHint":  "При необходимости назначьте сотруднику несколько залов.",
+                   "passportSeries":  "Серия паспорта",
+                   "pnfl":  "ПИНФЛ",
+                   "birthDate":  "Дата рождения",
+                   "birthDateHint":  "Необязательно. Укажите дату рождения сотрудника.",
+                   "employmentStatus":  "Статус работы",
+                   "salaryType":  "Тип зарплаты",
+                   "baseAmount":  "Базовая сумма",
+                   "kpiPercent":  "Процент KPI"
+               },
+    "status":  {
+                   "active":  "Активен",
+                   "inactive":  "Неактивен",
+                   "archived":  "В архиве"
+               },
+    "salaryType":  {
+                       "hourly":  "Почасовая",
+                       "daily":  "Подневная",
+                       "monthly":  "Месячная"
+                   },
+    "labels":  {
+                   "withoutRole":  "Роль не назначена",
+                   "notSelected":  "Не выбрано",
+                   "system":  "Системный",
+                   "custom":  "Пользовательский",
+                   "morePermissions":  "Ещё права"
+               },
+    "filters":  {
+                    "all":  "Все",
+                    "search":  "Поиск",
+                    "searchPlaceholder":  "Ищите по логину, имени или телефону",
+                    "employeeSearchPlaceholder":  "Ищите по имени или телефону",
+                    "searchRolesPlaceholder":  "Ищите по названию роли, описанию или праву",
+                    "searchPermissionsPlaceholder":  "Ищите по коду, названию или описанию",
+                    "clearSearch":  "Очистить поиск",
+                    "role":  "Роль",
+                    "permission":  "Право",
+                    "type":  "Тип",
+                    "scope":  "Раздел",
+                    "action":  "Действие",
+                    "status":  "Статус",
+                    "showArchived":  "Показывать архивных"
+                },
+    "sections":  {
+                     "account":  "Доступ и основные данные",
+                     "assignment":  "Привязка к залу",
+                     "payroll":  "Работа и зарплата"
+                 },
+    "permissionScopes":  {
+                             "admin":  "Админ",
+                             "pos":  "POS",
+                             "dashboard":  "Dashboard"
+                         },
+    "permissionActions":  {
+                              "list":  "Просмотр списка",
+                              "delete":  "Удаление",
+                              "view":  "Просмотр",
+                              "manage":  "Управление",
+                              "create":  "Создание",
+                              "update":  "Обновление",
+                              "activate":  "Активация",
+                              "deactivate":  "Деактивация",
+                              "resetPassword":  "Сброс пароля",
+                              "open":  "Открытие",
+                              "close":  "Закрытие",
+                              "refund":  "Возврат",
+                              "reprint":  "Повторная печать"
+                          },
+    "actions":  {
+                    "create":  "Новый пользователь",
+                    "createEmployee":  "Новый сотрудник",
+                    "edit":  "Редактировать",
+                    "save":  "Сохранить",
+                    "archive":  "Архивировать",
+                    "delete":  "Удалить",
+                    "roleCreate":  "Новая роль",
+                    "roleCreateSubmit":  "Сохранить роль",
+                    "changePin":  "Изменить PIN-код",
+                    "savePin":  "Сохранить PIN-код"
+                },
+    "dialogs":  {
+                    "deleteRole":  {
+                                       "title":  "Удаление роли",
+                                       "description":  "Роль \"{{name}}\" будет удалена. Продолжить?"
+                                   },
+                    "changePin":  {
+                                      "title":  "Изменить PIN-код"
+                                  }
+                },
+    "empty":  {
+                  "users":  {
+                                "noData":  {
+                                               "title":  "Пользователей пока нет",
+                                               "description":  "После добавления первого пользователя список появится здесь."
+                                           },
+                                "noResults":  {
+                                                  "title":  "Пользователи не найдены",
+                                                  "description":  "Измените поиск или фильтры и попробуйте снова."
+                                              }
+                            },
+                  "employees":  {
+                                    "noData":  {
+                                                   "title":  "Сотрудников пока нет",
+                                                   "description":  "После добавления первого сотрудника список появится здесь."
+                                               },
+                                    "noResults":  {
+                                                      "title":  "Сотрудники не найдены",
+                                                      "description":  "Измените поиск или фильтры и попробуйте снова."
+                                                  }
+                                },
+                  "roles":  {
+                                "noData":  {
+                                               "title":  "Ролей пока нет",
+                                               "description":  "После создания ролей они появятся в этой таблице."
+                                           },
+                                "noResults":  {
+                                                  "title":  "Роли не найдены",
+                                                  "description":  "По выбранным фильтрам ничего не найдено."
+                                              }
+                            },
+                  "permissions":  {
+                                      "noData":  {
+                                                     "title":  "Права пока не найдены",
+                                                     "description":  "Когда права будут доступны, они появятся в этой таблице."
+                                                 },
+                                      "noResults":  {
+                                                        "title":  "Права не найдены",
+                                                        "description":  "Поиск или фильтры не дали подходящих прав."
+                                                    }
+                                  }
+              },
+    "messages":  {
+                     "pinUpdated":  "PIN-код успешно обновлен."
+                 }
 }

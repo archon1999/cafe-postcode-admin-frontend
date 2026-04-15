@@ -1,6 +1,7 @@
 export {
   useCreateCashDeskMutation,
   useCreateDistributionPointMutation,
+  useCreateIntegrationConfigMutation,
   useCreatePrepStationMutation,
   useCreateRestaurantMutation,
   useDeleteCashDeskMutation,
@@ -9,6 +10,7 @@ export {
   useDeleteRestaurantMutation,
   useUpdateCashDeskMutation,
   useUpdateDistributionPointMutation,
+  useUpdateIntegrationConfigMutation,
   useUpdatePrepStationMutation,
   useUpdateRestaurantMutation,
 } from './mutations';
@@ -19,6 +21,9 @@ export {
   useGetDistributionPointsListQuery,
   useGetDistributionPointsQuery,
   useGetDistributionPointByIdQuery,
+  useGetIntegrationConfigByIdQuery,
+  useGetIntegrationConfigsListQuery,
+  useGetIntegrationConfigsQuery,
   useGetOrganizationsHallsQuery,
   useGetMyRestaurantQuery,
   useGetOrganizationsPrepStationByIdQuery,

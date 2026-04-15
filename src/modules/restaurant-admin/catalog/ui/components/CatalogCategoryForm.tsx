@@ -13,11 +13,12 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { useTranslate } from 'app/providers/locales';
-import type { CatalogCategory } from 'shared/api/admin-types';
+import type { CatalogCategory, CatalogCategoryPayload } from 'shared/api/admin-types';
 import { FormActions } from 'shared/ui/FormActions';
 import { Form, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
 
 import { useCreateCatalogCategoryMutation, useUpdateCatalogCategoryMutation } from '../../application';
+import { getMxikPrimaryPictureUrl } from '../../data-access';
 
 import { buildMxikOption, MxikAutocompleteField } from './MxikAutocompleteField';
 
@@ -27,6 +28,7 @@ const mxikOptionSchema = z
     code: z.string().min(1),
     label: z.string().min(1),
     name: z.string().optional(),
+    raw: z.record(z.string(), z.unknown()).optional(),
   })
   .nullable()
   .refine((value) => Boolean(value?.code), { message: 'MXIK kodi talab qilinadi' });
@@ -59,7 +61,7 @@ function CatalogCategoryFormInner({
   onSuccess,
   isDialog,
 }: CatalogCategoryFormProps & { isDialog: boolean }) {
-  const { t } = useTranslate('catalog');
+  const { t, currentLang } = useTranslate('catalog');
   const { t: tCommon } = useTranslate('common');
   const isEditMode = Boolean(category?.id);
 
@@ -77,7 +79,7 @@ function CatalogCategoryFormInner({
   useEffect(() => {
     reset({
       name: category?.name ?? '',
-      mxik: buildMxikOption(category?.mxikCode, category?.mxikName),
+      mxik: buildMxikOption(category?.mxikCode, category?.mxikName, category?.mxikPayload),
       sortOrder: category?.sortOrder ?? 0,
       isActive: category?.isActive ?? true,
     });
@@ -88,12 +90,29 @@ function CatalogCategoryFormInner({
       return;
     }
 
+    const shouldSyncMxikImage =
+      !category ||
+      values.mxik.code !== (category.mxikCode ?? '') ||
+      category.imageSource === 'mxik-cache' ||
+      !category.imageUrl;
+    const imagePayload: Pick<CatalogCategoryPayload, 'imageUrl' | 'imageSource'> = {};
+
+    if (shouldSyncMxikImage) {
+      const imageUrl = await getMxikPrimaryPictureUrl(values.mxik.code, currentLang.value === 'ru' ? 'ru' : 'uz');
+      const imageSource: CatalogCategoryPayload['imageSource'] = imageUrl ? 'mxik-cache' : '';
+
+      imagePayload.imageUrl = imageUrl || null;
+      imagePayload.imageSource = imageSource;
+    }
+
     const payload = {
       name: values.name.trim(),
       mxikCode: values.mxik.code,
       mxikName: values.mxik.name ?? '',
+      mxikPayload: values.mxik.raw ?? {},
       sortOrder: values.sortOrder,
       isActive: values.isActive,
+      ...imagePayload,
     };
 
     const savedCategory =

@@ -4,6 +4,8 @@ import type {
   AdminDistributionPoint,
   AdminDistributionPointPayload,
   AdminHall,
+  AdminIntegrationConfig,
+  AdminIntegrationConfigPayload,
   AdminPrepStation,
   AdminPrepStationPayload,
   AdminRestaurant,
@@ -26,6 +28,10 @@ export interface OrganizationsRepository {
   createPrepStation(payload: AdminPrepStationPayload): Promise<AdminPrepStation>;
   updatePrepStation(id: string, payload: AdminPrepStationPayload): Promise<AdminPrepStation>;
   deletePrepStation(id: string): Promise<void>;
+  getIntegrationConfigs(): Promise<AdminIntegrationConfig[]>;
+  getIntegrationConfigById(id: string): Promise<AdminIntegrationConfig>;
+  createIntegrationConfig(payload: AdminIntegrationConfigPayload): Promise<AdminIntegrationConfig>;
+  updateIntegrationConfig(id: string, payload: AdminIntegrationConfigPayload): Promise<AdminIntegrationConfig>;
   getRestaurants(): Promise<AdminRestaurant[]>;
   getMyRestaurant(): Promise<AdminRestaurant>;
   getRestaurantById(id: string): Promise<AdminRestaurant>;

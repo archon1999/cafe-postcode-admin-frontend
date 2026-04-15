@@ -69,6 +69,11 @@ const MY_RESTAURANT_DISTRIBUTION_POINT_PERMISSION_CODES: PermissionCode[] = [
   'distribution_points.create',
   'distribution_points.update',
 ];
+const MY_RESTAURANT_INTEGRATION_CONFIG_PERMISSION_CODES: PermissionCode[] = [
+  'integration_configs.view',
+  'integration_configs.create',
+  'integration_configs.update',
+];
 const EMPLOYEE_PERMISSION_CODES: PermissionCode[] = ['employees.view', 'employees.create', 'employees.update'];
 
 const ADMIN_LANDING_CANDIDATES = [
@@ -157,6 +162,10 @@ export function canAccessEmployees(snapshot?: AdminAccessSnapshot | null) {
   return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, EMPLOYEE_PERMISSION_CODES);
 }
 
+export function canUpdateEmployees(snapshot?: AdminAccessSnapshot | null) {
+  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, ['employees.update']);
+}
+
 export function canAccessRoles(snapshot?: AdminAccessSnapshot | null) {
   return (
     hasActiveRestaurantAccess(snapshot) &&
@@ -173,7 +182,8 @@ export function canAccessMyRestaurant(snapshot?: AdminAccessSnapshot | null) {
     canAccessMyRestaurantGeneral(snapshot) ||
     canAccessMyRestaurantCashDesks(snapshot) ||
     canAccessMyRestaurantPrepStations(snapshot) ||
-    canAccessMyRestaurantDistributionPoints(snapshot)
+    canAccessMyRestaurantDistributionPoints(snapshot) ||
+    canAccessMyRestaurantIntegrations(snapshot)
   );
 }
 
@@ -199,11 +209,18 @@ export function canAccessMyRestaurantDistributionPoints(snapshot?: AdminAccessSn
   );
 }
 
+export function canAccessMyRestaurantIntegrations(snapshot?: AdminAccessSnapshot | null) {
+  return (
+    hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, MY_RESTAURANT_INTEGRATION_CONFIG_PERMISSION_CODES)
+  );
+}
+
 const MY_RESTAURANT_LANDING_CANDIDATES = [
   RoutePath.organizationMyRestaurantGeneral,
   RoutePath.organizationMyRestaurantCashDeskList,
   RoutePath.organizationMyRestaurantPrepStationList,
   RoutePath.organizationMyRestaurantDistributionPointList,
+  RoutePath.organizationMyRestaurantIntegrationConfigList,
 ] as const;
 
 function matchesRoute(pathname: string, path: string) {
@@ -241,6 +258,10 @@ export function canAccessAdminPath(pathname: string, snapshot?: AdminAccessSnaps
 
   if (matchesPrefix(pathname, RoutePath.organizationMyRestaurantDistributionPointList)) {
     return canAccessMyRestaurantDistributionPoints(snapshot);
+  }
+
+  if (matchesPrefix(pathname, RoutePath.organizationMyRestaurantIntegrationConfigList)) {
+    return canAccessMyRestaurantIntegrations(snapshot);
   }
 
   if (matchesPrefix(pathname, RoutePath.organizationRestaurantList)) {

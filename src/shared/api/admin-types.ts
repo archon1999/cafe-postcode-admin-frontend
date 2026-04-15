@@ -280,6 +280,26 @@ export type AdminPrepStationPayload = {
   isActive: boolean;
 };
 
+export type AdminIntegrationConfigKind = 'fiscal' | 'payment' | 'printer';
+export type AdminIntegrationConfigMode = 'mock' | 'live';
+
+export type AdminIntegrationConfig = {
+  id: string;
+  kind: AdminIntegrationConfigKind;
+  provider: string;
+  mode: AdminIntegrationConfigMode;
+  isEnabled: boolean;
+  settings: Record<string, unknown>;
+};
+
+export type AdminIntegrationConfigPayload = {
+  kind: AdminIntegrationConfigKind;
+  provider: string;
+  mode: AdminIntegrationConfigMode;
+  isEnabled: boolean;
+  settings: Record<string, unknown>;
+};
+
 export type AdminRestaurantTariff = {
   id: string;
   name: string;
@@ -603,6 +623,7 @@ export type CatalogCategory = {
   name: string;
   mxikCode: string;
   mxikName?: string;
+  mxikPayload?: Record<string, unknown>;
   imageUrl?: string | null;
   imageSource?: 'mxik-cache' | 'manual' | null;
   sortOrder: number;
@@ -613,6 +634,9 @@ export type CatalogCategoryPayload = {
   name: string;
   mxikCode: string;
   mxikName?: string;
+  mxikPayload?: Record<string, unknown>;
+  imageUrl?: string | null;
+  imageSource?: 'mxik-cache' | 'manual' | '';
   sortOrder: number;
   isActive: boolean;
 };
@@ -633,6 +657,7 @@ export type CatalogItem = {
   name: string;
   mxikCode?: string;
   mxikName?: string;
+  mxikPayload?: Record<string, unknown>;
   description: string;
   price: number;
   isActive: boolean;
@@ -645,6 +670,7 @@ export type CatalogItemPayload = {
   name: string;
   mxikCode?: string;
   mxikName?: string;
+  mxikPayload?: Record<string, unknown>;
   description: string;
   price: number;
   isActive: boolean;
@@ -875,6 +901,12 @@ export type AdminDistributionPointsQueryParams = AdminListQueryParams & {
 export type AdminPrepStationsQueryParams = AdminListQueryParams & {
   kindIn?: string;
   isActive?: boolean;
+};
+
+export type AdminIntegrationConfigsQueryParams = AdminListQueryParams & {
+  kindIn?: string;
+  modeIn?: string;
+  isEnabled?: boolean;
 };
 
 export type AdminRestaurantsQueryParams = AdminListQueryParams & {

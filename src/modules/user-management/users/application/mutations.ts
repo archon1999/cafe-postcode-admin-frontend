@@ -53,6 +53,19 @@ export function useUpdateEmployeeMutation(id: string) {
   });
 }
 
+export function useChangeEmployeePinMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ user, pin }: { user: AdminUser; pin: string }) =>
+      usersRepository.updateEmployee(user.id, buildUserPayloadFromUser(user, { pin }, 'employee')),
+    onSuccess: async (_, variables) => {
+      await queryClient.invalidateQueries({ queryKey: usersKeys.employees });
+      await queryClient.invalidateQueries({ queryKey: usersKeys.employeeDetail(variables.user.id) });
+    },
+  });
+}
+
 export function useToggleUserActiveMutation() {
   const queryClient = useQueryClient();
 

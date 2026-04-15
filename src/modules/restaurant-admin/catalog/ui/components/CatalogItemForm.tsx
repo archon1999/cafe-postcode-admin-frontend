@@ -31,6 +31,7 @@ const mxikOptionSchema = z
     code: z.string().min(1),
     label: z.string().min(1),
     name: z.string().optional(),
+    raw: z.record(z.string(), z.unknown()).optional(),
   })
   .nullable()
   .optional();
@@ -99,7 +100,7 @@ function CatalogItemFormInner({
       category: item?.category ?? defaultCategoryId ?? '',
       prepStation: item?.prepStation ?? '',
       description: item?.description ?? '',
-      mxik: buildMxikOption(item?.mxikCode, item?.mxikName),
+      mxik: buildMxikOption(item?.mxikCode, item?.mxikName, item?.mxikPayload),
       price: item?.price ?? 0,
       isActive: item?.isActive ?? true,
       isStoplisted: item?.isStoplisted ?? false,
@@ -114,6 +115,7 @@ function CatalogItemFormInner({
       description: values.description?.trim() ?? '',
       mxikCode: values.mxik?.code ?? '',
       mxikName: values.mxik?.name ?? '',
+      mxikPayload: values.mxik?.raw ?? {},
       price: values.price,
       isActive: values.isActive,
       isStoplisted: values.isStoplisted,

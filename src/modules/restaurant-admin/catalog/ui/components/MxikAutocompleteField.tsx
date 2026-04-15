@@ -21,7 +21,11 @@ type MxikAutocompleteFieldProps<TForm extends FieldValues> = {
   required?: boolean;
 };
 
-export function buildMxikOption(code?: string | null, name?: string | null): MxikOption | null {
+export function buildMxikOption(
+  code?: string | null,
+  name?: string | null,
+  raw?: Record<string, unknown> | null,
+): MxikOption | null {
   const normalizedCode = code?.trim();
 
   if (!normalizedCode) {
@@ -35,6 +39,7 @@ export function buildMxikOption(code?: string | null, name?: string | null): Mxi
     code: normalizedCode,
     name: normalizedName,
     label: normalizedName ? `${normalizedCode} - ${normalizedName}` : normalizedCode,
+    raw: raw ?? undefined,
   };
 }
 

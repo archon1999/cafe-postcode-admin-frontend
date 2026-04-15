@@ -116,6 +116,14 @@ const TITLE_RULES: TitleRule[] = [
     ],
   },
   {
+    route: AppRoutes.ORGANIZATION_MY_RESTAURANT_INTEGRATION_CONFIG_LIST,
+    namespaces: ['organizations'],
+    resolve: (_params, t) => [
+      t('organizations:pages.myRestaurant.title', { defaultValue: 'Mening restoranim' }),
+      t('organizations:pages.integrations.title', { defaultValue: 'Integratsiyalar' }),
+    ],
+  },
+  {
     route: AppRoutes.REPORTS,
     namespaces: ['reports'],
     resolve: (_params, t) => [t('reports:workspace.title'), getReportTitle(t, DEFAULT_REPORT_KEY)],

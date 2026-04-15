@@ -7,6 +7,8 @@ const distributionPointsKeys = createKeyFactory('organizations', 'distributionPo
 const distributionPointKeys = createKeyFactory('organizations', 'distributionPoint');
 const prepStationsKeys = createKeyFactory('organizations', 'prepStations');
 const prepStationKeys = createKeyFactory('organizations', 'prepStation');
+const integrationConfigsKeys = createKeyFactory('organizations', 'integrationConfigs');
+const integrationConfigKeys = createKeyFactory('organizations', 'integrationConfig');
 const restaurantsKeys = createKeyFactory('organizations', 'restaurants');
 const restaurantKeys = createKeyFactory('organizations', 'restaurant');
 const hallsKeys = createKeyFactory('organizations', 'halls');
@@ -22,6 +24,9 @@ export const organizationsKeys = {
   prepStations: () => prepStationsKeys.all,
   prepStationsList: prepStationsKeys.list,
   prepStationDetail: prepStationKeys.id,
+  integrationConfigs: () => integrationConfigsKeys.all,
+  integrationConfigsList: integrationConfigsKeys.list,
+  integrationConfigDetail: integrationConfigKeys.id,
   restaurants: () => restaurantsKeys.all,
   restaurantsList: restaurantsKeys.list,
   myRestaurant: () => [...restaurantKeys.all, 'me'] as const,

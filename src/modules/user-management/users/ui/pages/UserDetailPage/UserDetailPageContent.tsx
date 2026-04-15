@@ -1,4 +1,4 @@
-﻿import Avatar from '@mui/material/Avatar';
+import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -23,7 +23,12 @@ import { RouterLink } from 'shared/ui/RouterLink';
 import { formatHallDisplayName } from 'shared/utils/format-hall-display';
 import { formatMoney } from 'shared/utils/format-money';
 
-import { useGetEmployeeByIdQuery, useGetHallsQuery, useGetUserByIdQuery } from '../../../application';
+import {
+  useEmployeeUpdateAccess,
+  useGetEmployeeByIdQuery,
+  useGetHallsQuery,
+  useGetUserByIdQuery,
+} from '../../../application';
 import type { UserManagementSurface } from '../../../domain';
 
 type UserEntry = {
@@ -167,6 +172,7 @@ export const UserDetailPageContent = ({ id, surface = 'user' }: UserDetailPageCo
   const { t: tCommon } = useTranslate('common');
 
   const isEmployeeSurface = surface === 'employee';
+  const canEditEmployee = useEmployeeUpdateAccess();
   const systemUserQuery = useGetUserByIdQuery(id ?? '', { enabled: Boolean(id) && !isEmployeeSurface });
   const employeeUserQuery = useGetEmployeeByIdQuery(id ?? '', { enabled: Boolean(id) && isEmployeeSurface });
   const userQuery = isEmployeeSurface ? employeeUserQuery : systemUserQuery;
@@ -271,15 +277,17 @@ export const UserDetailPageContent = ({ id, surface = 'user' }: UserDetailPageCo
           { name: user.fullName },
         ]}
         action={
-          <Button
-            component={RouterLink}
-            href={isEmployeeSurface ? RouterPathHelper.employeeEdit(user.id) : RouterPathHelper.userEdit(user.id)}
-            variant="contained"
-            color="black"
-            startIcon={<Iconify icon="solar:pen-bold" />}
-            data-testid="user-view-edit">
-            {t('actions.edit')}
-          </Button>
+          !isEmployeeSurface || canEditEmployee ? (
+            <Button
+              component={RouterLink}
+              href={isEmployeeSurface ? RouterPathHelper.employeeEdit(user.id) : RouterPathHelper.userEdit(user.id)}
+              variant="contained"
+              color="black"
+              startIcon={<Iconify icon="solar:pen-bold" />}
+              data-testid="user-view-edit">
+              {t('actions.edit')}
+            </Button>
+          ) : undefined
         }
         sx={{ mb: 2.5 }}
       />

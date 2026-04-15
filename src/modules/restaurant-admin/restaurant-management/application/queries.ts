@@ -6,6 +6,8 @@ import type {
   AdminDistributionPoint,
   AdminDistributionPointsQueryParams,
   AdminHall,
+  AdminIntegrationConfig,
+  AdminIntegrationConfigsQueryParams,
   AdminPaginatedResponse,
   AdminPrepStation,
   AdminPrepStationsQueryParams,
@@ -108,6 +110,39 @@ export function useGetOrganizationsPrepStationByIdQuery(
   return useQuery({
     queryKey: organizationsKeys.prepStationDetail(id),
     queryFn: () => organizationsRepository.getPrepStationById(id),
+    enabled: Boolean(id),
+    ...options,
+  });
+}
+
+export function useGetIntegrationConfigsQuery(
+  options?: Omit<UseQueryOptions<AdminIntegrationConfig[]>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: organizationsKeys.integrationConfigs(),
+    queryFn: () => organizationsRepository.getIntegrationConfigs(),
+    ...options,
+  });
+}
+
+export function useGetIntegrationConfigsListQuery(
+  params: AdminIntegrationConfigsQueryParams,
+  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminIntegrationConfig>>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: organizationsKeys.integrationConfigsList(params),
+    queryFn: () => apiClient.getAdminIntegrationConfigs(params),
+    ...options,
+  });
+}
+
+export function useGetIntegrationConfigByIdQuery(
+  id: string,
+  options?: Omit<UseQueryOptions<AdminIntegrationConfig>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: organizationsKeys.integrationConfigDetail(id),
+    queryFn: () => organizationsRepository.getIntegrationConfigById(id),
     enabled: Boolean(id),
     ...options,
   });

@@ -4,8 +4,10 @@ import {
   canAccessAccessControl,
   canAccessAdminPath,
   canAccessMyRestaurantGeneral,
+  canAccessMyRestaurantIntegrations,
   canAccessOrders,
   canAccessReports,
+  canUpdateEmployees,
   getDefaultAdminPath,
   type AdminAccessSnapshot,
 } from './admin-access';
@@ -38,6 +40,12 @@ describe('admin access', () => {
     expect(canAccessAdminPath(RoutePath.organizationMyRestaurantGeneral, snapshot)).toBe(true);
   });
 
+  it('allows my restaurant integrations when integration config permission exists', () => {
+    const snapshot = createSnapshot(['integration_configs.view']);
+    expect(canAccessMyRestaurantIntegrations(snapshot)).toBe(true);
+    expect(canAccessAdminPath(RoutePath.organizationMyRestaurantIntegrationConfigList, snapshot)).toBe(true);
+  });
+
   it('picks the first reachable landing path from canonical permissions', () => {
     const snapshot = createSnapshot(['payments.view']);
     expect(getDefaultAdminPath(snapshot)).toBe(RoutePath.paymentList);
@@ -51,6 +59,14 @@ describe('admin access', () => {
     expect(canAccessAdminPath(RoutePath.employeeList, employeeSnapshot)).toBe(true);
     expect(canAccessAccessControl(roleSnapshot)).toBe(true);
     expect(canAccessAdminPath(RoutePath.roleList, roleSnapshot)).toBe(true);
+  });
+
+  it('requires employees.update for employee edit affordances', () => {
+    const viewOnlySnapshot = createSnapshot(['employees.view']);
+    const updateSnapshot = createSnapshot(['employees.update']);
+
+    expect(canUpdateEmployees(viewOnlySnapshot)).toBe(false);
+    expect(canUpdateEmployees(updateSnapshot)).toBe(true);
   });
 
   it('keeps product-owner scope limited to business partners and tariffs', () => {

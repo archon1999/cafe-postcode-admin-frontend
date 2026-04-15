@@ -10,7 +10,6 @@ import type {
   AdminDistributionPoint,
   AdminDistributionPointsQueryParams,
   AdminDistributionPointPayload,
-  AdminMxikLookupResult,
   AdminDiningTable,
   AdminDiningTablesQueryParams,
   AdminDiningTablePayload,
@@ -19,6 +18,9 @@ import type {
   AdminHall,
   AdminHallsQueryParams,
   AdminHallPayload,
+  AdminIntegrationConfig,
+  AdminIntegrationConfigPayload,
+  AdminIntegrationConfigsQueryParams,
   AdminKitchenTicket,
   AdminKitchenTicketsQueryParams,
   AdminLoginRequest,
@@ -535,6 +537,40 @@ export const apiClient = {
       .then((response) => response.data);
   },
 
+  getAdminIntegrationConfigs(params?: AdminIntegrationConfigsQueryParams) {
+    return instance
+      .get<AdminPaginatedResponse<AdminIntegrationConfig>>('/api/v1/admin/integrations/configs/', {
+        params: {
+          page: params?.page,
+          pageSize: params?.pageSize,
+          search: params?.search,
+          kindIn: params?.kindIn,
+          modeIn: params?.modeIn,
+          isEnabled: params?.isEnabled,
+          ordering: params?.ordering,
+        },
+      })
+      .then((response) => response.data);
+  },
+
+  getAdminIntegrationConfigById(id: string) {
+    return instance
+      .get<AdminIntegrationConfig>(`/api/v1/admin/integrations/configs/${id}/`)
+      .then((response) => response.data);
+  },
+
+  createAdminIntegrationConfig(payload: AdminIntegrationConfigPayload) {
+    return instance
+      .post<AdminIntegrationConfig>('/api/v1/admin/integrations/configs/', payload)
+      .then((response) => response.data);
+  },
+
+  updateAdminIntegrationConfig(id: string, payload: AdminIntegrationConfigPayload) {
+    return instance
+      .put<AdminIntegrationConfig>(`/api/v1/admin/integrations/configs/${id}/`, payload)
+      .then((response) => response.data);
+  },
+
   getAdminBusinessPartners(params?: AdminBusinessPartnersQueryParams) {
     return instance
       .get<AdminPaginatedResponse<AdminBusinessPartner>>('/api/v1/admin/platform/business-partners/', {
@@ -690,7 +726,9 @@ export const apiClient = {
   },
 
   extendAdminRestaurant(id: string) {
-    return instance.post<AdminRestaurant>(`/api/v1/admin/platform/restaurants/${id}/extend/`).then((response) => response.data);
+    return instance
+      .post<AdminRestaurant>(`/api/v1/admin/platform/restaurants/${id}/extend/`)
+      .then((response) => response.data);
   },
 
   resetAdminRestaurantPassword(id: string) {
@@ -878,26 +916,6 @@ export const apiClient = {
 
   deleteAdminCatalogItem(id: string) {
     return instance.delete<void>(`/api/v1/admin/catalog/items/${id}/`).then((response) => response.data);
-  },
-
-  searchAdminMxik(params: { query: string; lang?: string; limit?: number }) {
-    return instance
-      .get<AdminMxikLookupResult[]>('/api/v1/admin/catalog/mxik/search/', {
-        params: {
-          query: params.query,
-          lang: params.lang,
-          limit: params.limit,
-        },
-      })
-      .then((response) => response.data);
-  },
-
-  getAdminMxikByCode(code: string, lang?: string) {
-    return instance
-      .get<AdminMxikLookupResult>(`/api/v1/admin/catalog/mxik/${code}/`, {
-        params: { lang },
-      })
-      .then((response) => response.data);
   },
 
   getAdminReportSummary(params: AdminSummaryReportQueryParams) {

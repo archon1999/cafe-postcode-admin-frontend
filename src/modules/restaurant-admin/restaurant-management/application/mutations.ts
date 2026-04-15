@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type {
   AdminCashDeskPayload,
   AdminDistributionPointPayload,
+  AdminIntegrationConfigPayload,
   AdminPrepStationPayload,
   AdminRestaurantPayload,
 } from 'shared/api/admin-types';
@@ -108,6 +109,30 @@ export function useDeletePrepStationMutation() {
     mutationFn: (id: string) => organizationsRepository.deletePrepStation(id),
     onSuccess: async () => {
       await invalidateQueryKeys(queryClient, [organizationsKeys.prepStations()]);
+    },
+  });
+}
+
+export function useCreateIntegrationConfigMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: AdminIntegrationConfigPayload) => organizationsRepository.createIntegrationConfig(payload),
+    onSuccess: async () => {
+      await invalidateQueryKeys(queryClient, [organizationsKeys.integrationConfigs()]);
+    },
+  });
+}
+
+export function useUpdateIntegrationConfigMutation(id: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: AdminIntegrationConfigPayload) =>
+      organizationsRepository.updateIntegrationConfig(id, payload),
+    onSuccess: async () => {
+      await invalidateQueryKeys(queryClient, [
+        organizationsKeys.integrationConfigs(),
+        organizationsKeys.integrationConfigDetail(id),
+      ]);
     },
   });
 }

@@ -11,7 +11,7 @@ import type {
 } from 'shared/api/admin-types';
 import { apiClient } from 'shared/api/http/apiClient';
 
-import { catalogRepository } from '../data-access';
+import { catalogRepository, searchMxik } from '../data-access';
 
 import { catalogKeys } from './keys';
 
@@ -91,12 +91,7 @@ export function useSearchMxikQuery(
 ) {
   return useQuery({
     queryKey: catalogKeys.mxikSearch(params),
-    queryFn: () =>
-      apiClient.searchAdminMxik({
-        query: params.query ?? '',
-        lang: params.lang,
-        limit: params.limit,
-      }),
+    queryFn: () => searchMxik({ query: params.query ?? '', lang: params.lang, limit: params.limit }),
     enabled: Boolean(params.query?.trim()) && (options?.enabled ?? true),
     ...options,
   });

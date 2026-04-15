@@ -109,6 +109,12 @@ const MyRestaurantDistributionPointsPage = lazy(
       'modules/restaurant-admin/restaurant-management/ui/pages/MyRestaurantDistributionPointsPage/MyRestaurantDistributionPointsPage'
     ),
 );
+const MyRestaurantIntegrationsPage = lazy(
+  () =>
+    import(
+      'modules/restaurant-admin/restaurant-management/ui/pages/MyRestaurantIntegrationsPage/MyRestaurantIntegrationsPage'
+    ),
+);
 const RestaurantFormPage = lazy(
   () => import('modules/business-partner/restaurants/ui/pages/RestaurantFormPage/RestaurantFormPage'),
 );
@@ -309,6 +315,10 @@ const mainChildren: RouteObject[] = [
   {
     path: RoutePath.organizationMyRestaurantDistributionPointList,
     element: <MyRestaurantDistributionPointsPage />,
+  },
+  {
+    path: RoutePath.organizationMyRestaurantIntegrationConfigList,
+    element: <MyRestaurantIntegrationsPage />,
   },
   {
     path: RoutePath.organizationRestaurantCreate,

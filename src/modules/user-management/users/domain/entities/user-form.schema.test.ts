@@ -1,8 +1,20 @@
 import { describe, expect, it } from 'vitest';
 
-import { buildUserPayload, defaultUserFormValues, mapUserToFormValues, userFormSchema } from './user-form.schema';
+import {
+  buildUserPayload,
+  defaultUserFormValues,
+  isValidPinCode,
+  mapUserToFormValues,
+  userFormSchema,
+} from './user-form.schema';
 
 describe('userFormSchema', () => {
+  it('accepts only four digit PIN codes', () => {
+    expect(isValidPinCode('1234')).toBe(true);
+    expect(isValidPinCode('123')).toBe(false);
+    expect(isValidPinCode('12a4')).toBe(false);
+  });
+
   it('defaults salary type to monthly in initial values', () => {
     expect(defaultUserFormValues.salaryType).toBe('monthly');
   });
