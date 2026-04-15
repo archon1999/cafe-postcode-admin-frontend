@@ -46,6 +46,23 @@
     "endDate": "Дата окончания",
     "customRange": "Произвольный диапазон"
   },
+  "dateRangePicker": {
+    "quickSelect": "Быстрый выбор",
+    "from": "С",
+    "to": "По",
+    "presets": {
+      "today": "Сегодня",
+      "weekToDate": "С начала недели",
+      "quarterToDate": "С начала квартала",
+      "monthToDate": "С начала месяца",
+      "yearToDate": "С начала года",
+      "last7Days": "Последние 7 дней",
+      "lastWeek": "Прошлая неделя",
+      "lastMonth": "Прошлый месяц",
+      "lastQuarter": "Прошлый квартал",
+      "lastYear": "Прошлый год"
+    }
+  },
   "paymentMethods": {
     "cash": "Наличные",
     "card": "Карта",

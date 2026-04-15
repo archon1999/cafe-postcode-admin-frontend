@@ -2,12 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { toTashkentCalendarDayjs } from 'shared/utils/dayjs';
 
-import {
-  createCustomRangeState,
-  createPresetRangeState,
-  updateRangeEnd,
-  updateRangeStart,
-} from './reportsDateRange';
+import { createCustomRangeState, createPresetRangeState, updateRangeEnd, updateRangeStart } from './reportsDateRange';
 
 describe('reportsDateRange', () => {
   it('builds today preset for the current Tashkent day', () => {
@@ -30,6 +25,16 @@ describe('reportsDateRange', () => {
     });
   });
 
+  it('builds month to date without including future days in the current month', () => {
+    const state = createPresetRangeState('monthToDate', toTashkentCalendarDayjs('2026-04-08'));
+
+    expect(state).toEqual({
+      startDate: '2026-04-01',
+      endDate: '2026-04-08',
+      activePreset: 'monthToDate',
+    });
+  });
+
   it('builds full current year for the yearly preset', () => {
     const state = createPresetRangeState('year', toTashkentCalendarDayjs('2026-04-08'));
 
@@ -37,6 +42,36 @@ describe('reportsDateRange', () => {
       startDate: '2026-01-01',
       endDate: '2026-12-31',
       activePreset: 'year',
+    });
+  });
+
+  it('builds quarter to date from the current quarter start', () => {
+    const state = createPresetRangeState('quarterToDate', toTashkentCalendarDayjs('2026-04-08'));
+
+    expect(state).toEqual({
+      startDate: '2026-04-01',
+      endDate: '2026-04-08',
+      activePreset: 'quarterToDate',
+    });
+  });
+
+  it('builds last 7 days ending on the current day', () => {
+    const state = createPresetRangeState('last7Days', toTashkentCalendarDayjs('2026-04-15'));
+
+    expect(state).toEqual({
+      startDate: '2026-04-08',
+      endDate: '2026-04-15',
+      activePreset: 'last7Days',
+    });
+  });
+
+  it('builds the previous full quarter', () => {
+    const state = createPresetRangeState('lastQuarter', toTashkentCalendarDayjs('2026-04-08'));
+
+    expect(state).toEqual({
+      startDate: '2026-01-01',
+      endDate: '2026-03-31',
+      activePreset: 'lastQuarter',
     });
   });
 
@@ -67,10 +102,7 @@ describe('reportsDateRange', () => {
   });
 
   it('keeps the range valid when the new end date is before the current start date', () => {
-    const state = updateRangeEnd(
-      createPresetRangeState('month', toTashkentCalendarDayjs('2026-04-08')),
-      '2026-03-15',
-    );
+    const state = updateRangeEnd(createPresetRangeState('month', toTashkentCalendarDayjs('2026-04-08')), '2026-03-15');
 
     expect(state).toEqual({
       startDate: '2026-03-15',

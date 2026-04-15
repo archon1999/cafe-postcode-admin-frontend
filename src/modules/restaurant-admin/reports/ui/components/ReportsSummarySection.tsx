@@ -9,16 +9,16 @@ import { useGetReportSummaryQuery } from '../../application';
 import { reportsRepository } from '../../data-access';
 import type { ReportDefinition } from '../../domain';
 
+import type { ReportsDatePreset, ReportsFixedDatePreset } from './reportsDateRange';
 import { ReportsHeaderCard } from './ReportsHeaderCard';
 import { ReportSummaryCards } from './ReportSummaryCards';
-import type { ReportsDatePreset } from './reportsDateRange';
 
 type ReportsSummarySectionProps = {
   report: ReportDefinition;
   startDate: string;
   endDate: string;
   activePreset: ReportsDatePreset;
-  onPresetChange: (value: Exclude<ReportsDatePreset, 'custom'>) => void;
+  onPresetChange: (value: ReportsFixedDatePreset) => void;
   onRangeChange: (startDate: string, endDate: string) => void;
 };
 

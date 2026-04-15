@@ -46,6 +46,23 @@
     "endDate": "Тугаш санаси",
     "customRange": "Ихтиёрий оралиқ"
   },
+  "dateRangePicker": {
+    "quickSelect": "Тез танлаш",
+    "from": "Дан",
+    "to": "Гача",
+    "presets": {
+      "today": "Бугун",
+      "weekToDate": "Ҳафта бошидан",
+      "quarterToDate": "Чорак бошидан",
+      "monthToDate": "Ой бошидан",
+      "yearToDate": "Йил бошидан",
+      "last7Days": "Охирги 7 кун",
+      "lastWeek": "Ўтган ҳафта",
+      "lastMonth": "Ўтган ой",
+      "lastQuarter": "Ўтган чорак",
+      "lastYear": "Ўтган йил"
+    }
+  },
   "paymentMethods": {
     "cash": "Нақд",
     "card": "Карта",

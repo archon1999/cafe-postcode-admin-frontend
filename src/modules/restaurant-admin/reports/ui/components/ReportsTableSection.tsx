@@ -49,10 +49,10 @@ import {
 import { reportsRepository } from '../../data-access';
 import type { ReportDefinition } from '../../domain';
 
+import type { ReportsDatePreset, ReportsFixedDatePreset } from './reportsDateRange';
 import { ReportsHeaderCard } from './ReportsHeaderCard';
 import type { ReportsToolbarFilter } from './ReportsToolbar';
 import { ReportTableCard } from './ReportTableCard';
-import type { ReportsDatePreset } from './reportsDateRange';
 
 type ReportTableRow =
   | AdminSalesReportRow
@@ -92,7 +92,7 @@ type ReportsTableSectionProps = {
   paginationModel: GridPaginationModel;
   sortModel: GridSortModel;
   columnVisibilityModel: GridColumnVisibilityModel;
-  onPresetChange: (value: Exclude<ReportsDatePreset, 'custom'>) => void;
+  onPresetChange: (value: ReportsFixedDatePreset) => void;
   onRangeChange: (startDate: string, endDate: string) => void;
   onSearchChange: (value: string) => void;
   onClearSearch: () => void;

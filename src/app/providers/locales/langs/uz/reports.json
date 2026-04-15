@@ -53,6 +53,23 @@
     "searchPaymentBreakdownPlaceholder": "To'lov usuli bo'yicha qidiring",
     "searchShiftsPlaceholder": "Kassir yoki kassa bo'yicha qidiring"
   },
+  "dateRangePicker": {
+    "quickSelect": "Tez tanlash",
+    "from": "Dan",
+    "to": "Gacha",
+    "presets": {
+      "today": "Bugun",
+      "weekToDate": "Hafta boshidan",
+      "quarterToDate": "Chorak boshidan",
+      "monthToDate": "Oy boshidan",
+      "yearToDate": "Yil boshidan",
+      "last7Days": "Oxirgi 7 kun",
+      "lastWeek": "O'tgan hafta",
+      "lastMonth": "O'tgan oy",
+      "lastQuarter": "O'tgan chorak",
+      "lastYear": "O'tgan yil"
+    }
+  },
   "paymentMethods": {
     "cash": "Naqd",
     "card": "Karta",

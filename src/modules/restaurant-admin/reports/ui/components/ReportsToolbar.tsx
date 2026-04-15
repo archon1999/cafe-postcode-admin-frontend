@@ -5,13 +5,12 @@ import Popover from '@mui/material/Popover';
 import { alpha, useTheme } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import type { GridColDef, GridColumnVisibilityModel } from '@mui/x-data-grid';
 import { enUS } from 'date-fns/locale/en-US';
 import { ru } from 'date-fns/locale/ru';
 import { uz } from 'date-fns/locale/uz';
 import { uzCyrl } from 'date-fns/locale/uz-Cyrl';
-import { useEffect, useMemo, useState, type MouseEvent } from 'react';
+import { useEffect, useMemo, useState, type ChangeEvent, type MouseEvent } from 'react';
 import { DayPicker, TZDate, type DateRange } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 
@@ -27,7 +26,17 @@ import { Iconify } from 'shared/ui/Iconify';
 import { TableSearchInput } from 'shared/ui/TableSearchInput';
 import { TASHKENT_TIMEZONE, toTashkentCalendarDayjs } from 'shared/utils/dayjs';
 
-import { createCustomRangeState, type ReportsDatePreset } from './reportsDateRange';
+import {
+  createCustomRangeState,
+  getPresetDateRange,
+  isValidReportsDate,
+  REPORTS_DATE_QUICK_PRESETS,
+  updateRangeEnd,
+  updateRangeStart,
+  type ReportsDatePreset,
+  type ReportsDateQuickPreset,
+  type ReportsFixedDatePreset,
+} from './reportsDateRange';
 
 type ToolbarFilter = {
   label: string;
@@ -45,6 +54,7 @@ type ReportsToolbarProps = {
   activePreset: ReportsDatePreset;
   startDate: string;
   endDate: string;
+  onPresetChange: (value: ReportsFixedDatePreset) => void;
   onRangeChange: (startDate: string, endDate: string) => void;
   search?: string;
   onSearchChange?: (value: string) => void;
@@ -65,6 +75,8 @@ type ReportsToolbarProps = {
 
 const MIN_MONTH = new TZDate(2020, 0, 1, TASHKENT_TIMEZONE);
 const MAX_MONTH = new TZDate(2100, 11, 31, TASHKENT_TIMEZONE);
+const MIN_DATE_VALUE = '2020-01-01';
+const MAX_DATE_VALUE = '2100-12-31';
 
 function formatDisplayDate(value: string) {
   return toTashkentCalendarDayjs(value, 'YYYY-MM-DD').format('DD.MM.YYYY');
@@ -81,9 +93,10 @@ function fromRangePickerDate(value: Date) {
 }
 
 export function ReportsToolbar({
-  activePreset: _activePreset,
+  activePreset,
   startDate,
   endDate,
+  onPresetChange,
   onRangeChange,
   search = '',
   onSearchChange,
@@ -102,36 +115,29 @@ export function ReportsToolbar({
   showColumns = false,
 }: ReportsToolbarProps) {
   const { t, currentLang } = useTranslate('reports');
-  const { t: tCommon } = useTranslate('common');
   const theme = useTheme();
-  const mdUp = useMediaQuery(theme.breakpoints.up('md'));
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [draftRange, setDraftRange] = useState<DateRange | undefined>(() => ({
     from: toRangePickerDate(startDate),
     to: toRangePickerDate(endDate),
   }));
+  const [draftPreset, setDraftPreset] = useState<ReportsDatePreset>(activePreset);
   const [displayMonth, setDisplayMonth] = useState<Date>(() => toRangePickerDate(startDate));
 
   const open = Boolean(anchorEl);
   const dateRangeLabel = t('filters.dateRange', { defaultValue: 'Date range' });
-  const applyLabel = t('actions.applyRange', { defaultValue: 'Apply' });
+  const quickSelectLabel = t('dateRangePicker.quickSelect', { defaultValue: 'Quick Select' });
+  const fromLabel = t('dateRangePicker.from', { defaultValue: 'From' });
+  const toLabel = t('dateRangePicker.to', { defaultValue: 'To' });
 
   const displayValue = useMemo(
     () => `${formatDisplayDate(startDate)} - ${formatDisplayDate(endDate)}`,
     [endDate, startDate],
   );
 
-  const draftDisplayValue = useMemo(() => {
-    if (!draftRange?.from) {
-      return displayValue;
-    }
-
-    const draftStartDate = fromRangePickerDate(draftRange.from);
-    const draftEndDate = fromRangePickerDate(draftRange.to ?? draftRange.from);
-
-    return `${formatDisplayDate(draftStartDate)} - ${formatDisplayDate(draftEndDate)}`;
-  }, [displayValue, draftRange]);
+  const draftStartDate = useMemo(() => (draftRange?.from ? fromRangePickerDate(draftRange.from) : ''), [draftRange]);
+  const draftEndDate = useMemo(() => (draftRange?.to ? fromRangePickerDate(draftRange.to) : ''), [draftRange]);
 
   const dayPickerLocale = useMemo(() => {
     if (currentLang.value === 'ru') {
@@ -149,6 +155,34 @@ export function ReportsToolbar({
     return enUS;
   }, [currentLang.value]);
 
+  const quickPresetOptions = useMemo(
+    () =>
+      REPORTS_DATE_QUICK_PRESETS.map((preset) => ({
+        value: preset,
+        label:
+          preset === 'today'
+            ? t('dateRangePicker.presets.today', { defaultValue: t('actions.today', { defaultValue: 'Today' }) })
+            : preset === 'weekToDate'
+              ? t('dateRangePicker.presets.weekToDate', { defaultValue: 'Week to date' })
+              : preset === 'quarterToDate'
+                ? t('dateRangePicker.presets.quarterToDate', { defaultValue: 'Quarter to date' })
+                : preset === 'monthToDate'
+                  ? t('dateRangePicker.presets.monthToDate', { defaultValue: 'Month to date' })
+                  : preset === 'yearToDate'
+                    ? t('dateRangePicker.presets.yearToDate', { defaultValue: 'Year to date' })
+                    : preset === 'last7Days'
+                      ? t('dateRangePicker.presets.last7Days', { defaultValue: 'Last 7 days' })
+                      : preset === 'lastWeek'
+                        ? t('dateRangePicker.presets.lastWeek', { defaultValue: 'Last week' })
+                        : preset === 'lastMonth'
+                          ? t('dateRangePicker.presets.lastMonth', { defaultValue: 'Last month' })
+                          : preset === 'lastQuarter'
+                            ? t('dateRangePicker.presets.lastQuarter', { defaultValue: 'Last quarter' })
+                            : t('dateRangePicker.presets.lastYear', { defaultValue: 'Last year' }),
+      })),
+    [t],
+  );
+
   useEffect(() => {
     if (!open) {
       return;
@@ -158,8 +192,9 @@ export function ReportsToolbar({
     const nextTo = toRangePickerDate(endDate);
 
     setDraftRange({ from: nextFrom, to: nextTo });
+    setDraftPreset(activePreset);
     setDisplayMonth(nextFrom);
-  }, [endDate, open, startDate]);
+  }, [activePreset, endDate, open, startDate]);
 
   const handleOpen = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -169,18 +204,70 @@ export function ReportsToolbar({
     setAnchorEl(null);
   };
 
-  const handleApply = () => {
-    if (!draftRange?.from) {
+  const syncDraftRange = (nextStartDate: string, nextEndDate: string, nextPreset: ReportsDatePreset) => {
+    const nextFrom = toRangePickerDate(nextStartDate);
+    const nextTo = toRangePickerDate(nextEndDate);
+
+    setDraftRange({ from: nextFrom, to: nextTo });
+    setDraftPreset(nextPreset);
+    setDisplayMonth(nextFrom);
+  };
+
+  const commitCustomRange = (from: Date, to: Date) => {
+    const nextRangeState = createCustomRangeState(fromRangePickerDate(from), fromRangePickerDate(to));
+
+    syncDraftRange(nextRangeState.startDate, nextRangeState.endDate, nextRangeState.activePreset);
+    onRangeChange(nextRangeState.startDate, nextRangeState.endDate);
+  };
+
+  const handleQuickPresetSelect = (preset: ReportsDateQuickPreset) => {
+    const nextRange = getPresetDateRange(preset);
+
+    syncDraftRange(nextRange.startDate, nextRange.endDate, preset);
+    onPresetChange(preset);
+  };
+
+  const handleRangeSelect = (nextRange: DateRange | undefined) => {
+    setDraftRange(nextRange);
+    setDraftPreset('custom');
+
+    if (!nextRange?.from) {
       return;
     }
 
-    const nextRangeState = createCustomRangeState(
-      fromRangePickerDate(draftRange.from),
-      fromRangePickerDate(draftRange.to ?? draftRange.from),
-    );
+    setDisplayMonth(nextRange.from);
 
+    if (nextRange.to) {
+      commitCustomRange(nextRange.from, nextRange.to);
+    }
+  };
+
+  const handleStartDateChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const nextStartDate = event.target.value;
+
+    if (!isValidReportsDate(nextStartDate)) {
+      return;
+    }
+
+    const currentRangeState = createCustomRangeState(draftStartDate || startDate, draftEndDate || endDate);
+    const nextRangeState = updateRangeStart(currentRangeState, nextStartDate);
+
+    syncDraftRange(nextRangeState.startDate, nextRangeState.endDate, nextRangeState.activePreset);
     onRangeChange(nextRangeState.startDate, nextRangeState.endDate);
-    handleClose();
+  };
+
+  const handleEndDateChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const nextEndDate = event.target.value;
+
+    if (!isValidReportsDate(nextEndDate)) {
+      return;
+    }
+
+    const currentRangeState = createCustomRangeState(draftStartDate || startDate, draftEndDate || endDate);
+    const nextRangeState = updateRangeEnd(currentRangeState, nextEndDate);
+
+    syncDraftRange(nextRangeState.startDate, nextRangeState.endDate, nextRangeState.activePreset);
+    onRangeChange(nextRangeState.startDate, nextRangeState.endDate);
   };
 
   return (
@@ -246,66 +333,127 @@ export function ReportsToolbar({
         }}>
         <Box
           sx={{
-            p: 2,
+            display: 'flex',
+            flexDirection: { xs: 'column', md: 'row' },
+            width: { xs: 'calc(100vw - 32px)', md: 820 },
+            maxWidth: 'calc(100vw - 32px)',
             '& .rdp-root': {
-              '--rdp-accent-color': theme.palette.primary.main,
-              '--rdp-accent-background-color': alpha(theme.palette.primary.main, 0.14),
+              '--rdp-accent-color': theme.palette.grey[900],
+              '--rdp-accent-background-color': alpha(theme.palette.grey[700], 0.18),
               margin: 0,
             },
             '& .rdp-months': {
               justifyContent: 'center',
             },
+            '& .rdp-month_caption': {
+              justifyContent: 'center',
+              fontSize: 20,
+              fontWeight: 700,
+              color: 'text.primary',
+            },
+            '& .rdp-weekday': {
+              color: 'text.secondary',
+              fontWeight: 600,
+            },
             '& .rdp-day_button': {
               width: 40,
               height: 40,
-              borderRadius: 1.5,
+              borderRadius: '50%',
             },
             '& .rdp-dropdown_root': {
               borderRadius: 1,
             },
           }}>
-          <DayPicker
-            mode="range"
-            selected={draftRange}
-            onSelect={setDraftRange}
-            month={displayMonth}
-            onMonthChange={setDisplayMonth}
-            locale={dayPickerLocale}
-            timeZone={TASHKENT_TIMEZONE}
-            numberOfMonths={mdUp ? 2 : 1}
-            defaultMonth={toRangePickerDate(startDate)}
-            startMonth={MIN_MONTH}
-            endMonth={MAX_MONTH}
-            showOutsideDays
-            pagedNavigation
-            fixedWeeks
-            resetOnSelect
-            navLayout="after"
-            captionLayout="dropdown"
-          />
-
           <Box
             sx={{
-              mt: 2,
-              pt: 2,
-              borderTop: (nextTheme) => `1px solid ${nextTheme.vars.palette.divider}`,
-              display: 'flex',
-              flexDirection: { xs: 'column', sm: 'row' },
-              alignItems: { xs: 'stretch', sm: 'center' },
-              gap: 1.5,
+              width: { xs: 1, md: 260 },
+              flexShrink: 0,
+              p: 2.5,
+              borderRight: { md: (nextTheme) => `1px solid ${nextTheme.vars.palette.divider}` },
+              borderBottom: { xs: (nextTheme) => `1px solid ${nextTheme.vars.palette.divider}`, md: 'none' },
             }}>
-            <Typography variant="body2" sx={{ color: 'text.secondary', flex: 1, minWidth: 0 }}>
-              {draftDisplayValue}
+            <Typography variant="subtitle1" sx={{ mb: 1.5, color: 'text.secondary' }}>
+              {quickSelectLabel}
             </Typography>
 
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
-              <Button size="small" color="inherit" onClick={handleClose}>
-                {tCommon('actions.cancel')}
-              </Button>
+            <Box sx={{ display: 'grid', gap: 0.5 }}>
+              {quickPresetOptions.map((option) => {
+                const selected = draftPreset === option.value;
 
-              <Button size="small" variant="contained" color="black" onClick={handleApply}>
-                {applyLabel}
-              </Button>
+                return (
+                  <Button
+                    key={option.value}
+                    color="inherit"
+                    fullWidth
+                    startIcon={<Iconify icon="solar:calendar-linear" width={20} />}
+                    onClick={() => handleQuickPresetSelect(option.value)}
+                    sx={{
+                      justifyContent: 'flex-start',
+                      px: 1,
+                      py: 1,
+                      borderRadius: 1,
+                      color: selected ? 'text.primary' : 'text.secondary',
+                      bgcolor: selected ? alpha(theme.palette.grey[900], 0.08) : 'transparent',
+                      '&:hover': {
+                        bgcolor: selected ? alpha(theme.palette.grey[900], 0.12) : 'action.hover',
+                      },
+                    }}>
+                    {option.label}
+                  </Button>
+                );
+              })}
+            </Box>
+          </Box>
+
+          <Box sx={{ flex: 1, minWidth: 0, p: 2.5 }}>
+            <DayPicker
+              mode="range"
+              selected={draftRange}
+              onSelect={handleRangeSelect}
+              month={displayMonth}
+              onMonthChange={setDisplayMonth}
+              locale={dayPickerLocale}
+              timeZone={TASHKENT_TIMEZONE}
+              numberOfMonths={1}
+              defaultMonth={toRangePickerDate(startDate)}
+              startMonth={MIN_MONTH}
+              endMonth={MAX_MONTH}
+              showOutsideDays
+              pagedNavigation
+              fixedWeeks
+              resetOnSelect
+              navLayout="around"
+              captionLayout="label"
+            />
+
+            <Box
+              sx={{
+                mt: 2,
+                pt: 2,
+                borderTop: (nextTheme) => `1px solid ${nextTheme.vars.palette.divider}`,
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
+                gap: 2,
+              }}>
+              <TextField
+                size="small"
+                type="date"
+                label={fromLabel}
+                value={draftStartDate}
+                onChange={handleStartDateChange}
+                InputLabelProps={{ shrink: true }}
+                inputProps={{ min: MIN_DATE_VALUE, max: MAX_DATE_VALUE }}
+              />
+
+              <TextField
+                size="small"
+                type="date"
+                label={toLabel}
+                value={draftEndDate}
+                onChange={handleEndDateChange}
+                InputLabelProps={{ shrink: true }}
+                inputProps={{ min: MIN_DATE_VALUE, max: MAX_DATE_VALUE }}
+              />
             </Box>
           </Box>
         </Box>

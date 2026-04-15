@@ -13,18 +13,18 @@ import { DEFAULT_PAGINATION_MODEL, DEFAULT_COLUMN_VISIBILITY_MODEL } from 'share
 import { useParams, useRouter } from 'shared/hooks/router';
 
 import { DEFAULT_REPORT_KEY, getReportDefinition, REPORTS_REGISTRY } from '../../../domain';
-import { ReportsMobileTabs } from '../../components/ReportsMobileTabs';
-import { ReportsSidebar } from '../../components/ReportsSidebar';
-import { ReportsSummarySection } from '../../components/ReportsSummarySection';
-import { ReportsTableSection } from '../../components/ReportsTableSection';
 import {
   createCustomRangeState,
   createPresetRangeState,
   isReportsDatePreset,
   isValidReportsDate,
-  type ReportsDatePreset,
+  type ReportsFixedDatePreset,
   type ReportsDateRangeState,
 } from '../../components/reportsDateRange';
+import { ReportsMobileTabs } from '../../components/ReportsMobileTabs';
+import { ReportsSidebar } from '../../components/ReportsSidebar';
+import { ReportsSummarySection } from '../../components/ReportsSummarySection';
+import { ReportsTableSection } from '../../components/ReportsTableSection';
 
 const REPORTS_DATE_RANGE_STORAGE_KEY = 'restaurant-admin-reports-date-range';
 
@@ -164,7 +164,7 @@ const ReportsPage = () => {
     resetPage();
   };
 
-  const handlePresetChange = (preset: Exclude<ReportsDatePreset, 'custom'>) => {
+  const handlePresetChange = (preset: ReportsFixedDatePreset) => {
     applyDateRangeState(createPresetRangeState(preset));
   };
 
