@@ -16,7 +16,7 @@ import { useTranslate } from 'app/providers/locales';
 import { Form, RHFTextField } from 'shared/ui/HookForm';
 
 import { useChangeEmployeePinMutation, useGetEmployeeByIdQuery } from '../../../application';
-import { isValidPinCode, PIN_CODE_ERROR_MESSAGE } from '../../../domain';
+import { isValidPinCode, PIN_CODE_ERROR_MESSAGE, sanitizePinCodeInput } from '../../../domain';
 
 const changeEmployeePinSchema = z.object({
   pin: z.string().trim().refine(isValidPinCode, { message: PIN_CODE_ERROR_MESSAGE }),
@@ -95,7 +95,8 @@ export function ChangeEmployeePinDialog({ employeeId, onClose, open }: ChangeEmp
                 name="pin"
                 label={t('fields.pin')}
                 helperText={t('fields.pinHint')}
-                inputProps={{ inputMode: 'numeric', maxLength: 4 }}
+                sanitizeValue={sanitizePinCodeInput}
+                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '[0-9]*', maxLength: 4 } }}
               />
             </Stack>
           ) : (

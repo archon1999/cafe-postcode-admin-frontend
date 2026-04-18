@@ -5,6 +5,7 @@ export {
   defaultUserFormValues,
   getUserFormSchema,
   isValidPinCode,
+  sanitizePinCodeInput,
   mapUserToFormValues,
   PIN_CODE_ERROR_MESSAGE,
   type UserFormValues,

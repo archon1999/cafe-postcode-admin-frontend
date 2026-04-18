@@ -5,6 +5,7 @@ import {
   defaultUserFormValues,
   isValidPinCode,
   mapUserToFormValues,
+  sanitizePinCodeInput,
   userFormSchema,
 } from './user-form.schema';
 
@@ -13,6 +14,11 @@ describe('userFormSchema', () => {
     expect(isValidPinCode('1234')).toBe(true);
     expect(isValidPinCode('123')).toBe(false);
     expect(isValidPinCode('12a4')).toBe(false);
+  });
+
+  it('sanitizes pin input to four digits', () => {
+    expect(sanitizePinCodeInput('12a34')).toBe('1234');
+    expect(sanitizePinCodeInput('12 34 56')).toBe('1234');
   });
 
   it('defaults salary type to monthly in initial values', () => {

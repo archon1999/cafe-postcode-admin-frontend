@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 
 import { RHFDatePicker, RHFMultiSelect, RHFPhoneInput, RHFSelect, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
 
-import type { UserFormValues } from '../../../domain';
+import { sanitizePinCodeInput, type UserFormValues } from '../../../domain';
 
 type TranslateFn = (key: string, options?: Record<string, unknown>) => string;
 
@@ -96,7 +96,8 @@ export const UserFormFields = ({
             name="pin"
             label={t('fields.pin')}
             helperText={t('fields.pinHint')}
-            inputProps={{ inputMode: 'numeric', maxLength: 4 }}
+            sanitizeValue={sanitizePinCodeInput}
+            slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '[0-9]*', maxLength: 4 } }}
           />
         )}
 

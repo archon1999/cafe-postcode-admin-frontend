@@ -12,6 +12,10 @@ export function isValidPinCode(value: string) {
   return /^\d{4}$/.test(value);
 }
 
+export function sanitizePinCodeInput(value: string) {
+  return value.replace(/\D/g, '').slice(0, 4);
+}
+
 const numberFieldWithDefaultZero = z.preprocess(
   (value) => (value === '' || value === null || value === undefined ? 0 : Number(value)),
   z.number().min(0, { message: "Summa 0 dan kichik bo'lmasligi kerak" }),

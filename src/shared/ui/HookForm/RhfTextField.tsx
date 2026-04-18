@@ -8,6 +8,7 @@ export type RHFTextFieldProps<T extends FieldValues = FieldValues> = TextFieldPr
   rules?: any;
   numberMax?: number;
   integerOnly?: boolean;
+  sanitizeValue?: (value: string) => string;
 };
 
 export function RHFTextField<T extends FieldValues = FieldValues>({
@@ -15,6 +16,7 @@ export function RHFTextField<T extends FieldValues = FieldValues>({
   rules,
   numberMax,
   integerOnly = false,
+  sanitizeValue,
   helperText,
   slotProps,
   type = 'text',
@@ -40,6 +42,8 @@ export function RHFTextField<T extends FieldValues = FieldValues>({
     return true;
   };
 
+  const sanitizeInputValue = (value: string) => (sanitizeValue ? sanitizeValue(value) : value);
+
   return (
     <Controller
       name={name}
@@ -51,17 +55,20 @@ export function RHFTextField<T extends FieldValues = FieldValues>({
           fullWidth
           value={isNumberType ? transformValue(field.value) : field.value}
           onChange={(event) => {
+            const sanitizedValue = sanitizeInputValue(event.target.value);
+
             if (isNumberType) {
-              const candidate = event.target.value.trim();
+              const candidate = sanitizedValue.trim();
               if (!isAllowedNumberInput(candidate)) return;
             }
 
-            const transformedValue = isNumberType ? transformValueOnChange(event.target.value) : event.target.value;
+            const transformedValue = isNumberType ? transformValueOnChange(sanitizedValue) : sanitizedValue;
 
             field.onChange(transformedValue);
           }}
           onBlur={(event) => {
-            const transformedValue = isNumberType ? transformValueOnBlur(event.target.value) : event.target.value;
+            const sanitizedValue = sanitizeInputValue(event.target.value);
+            const transformedValue = isNumberType ? transformValueOnBlur(sanitizedValue) : sanitizedValue;
 
             if (isNumberType && numberMax !== undefined) {
               const normalized = Number(transformedValue);

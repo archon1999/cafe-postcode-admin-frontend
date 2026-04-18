@@ -89,4 +89,28 @@ describe('ChangeEmployeePinDialog', () => {
     expect(toastSuccessMock).toHaveBeenCalledWith('users:messages.pinUpdated');
     expect(onClose).toHaveBeenCalledTimes(1);
   });
+
+  it('keeps only four digits in the pin input', () => {
+    const employee = createEmployee();
+
+    useTranslateMock.mockImplementation((namespace: string) => ({
+      t: (key: string) => `${namespace}:${key}`,
+    }));
+    useGetEmployeeByIdQueryMock.mockReturnValue({
+      data: employee,
+      isLoading: false,
+    });
+    useChangeEmployeePinMutationMock.mockReturnValue({
+      mutateAsync: vi.fn(),
+      isPending: false,
+    });
+
+    render(<ChangeEmployeePinDialog open employeeId={employee.id} onClose={vi.fn()} />);
+
+    const input = screen.getByLabelText('users:fields.pin') as HTMLInputElement;
+
+    fireEvent.change(input, { target: { value: '12a3456' } });
+
+    expect(input).toHaveValue('1234');
+  });
 });
