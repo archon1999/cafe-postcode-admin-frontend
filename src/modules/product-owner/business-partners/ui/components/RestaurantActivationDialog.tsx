@@ -21,15 +21,22 @@ import type {
   AdminRole,
   AdminTariffOption,
 } from 'shared/api/admin-types';
-import { Form, RHFDatePicker, RHFMultiSelect, RHFRadioGroup, RHFSelect } from 'shared/ui/HookForm';
+import { Form, RHFDatePicker, RHFMultiSelect, RHFRadioGroup, RHFSelect, RHFSumCurrencyField } from 'shared/ui/HookForm';
 import { getCurrentTashkentTime } from 'shared/utils/dayjs';
 import { formatMoney } from 'shared/utils/format-money';
+
+const moneyFieldSchema = z.preprocess(
+  (value) => (value === '' || value === null || value === undefined ? undefined : Number(value)),
+  z.number().min(0),
+);
 
 const activationSchema = z
   .object({
     activationType: z.enum(['tariff', 'custom']).default('tariff'),
     billingPeriod: z.enum(['monthly', 'yearly']),
     tariffId: z.string().default(''),
+    monthlyPrice: moneyFieldSchema.optional(),
+    yearlyPrice: moneyFieldSchema.optional(),
     allowedRoleIds: z.array(z.string()).default([]),
     permissionIds: z.array(z.string()).default([]),
     startsOn: z.string().min(1),
@@ -61,6 +68,22 @@ const activationSchema = z
         message: 'Kamida bitta ruxsat tanlang.',
       });
     }
+
+    if (values.monthlyPrice === undefined) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['monthlyPrice'],
+        message: 'Oylik narxni kiriting.',
+      });
+    }
+
+    if (values.yearlyPrice === undefined) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['yearlyPrice'],
+        message: 'Yillik narxni kiriting.',
+      });
+    }
   });
 
 type ActivationFormValues = z.input<typeof activationSchema>;
@@ -70,6 +93,8 @@ const defaultValues: ActivationFormValues = {
   activationType: 'tariff',
   billingPeriod: 'monthly',
   tariffId: '',
+  monthlyPrice: undefined,
+  yearlyPrice: undefined,
   allowedRoleIds: [],
   permissionIds: [],
   startsOn: getCurrentTashkentTime().format('YYYY-MM-DD'),
@@ -115,8 +140,10 @@ export function RestaurantActivationDialog({
 
   const activationType = methods.watch('activationType');
   const selectedTariffId = methods.watch('tariffId');
-  const selectedRoleIds = methods.watch('allowedRoleIds');
-  const selectedPermissionIds = methods.watch('permissionIds');
+  const watchedRoleIds = methods.watch('allowedRoleIds');
+  const watchedPermissionIds = methods.watch('permissionIds');
+  const selectedRoleIds = useMemo(() => watchedRoleIds ?? [], [watchedRoleIds]);
+  const selectedPermissionIds = useMemo(() => watchedPermissionIds ?? [], [watchedPermissionIds]);
 
   const selectedTariff = useMemo(
     () => tariffs.find((tariff) => tariff.id === selectedTariffId) ?? null,
@@ -181,6 +208,8 @@ export function RestaurantActivationDialog({
       await onSubmit({
         activationType: 'custom',
         billingPeriod: values.billingPeriod,
+        monthlyPrice: values.monthlyPrice,
+        yearlyPrice: values.yearlyPrice,
         allowedRoleIds: values.allowedRoleIds,
         permissionIds: uniqueIds(values.permissionIds),
         startsOn: values.startsOn,
@@ -202,7 +231,7 @@ export function RestaurantActivationDialog({
       <DialogContent>
         <Form methods={methods} onSubmit={handleSubmit}>
           <Stack spacing={3} sx={{ pt: 1 }}>
-            <RHFRadioGroup<ActivationValues>
+            <RHFRadioGroup
               name="activationType"
               label={t('fields.customTariff')}
               row
@@ -212,7 +241,7 @@ export function RestaurantActivationDialog({
               ]}
             />
 
-            <RHFRadioGroup<ActivationValues>
+            <RHFRadioGroup
               name="billingPeriod"
               label={t('fields.billingPeriod')}
               row
@@ -226,7 +255,7 @@ export function RestaurantActivationDialog({
 
             {activationType === 'tariff' ? (
               <>
-                <RHFSelect<ActivationValues> name="tariffId" label={t('fields.tariff')}>
+                <RHFSelect name="tariffId" label={t('fields.tariff')}>
                   <MenuItem value="">{t('labels.notSelected')}</MenuItem>
                   {tariffs.map((tariff) => (
                     <MenuItem key={tariff.id} value={tariff.id}>
@@ -264,7 +293,11 @@ export function RestaurantActivationDialog({
                   </Stack>
                 </Alert>
 
-                <RHFMultiSelect<ActivationValues>
+                <RHFSumCurrencyField name="monthlyPrice" label={t('fields.monthlyPrice')} />
+
+                <RHFSumCurrencyField name="yearlyPrice" label={t('fields.yearlyPrice')} />
+
+                <RHFMultiSelect
                   name="allowedRoleIds"
                   label={t('fields.allowedRoles')}
                   checkbox
@@ -273,7 +306,7 @@ export function RestaurantActivationDialog({
                   options={filteredRoles.map((role) => ({ value: role.id, label: role.name }))}
                 />
 
-                <RHFMultiSelect<ActivationValues>
+                <RHFMultiSelect
                   name="permissionIds"
                   label={t('fields.permissions')}
                   checkbox
@@ -299,7 +332,7 @@ export function RestaurantActivationDialog({
               </>
             )}
 
-            <RHFDatePicker<ActivationValues>
+            <RHFDatePicker
               name="startsOn"
               label={t('fields.startsOn')}
               outputFormat="YYYY-MM-DD"

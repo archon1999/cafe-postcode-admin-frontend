@@ -52,12 +52,16 @@ import type {
   AdminShiftReportQueryParams,
   AdminShiftReportRow,
   AdminRestaurant,
+  AdminRestaurantBalanceTransaction,
+  AdminRestaurantBalanceTransactionsQueryParams,
+  AdminRestaurantDetail,
   AdminRestaurantLookupResult,
   AdminRestaurantActivationPayload,
   AdminRestaurantActivationOptions,
   AdminRestaurantActivationResult,
   AdminRestaurantsQueryParams,
   AdminRestaurantPayload,
+  AdminRestaurantTopUpPayload,
   AdminSummaryReportQueryParams,
   AdminTariff,
   AdminTariffOption,
@@ -690,6 +694,12 @@ export const apiClient = {
     return instance.get<AdminRestaurant>(`/api/v1/admin/restaurants/${id}/`).then((response) => response.data);
   },
 
+  getAdminRestaurantDetail(id: string) {
+    return instance
+      .get<AdminRestaurantDetail>(`/api/v1/admin/restaurants/${id}/detail/`)
+      .then((response) => response.data);
+  },
+
   lookupAdminRestaurant(taxNumber: string) {
     return instance
       .get<AdminRestaurantLookupResult>('/api/v1/admin/restaurants/lookup/', {
@@ -743,6 +753,28 @@ export const apiClient = {
   resetAdminRestaurantPassword(id: string) {
     return instance
       .post<AdminRestaurantActivationResult>(`/api/v1/admin/platform/restaurants/${id}/reset-password/`)
+      .then((response) => response.data);
+  },
+
+  getAdminRestaurantBalanceTransactions(id: string, params?: AdminRestaurantBalanceTransactionsQueryParams) {
+    return instance
+      .get<AdminPaginatedResponse<AdminRestaurantBalanceTransaction>>(
+        `/api/v1/admin/platform/restaurants/${id}/balance-transactions/`,
+        {
+          params: {
+            page: params?.page,
+            pageSize: params?.pageSize,
+            search: params?.search,
+            ordering: params?.ordering,
+          },
+        },
+      )
+      .then((response) => response.data);
+  },
+
+  topUpAdminRestaurantBalance(id: string, payload: AdminRestaurantTopUpPayload) {
+    return instance
+      .post<AdminRestaurantBalanceTransaction>(`/api/v1/admin/platform/restaurants/${id}/top-up/`, payload)
       .then((response) => response.data);
   },
 

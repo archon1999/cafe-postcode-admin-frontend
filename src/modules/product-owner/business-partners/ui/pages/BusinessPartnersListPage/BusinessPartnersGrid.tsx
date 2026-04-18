@@ -15,11 +15,12 @@ import { Iconify } from 'shared/ui/Iconify';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 
 import {
-  useActivateBusinessPartnerMutation,
   useDeactivateBusinessPartnerMutation,
   useGetBusinessPartnersListQuery,
   useResetBusinessPartnerPasswordMutation,
 } from '../../../application';
+import { BusinessPartnerActivationDialog } from '../../components/BusinessPartnerActivationDialog';
+import { BusinessPartnerClientsCell } from '../../components/BusinessPartnerClientsCell';
 import { CredentialsRevealDialog } from '../../components/CredentialsRevealDialog';
 
 import {
@@ -38,12 +39,12 @@ export function BusinessPartnersGrid() {
   const [columnVisibilityModel, setColumnVisibilityModel] = useState(DEFAULT_COLUMN_VISIBILITY_MODEL);
   const [selectedRows, setSelectedRows] = useState<GridRowSelectionModel>(DEFAULT_SELECTION_MODEL);
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
+  const [rowToActivate, setRowToActivate] = useState<AdminBusinessPartner | null>(null);
   const [rowToDeactivate, setRowToDeactivate] = useState<AdminBusinessPartner | null>(null);
   const [credentials, setCredentials] = useState<AdminGeneratedCredentials | null>(null);
   const [credentialsDialogTitle, setCredentialsDialogTitle] = useState('');
   const [credentialsDialogDescription, setCredentialsDialogDescription] = useState('');
 
-  const activateMutation = useActivateBusinessPartnerMutation();
   const deactivateMutation = useDeactivateBusinessPartnerMutation();
   const resetPasswordMutation = useResetBusinessPartnerPasswordMutation();
 
@@ -65,6 +66,16 @@ export function BusinessPartnersGrid() {
       { field: 'inn', headerName: t('fields.inn'), minWidth: 160, flex: 0.6 },
       { field: 'directorName', headerName: t('fields.directorName'), minWidth: 200, flex: 0.8 },
       { field: 'phone', headerName: t('fields.phone'), minWidth: 160, flex: 0.6 },
+      {
+        field: 'clients',
+        headerName: t('fields.clients'),
+        minWidth: 240,
+        flex: 1,
+        sortable: false,
+        renderCell: ({ row }) => (
+          <BusinessPartnerClientsCell restaurants={row.restaurants} restaurantsCount={row.restaurantsCount} />
+        ),
+      },
       {
         field: 'status',
         headerName: t('fields.status'),
@@ -106,10 +117,7 @@ export function BusinessPartnersGrid() {
                   return;
                 }
 
-                const result = await activateMutation.mutateAsync(params.row.id);
-                setCredentials({ username: result.username, password: result.password });
-                setCredentialsDialogTitle(t('dialogs.partnerCredentials.title'));
-                setCredentialsDialogDescription(t('dialogs.partnerCredentials.description'));
+                setRowToActivate(params.row);
               }}
             />,
             <CustomGridActionsCellItem
@@ -129,7 +137,7 @@ export function BusinessPartnersGrid() {
         },
       },
     ],
-    [activateMutation, resetPasswordMutation, t, tCommon],
+    [resetPasswordMutation, t, tCommon],
   );
 
   return (
@@ -140,7 +148,7 @@ export function BusinessPartnersGrid() {
           rows={query.data?.data ?? []}
           columns={columns}
           rowCount={query.data?.total ?? 0}
-          loading={query.isLoading || activateMutation.isPending || resetPasswordMutation.isPending}
+          loading={query.isLoading || resetPasswordMutation.isPending}
           localeText={localeText}
           paginationMode="server"
           sortingMode="server"
@@ -217,6 +225,17 @@ export function BusinessPartnersGrid() {
             {t('actions.deactivate')}
           </Button>
         }
+      />
+
+      <BusinessPartnerActivationDialog
+        open={rowToActivate}
+        onClose={() => setRowToActivate(null)}
+        onSuccess={(result) => {
+          setRowToActivate(null);
+          setCredentials({ username: result.username, password: result.password });
+          setCredentialsDialogTitle(t('dialogs.partnerCredentials.title'));
+          setCredentialsDialogDescription(t('dialogs.partnerCredentials.description'));
+        }}
       />
 
       <CredentialsRevealDialog

@@ -13,6 +13,7 @@
     "legalName": "Yuridik nom",
     "directorName": "Direktor",
     "phone": "Telefon",
+    "clients": "Mijozlari",
     "email": "Email",
     "address": "Manzil",
     "status": "Holat",
@@ -78,6 +79,11 @@
       "title": "Biznes hamkorni deaktivlashtirish",
       "description": "\"{{name}}\" biznes hamkorni deaktivlashtirmoqchimisiz?"
     },
+    "activatePartner": {
+      "title": "Biznes hamkorni aktivlashtirish",
+      "description": "Login va parolni tekshirib, kerak bo'lsa o'zgartiring.",
+      "credentialsHint": "Default qiymatlar backend tomonidan generatsiya qilinadi."
+    },
     "partnerCredentials": {
       "title": "Biznes hamkor kredensiallari",
       "description": "Login, parol va aktivatsiya kodi faqat bir marta ko'rsatiladi. Xavfsiz joyga yozib oling.",
@@ -106,7 +112,9 @@
     }
   },
   "validation": {
-    "invalidJson": "JSON noto'g'ri formatda."
+    "invalidJson": "JSON noto'g'ri formatda.",
+    "usernameRequired": "Login talab qilinadi.",
+    "passwordRequired": "Parol talab qilinadi."
   },
   "empty": {
     "businessPartners": {

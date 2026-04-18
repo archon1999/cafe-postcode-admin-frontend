@@ -8,6 +8,7 @@ export {
   useDeletePrepStationMutation,
   useDeleteRestaurantMutation,
   useLookupRestaurantMutation,
+  useTopUpRestaurantBalanceMutation,
   useUpdateCashDeskMutation,
   useUpdateDistributionPointMutation,
   useUpdatePrepStationMutation,
@@ -24,7 +25,9 @@ export {
   useGetOrganizationsPrepStationByIdQuery,
   useGetPrepStationsListQuery,
   useGetPrepStationsQuery,
+  useGetRestaurantBalanceTransactionsQuery,
   useGetRestaurantByIdQuery,
+  useGetRestaurantDetailQuery,
   useGetRestaurantsListQuery,
   useGetRestaurantsQuery,
 } from './queries';

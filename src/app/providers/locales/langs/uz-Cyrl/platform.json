@@ -1,23 +1,11 @@
 {
   "pages": {
-    "businessPartners": {
-      "title": "Бизнес ҳамкорлар"
-    },
-    "businessPartnerCreate": {
-      "title": "Янги бизнес ҳамкор"
-    },
-    "businessPartnerEdit": {
-      "title": "Бизнес ҳамкорни таҳрирлаш"
-    },
-    "tariffs": {
-      "title": "Тарифлар"
-    },
-    "tariffCreate": {
-      "title": "Янги тариф"
-    },
-    "tariffEdit": {
-      "title": "Тарифни таҳрирлаш"
-    }
+    "businessPartners": { "title": "Бизнес ҳамкорлар" },
+    "businessPartnerCreate": { "title": "Янги бизнес ҳамкор" },
+    "businessPartnerEdit": { "title": "Бизнес ҳамкорни таҳрирлаш" },
+    "tariffs": { "title": "Тарифлар" },
+    "tariffCreate": { "title": "Янги тариф" },
+    "tariffEdit": { "title": "Тарифни таҳрирлаш" }
   },
   "fields": {
     "inn": "ИНН",
@@ -25,6 +13,7 @@
     "legalName": "Юридик ном",
     "directorName": "Директор",
     "phone": "Телефон",
+    "clients": "Мижозлари",
     "email": "Email",
     "address": "Манзил",
     "status": "Ҳолат",
@@ -90,8 +79,13 @@
       "title": "Бизнес ҳамкорни деактивлаштириш",
       "description": "\"{{name}}\" бизнес ҳамкорни деактивлаштирмоқчимисиз?"
     },
+    "activatePartner": {
+      "title": "Бизнес ҳамкорни активлаштириш",
+      "description": "Логин ва паролни текшириб, керак бўлса ўзгартиринг.",
+      "credentialsHint": "Default қийматлар backend томонидан генерация қилинади."
+    },
     "partnerCredentials": {
-      "title": "Бизнес ҳамкор креденциаллари",
+      "title": "Бизнес ҳамкор креденсиаллари",
       "description": "Логин, парол ва активатсия коди фақат бир марта кўрсатилади. Хавфсиз жойга ёзиб олинг.",
       "resetDescription": "Янги парол фақат бир марта кўрсатилади. Хавфсиз жойга ёзиб олинг."
     },
@@ -104,7 +98,7 @@
       "description": "\"{{name}}\" ресторанни деактивлаштирмоқчимисиз?"
     },
     "restaurantCredentials": {
-      "title": "Ресторан админи креденциаллари",
+      "title": "Ресторан админи креденсиаллари",
       "description": "Логин, парол ва активатсия коди фақат бир марта кўрсатилади. Хавфсиз жойга ёзиб олинг.",
       "resetDescription": "Янги парол фақат бир марта кўрсатилади. Хавфсиз жойга ёзиб олинг."
     },
@@ -118,7 +112,9 @@
     }
   },
   "validation": {
-    "invalidJson": "JSON нотўғри форматда."
+    "invalidJson": "JSON нотўғри форматда.",
+    "usernameRequired": "Логин талаб қилинади.",
+    "passwordRequired": "Парол талаб қилинади."
   },
   "empty": {
     "businessPartners": {

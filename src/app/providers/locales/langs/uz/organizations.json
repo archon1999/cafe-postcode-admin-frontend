@@ -37,13 +37,13 @@
       "title": "Tayyorlash stansiyasini tahrirlash"
     },
     "restaurants": {
-      "title": "Restoranlar"
+      "title": "Mijozlar"
     },
     "restaurantCreate": {
-      "title": "Yangi restoran"
+      "title": "Yangi mijoz"
     },
     "restaurantEdit": {
-      "title": "Restoranni tahrirlash"
+      "title": "Mijozni tahrirlash"
     },
     "myRestaurant": {
       "title": "Mening restoranim"
@@ -85,7 +85,7 @@
     "kind": "Turi",
     "status": "Holat",
     "integrationChannel": "Integratsiya kanali",
-    "restaurant": "Restoran",
+    "restaurant": "Mijoz",
     "legalName": "Yuridik nom",
     "taxNumber": "STIR",
     "authCode": "Aktivatsiya kodi",
@@ -226,8 +226,8 @@
     "createCashDesk": "Yangi kassa",
     "createDistributionPoint": "Yangi nuqta",
     "createPrepStation": "Yangi stansiya",
-    "createRestaurant": "Yangi restoran",
-    "editRestaurantProfile": "Restoran profilini tahrirlash",
+    "createRestaurant": "Yangi mijoz",
+    "editRestaurantProfile": "Mijoz profilini tahrirlash",
     "showAuthCode": "Kodni ko'rsatish",
     "hideAuthCode": "Kodni yashirish",
     "createIntegration": "Yangi integratsiya"
@@ -250,8 +250,8 @@
       "description": "\"{{name}}\" stansiyasini o'chirmoqchimisiz?"
     },
     "deleteRestaurant": {
-      "title": "Restoranni o'chirish",
-      "description": "\"{{name}}\" restoranni o'chirmoqchimisiz?"
+      "title": "Mijozni o'chirish",
+      "description": "\"{{name}}\" mijozni o'chirmoqchimisiz?"
     }
   },
   "empty": {
@@ -297,12 +297,12 @@
     },
     "restaurants": {
       "noData": {
-        "title": "Restoranlar hali yo'q",
-        "description": "Restoranlar yaratilgandan keyin ular shu yerda ko'rinadi."
+        "title": "Mijozlar hali yo'q",
+        "description": "Mijozlar yaratilgandan keyin ular shu yerda ko'rinadi."
       },
       "noResults": {
-        "title": "Restoran topilmadi",
-        "description": "Qidiruv yoki filterlarga mos restoran topilmadi."
+        "title": "Mijoz topilmadi",
+        "description": "Qidiruv yoki filterlarga mos mijoz topilmadi."
       }
     },
     "integrations": {

@@ -5,6 +5,7 @@ import type {
   AdminDistributionPointPayload,
   AdminPrepStationPayload,
   AdminRestaurantPayload,
+  AdminRestaurantTopUpPayload,
 } from 'shared/api/admin-types';
 import { apiClient } from 'shared/api/http/apiClient';
 
@@ -145,6 +146,19 @@ export function useDeleteRestaurantMutation() {
     mutationFn: (id: string) => organizationsRepository.deleteRestaurant(id),
     onSuccess: async () => {
       await invalidateQueryKeys(queryClient, [organizationsKeys.restaurants()]);
+    },
+  });
+}
+
+export function useTopUpRestaurantBalanceMutation(id: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: AdminRestaurantTopUpPayload) => apiClient.topUpAdminRestaurantBalance(id, payload),
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: organizationsKeys.restaurantOverview(id) }),
+        queryClient.invalidateQueries({ queryKey: organizationsKeys.restaurantBalanceTransactions(id) }),
+      ]);
     },
   });
 }

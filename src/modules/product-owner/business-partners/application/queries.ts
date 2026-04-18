@@ -3,6 +3,7 @@ import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
 import type {
   AdminBusinessPartner,
   AdminBusinessPartnersQueryParams,
+  AdminPartnerActivationDefaults,
   AdminPaginatedResponse,
   AdminRestaurantActivationOptions,
   AdminTariff,
@@ -30,6 +31,18 @@ export function useGetBusinessPartnerByIdQuery(
   return useQuery({
     queryKey: platformKeys.businessPartnerDetail(id),
     queryFn: () => apiClient.getAdminBusinessPartnerById(id),
+    enabled: Boolean(id),
+    ...options,
+  });
+}
+
+export function useGetBusinessPartnerActivationDefaultsQuery(
+  id: string,
+  options?: Omit<UseQueryOptions<AdminPartnerActivationDefaults>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: platformKeys.businessPartnerActivationDefaults(id),
+    queryFn: () => apiClient.getAdminBusinessPartnerActivationDefaults(id),
     enabled: Boolean(id),
     ...options,
   });

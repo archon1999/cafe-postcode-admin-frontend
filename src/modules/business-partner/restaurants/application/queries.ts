@@ -10,6 +10,9 @@ import type {
   AdminPrepStation,
   AdminPrepStationsQueryParams,
   AdminRestaurant,
+  AdminRestaurantBalanceTransaction,
+  AdminRestaurantBalanceTransactionsQueryParams,
+  AdminRestaurantDetail,
   AdminRestaurantsQueryParams,
 } from 'shared/api/admin-types';
 import { apiClient } from 'shared/api/http/apiClient';
@@ -139,6 +142,31 @@ export function useGetRestaurantByIdQuery(
   return useQuery({
     queryKey: organizationsKeys.restaurantDetail(id),
     queryFn: () => organizationsRepository.getRestaurantById(id),
+    enabled: Boolean(id),
+    ...options,
+  });
+}
+
+export function useGetRestaurantDetailQuery(
+  id: string,
+  options?: Omit<UseQueryOptions<AdminRestaurantDetail>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: organizationsKeys.restaurantOverview(id),
+    queryFn: () => apiClient.getAdminRestaurantDetail(id),
+    enabled: Boolean(id),
+    ...options,
+  });
+}
+
+export function useGetRestaurantBalanceTransactionsQuery(
+  id: string,
+  params: AdminRestaurantBalanceTransactionsQueryParams,
+  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminRestaurantBalanceTransaction>>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: organizationsKeys.restaurantBalanceTransactionsList(id, params),
+    queryFn: () => apiClient.getAdminRestaurantBalanceTransactions(id, params),
     enabled: Boolean(id),
     ...options,
   });

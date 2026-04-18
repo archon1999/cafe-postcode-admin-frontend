@@ -118,6 +118,9 @@ const MyRestaurantIntegrationsPage = lazy(
 const RestaurantFormPage = lazy(
   () => import('modules/business-partner/restaurants/ui/pages/RestaurantFormPage/RestaurantFormPage'),
 );
+const RestaurantDetailPage = lazy(
+  () => import('modules/business-partner/restaurants/ui/pages/RestaurantDetailPage/RestaurantDetailPage'),
+);
 const HallsListPage = lazy(() => import('modules/restaurant-admin/floor/ui/pages/HallsListPage/HallsListPage'));
 const HallFormPage = lazy(() => import('modules/restaurant-admin/floor/ui/pages/HallFormPage/HallFormPage'));
 const HallConstructorPage = lazy(
@@ -323,6 +326,10 @@ const mainChildren: RouteObject[] = [
   {
     path: RoutePath.organizationRestaurantCreate,
     element: <RestaurantFormPage />,
+  },
+  {
+    path: RoutePath.organizationRestaurantDetail,
+    element: <RestaurantDetailPage />,
   },
   {
     path: RoutePath.organizationRestaurantEdit,

@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { organizationsKeys } from 'modules/business-partner/restaurants/application/keys';
 import type {
   AdminBusinessPartnerPayload,
+  AdminPartnerActivationDefaults,
   AdminRestaurantActivationPayload,
   AdminTariffPayload,
 } from 'shared/api/admin-types';
@@ -46,7 +47,8 @@ export function useActivateBusinessPartnerMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => apiClient.activateAdminBusinessPartner(id),
+    mutationFn: ({ id, payload }: { id: string; payload?: AdminPartnerActivationDefaults }) =>
+      apiClient.activateAdminBusinessPartner(id, payload),
     onSuccess: async () => {
       await invalidate(queryClient, [platformKeys.businessPartners()]);
     },

@@ -1,23 +1,11 @@
 {
   "pages": {
-    "businessPartners": {
-      "title": "Бизнес-партнеры"
-    },
-    "businessPartnerCreate": {
-      "title": "Новый бизнес-партнер"
-    },
-    "businessPartnerEdit": {
-      "title": "Редактирование бизнес-партнера"
-    },
-    "tariffs": {
-      "title": "Тарифы"
-    },
-    "tariffCreate": {
-      "title": "Новый тариф"
-    },
-    "tariffEdit": {
-      "title": "Редактирование тарифа"
-    }
+    "businessPartners": { "title": "Бизнес-партнеры" },
+    "businessPartnerCreate": { "title": "Новый бизнес-партнер" },
+    "businessPartnerEdit": { "title": "Редактирование бизнес-партнера" },
+    "tariffs": { "title": "Тарифы" },
+    "tariffCreate": { "title": "Новый тариф" },
+    "tariffEdit": { "title": "Редактирование тарифа" }
   },
   "fields": {
     "inn": "ИНН",
@@ -25,6 +13,7 @@
     "legalName": "Юридическое название",
     "directorName": "Директор",
     "phone": "Телефон",
+    "clients": "Клиенты",
     "email": "Email",
     "address": "Адрес",
     "status": "Статус",
@@ -90,6 +79,11 @@
       "title": "Деактивация бизнес-партнера",
       "description": "Деактивировать бизнес-партнера \"{{name}}\"?"
     },
+    "activatePartner": {
+      "title": "Активация бизнес-партнера",
+      "description": "Проверьте логин и пароль, при необходимости измените их.",
+      "credentialsHint": "Значения по умолчанию генерируются бэкендом."
+    },
     "partnerCredentials": {
       "title": "Учетные данные бизнес-партнера",
       "description": "Логин, пароль и код активации показываются только один раз. Сохраните их в безопасном месте.",
@@ -118,7 +112,9 @@
     }
   },
   "validation": {
-    "invalidJson": "Некорректный JSON."
+    "invalidJson": "Некорректный JSON.",
+    "usernameRequired": "Логин обязателен.",
+    "passwordRequired": "Пароль обязателен."
   },
   "empty": {
     "businessPartners": {

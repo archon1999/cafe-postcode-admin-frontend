@@ -311,6 +311,50 @@ export type AdminRestaurantTariff = {
   roleCodes: string[];
 };
 
+export type AdminRestaurantActiveUser = {
+  id: string;
+  fullName: string;
+  username: string;
+  role: AdminRoleSummary | null;
+};
+
+export type AdminRestaurantSoliqSummary = {
+  configured: boolean;
+  isEnabled: boolean;
+  mode: AdminIntegrationConfigMode;
+  provider: string;
+  terminalId?: string | null;
+  cashboxId?: string | null;
+  taxNumber?: string | null;
+  endpointUrl?: string | null;
+};
+
+export type AdminRestaurantBalanceSummary = {
+  currentBalance: number;
+  nextChargeAmount?: number | null;
+  nextChargeOn?: string | null;
+  nextPeriodStatus?: 'active' | 'inactive' | null;
+  lastTopUpAt?: string | null;
+};
+
+export type AdminRestaurantBalanceTransactionActor = {
+  id: string;
+  fullName: string;
+  username: string;
+};
+
+export type AdminRestaurantBalanceTransaction = {
+  id: string;
+  kind: 'top_up' | 'renewal_charge';
+  amount: number;
+  balanceAfter: number;
+  performedBy?: AdminRestaurantBalanceTransactionActor | null;
+  note: string;
+  periodStart?: string | null;
+  periodEnd?: string | null;
+  createdAt: string;
+};
+
 export type AdminRestaurant = {
   id: string;
   businessPartnerId?: string | null;
@@ -335,6 +379,12 @@ export type AdminRestaurant = {
   roleCodes?: string[];
   tariff?: AdminRestaurantTariff | null;
   branches?: AdminBranch[];
+};
+
+export type AdminRestaurantDetail = AdminRestaurant & {
+  activeUsers: AdminRestaurantActiveUser[];
+  soliqIntegration?: AdminRestaurantSoliqSummary | null;
+  balance: AdminRestaurantBalanceSummary;
 };
 
 export type AdminRestaurantPayload = {
@@ -443,6 +493,8 @@ export type AdminPartnerActivationResult = AdminGeneratedCredentials & {
 export type AdminRestaurantActivationPayload = {
   activationType?: 'tariff' | 'custom';
   billingPeriod: AdminBillingPeriod;
+  monthlyPrice?: number;
+  yearlyPrice?: number;
   tariffId?: string;
   allowedRoleIds?: string[];
   permissionIds?: string[];
@@ -451,6 +503,11 @@ export type AdminRestaurantActivationPayload = {
 
 export type AdminRestaurantActivationResult = AdminGeneratedCredentials & {
   restaurant: AdminRestaurant;
+};
+
+export type AdminRestaurantTopUpPayload = {
+  amount: number;
+  note?: string;
 };
 
 export type AdminKitchenTicketItem = {
@@ -956,6 +1013,8 @@ export type AdminIntegrationConfigsQueryParams = AdminListQueryParams & {
 export type AdminRestaurantsQueryParams = AdminListQueryParams & {
   isActive?: boolean;
 };
+
+export type AdminRestaurantBalanceTransactionsQueryParams = AdminListQueryParams;
 
 export type AdminBusinessPartnersQueryParams = AdminListQueryParams & {
   isActive?: boolean;

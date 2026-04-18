@@ -15,13 +15,14 @@ import type { AdminRestaurant } from 'shared/api/admin-types';
 import { DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_PAGINATION_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState } from 'shared/ui/CustomDataGrid';
 import { Iconify } from 'shared/ui/Iconify';
-import { formatDate, formatDateTime } from 'shared/utils/format-time';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
+import { formatDate, formatDateTime } from 'shared/utils/format-time';
 
 import { useGetRestaurantsListQuery } from '../../../application';
 import {
   RestaurantActivateDialog,
   RestaurantCredentialsDialog,
+  RestaurantDetailLinkCell,
   type RestaurantCredentialsDialogState,
   RestaurantDeactivateDialog,
   RestaurantDeleteDialog,
@@ -67,7 +68,13 @@ export function RestaurantsGrid() {
 
   const columns = useMemo<GridColDef<AdminRestaurant>[]>(
     () => [
-      { field: 'name', headerName: t('fields.name'), minWidth: 220, flex: 1 },
+      {
+        field: 'name',
+        headerName: t('fields.name'),
+        minWidth: 220,
+        flex: 1,
+        renderCell: ({ row }) => <RestaurantDetailLinkCell id={row.id} name={row.name} />,
+      },
       { field: 'phone', headerName: t('fields.phone'), minWidth: 160, flex: 0.7 },
       {
         field: 'tariff',
