@@ -32,6 +32,7 @@
                    "kind":  "Turi",
                    "sortOrder":  "Tartib",
                    "status":  "Holat",
+                   "image":  "Rasm",
                    "category":  "Kategoriya",
                    "prepStation":  "Tayyorlash stansiyasi",
                    "sku":  "SKU",
@@ -43,9 +44,10 @@
                    "cashSale":  "Sotish turi",
                    "labelStatus":  "Markirovka statusi",
                    "packageCode":  "O\u0027lchov birligi",
-                   "labelStatusWithField":  "Markirovka statusi (label)",
-                   "packageCodeWithField":  "O\u0027lchov birligi (package_code)",
-                   "useCardStatus":  "Tovar kartasi statusi (useCard)",
+                   "labelStatusWithField":  "Markirovka statusi",
+                   "packageCodeWithField":  "O\u0027lchov birligi",
+                   "useCardStatus":  "Tovar kartasi statusi",
+                   "cashSaleRestriction":  "Sotilish uchun cheklov",
                    "mxikProductName":  "Tovar nomi"
                },
     "filters":  {
@@ -65,12 +67,18 @@
                    "mxikImagePreview":  "MXIK rasmi",
                    "mxikImagePreviewDescription":  "Kategoriya rasmi MXIK kodi bo\u0027yicha avtomatik sinxronlangan.",
                    "mxikImageSource":  "MXIK orqali yangilangan",
+                   "manualImageSource":  "Qo'lda yuklangan",
+                   "catalogImageDescription":  "MXIK rasmi avtomatik yuklanadi. Qo'lda yuklangan rasm ustun turadi.",
+                   "catalogImageUnavailable":  "Tanlangan MXIK uchun rasm topilmadi. Qo'lda rasm yuklashingiz mumkin.",
                    "mxikNotAssigned":  "MXIK biriktirilmagan",
                    "mxikRequired":  "Kategoriya uchun MXIK kodi majburiy.",
                    "mxikOptional":  "Mahsulot uchun MXIK kodi ixtiyoriy.",
                    "mxikLoading":  "MXIK qidirilmoqda...",
                    "mxikNotFound":  "MXIK topilmadi",
-                   "mxikDetails":  "MXIK ma\u0027lumotlari"
+                   "mxikDetails":  "MXIK ma\u0027lumotlari",
+                   "cashSaleForbidden":  "Naqd sotish mumkin emas",
+                   "cashSaleLimited":  "Faqat 25 mln gacha naqd sotish mumkin",
+                   "cashSaleUnlimited":  "Hohlagancha sotadi"
                },
     "kinds":  {
                   "dish":  "Taom",
@@ -87,7 +95,9 @@
                     "inactiveOnly":  "Nofaol",
                     "createCategory":  "Yangi kategoriya",
                     "createItem":  "Yangi mahsulot",
-                    "searchMxik":  "MXIK bo\u0027yicha qidiring"
+                    "searchMxik":  "MXIK bo\u0027yicha qidiring",
+                    "removeImage":  "Rasmni olib tashlash",
+                    "restoreMxikImage":  "MXIK rasmini tiklash"
                 },
     "dialogs":  {
                     "deleteCategory":  {

@@ -1,0 +1,83 @@
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import { useFormContext, type FieldValues, type Path } from 'react-hook-form';
+
+import { useTranslate } from 'app/providers/locales';
+import type { CatalogImageSource } from 'shared/api/admin-types';
+import { RHFUpload } from 'shared/ui/HookForm';
+import type { FileUploadType } from 'shared/ui/Upload';
+
+type CatalogImageEditorProps<TForm extends FieldValues> = {
+  imageName: Path<TForm>;
+  imageSourceName: Path<TForm>;
+  mxikImageUrl?: string | null;
+  disabled?: boolean;
+  onClearImage: () => void;
+  onRestoreMxikImage: () => void;
+};
+
+export function CatalogImageEditor<TForm extends FieldValues>({
+  imageName,
+  imageSourceName,
+  mxikImageUrl,
+  disabled = false,
+  onClearImage,
+  onRestoreMxikImage,
+}: CatalogImageEditorProps<TForm>) {
+  const { t } = useTranslate('catalog');
+  const { watch } = useFormContext<TForm>();
+
+  const imageValue = watch(imageName) as FileUploadType | undefined;
+  const imageSource = (watch(imageSourceName) as CatalogImageSource | '' | null | undefined) ?? '';
+  const hasImage = Boolean(imageValue);
+  const canRestoreMxikImage = Boolean(mxikImageUrl) && imageSource !== 'mxik-cache';
+  const imageSourceLabel =
+    imageSource === 'manual'
+      ? t('labels.manualImageSource')
+      : imageSource === 'mxik-cache'
+        ? t('labels.mxikImageSource')
+        : null;
+
+  return (
+    <Stack spacing={1.5}>
+      <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap>
+        <Typography variant="subtitle1">{t('fields.image')}</Typography>
+        {imageSourceLabel ? (
+          <Chip
+            size="small"
+            variant="soft"
+            color={imageSource === 'manual' ? 'success' : 'info'}
+            label={imageSourceLabel}
+          />
+        ) : null}
+      </Stack>
+
+      <Typography variant="body2" color="text.secondary">
+        {mxikImageUrl ? t('labels.catalogImageDescription') : t('labels.catalogImageUnavailable')}
+      </Typography>
+
+      <RHFUpload<TForm>
+        name={imageName}
+        disabled={disabled}
+        helperText={!mxikImageUrl && !hasImage ? t('labels.catalogImageUnavailable') : undefined}
+        onDelete={onClearImage}
+      />
+
+      <Stack direction="row" spacing={1.5} flexWrap="wrap" useFlexGap>
+        {hasImage ? (
+          <Button variant="outlined" color="inherit" onClick={onClearImage} disabled={disabled}>
+            {t('actions.removeImage')}
+          </Button>
+        ) : null}
+
+        {canRestoreMxikImage ? (
+          <Button variant="outlined" onClick={onRestoreMxikImage} disabled={disabled}>
+            {t('actions.restoreMxikImage')}
+          </Button>
+        ) : null}
+      </Stack>
+    </Stack>
+  );
+}

@@ -9,11 +9,42 @@ type MxikSearchParams = {
 };
 
 const DEFAULT_MXIK_API_BASE_URL = 'https://tasnif.soliq.uz/api/cls-api';
-const mxikBaseUrl = (import.meta.env.VITE_MXIK_API_BASE_URL || DEFAULT_MXIK_API_BASE_URL).replace(/\/+$/, '');
+const DEFAULT_MXIK_INTEGRATION_API_BASE_URL = 'https://tasnif.soliq.uz/api/cl-api';
+
+function normalizeBaseUrl(baseUrl: string) {
+  return baseUrl.replace(/\/+$/, '');
+}
+
+function deriveMxikIntegrationBaseUrl(baseUrl: string) {
+  if (/\/api\/cls-api$/i.test(baseUrl)) {
+    return baseUrl.replace(/\/api\/cls-api$/i, '/api/cl-api');
+  }
+
+  if (/\/cls-api$/i.test(baseUrl)) {
+    return baseUrl.replace(/\/cls-api$/i, '/cl-api');
+  }
+
+  try {
+    return new URL('/api/cl-api', baseUrl).toString();
+  } catch {
+    return DEFAULT_MXIK_INTEGRATION_API_BASE_URL;
+  }
+}
+
+const mxikBaseUrl = normalizeBaseUrl(import.meta.env.VITE_MXIK_API_BASE_URL || DEFAULT_MXIK_API_BASE_URL);
+const mxikIntegrationBaseUrl = normalizeBaseUrl(
+  import.meta.env.VITE_MXIK_INTEGRATION_API_BASE_URL || deriveMxikIntegrationBaseUrl(mxikBaseUrl),
+);
+const mxikTimeout = Number(import.meta.env.VITE_MXIK_TIMEOUT) || Number(import.meta.env.VITE_API_TIMEOUT) || 10000;
 
 const mxikHttp = axios.create({
   baseURL: mxikBaseUrl,
-  timeout: Number(import.meta.env.VITE_MXIK_TIMEOUT) || Number(import.meta.env.VITE_API_TIMEOUT) || 10000,
+  timeout: mxikTimeout,
+});
+
+const mxikIntegrationHttp = axios.create({
+  baseURL: mxikIntegrationBaseUrl,
+  timeout: mxikTimeout,
 });
 
 function normalizeLang(lang?: string) {
@@ -80,8 +111,12 @@ function extractItems(payload: unknown): Record<string, unknown>[] {
   return [payload];
 }
 
+function getMxikCode(payload: Record<string, unknown>) {
+  return asString(payload.mxikCode) || asString(payload.mxik) || asString(payload.code);
+}
+
 function normalizeItem(payload: Record<string, unknown>): AdminMxikLookupResult {
-  const code = asString(payload.mxikCode) || asString(payload.code);
+  const code = getMxikCode(payload);
   let name = asString(payload.mxikName) || asString(payload.name) || asString(payload.shortName);
 
   if (!name) {
@@ -172,17 +207,50 @@ function normalizeDetails(payload: Record<string, unknown>): AdminMxikDetails {
   const packages = extractPackages(payload.packages);
 
   return {
-    code: asString(payload.mxikCode) || asString(payload.code),
+    code: getMxikCode(payload),
     name: asString(payload.mxikName) || asString(payload.name) || asString(payload.shortName),
     shortName: asString(payload.shortName),
     unitName: asString(payload.unitName),
     commonUnitName: asString(payload.commonUnitName),
-    useCard: asNumber(payload.useCard) ?? asNumber(payload.cashSale),
+    useCard: asNumber(payload.useCard),
+    cashSale: asNumber(payload.cashSale),
     labelStatus: asNumber(payload.label),
     primaryPackage: pickPrimaryPackage(packages),
     packages,
     raw: payload,
   };
+}
+
+function extractIntegrationDetail(payload: unknown, code: string) {
+  const items = extractItems(payload);
+
+  return items.find((item) => getMxikCode(item) === code) ?? items[0] ?? null;
+}
+
+function mergeDetailsPayloads(
+  detailsPayload: Record<string, unknown> | null,
+  integrationPayload: Record<string, unknown> | null,
+) {
+  if (!detailsPayload && !integrationPayload) {
+    return null;
+  }
+
+  const mergedPayload = {
+    ...(integrationPayload ?? {}),
+    ...(detailsPayload ?? {}),
+  };
+
+  if (integrationPayload && 'cashSale' in integrationPayload) {
+    mergedPayload.cashSale = integrationPayload.cashSale;
+  }
+
+  if (Array.isArray(detailsPayload?.packages)) {
+    mergedPayload.packages = detailsPayload.packages;
+  } else if (Array.isArray(integrationPayload?.packages)) {
+    mergedPayload.packages = integrationPayload.packages;
+  }
+
+  return mergedPayload;
 }
 
 export async function getMxikDetails(code: string, lang?: string): Promise<AdminMxikDetails | null> {
@@ -192,18 +260,44 @@ export async function getMxikDetails(code: string, lang?: string): Promise<Admin
     return null;
   }
 
-  const response = await mxikHttp.get('mxik/get/by-mxik', {
-    params: {
-      mxikCode: normalizedCode,
-      lang: normalizeDetailLang(lang),
-    },
-  });
+  const [detailsResult, integrationResult] = await Promise.allSettled([
+    mxikHttp.get('mxik/get/by-mxik', {
+      params: {
+        mxikCode: normalizedCode,
+        lang: normalizeDetailLang(lang),
+      },
+    }),
+    mxikIntegrationHttp.get('integration-mxik/get/information', {
+      params: {
+        page: 0,
+        size: 25,
+        search_text: normalizedCode,
+        type: 1,
+      },
+    }),
+  ]);
 
-  if (!isRecord(response.data)) {
+  const detailsPayload =
+    detailsResult.status === 'fulfilled' && isRecord(detailsResult.value.data) ? detailsResult.value.data : null;
+  const integrationPayload =
+    integrationResult.status === 'fulfilled'
+      ? extractIntegrationDetail(integrationResult.value.data, normalizedCode)
+      : null;
+  const mergedPayload = mergeDetailsPayloads(detailsPayload, integrationPayload);
+
+  if (!mergedPayload) {
+    if (detailsResult.status === 'rejected') {
+      throw detailsResult.reason;
+    }
+
+    if (integrationResult.status === 'rejected') {
+      throw integrationResult.reason;
+    }
+
     return null;
   }
 
-  return normalizeDetails(response.data);
+  return normalizeDetails(mergedPayload);
 }
 
 function extractPictureNames(payload: unknown): string[] {

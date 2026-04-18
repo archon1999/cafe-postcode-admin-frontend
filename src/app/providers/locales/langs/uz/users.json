@@ -97,8 +97,7 @@
     "system": "Tizimli",
     "custom": "Maxsus",
     "morePermissions": "Yana ruxsatlar",
-    "permissionsSelectedCount": "{{count}} ta ruxsat tanlangan",
-    "employeeLoginAccess": "Bu rol admin panel va dashboard uchun login-parol bilan kiradi."
+    "permissionsSelectedCount": "{{count}} ta ruxsat tanlangan"
   },
   "filters": {
     "all": "Barchasi",

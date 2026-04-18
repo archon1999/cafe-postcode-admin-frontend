@@ -5,6 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+import { useState } from 'react';
 
 import { useTranslate } from 'app/providers/locales';
 import type { CatalogItem } from 'shared/api/admin-types';
@@ -19,6 +20,8 @@ type CatalogBrowserProductCardProps = {
 export function CatalogBrowserProductCard({ product, onEdit }: CatalogBrowserProductCardProps) {
   const { t } = useTranslate('catalog');
   const { t: tCommon } = useTranslate('common');
+  const [isImageBroken, setIsImageBroken] = useState(false);
+  const hasImage = Boolean(product.imageUrl) && !isImageBroken;
 
   return (
     <Card
@@ -30,6 +33,28 @@ export function CatalogBrowserProductCard({ product, onEdit }: CatalogBrowserPro
         flexDirection: 'column',
         gap: 1.5,
       }}>
+      <Box
+        sx={{
+          width: 1,
+          aspectRatio: '4 / 3',
+          overflow: 'hidden',
+          display: 'grid',
+          placeItems: 'center',
+          bgcolor: hasImage ? 'grey.100' : 'background.neutral',
+        }}>
+        {hasImage ? (
+          <Box
+            component="img"
+            src={product.imageUrl ?? undefined}
+            alt={product.name}
+            onError={() => setIsImageBroken(true)}
+            sx={{ width: 1, height: 1, objectFit: 'cover' }}
+          />
+        ) : (
+          <Iconify icon="solar:gallery-wide-bold-duotone" width={34} sx={{ color: 'text.secondary' }} />
+        )}
+      </Box>
+
       <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="flex-start">
         <Typography
           variant="subtitle1"

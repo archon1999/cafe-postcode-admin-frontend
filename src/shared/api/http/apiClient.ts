@@ -1,6 +1,7 @@
 import type {
   AdminBusinessPartner,
   AdminBusinessPartnerLookupResult,
+  AdminPartnerActivationDefaults,
   AdminBusinessPartnerPayload,
   AdminBusinessPartnersQueryParams,
   AdminCashDesk,
@@ -611,10 +612,18 @@ export const apiClient = {
       .then((response) => response.data);
   },
 
-  activateAdminBusinessPartner(id: string) {
+  getAdminBusinessPartnerActivationDefaults(id: string) {
     return instance
-      .post<AdminPartnerActivationResult>(`/api/v1/admin/platform/business-partners/${id}/activate/`)
+      .get<AdminPartnerActivationDefaults>(`/api/v1/admin/platform/business-partners/${id}/activation-defaults/`)
       .then((response) => response.data);
+  },
+
+  activateAdminBusinessPartner(id: string, payload?: AdminPartnerActivationDefaults) {
+    const request = payload
+      ? instance.post<AdminPartnerActivationResult>(`/api/v1/admin/platform/business-partners/${id}/activate/`, payload)
+      : instance.post<AdminPartnerActivationResult>(`/api/v1/admin/platform/business-partners/${id}/activate/`);
+
+    return request.then((response) => response.data);
   },
 
   deactivateAdminBusinessPartner(id: string) {
@@ -870,13 +879,13 @@ export const apiClient = {
     return instance.get<CatalogCategory>(`/api/v1/admin/catalog/categories/${id}/`).then((response) => response.data);
   },
 
-  createAdminCatalogCategory(payload: CatalogCategoryPayload) {
+  createAdminCatalogCategory(payload: CatalogCategoryPayload | FormData) {
     return instance
       .post<CatalogCategory>('/api/v1/admin/catalog/categories/', payload)
       .then((response) => response.data);
   },
 
-  updateAdminCatalogCategory(id: string, payload: CatalogCategoryPayload) {
+  updateAdminCatalogCategory(id: string, payload: CatalogCategoryPayload | FormData) {
     return instance
       .put<CatalogCategory>(`/api/v1/admin/catalog/categories/${id}/`, payload)
       .then((response) => response.data);
@@ -906,11 +915,11 @@ export const apiClient = {
     return instance.get<CatalogItem>(`/api/v1/admin/catalog/items/${id}/`).then((response) => response.data);
   },
 
-  createAdminCatalogItem(payload: CatalogItemPayload) {
+  createAdminCatalogItem(payload: CatalogItemPayload | FormData) {
     return instance.post<CatalogItem>('/api/v1/admin/catalog/items/', payload).then((response) => response.data);
   },
 
-  updateAdminCatalogItem(id: string, payload: CatalogItemPayload) {
+  updateAdminCatalogItem(id: string, payload: CatalogItemPayload | FormData) {
     return instance.put<CatalogItem>(`/api/v1/admin/catalog/items/${id}/`, payload).then((response) => response.data);
   },
 

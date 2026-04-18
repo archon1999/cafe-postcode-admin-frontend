@@ -49,6 +49,10 @@ export type AdminReportKey =
 export type AdminReportPeriodType = 'day' | 'month' | 'year';
 export type AdminBusinessPartnerStatus = 'draft' | 'active' | 'inactive';
 export type AdminBillingPeriod = 'monthly' | 'yearly';
+export type AdminBusinessPartnerRestaurant = {
+  id: string;
+  name: string;
+};
 
 export type AdminZoneOrCabinSummary = {
   id: string;
@@ -367,6 +371,8 @@ export type AdminBusinessPartner = {
   activatedAt?: string | null;
   deactivatedAt?: string | null;
   fakturaPayload?: Record<string, unknown>;
+  restaurants?: AdminBusinessPartnerRestaurant[];
+  restaurantsCount?: number;
 };
 
 export type AdminBusinessPartnerPayload = {
@@ -427,6 +433,8 @@ export type AdminGeneratedCredentials = {
   username: string;
   password: string;
 };
+
+export type AdminPartnerActivationDefaults = AdminGeneratedCredentials;
 
 export type AdminPartnerActivationResult = AdminGeneratedCredentials & {
   partner: AdminBusinessPartner;
@@ -625,10 +633,12 @@ export type CatalogCategory = {
   mxikName?: string;
   mxikPayload?: Record<string, unknown>;
   imageUrl?: string | null;
-  imageSource?: 'mxik-cache' | 'manual' | null;
+  imageSource?: CatalogImageSource | null;
   sortOrder: number;
   isActive: boolean;
 };
+
+export type CatalogImageSource = 'mxik-cache' | 'manual';
 
 export type CatalogCategoryPayload = {
   name: string;
@@ -636,7 +646,10 @@ export type CatalogCategoryPayload = {
   mxikName?: string;
   mxikPayload?: Record<string, unknown>;
   imageUrl?: string | null;
-  imageSource?: 'mxik-cache' | 'manual' | '';
+  imageSource?: CatalogImageSource | '';
+  imageFile?: File | null;
+  clearImage?: boolean;
+  restoreMxikImage?: boolean;
   sortOrder: number;
   isActive: boolean;
 };
@@ -665,6 +678,7 @@ export type AdminMxikDetails = {
   unitName?: string;
   commonUnitName?: string;
   useCard?: number | null;
+  cashSale?: number | null;
   labelStatus?: number | null;
   primaryPackage?: AdminMxikPackage | null;
   packages: AdminMxikPackage[];
@@ -681,6 +695,8 @@ export type CatalogItem = {
   mxikCode?: string;
   mxikName?: string;
   mxikPayload?: Record<string, unknown>;
+  imageUrl?: string | null;
+  imageSource?: CatalogImageSource | null;
   description: string;
   price: number;
   isActive: boolean;
@@ -694,6 +710,11 @@ export type CatalogItemPayload = {
   mxikCode?: string;
   mxikName?: string;
   mxikPayload?: Record<string, unknown>;
+  imageUrl?: string | null;
+  imageSource?: CatalogImageSource | '';
+  imageFile?: File | null;
+  clearImage?: boolean;
+  restoreMxikImage?: boolean;
   description: string;
   price: number;
   isActive: boolean;

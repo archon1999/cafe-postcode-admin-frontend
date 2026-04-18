@@ -1,4 +1,4 @@
-{
+﻿{
     "pages":  {
                   "categories":  {
                                      "title":  "Категории меню"
@@ -35,10 +35,12 @@
                    "cashSale":  "Тип продажи",
                    "labelStatus":  "Статус маркировки",
                    "packageCode":  "Единица измерения",
-                   "labelStatusWithField":  "Статус маркировки (label)",
-                   "packageCodeWithField":  "Единица измерения (package_code)",
-                   "useCardStatus":  "Статус товарной карточки (useCard)",
-                   "mxikProductName":  "Наименование товара"
+                   "labelStatusWithField":  "Статус маркировки",
+                   "packageCodeWithField":  "Единица измерения",
+                   "useCardStatus":  "Статус товарной карточки",
+                   "cashSaleRestriction":  "Ограничение на продажу",
+                   "mxikProductName":  "Наименование товара",
+                   "image":  "Изображение"
                },
     "filters":  {
                     "all":  "Все",
@@ -59,9 +61,15 @@
                    "mxikLoading":  "Идет поиск ИКПУ/MXИК...",
                    "mxikNotFound":  "ИКПУ/MXИК не найден",
                    "mxikDetails":  "Данные MXIK",
+                   "cashSaleForbidden":  "Наличная продажа запрещена",
+                   "cashSaleLimited":  "Разрешена наличная продажа только до 25 млн",
+                   "cashSaleUnlimited":  "Можно продавать без ограничений",
                    "mxikImagePreview":  "Изображение MXIK",
                    "mxikImagePreviewDescription":  "Изображение категории автоматически синхронизировано по коду MXIK.",
-                   "mxikImageSource":  "Обновлено через MXIK"
+                   "mxikImageSource":  "Обновлено через MXIK",
+                   "catalogImageUnavailable":  "Для выбранного MXIK изображение не найдено. Можно загрузить файл вручную.",
+                   "catalogImageDescription":  "Изображение MXIK подгружается автоматически. Загруженное вручную изображение имеет приоритет.",
+                   "manualImageSource":  "Загружено вручную"
                },
     "kinds":  {
                   "dish":  "Блюдо",
@@ -76,7 +84,9 @@
                     "delete":  "Удалить",
                     "createCategory":  "Новая категория",
                     "createItem":  "Новый товар",
-                    "searchMxik":  "Найти по ИКПУ/MXИК"
+                    "searchMxik":  "Найти по ИКПУ/MXИК",
+                    "restoreMxikImage":  "Вернуть изображение MXIK",
+                    "removeImage":  "Удалить изображение"
                 },
     "dialogs":  {
                     "deleteCategory":  {

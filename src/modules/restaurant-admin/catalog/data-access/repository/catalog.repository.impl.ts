@@ -1,6 +1,7 @@
 import { apiClient } from 'shared/api/http/apiClient';
 
 import type { CatalogRepository } from '../../domain';
+import { buildCatalogCategoryFormData, buildCatalogItemFormData } from '../catalogFormData';
 
 export const catalogRepository: CatalogRepository = {
   getCategories() {
@@ -12,11 +13,11 @@ export const catalogRepository: CatalogRepository = {
   },
 
   createCategory(payload) {
-    return apiClient.createAdminCatalogCategory(payload);
+    return apiClient.createAdminCatalogCategory(buildCatalogCategoryFormData(payload));
   },
 
   updateCategory(id, payload) {
-    return apiClient.updateAdminCatalogCategory(id, payload);
+    return apiClient.updateAdminCatalogCategory(id, buildCatalogCategoryFormData(payload));
   },
 
   deleteCategory(id: string) {
@@ -32,11 +33,11 @@ export const catalogRepository: CatalogRepository = {
   },
 
   createItem(payload) {
-    return apiClient.createAdminCatalogItem(payload);
+    return apiClient.createAdminCatalogItem(buildCatalogItemFormData(payload));
   },
 
   updateItem(id, payload) {
-    return apiClient.updateAdminCatalogItem(id, payload);
+    return apiClient.updateAdminCatalogItem(id, buildCatalogItemFormData(payload));
   },
 
   deleteItem(id: string) {

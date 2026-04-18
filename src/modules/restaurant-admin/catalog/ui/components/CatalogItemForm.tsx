@@ -9,24 +9,32 @@ import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { useTranslate } from 'app/providers/locales';
-import type { AdminMxikDetails, AdminMxikPackage, CatalogItem } from 'shared/api/admin-types';
+import type {
+  AdminMxikDetails,
+  AdminMxikPackage,
+  CatalogImageSource,
+  CatalogItem,
+  CatalogItemPayload,
+} from 'shared/api/admin-types';
 import { FormActions } from 'shared/ui/FormActions';
 import { Form, RHFSelect, RHFSumCurrencyField, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
 import { LabelRow } from 'shared/ui/LabelRow/LabelRow';
 
 import {
   useCreateCatalogItemMutation,
-  useGetMxikDetailsQuery,
   useGetCatalogCategoriesQuery,
+  useGetMxikDetailsQuery,
   useGetPrepStationsQuery,
   useUpdateCatalogItemMutation,
 } from '../../application';
+import { getMxikPrimaryPictureUrl } from '../../data-access';
 
+import { CatalogImageEditor } from './CatalogImageEditor';
 import { buildMxikOption, MxikAutocompleteField } from './MxikAutocompleteField';
 
 const mxikOptionSchema = z
@@ -40,12 +48,20 @@ const mxikOptionSchema = z
   .nullable()
   .optional();
 
+const imageFieldSchema = z.custom<File | string | null | undefined>(
+  (value) => value === undefined || value === null || typeof value === 'string' || value instanceof File,
+);
+
 const itemFormSchema = z.object({
   name: z.string().min(1, { message: 'Nomi talab qilinadi' }),
   category: z.string().optional(),
   prepStation: z.string().optional(),
   description: z.string().optional(),
   mxik: mxikOptionSchema,
+  imageFile: imageFieldSchema.optional(),
+  imageSource: z.enum(['mxik-cache', 'manual', '']),
+  clearImage: z.boolean(),
+  restoreMxikImage: z.boolean(),
   price: z.preprocess(
     (value) => (value === '' || value === null || value === undefined ? 0 : value),
     z.coerce.number().int().min(0),
@@ -69,6 +85,10 @@ const defaultValues: ItemFormValues = {
   prepStation: '',
   description: '',
   mxik: null,
+  imageFile: null,
+  imageSource: '',
+  clearImage: false,
+  restoreMxikImage: false,
   price: 0,
   isActive: true,
   isStoplisted: false,
@@ -76,6 +96,10 @@ const defaultValues: ItemFormValues = {
 
 function getMxikDetailLang(lang: string) {
   return lang === 'ru' ? 'ru' : 'uz_latn';
+}
+
+function getMxikImageLang(lang: string) {
+  return lang === 'ru' ? 'ru' : 'uz';
 }
 
 function formatMxikFlag(value: number | null | undefined, yesLabel: string, noLabel: string) {
@@ -111,13 +135,40 @@ function getLabelStatus(details: AdminMxikDetails | null | undefined, fallbackRa
   return typeof rawValue === 'number' ? rawValue : null;
 }
 
-function getUseCardStatus(details: AdminMxikDetails | null | undefined, fallbackRaw?: Record<string, unknown>) {
-  if (details?.useCard !== null && details?.useCard !== undefined) {
-    return details.useCard;
+function getCashSaleStatus(details: AdminMxikDetails | null | undefined, fallbackRaw?: Record<string, unknown>) {
+  if (details?.cashSale !== null && details?.cashSale !== undefined) {
+    return details.cashSale;
   }
 
-  const rawValue = fallbackRaw?.useCard ?? fallbackRaw?.cashSale;
+  const rawValue = fallbackRaw?.cashSale;
   return typeof rawValue === 'number' ? rawValue : null;
+}
+
+function formatCashSaleRestriction(
+  value: number | null | undefined,
+  labels: {
+    forbidden: string;
+    limited: string;
+    unlimited: string;
+  },
+) {
+  if (value === null || value === undefined) {
+    return '';
+  }
+
+  if (value === 0) {
+    return labels.forbidden;
+  }
+
+  if (value === 1) {
+    return labels.limited;
+  }
+
+  if (value === 2) {
+    return labels.unlimited;
+  }
+
+  return String(value);
 }
 
 function CatalogItemFormInner({
@@ -130,6 +181,7 @@ function CatalogItemFormInner({
   const { t, currentLang } = useTranslate('catalog');
   const { t: tCommon } = useTranslate('common');
   const isEditMode = Boolean(item?.id);
+  const [mxikImageUrl, setMxikImageUrl] = useState<string | null>(null);
 
   const categoriesQuery = useGetCatalogCategoriesQuery();
   const prepStationsQuery = useGetPrepStationsQuery();
@@ -141,8 +193,9 @@ function CatalogItemFormInner({
     defaultValues,
   });
 
-  const { handleSubmit, reset, formState, watch, setValue } = methods;
+  const { handleSubmit, reset, formState, watch, setValue, getValues } = methods;
   const selectedMxik = watch('mxik');
+  const selectedImage = watch('imageFile');
   const mxikDetailsQuery = useGetMxikDetailsQuery(
     { code: selectedMxik?.code, lang: getMxikDetailLang(currentLang.value) },
     { enabled: Boolean(selectedMxik?.code) },
@@ -150,7 +203,7 @@ function CatalogItemFormInner({
   const isSubmitting = formState.isSubmitting || createMutation.isPending || updateMutation.isPending;
   const mxikNameValue = mxikDetailsQuery.data?.name || selectedMxik?.name || '';
   const primaryPackage = mxikDetailsQuery.data?.primaryPackage ?? null;
-  const useCardStatus = getUseCardStatus(mxikDetailsQuery.data, selectedMxik?.raw);
+  const cashSaleStatus = getCashSaleStatus(mxikDetailsQuery.data, selectedMxik?.raw);
   const labelStatus = getLabelStatus(mxikDetailsQuery.data, selectedMxik?.raw);
 
   useEffect(() => {
@@ -160,14 +213,97 @@ function CatalogItemFormInner({
       prepStation: item?.prepStation ?? '',
       description: item?.description ?? '',
       mxik: buildMxikOption(item?.mxikCode, item?.mxikName, item?.mxikPayload),
+      imageFile: item?.imageUrl ?? null,
+      imageSource: (item?.imageSource ?? '') as CatalogImageSource | '',
+      clearImage: false,
+      restoreMxikImage: false,
       price: item?.price ?? 0,
       isActive: item?.isActive ?? true,
       isStoplisted: item?.isStoplisted ?? false,
     });
+    setMxikImageUrl(item?.imageSource === 'mxik-cache' ? (item.imageUrl ?? null) : null);
   }, [defaultCategoryId, item, reset]);
 
+  useEffect(() => {
+    if (!(selectedImage instanceof File)) {
+      return;
+    }
+
+    setValue('imageSource', 'manual', { shouldDirty: true, shouldValidate: true });
+    setValue('clearImage', false, { shouldDirty: true });
+    setValue('restoreMxikImage', false, { shouldDirty: true });
+  }, [selectedImage, setValue]);
+
+  useEffect(() => {
+    let isActive = true;
+
+    if (!selectedMxik?.code) {
+      setMxikImageUrl(null);
+      if (getValues('imageSource') !== 'manual') {
+        setValue('imageFile', null, { shouldDirty: false });
+        setValue('imageSource', '', { shouldDirty: false });
+        setValue('restoreMxikImage', false, { shouldDirty: false });
+      }
+      return () => {
+        isActive = false;
+      };
+    }
+
+    void (async () => {
+      const nextImageUrl =
+        (await getMxikPrimaryPictureUrl(selectedMxik.code, getMxikImageLang(currentLang.value))) || null;
+
+      if (!isActive) {
+        return;
+      }
+
+      setMxikImageUrl(nextImageUrl);
+
+      if (getValues('imageSource') === 'manual') {
+        return;
+      }
+
+      setValue('clearImage', false, { shouldDirty: false });
+      setValue('restoreMxikImage', false, { shouldDirty: false });
+      setValue('imageFile', nextImageUrl, { shouldDirty: false });
+      setValue('imageSource', nextImageUrl ? 'mxik-cache' : '', { shouldDirty: false });
+    })();
+
+    return () => {
+      isActive = false;
+    };
+  }, [currentLang.value, getValues, selectedMxik?.code, setValue]);
+
+  const handleClearImage = () => {
+    setValue('imageFile', null, { shouldDirty: true, shouldValidate: true });
+    setValue('imageSource', '', { shouldDirty: true, shouldValidate: true });
+    setValue('clearImage', true, { shouldDirty: true });
+    setValue('restoreMxikImage', false, { shouldDirty: true });
+  };
+
+  const handleRestoreMxikImage = () => {
+    setValue('imageFile', mxikImageUrl, { shouldDirty: true, shouldValidate: true });
+    setValue('imageSource', mxikImageUrl ? 'mxik-cache' : '', { shouldDirty: true, shouldValidate: true });
+    setValue('clearImage', false, { shouldDirty: true });
+    setValue('restoreMxikImage', true, { shouldDirty: true });
+  };
+
   const onSubmit = handleSubmit(async (values) => {
-    const payload = {
+    const resolvedMxikImageUrl = values.mxik?.code
+      ? (await getMxikPrimaryPictureUrl(values.mxik.code, getMxikImageLang(currentLang.value))) || null
+      : null;
+    const normalizedImageSource: CatalogItemPayload['imageSource'] =
+      values.imageFile instanceof File
+        ? 'manual'
+        : values.clearImage
+          ? ''
+          : values.restoreMxikImage
+            ? resolvedMxikImageUrl
+              ? 'mxik-cache'
+              : ''
+            : values.imageSource;
+
+    const payload: CatalogItemPayload = {
       name: values.name.trim(),
       category: values.category || null,
       prepStation: values.prepStation || null,
@@ -175,6 +311,11 @@ function CatalogItemFormInner({
       mxikCode: values.mxik?.code ?? '',
       mxikName: values.mxik?.name ?? '',
       mxikPayload: values.mxik?.raw ?? {},
+      imageUrl: resolvedMxikImageUrl,
+      imageSource: normalizedImageSource,
+      imageFile: values.imageFile instanceof File ? values.imageFile : null,
+      clearImage: values.clearImage,
+      restoreMxikImage: values.restoreMxikImage,
       price: values.price,
       isActive: values.isActive,
       isStoplisted: values.isStoplisted,
@@ -190,6 +331,15 @@ function CatalogItemFormInner({
 
   const fields = (
     <Stack spacing={3} sx={isDialog ? { pt: 1 } : undefined}>
+      <CatalogImageEditor<ItemFormValues>
+        imageName="imageFile"
+        imageSourceName="imageSource"
+        mxikImageUrl={mxikImageUrl}
+        disabled={isSubmitting}
+        onClearImage={handleClearImage}
+        onRestoreMxikImage={handleRestoreMxikImage}
+      />
+
       <Box
         sx={{
           display: 'grid',
@@ -243,9 +393,7 @@ function CatalogItemFormInner({
               p: 2,
             }}>
             <Stack spacing={1.25} divider={<Divider flexItem />}>
-              <Typography variant="subtitle2">
-                {t('labels.mxikDetails')}
-              </Typography>
+              <Typography variant="subtitle2">{t('labels.mxikDetails')}</Typography>
               <LabelRow
                 label={t('fields.mxikProductName')}
                 value={mxikDetailsQuery.isLoading && !mxikNameValue ? tCommon('labels.loading') : mxikNameValue}
@@ -259,11 +407,15 @@ function CatalogItemFormInner({
                 }
               />
               <LabelRow
-                label={t('fields.useCardStatus')}
+                label={t('fields.cashSaleRestriction')}
                 value={
-                  mxikDetailsQuery.isLoading && useCardStatus === null
+                  mxikDetailsQuery.isLoading && cashSaleStatus === null
                     ? tCommon('labels.loading')
-                    : formatMxikFlag(useCardStatus, tCommon('labels.yes'), tCommon('labels.no'))
+                    : formatCashSaleRestriction(cashSaleStatus, {
+                        forbidden: t('labels.cashSaleForbidden'),
+                        limited: t('labels.cashSaleLimited'),
+                        unlimited: t('labels.cashSaleUnlimited'),
+                      })
                 }
               />
               <LabelRow

@@ -141,6 +141,53 @@ describe('apiClient query params', () => {
     });
   });
 
+  it('loads business partner activation defaults', async () => {
+    getMock.mockResolvedValueOnce({
+      data: {
+        username: 'bh-123456789',
+        password: 'secret123',
+      },
+    });
+
+    await apiClient.getAdminBusinessPartnerActivationDefaults('partner-1');
+
+    expect(getMock).toHaveBeenCalledWith('/api/v1/admin/platform/business-partners/partner-1/activation-defaults/');
+  });
+
+  it('sends manual credentials during business partner activation when provided', async () => {
+    postMock.mockResolvedValueOnce({
+      data: {
+        partner: { id: 'partner-1', companyName: 'Partner', status: 'active' },
+        username: 'manual-login',
+        password: 'manual-pass',
+      },
+    });
+
+    await apiClient.activateAdminBusinessPartner('partner-1', {
+      username: 'manual-login',
+      password: 'manual-pass',
+    });
+
+    expect(postMock).toHaveBeenCalledWith('/api/v1/admin/platform/business-partners/partner-1/activate/', {
+      username: 'manual-login',
+      password: 'manual-pass',
+    });
+  });
+
+  it('activates business partner without a payload body for the legacy flow', async () => {
+    postMock.mockResolvedValueOnce({
+      data: {
+        partner: { id: 'partner-1', companyName: 'Partner', status: 'active' },
+        username: 'bh-123456789',
+        password: 'secret123',
+      },
+    });
+
+    await apiClient.activateAdminBusinessPartner('partner-1');
+
+    expect(postMock).toHaveBeenCalledWith('/api/v1/admin/platform/business-partners/partner-1/activate/');
+  });
+
   it('looks up restaurants by tax number through the backend proxy', async () => {
     getMock.mockResolvedValueOnce({
       data: {

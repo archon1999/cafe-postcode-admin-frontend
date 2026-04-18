@@ -1,4 +1,4 @@
-{
+﻿{
     "pages":  {
                   "categories":  {
                                      "title":  "Меню категориялари"
@@ -35,10 +35,12 @@
                    "cashSale":  "Сотиш тури",
                    "labelStatus":  "Маркировка статуси",
                    "packageCode":  "Ўлчов бирлиги",
-                   "labelStatusWithField":  "Маркировка статуси (label)",
-                   "packageCodeWithField":  "Ўлчов бирлиги (package_code)",
-                   "useCardStatus":  "Товар картаси статуси (useCard)",
-                   "mxikProductName":  "Товар номи"
+                   "labelStatusWithField":  "Маркировка статуси",
+                   "packageCodeWithField":  "Ўлчов бирлиги",
+                   "useCardStatus":  "Товар картаси статуси",
+                   "cashSaleRestriction":  "Сотилиш учун чеклов",
+                   "mxikProductName":  "Товар номи",
+                   "image":  "Расм"
                },
     "filters":  {
                     "all":  "Барчаси",
@@ -59,9 +61,15 @@
                    "mxikLoading":  "MXИК қидирилмоқда...",
                    "mxikNotFound":  "MXИК топилмади",
                    "mxikDetails":  "MXIK маълумотлари",
+                   "cashSaleForbidden":  "Нақд сотиш мумкин эмас",
+                   "cashSaleLimited":  "Фақат 25 млн гача нақд сотиш мумкин",
+                   "cashSaleUnlimited":  "Хоҳлаганча сотади",
                    "mxikImagePreview":  "MXIK расми",
                    "mxikImagePreviewDescription":  "Категория расми MXIK коди бўйича автоматик синхронланган.",
-                   "mxikImageSource":  "MXIK орқали янгиланган"
+                   "mxikImageSource":  "MXIK орқали янгиланган",
+                   "catalogImageUnavailable":  "Танланган MXIK учун расм топилмади. Қўлда расм юклашингиз мумкин.",
+                   "catalogImageDescription":  "MXIK расми автоматик юкланади. Қўлда юкланган расм устун туради.",
+                   "manualImageSource":  "Қўлда юкланган"
                },
     "kinds":  {
                   "dish":  "Таом",
@@ -76,7 +84,9 @@
                     "delete":  "Ўчириш",
                     "createCategory":  "Янги категория",
                     "createItem":  "Янги маҳсулот",
-                    "searchMxik":  "MXИК бўйича қидиринг"
+                    "searchMxik":  "MXИК бўйича қидиринг",
+                    "restoreMxikImage":  "MXIK расмини тиклаш",
+                    "removeImage":  "Расмни олиб ташлаш"
                 },
     "dialogs":  {
                     "deleteCategory":  {

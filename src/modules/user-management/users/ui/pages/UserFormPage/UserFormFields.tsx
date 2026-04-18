@@ -49,20 +49,20 @@ export const UserFormFields = ({
   t,
   tCommon,
 }: UserFormFieldsProps) => (
-    <>
-      <Stack spacing={2}>
-        <Typography variant="h6">{t('sections.account')}</Typography>
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
-            gap: 3,
-          }}>
-          <RHFTextField<UserFormValues> name="fullName" label={t('fields.fullName')} />
-          <RHFPhoneInput<UserFormValues>
-            name="phone"
-            label={t('fields.phone')}
-            defaultCountry="UZ"
+  <>
+    <Stack spacing={2}>
+      <Typography variant="h6">{t('sections.account')}</Typography>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
+          gap: 3,
+        }}>
+        <RHFTextField<UserFormValues> name="fullName" label={t('fields.fullName')} />
+        <RHFPhoneInput<UserFormValues>
+          name="phone"
+          label={t('fields.phone')}
+          defaultCountry="UZ"
           placeholder={t('fields.phonePlaceholder')}
         />
 
@@ -84,23 +84,29 @@ export const UserFormFields = ({
         </RHFSelect>
 
         {!isEmployeeSurface || requiresLoginCredentials ? (
-          <RHFTextField<UserFormValues> name="username" label={t('fields.username')} />
-        ) : null}
-        {!isEmployeeSurface || requiresLoginCredentials ? (
-          <RHFTextField<UserFormValues>
-            name="password"
-            label={t('fields.password')}
-            type="password"
-            helperText={
-              isEmployeeSurface && requiresLoginCredentials
-                ? isEditMode
-                  ? t('fields.employeePasswordEditHint')
-                  : t('fields.employeePasswordCreateHint')
-                : isEditMode
-                  ? t('fields.passwordEditHint')
-                  : t('fields.passwordCreateHint')
-            }
-          />
+          <Box
+            sx={{
+              display: 'grid',
+              gridColumn: '1 / -1',
+              gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
+              gap: 3,
+            }}>
+            <RHFTextField<UserFormValues> name="username" label={t('fields.username')} />
+            <RHFTextField<UserFormValues>
+              name="password"
+              label={t('fields.password')}
+              type="password"
+              helperText={
+                isEmployeeSurface && requiresLoginCredentials
+                  ? isEditMode
+                    ? t('fields.employeePasswordEditHint')
+                    : t('fields.employeePasswordCreateHint')
+                  : isEditMode
+                    ? t('fields.passwordEditHint')
+                    : t('fields.passwordCreateHint')
+              }
+            />
+          </Box>
         ) : null}
 
         {showPinField && (

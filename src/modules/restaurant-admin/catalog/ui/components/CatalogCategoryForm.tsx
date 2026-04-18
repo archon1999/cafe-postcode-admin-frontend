@@ -2,24 +2,23 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
-import Chip from '@mui/material/Chip';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { useTranslate } from 'app/providers/locales';
-import type { CatalogCategory, CatalogCategoryPayload } from 'shared/api/admin-types';
+import type { CatalogCategory, CatalogCategoryPayload, CatalogImageSource } from 'shared/api/admin-types';
 import { FormActions } from 'shared/ui/FormActions';
 import { Form, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
 
 import { useCreateCatalogCategoryMutation, useUpdateCatalogCategoryMutation } from '../../application';
 import { getMxikPrimaryPictureUrl } from '../../data-access';
 
+import { CatalogImageEditor } from './CatalogImageEditor';
 import { buildMxikOption, MxikAutocompleteField } from './MxikAutocompleteField';
 
 const mxikOptionSchema = z
@@ -33,9 +32,17 @@ const mxikOptionSchema = z
   .nullable()
   .refine((value) => Boolean(value?.code), { message: 'MXIK kodi talab qilinadi' });
 
+const imageFieldSchema = z.custom<File | string | null | undefined>(
+  (value) => value === undefined || value === null || typeof value === 'string' || value instanceof File,
+);
+
 const categoryFormSchema = z.object({
   name: z.string().min(1, { message: 'Nomi talab qilinadi' }),
   mxik: mxikOptionSchema,
+  imageFile: imageFieldSchema.optional(),
+  imageSource: z.enum(['mxik-cache', 'manual', '']),
+  clearImage: z.boolean(),
+  restoreMxikImage: z.boolean(),
   sortOrder: z.coerce.number().int().min(0),
   isActive: z.boolean(),
 });
@@ -51,9 +58,17 @@ type CatalogCategoryFormProps = {
 const defaultValues: CategoryFormValues = {
   name: '',
   mxik: null,
+  imageFile: null,
+  imageSource: '',
+  clearImage: false,
+  restoreMxikImage: false,
   sortOrder: 0,
   isActive: true,
 };
+
+function getMxikImageLang(lang: string) {
+  return lang === 'ru' ? 'ru' : 'uz';
+}
 
 function CatalogCategoryFormInner({
   category,
@@ -64,6 +79,7 @@ function CatalogCategoryFormInner({
   const { t, currentLang } = useTranslate('catalog');
   const { t: tCommon } = useTranslate('common');
   const isEditMode = Boolean(category?.id);
+  const [mxikImageUrl, setMxikImageUrl] = useState<string | null>(null);
 
   const createMutation = useCreateCatalogCategoryMutation();
   const updateMutation = useUpdateCatalogCategoryMutation(category?.id ?? '');
@@ -73,46 +89,119 @@ function CatalogCategoryFormInner({
     defaultValues,
   });
 
-  const { handleSubmit, reset, formState } = methods;
+  const { handleSubmit, reset, formState, watch, setValue, getValues } = methods;
   const isSubmitting = formState.isSubmitting || createMutation.isPending || updateMutation.isPending;
+  const selectedMxikCode = watch('mxik')?.code ?? '';
+  const selectedImage = watch('imageFile');
 
   useEffect(() => {
     reset({
       name: category?.name ?? '',
       mxik: buildMxikOption(category?.mxikCode, category?.mxikName, category?.mxikPayload),
+      imageFile: category?.imageUrl ?? null,
+      imageSource: (category?.imageSource ?? '') as CatalogImageSource | '',
+      clearImage: false,
+      restoreMxikImage: false,
       sortOrder: category?.sortOrder ?? 0,
       isActive: category?.isActive ?? true,
     });
+    setMxikImageUrl(category?.imageSource === 'mxik-cache' ? (category.imageUrl ?? null) : null);
   }, [category, reset]);
+
+  useEffect(() => {
+    if (!(selectedImage instanceof File)) {
+      return;
+    }
+
+    setValue('imageSource', 'manual', { shouldDirty: true, shouldValidate: true });
+    setValue('clearImage', false, { shouldDirty: true });
+    setValue('restoreMxikImage', false, { shouldDirty: true });
+  }, [selectedImage, setValue]);
+
+  useEffect(() => {
+    let isActive = true;
+
+    if (!selectedMxikCode) {
+      setMxikImageUrl(null);
+      if (getValues('imageSource') !== 'manual') {
+        setValue('imageFile', null, { shouldDirty: false });
+        setValue('imageSource', '', { shouldDirty: false });
+        setValue('restoreMxikImage', false, { shouldDirty: false });
+      }
+      return () => {
+        isActive = false;
+      };
+    }
+
+    void (async () => {
+      const nextImageUrl =
+        (await getMxikPrimaryPictureUrl(selectedMxikCode, getMxikImageLang(currentLang.value))) || null;
+
+      if (!isActive) {
+        return;
+      }
+
+      setMxikImageUrl(nextImageUrl);
+
+      if (getValues('imageSource') === 'manual') {
+        return;
+      }
+
+      setValue('clearImage', false, { shouldDirty: false });
+      setValue('restoreMxikImage', false, { shouldDirty: false });
+      setValue('imageFile', nextImageUrl, { shouldDirty: false });
+      setValue('imageSource', nextImageUrl ? 'mxik-cache' : '', { shouldDirty: false });
+    })();
+
+    return () => {
+      isActive = false;
+    };
+  }, [currentLang.value, getValues, selectedMxikCode, setValue]);
+
+  const handleClearImage = () => {
+    setValue('imageFile', null, { shouldDirty: true, shouldValidate: true });
+    setValue('imageSource', '', { shouldDirty: true, shouldValidate: true });
+    setValue('clearImage', true, { shouldDirty: true });
+    setValue('restoreMxikImage', false, { shouldDirty: true });
+  };
+
+  const handleRestoreMxikImage = () => {
+    setValue('imageFile', mxikImageUrl, { shouldDirty: true, shouldValidate: true });
+    setValue('imageSource', mxikImageUrl ? 'mxik-cache' : '', { shouldDirty: true, shouldValidate: true });
+    setValue('clearImage', false, { shouldDirty: true });
+    setValue('restoreMxikImage', true, { shouldDirty: true });
+  };
 
   const onSubmit = handleSubmit(async (values) => {
     if (!values.mxik) {
       return;
     }
 
-    const shouldSyncMxikImage =
-      !category ||
-      values.mxik.code !== (category.mxikCode ?? '') ||
-      category.imageSource === 'mxik-cache' ||
-      !category.imageUrl;
-    const imagePayload: Pick<CatalogCategoryPayload, 'imageUrl' | 'imageSource'> = {};
+    const resolvedMxikImageUrl =
+      (await getMxikPrimaryPictureUrl(values.mxik.code, getMxikImageLang(currentLang.value))) || null;
+    const normalizedImageSource: CatalogCategoryPayload['imageSource'] =
+      values.imageFile instanceof File
+        ? 'manual'
+        : values.clearImage
+          ? ''
+          : values.restoreMxikImage
+            ? resolvedMxikImageUrl
+              ? 'mxik-cache'
+              : ''
+            : values.imageSource;
 
-    if (shouldSyncMxikImage) {
-      const imageUrl = await getMxikPrimaryPictureUrl(values.mxik.code, currentLang.value === 'ru' ? 'ru' : 'uz');
-      const imageSource: CatalogCategoryPayload['imageSource'] = imageUrl ? 'mxik-cache' : '';
-
-      imagePayload.imageUrl = imageUrl || null;
-      imagePayload.imageSource = imageSource;
-    }
-
-    const payload = {
+    const payload: CatalogCategoryPayload = {
       name: values.name.trim(),
       mxikCode: values.mxik.code,
       mxikName: values.mxik.name ?? '',
       mxikPayload: values.mxik.raw ?? {},
+      imageUrl: resolvedMxikImageUrl,
+      imageSource: normalizedImageSource,
+      imageFile: values.imageFile instanceof File ? values.imageFile : null,
+      clearImage: values.clearImage,
+      restoreMxikImage: values.restoreMxikImage,
       sortOrder: values.sortOrder,
       isActive: values.isActive,
-      ...imagePayload,
     };
 
     const savedCategory =
@@ -121,64 +210,18 @@ function CatalogCategoryFormInner({
     onSuccess?.(savedCategory);
   });
 
-  const title = isEditMode
-    ? t('pages.categoryEdit.title')
-    : t('pages.categoryCreate.title');
+  const title = isEditMode ? t('pages.categoryEdit.title') : t('pages.categoryCreate.title');
 
   const fields = (
     <Stack spacing={3} sx={isDialog ? { pt: 1 } : undefined}>
-      {category?.imageUrl ? (
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', md: '220px minmax(0, 1fr)' },
-            gap: 2.5,
-            alignItems: 'center',
-            p: 2,
-            borderRadius: 2.5,
-            bgcolor: 'background.neutral',
-          }}>
-          <Box
-            sx={{
-              overflow: 'hidden',
-              borderRadius: 2,
-              aspectRatio: '1 / 1',
-              bgcolor: 'background.paper',
-              border: '1px solid',
-              borderColor: 'divider',
-            }}>
-            <Box
-              component="img"
-              src={category.imageUrl}
-              alt={category.name}
-              sx={{ width: 1, height: 1, objectFit: 'cover' }}
-            />
-          </Box>
-
-          <Stack spacing={1.25}>
-            <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap>
-              <Typography variant="subtitle1">
-                {t('labels.mxikImagePreview')}
-              </Typography>
-              {category.imageSource ? (
-                <Chip
-                  size="small"
-                  variant="soft"
-                  color={category.imageSource === 'mxik-cache' ? 'info' : 'default'}
-                  label={
-                    category.imageSource === 'mxik-cache'
-                      ? t('labels.mxikImageSource')
-                      : category.imageSource
-                  }
-                />
-              ) : null}
-            </Stack>
-            <Typography variant="body2" color="text.secondary">
-              {t('labels.mxikImagePreviewDescription')}
-            </Typography>
-          </Stack>
-        </Box>
-      ) : null}
+      <CatalogImageEditor<CategoryFormValues>
+        imageName="imageFile"
+        imageSourceName="imageSource"
+        mxikImageUrl={mxikImageUrl}
+        disabled={isSubmitting}
+        onClearImage={handleClearImage}
+        onRestoreMxikImage={handleRestoreMxikImage}
+      />
 
       <Box
         sx={{
@@ -211,9 +254,7 @@ function CatalogCategoryFormInner({
             {tCommon('actions.cancel')}
           </Button>
           <Button type="submit" variant="contained" color="black" loading={isSubmitting}>
-            {isEditMode
-              ? t('actions.save')
-              : t('actions.create')}
+            {isEditMode ? t('actions.save') : t('actions.create')}
           </Button>
         </DialogActions>
       </Form>
@@ -226,11 +267,7 @@ function CatalogCategoryFormInner({
         {fields}
         <FormActions
           isSubmitting={isSubmitting}
-          submitLabel={
-            isEditMode
-              ? t('actions.save')
-              : t('actions.create')
-          }
+          submitLabel={isEditMode ? t('actions.save') : t('actions.create')}
           onCancel={onCancel}
         />
       </Form>

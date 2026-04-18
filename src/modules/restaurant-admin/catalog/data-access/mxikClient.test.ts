@@ -92,7 +92,7 @@ describe('searchMxik', () => {
     expect(getMock).not.toHaveBeenCalled();
   });
 
-  it('loads MXIK details with package, label, and useCard metadata', async () => {
+  it('loads MXIK details with package, label, and cash sale metadata', async () => {
     getMock.mockResolvedValueOnce({
       data: {
         mxikCode: '02202002006000000',
@@ -120,22 +120,50 @@ describe('searchMxik', () => {
         ],
       },
     });
+    getMock.mockResolvedValueOnce({
+      data: {
+        data: [
+          {
+            mxik: '02202002006000000',
+            name: 'Mors',
+            cashSale: 2,
+            label: 1,
+            packages: [
+              {
+                code: 1378885,
+                nameLat: 'litr',
+                packageType: '1',
+              },
+            ],
+          },
+        ],
+      },
+    });
 
     const result = await getMxikDetails('02202002006000000', 'uz');
 
-    expect(getMock).toHaveBeenCalledWith('mxik/get/by-mxik', {
+    expect(getMock).toHaveBeenNthCalledWith(1, 'mxik/get/by-mxik', {
       params: {
         mxikCode: '02202002006000000',
         lang: 'uz_latn',
       },
     });
-    expect(result).toEqual({
+    expect(getMock).toHaveBeenNthCalledWith(2, 'integration-mxik/get/information', {
+      params: {
+        page: 0,
+        size: 25,
+        search_text: '02202002006000000',
+        type: 1,
+      },
+    });
+    expect(result).toMatchObject({
       code: '02202002006000000',
       name: 'Mors',
       shortName: 'Mors',
       unitName: '',
       commonUnitName: '',
       useCard: 0,
+      cashSale: 2,
       labelStatus: 1,
       primaryPackage: {
         code: '1378885',
@@ -190,6 +218,7 @@ describe('searchMxik', () => {
         shortName: 'Mors',
         label: 1,
         useCard: 0,
+        cashSale: 2,
         unitName: null,
         commonUnitName: null,
         packages: [
@@ -209,6 +238,11 @@ describe('searchMxik', () => {
           },
         ],
       },
+    });
+    expect(result?.raw).toMatchObject({
+      mxikCode: '02202002006000000',
+      mxik: '02202002006000000',
+      cashSale: 2,
     });
   });
 
