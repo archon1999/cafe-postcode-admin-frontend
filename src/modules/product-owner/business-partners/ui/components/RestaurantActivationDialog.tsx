@@ -247,9 +247,7 @@ export function RestaurantActivationDialog({
               row
               options={BILLING_PERIOD_OPTIONS.map((option) => ({
                 value: option.value,
-                label: t(`labels.${option.labelKey}`, {
-                  defaultValue: option.labelKey === 'monthly' ? 'Oylik' : 'Yillik',
-                }),
+                label: t(`labels.${option.labelKey}`),
               }))}
             />
 

@@ -102,7 +102,21 @@
     "tariff": "Тариф",
     "tariffHint": "Выберите тариф, который определяет доступ ресторана.",
     "tariffPlaceholder": "Выберите тариф",
-    "authCode": "Код активации"
+    "authCode": "Код активации",
+    "topUpAmount": "Сумма пополнения",
+    "note": "Примечание",
+    "role": "Роль",
+    "provider": "Провайдер",
+    "currentBalance": "Текущий баланс",
+    "nextChargeAmount": "Сумма следующего списания",
+    "nextChargeOn": "Дата следующего списания",
+    "nextPeriodStatus": "Статус следующего периода",
+    "lastTopUpAt": "Последнее пополнение",
+    "date": "Дата",
+    "type": "Тип",
+    "amount": "Сумма",
+    "balanceAfter": "Баланс после",
+    "user": "Пользователь"
   },
   "filters": {
     "all": "Все",
@@ -130,7 +144,13 @@
     "regularBranch": "Обычный филиал",
     "notSelected": "Не выбрано",
     "vatEnabled": "Включено",
-    "vatDisabled": "Выключено"
+    "vatDisabled": "Выключено",
+    "loading": "Загрузка...",
+    "system": "Система",
+    "balanceTransactionKinds": {
+      "renewalCharge": "Списание за период",
+      "topUp": "Пополнение баланса"
+    }
   },
   "sections": {
     "myRestaurantProfile": {
@@ -146,7 +166,27 @@
     },
     "fiscalProfile": "Фискальный профиль",
     "fiscalProfileDescription": "В этом разделе хранятся поля филиала, влияющие на кассу, такие как сервисный сбор, ИНН и НДС.",
-    "branchFiscalProfile": "Фискальный профиль филиала"
+    "branchFiscalProfile": "Фискальный профиль филиала",
+    "customerOverview": {
+      "title": "Информация о клиенте",
+      "description": "Здесь отображаются основные данные клиента и текущий статус активности."
+    },
+    "activeUsers": {
+      "title": "Активные пользователи",
+      "description": "Активные пользователи, привязанные к клиенту, и их роли."
+    },
+    "soliqIntegration": {
+      "title": "Интеграция с налоговой",
+      "description": "Текущее состояние интеграции с Soliq OFD и основные идентификаторы."
+    },
+    "balance": {
+      "title": "Баланс",
+      "description": "В этом разделе отображаются баланс на следующий период, сумма списания и статус периода."
+    },
+    "balanceHistory": {
+      "title": "История баланса",
+      "description": "Последние движения по балансу: пополнения и списания за период."
+    }
   },
   "restaurantManagement": {
     "title": "Управление рестораном",
@@ -230,7 +270,8 @@
     "editRestaurantProfile": "Редактировать профиль ресторана",
     "createIntegration": "Новая интеграция",
     "hideAuthCode": "Скрыть код",
-    "showAuthCode": "Показать код"
+    "showAuthCode": "Показать код",
+    "topUpBalance": "Пополнить баланс"
   },
   "dialogs": {
     "deleteBranch": {
@@ -252,6 +293,9 @@
     "deleteRestaurant": {
       "title": "Удалить ресторан",
       "description": "Удалить ресторан \"{{name}}\"?"
+    },
+    "balanceTopUp": {
+      "title": "Пополнение баланса"
     }
   },
   "empty": {
@@ -314,7 +358,10 @@
         "description": "Измените поиск или фильтры и попробуйте снова.",
         "title": "Интеграция не найдена"
       }
-    }
+    },
+    "activeUsers": "Активных пользователей пока нет.",
+    "soliqIntegration": "Интеграция с налоговой не настроена.",
+    "balanceTransactions": "Движений по балансу пока нет."
   },
   "integrations": {
     "fields": {

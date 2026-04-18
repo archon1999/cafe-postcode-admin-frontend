@@ -70,10 +70,10 @@ function getTransactionKindLabel(
   t: ReturnType<typeof useTranslate>['t'],
 ) {
   if (kind === 'renewal_charge') {
-    return t('labels.balanceTransactionKinds.renewalCharge', { defaultValue: 'Davr uchun yechim' });
+    return t('labels.balanceTransactionKinds.renewalCharge');
   }
 
-  return t('labels.balanceTransactionKinds.topUp', { defaultValue: "Balans to'ldirish" });
+  return t('labels.balanceTransactionKinds.topUp');
 }
 
 const RestaurantDetailPage = () => {
@@ -155,13 +155,9 @@ const RestaurantDetailPage = () => {
         <Card sx={{ p: 3 }}>
           <Stack spacing={3}>
             <Stack spacing={0.75}>
-              <Typography variant="h6">
-                {t('sections.customerOverview.title', { defaultValue: "Mijoz ma'lumotlari" })}
-              </Typography>
+              <Typography variant="h6">{t('sections.customerOverview.title')}</Typography>
               <Typography variant="body2" color="text.secondary">
-                {t('sections.customerOverview.description', {
-                  defaultValue: "Mijozning asosiy ma'lumotlari va joriy aktivlik holati shu yerda ko'rinadi.",
-                })}
+                {t('sections.customerOverview.description')}
               </Typography>
             </Stack>
 
@@ -203,14 +199,8 @@ const RestaurantDetailPage = () => {
         <Card sx={{ p: 3 }}>
           <Stack spacing={2}>
             <Stack spacing={0.75}>
-              <Typography variant="h6">
-                {t('sections.activeUsers.title', { defaultValue: 'Aktiv foydalanuvchilar' })}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {t('sections.activeUsers.description', {
-                  defaultValue: 'Mijozga biriktirilgan aktiv foydalanuvchilar va ularning rollari.',
-                })}
-              </Typography>
+              <Typography variant="h6">{t('sections.activeUsers.title')}</Typography>
+              <Typography variant="body2" color="text.secondary">{t('sections.activeUsers.description')}</Typography>
             </Stack>
 
             {restaurant.activeUsers.length ? (
@@ -219,7 +209,7 @@ const RestaurantDetailPage = () => {
                   <TableRow>
                     <TableCell>{t('fields.name')}</TableCell>
                     <TableCell>{tPlatform('fields.username')}</TableCell>
-                    <TableCell>{t('fields.role', { defaultValue: 'Rol' })}</TableCell>
+                    <TableCell>{t('fields.role')}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -234,7 +224,7 @@ const RestaurantDetailPage = () => {
               </Table>
             ) : (
               <Typography variant="body2" color="text.secondary">
-                {t('empty.activeUsers', { defaultValue: "Aktiv foydalanuvchilar hali yo'q." })}
+                {t('empty.activeUsers')}
               </Typography>
             )}
           </Stack>
@@ -243,14 +233,8 @@ const RestaurantDetailPage = () => {
         <Card sx={{ p: 3 }}>
           <Stack spacing={2}>
             <Stack spacing={0.75}>
-              <Typography variant="h6">
-                {t('sections.soliqIntegration.title', { defaultValue: 'Soliq bilan integratsiya' })}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {t('sections.soliqIntegration.description', {
-                  defaultValue: 'Soliq OFD integratsiyasining joriy holati va asosiy identifikatorlari.',
-                })}
-              </Typography>
+              <Typography variant="h6">{t('sections.soliqIntegration.title')}</Typography>
+              <Typography variant="body2" color="text.secondary">{t('sections.soliqIntegration.description')}</Typography>
             </Stack>
 
             {restaurant.soliqIntegration ? (
@@ -260,9 +244,7 @@ const RestaurantDetailPage = () => {
                   gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
                   gap: 2.5,
                 }}>
-                <SummaryField label={t('fields.provider', { defaultValue: 'Provayder' })}>
-                  {restaurant.soliqIntegration.provider}
-                </SummaryField>
+                <SummaryField label={t('fields.provider')}>{restaurant.soliqIntegration.provider}</SummaryField>
                 <SummaryField label={t('fields.status')}>
                   <Chip
                     size="small"
@@ -290,7 +272,7 @@ const RestaurantDetailPage = () => {
               </Box>
             ) : (
               <Typography variant="body2" color="text.secondary">
-                {t('empty.soliqIntegration', { defaultValue: 'Soliq integratsiyasi sozlanmagan.' })}
+                {t('empty.soliqIntegration')}
               </Typography>
             )}
           </Stack>
@@ -300,19 +282,15 @@ const RestaurantDetailPage = () => {
           <Stack spacing={3}>
             <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" spacing={2}>
               <Stack spacing={0.75}>
-                <Typography variant="h6">{t('sections.balance.title', { defaultValue: 'Balans' })}</Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {t('sections.balance.description', {
-                    defaultValue: "Keyingi davr uchun balans, yechim summasi va status preview shu bo'limda ko'rinadi.",
-                  })}
-                </Typography>
+                <Typography variant="h6">{t('sections.balance.title')}</Typography>
+                <Typography variant="body2" color="text.secondary">{t('sections.balance.description')}</Typography>
               </Stack>
               <Button
                 variant="contained"
                 color="black"
                 startIcon={<Iconify icon="mingcute:add-line" />}
                 onClick={() => setTopUpDialogOpen(true)}>
-                {t('actions.topUpBalance', { defaultValue: "Balansni to'ldirish" })}
+                {t('actions.topUpBalance')}
               </Button>
             </Stack>
 
@@ -322,20 +300,20 @@ const RestaurantDetailPage = () => {
                 gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
                 gap: 2.5,
               }}>
-              <SummaryField label={t('fields.currentBalance', { defaultValue: 'Joriy balans' })}>
+              <SummaryField label={t('fields.currentBalance')}>
                 {formatMoney(restaurant.balance.currentBalance)}
               </SummaryField>
-              <SummaryField label={t('fields.nextChargeAmount', { defaultValue: 'Keyingi yechim summasi' })}>
+              <SummaryField label={t('fields.nextChargeAmount')}>
                 {restaurant.balance.nextChargeAmount !== null && restaurant.balance.nextChargeAmount !== undefined
                   ? formatMoney(restaurant.balance.nextChargeAmount)
                   : t('labels.notSelected')}
               </SummaryField>
-              <SummaryField label={t('fields.nextChargeOn', { defaultValue: 'Keyingi yechim sanasi' })}>
+              <SummaryField label={t('fields.nextChargeOn')}>
                 {restaurant.balance.nextChargeOn
                   ? formatDate(restaurant.balance.nextChargeOn, 'DD.MM.YYYY')
                   : t('labels.notSelected')}
               </SummaryField>
-              <SummaryField label={t('fields.nextPeriodStatus', { defaultValue: 'Keyingi davr statusi' })}>
+              <SummaryField label={t('fields.nextPeriodStatus')}>
                 <Chip
                   size="small"
                   color={restaurant.balance.nextPeriodStatus === 'active' ? 'success' : 'default'}
@@ -344,7 +322,7 @@ const RestaurantDetailPage = () => {
                   sx={{ alignSelf: 'flex-start' }}
                 />
               </SummaryField>
-              <SummaryField label={t('fields.lastTopUpAt', { defaultValue: "Oxirgi to'ldirish" })}>
+              <SummaryField label={t('fields.lastTopUpAt')}>
                 {restaurant.balance.lastTopUpAt
                   ? formatDateTime(restaurant.balance.lastTopUpAt, 'DD.MM.YYYY HH:mm')
                   : t('labels.notSelected')}
@@ -356,30 +334,22 @@ const RestaurantDetailPage = () => {
         <Card sx={{ p: 3 }}>
           <Stack spacing={2}>
             <Stack spacing={0.75}>
-              <Typography variant="h6">
-                {t('sections.balanceHistory.title', { defaultValue: 'Balans tarixi' })}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {t('sections.balanceHistory.description', {
-                  defaultValue: "So'nggi balans harakatlari: to'ldirishlar va davr uchun yechimlar.",
-                })}
-              </Typography>
+              <Typography variant="h6">{t('sections.balanceHistory.title')}</Typography>
+              <Typography variant="body2" color="text.secondary">{t('sections.balanceHistory.description')}</Typography>
             </Stack>
 
             {balanceTransactionsQuery.isLoading ? (
-              <Typography variant="body2" color="text.secondary">
-                {t('labels.loading', { defaultValue: 'Yuklanmoqda...' })}
-              </Typography>
+              <Typography variant="body2" color="text.secondary">{t('labels.loading')}</Typography>
             ) : transactions.length ? (
               <Table size="small">
                 <TableHead>
                   <TableRow>
-                    <TableCell>{t('fields.date', { defaultValue: 'Sana' })}</TableCell>
-                    <TableCell>{t('fields.type', { defaultValue: 'Turi' })}</TableCell>
-                    <TableCell>{t('fields.amount', { defaultValue: 'Summa' })}</TableCell>
-                    <TableCell>{t('fields.balanceAfter', { defaultValue: 'Balansdan keyin' })}</TableCell>
-                    <TableCell>{t('fields.user', { defaultValue: 'Foydalanuvchi' })}</TableCell>
-                    <TableCell>{t('fields.note', { defaultValue: 'Izoh' })}</TableCell>
+                    <TableCell>{t('fields.date')}</TableCell>
+                    <TableCell>{t('fields.type')}</TableCell>
+                    <TableCell>{t('fields.amount')}</TableCell>
+                    <TableCell>{t('fields.balanceAfter')}</TableCell>
+                    <TableCell>{t('fields.user')}</TableCell>
+                    <TableCell>{t('fields.note')}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -389,9 +359,7 @@ const RestaurantDetailPage = () => {
                       <TableCell>{getTransactionKindLabel(transaction.kind, t)}</TableCell>
                       <TableCell>{formatSignedMoney(transaction.amount)}</TableCell>
                       <TableCell>{formatMoney(transaction.balanceAfter)}</TableCell>
-                      <TableCell>
-                        {transaction.performedBy?.fullName ?? t('labels.system', { defaultValue: 'Tizim' })}
-                      </TableCell>
+                      <TableCell>{transaction.performedBy?.fullName ?? t('labels.system')}</TableCell>
                       <TableCell>{transaction.note || '-'}</TableCell>
                     </TableRow>
                   ))}
@@ -399,7 +367,7 @@ const RestaurantDetailPage = () => {
               </Table>
             ) : (
               <Typography variant="body2" color="text.secondary">
-                {t('empty.balanceTransactions', { defaultValue: "Balans harakatlari hali yo'q." })}
+                {t('empty.balanceTransactions')}
               </Typography>
             )}
           </Stack>

@@ -102,7 +102,21 @@
     "tariff": "Тариф",
     "tariffHint": "Ресторан рухсатларини белгилайдиган тарифни танланг.",
     "tariffPlaceholder": "Тарифни танланг",
-    "authCode": "Активатсия коди"
+    "authCode": "Активатсия коди",
+    "topUpAmount": "Тўлдириш суммаси",
+    "note": "Изоҳ",
+    "role": "Рол",
+    "provider": "Провайдер",
+    "currentBalance": "Жорий баланс",
+    "nextChargeAmount": "Кейинги ечим суммаси",
+    "nextChargeOn": "Кейинги ечим санаси",
+    "nextPeriodStatus": "Кейинги давр статуси",
+    "lastTopUpAt": "Охирги тўлдириш",
+    "date": "Сана",
+    "type": "Тури",
+    "amount": "Сумма",
+    "balanceAfter": "Балансдан кейин",
+    "user": "Фойдаланувчи"
   },
   "filters": {
     "all": "Барчаси",
@@ -130,7 +144,13 @@
     "regularBranch": "Оддий филиал",
     "notSelected": "Танланмаган",
     "vatEnabled": "Ёқилган",
-    "vatDisabled": "Ёқилмаган"
+    "vatDisabled": "Ёқилмаган",
+    "loading": "Юкланмоқда...",
+    "system": "Тизим",
+    "balanceTransactionKinds": {
+      "renewalCharge": "Давр учун ечим",
+      "topUp": "Баланс тўлдириш"
+    }
   },
   "sections": {
     "myRestaurantProfile": {
@@ -146,7 +166,27 @@
     },
     "fiscalProfile": "Фискал профил",
     "fiscalProfileDescription": "Филиалнинг хизмат ҳақи, СТИР ва QQS каби кассага таъсир қилувчи майдонлари шу бўлимда сақланади.",
-    "branchFiscalProfile": "Филиал фискал профили"
+    "branchFiscalProfile": "Филиал фискал профили",
+    "customerOverview": {
+      "title": "Мижоз маълумотлари",
+      "description": "Мижознинг асосий маълумотлари ва жорий активлик ҳолати шу ерда кўринади."
+    },
+    "activeUsers": {
+      "title": "Актив фойдаланувчилар",
+      "description": "Мижозга бириктирилган актив фойдаланувчилар ва уларнинг роллари."
+    },
+    "soliqIntegration": {
+      "title": "Солиқ билан интеграция",
+      "description": "Солиқ OFD интеграциясининг жорий ҳолати ва асосий идентификаторлари."
+    },
+    "balance": {
+      "title": "Баланс",
+      "description": "Кейинги давр учун баланс, ечим суммаси ва статус ҳолати шу бўлимда кўринади."
+    },
+    "balanceHistory": {
+      "title": "Баланс тарихи",
+      "description": "Сўнгги баланс ҳаракатлари: тўлдиришлар ва давр учун ечимлар."
+    }
   },
   "restaurantManagement": {
     "title": "Ресторан бўйича бошқарув",
@@ -230,7 +270,8 @@
     "editRestaurantProfile": "Ресторан профилини таҳрирлаш",
     "createIntegration": "Янги интегратсия",
     "hideAuthCode": "Кодни яшириш",
-    "showAuthCode": "Кодни кўрсатиш"
+    "showAuthCode": "Кодни кўрсатиш",
+    "topUpBalance": "Балансни тўлдириш"
   },
   "dialogs": {
     "deleteBranch": {
@@ -252,6 +293,9 @@
     "deleteRestaurant": {
       "title": "Ресторанни ўчириш",
       "description": "\"{{name}}\" ресторанни ўчирмоқчимисиз?"
+    },
+    "balanceTopUp": {
+      "title": "Балансни тўлдириш"
     }
   },
   "empty": {
@@ -314,7 +358,10 @@
         "description": "Қидирув ёки филтерларни ўзгартириб қайта уриниб кўринг.",
         "title": "Интегратсия топилмади"
       }
-    }
+    },
+    "activeUsers": "Актив фойдаланувчилар ҳали йўқ.",
+    "soliqIntegration": "Солиқ интеграцияси созланмаган.",
+    "balanceTransactions": "Баланс ҳаракатлари ҳали йўқ."
   },
   "integrations": {
     "fields": {

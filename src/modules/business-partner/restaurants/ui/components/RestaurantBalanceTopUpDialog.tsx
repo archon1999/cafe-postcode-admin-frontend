@@ -65,21 +65,18 @@ export function RestaurantBalanceTopUpDialog({
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
-      <DialogTitle>{t('dialogs.balanceTopUp.title', { defaultValue: "Balansni to'ldirish" })}</DialogTitle>
+      <DialogTitle>{t('dialogs.balanceTopUp.title')}</DialogTitle>
       <DialogContent>
         <Form methods={methods} onSubmit={handleSubmit}>
           <Stack spacing={3} sx={{ pt: 1 }}>
-            <RHFSumCurrencyField
-              name="amount"
-              label={t('fields.topUpAmount', { defaultValue: "To'ldirish summasi" })}
-            />
-            <RHFTextField name="note" label={t('fields.note', { defaultValue: 'Izoh' })} multiline minRows={3} />
+            <RHFSumCurrencyField name="amount" label={t('fields.topUpAmount')} />
+            <RHFTextField name="note" label={t('fields.note')} multiline minRows={3} />
             <DialogActions sx={{ px: 0 }}>
               <Button onClick={onClose} disabled={isSubmitting} color="inherit" variant="outlined">
                 {tPlatform('actions.cancel')}
               </Button>
               <Button loading={isSubmitting} variant="contained" color="black" type="submit">
-                {t('actions.topUpBalance', { defaultValue: "Balansni to'ldirish" })}
+                {t('actions.topUpBalance')}
               </Button>
             </DialogActions>
           </Stack>

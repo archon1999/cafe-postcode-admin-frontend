@@ -102,7 +102,21 @@
     "ownerDashboardEnabled": "Rahbar paneli yoqilgan",
     "tariff": "Tarif",
     "tariffHint": "Restoran ruxsatlarini belgilaydigan tarifni tanlang.",
-    "tariffPlaceholder": "Tarifni tanlang"
+    "tariffPlaceholder": "Tarifni tanlang",
+    "topUpAmount": "To'ldirish summasi",
+    "note": "Izoh",
+    "role": "Rol",
+    "provider": "Provayder",
+    "currentBalance": "Joriy balans",
+    "nextChargeAmount": "Keyingi yechim summasi",
+    "nextChargeOn": "Keyingi yechim sanasi",
+    "nextPeriodStatus": "Keyingi davr statusi",
+    "lastTopUpAt": "Oxirgi to'ldirish",
+    "date": "Sana",
+    "type": "Turi",
+    "amount": "Summa",
+    "balanceAfter": "Balansdan keyin",
+    "user": "Foydalanuvchi"
   },
   "filters": {
     "all": "Barchasi",
@@ -130,7 +144,13 @@
     "regularBranch": "Oddiy filial",
     "notSelected": "Tanlanmagan",
     "vatEnabled": "Yoqilgan",
-    "vatDisabled": "Yoqilmagan"
+    "vatDisabled": "Yoqilmagan",
+    "loading": "Yuklanmoqda...",
+    "system": "Tizim",
+    "balanceTransactionKinds": {
+      "renewalCharge": "Davr uchun yechim",
+      "topUp": "Balans to'ldirish"
+    }
   },
   "sections": {
     "myRestaurantProfile": {
@@ -146,7 +166,27 @@
     },
     "fiscalProfile": "Fiskal profil",
     "fiscalProfileDescription": "Filialning xizmat haqi, STIR va QQS kabi kassaga ta'sir qiluvchi maydonlari shu bo'limda saqlanadi.",
-    "branchFiscalProfile": "Filial fiskal profili"
+    "branchFiscalProfile": "Filial fiskal profili",
+    "customerOverview": {
+      "title": "Mijoz ma'lumotlari",
+      "description": "Mijozning asosiy ma'lumotlari va joriy aktivlik holati shu yerda ko'rinadi."
+    },
+    "activeUsers": {
+      "title": "Aktiv foydalanuvchilar",
+      "description": "Mijozga biriktirilgan aktiv foydalanuvchilar va ularning rollari."
+    },
+    "soliqIntegration": {
+      "title": "Soliq bilan integratsiya",
+      "description": "Soliq OFD integratsiyasining joriy holati va asosiy identifikatorlari."
+    },
+    "balance": {
+      "title": "Balans",
+      "description": "Keyingi davr uchun balans, yechim summasi va status holati shu bo'limda ko'rinadi."
+    },
+    "balanceHistory": {
+      "title": "Balans tarixi",
+      "description": "So'nggi balans harakatlari: to'ldirishlar va davr uchun yechimlar."
+    }
   },
   "restaurantManagement": {
     "title": "Restoran bo'yicha boshqaruv",
@@ -230,7 +270,8 @@
     "editRestaurantProfile": "Mijoz profilini tahrirlash",
     "showAuthCode": "Kodni ko'rsatish",
     "hideAuthCode": "Kodni yashirish",
-    "createIntegration": "Yangi integratsiya"
+    "createIntegration": "Yangi integratsiya",
+    "topUpBalance": "Balansni to'ldirish"
   },
   "dialogs": {
     "deleteBranch": {
@@ -252,6 +293,9 @@
     "deleteRestaurant": {
       "title": "Mijozni o'chirish",
       "description": "\"{{name}}\" mijozni o'chirmoqchimisiz?"
+    },
+    "balanceTopUp": {
+      "title": "Balansni to'ldirish"
     }
   },
   "empty": {
@@ -314,7 +358,10 @@
         "description": "Qidiruv yoki filterlarni o'zgartirib qayta urinib ko'ring.",
         "title": "Integratsiya topilmadi"
       }
-    }
+    },
+    "activeUsers": "Aktiv foydalanuvchilar hali yo'q.",
+    "soliqIntegration": "Soliq integratsiyasi sozlanmagan.",
+    "balanceTransactions": "Balans harakatlari hali yo'q."
   },
   "integrations": {
     "fields": {
