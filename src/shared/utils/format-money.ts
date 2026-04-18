@@ -22,6 +22,93 @@ function resolveLocale() {
   return currentLang.numberFormat;
 }
 
+function normalizeNumericString(value: string) {
+  return value
+    .replace(/\u00a0/g, ' ')
+    .trim()
+    .replace(/\s+/g, '')
+    .replace(/_/g, '')
+    .replace(/[^\d,.\-+]/g, '');
+}
+
+function parseSingleSeparatorNumber(value: string, separator: '.' | ',') {
+  const parts = value.split(separator);
+
+  if (parts.length === 1) {
+    return Number(value);
+  }
+
+  if (parts.length === 2) {
+    const [leftPart, rightPart] = parts;
+
+    if (!rightPart) {
+      return Number(leftPart);
+    }
+
+    if (rightPart.length === 3 && leftPart.length <= 3) {
+      return Number(`${leftPart}${rightPart}`);
+    }
+
+    return Number(`${leftPart || '0'}.${rightPart}`);
+  }
+
+  const isGroupedThousands = parts.every((part, index) => {
+    if (index === 0) {
+      return part.length >= 1 && part.length <= 3;
+    }
+
+    return part.length === 3;
+  });
+
+  if (isGroupedThousands) {
+    return Number(parts.join(''));
+  }
+
+  const decimalPart = parts.pop();
+
+  if (!decimalPart) {
+    return Number(parts.join(''));
+  }
+
+  return Number(`${parts.join('')}.${decimalPart}`);
+}
+
+function parseNumericString(value: string): number | null {
+  const normalizedValue = normalizeNumericString(value);
+
+  if (!normalizedValue) {
+    return null;
+  }
+
+  const sign = normalizedValue.startsWith('-') ? -1 : 1;
+  const unsignedValue = normalizedValue.replace(/^[+-]/, '');
+
+  if (!unsignedValue || !/^\d[\d.,]*$/.test(unsignedValue)) {
+    return null;
+  }
+
+  if (!/[.,]/.test(unsignedValue)) {
+    const parsedValue = Number(unsignedValue);
+    return Number.isFinite(parsedValue) ? sign * parsedValue : null;
+  }
+
+  const hasDot = unsignedValue.includes('.');
+  const hasComma = unsignedValue.includes(',');
+
+  if (hasDot && hasComma) {
+    const decimalSeparator = unsignedValue.lastIndexOf('.') > unsignedValue.lastIndexOf(',') ? '.' : ',';
+    const groupSeparator = decimalSeparator === '.' ? ',' : '.';
+    const normalizedNumber = unsignedValue.split(groupSeparator).join('').replace(decimalSeparator, '.');
+    const parsedValue = Number(normalizedNumber);
+
+    return Number.isFinite(parsedValue) ? sign * parsedValue : null;
+  }
+
+  const parsedValue = parseSingleSeparatorNumber(unsignedValue, hasDot ? '.' : ',');
+
+  return Number.isFinite(parsedValue) ? sign * parsedValue : null;
+}
+
 function resolveNumber(inputValue: InputMoneyValue): number | null {
   if (inputValue === null || inputValue === undefined || inputValue === '') {
     return null;
@@ -31,15 +118,7 @@ function resolveNumber(inputValue: InputMoneyValue): number | null {
     return Number.isFinite(inputValue) ? inputValue : null;
   }
 
-  const normalizedValue = inputValue.replace(/[^\d]/g, '');
-
-  if (!normalizedValue) {
-    return null;
-  }
-
-  const parsedValue = Number(normalizedValue);
-
-  return Number.isFinite(parsedValue) ? parsedValue : null;
+  return parseNumericString(inputValue);
 }
 
 export function getMoneySuffix() {
