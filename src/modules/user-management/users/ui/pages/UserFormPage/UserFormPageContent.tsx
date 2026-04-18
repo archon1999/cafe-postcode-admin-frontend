@@ -31,6 +31,7 @@ import {
   defaultUserFormValues,
   getUserFormSchema,
   mapUserToFormValues,
+  roleRequiresEmployeeCredentials,
   type UserManagementSurface,
   type UserFormValues,
 } from '../../../domain';
@@ -48,7 +49,7 @@ export const UserFormPageContent = ({ id, surface = 'user' }: UserFormPageConten
   const { push } = useRouter();
   const isEditMode = Boolean(id);
   const isEmployeeSurface = surface === 'employee';
-  const formSchema = useMemo(() => getUserFormSchema(surface), [surface]);
+  const formSchema = useMemo(() => getUserFormSchema(surface, isEditMode), [isEditMode, surface]);
   const listPath = isEmployeeSurface ? RoutePath.employeeList : RoutePath.userList;
   const listTitle = isEmployeeSurface ? t('pages.employeeList.title') : t('pages.list.title');
   const editTitle = isEmployeeSurface ? t('pages.employeeEdit.title') : t('pages.edit.title');
@@ -77,8 +78,9 @@ export const UserFormPageContent = ({ id, surface = 'user' }: UserFormPageConten
   const selectedAllowedHallIds = watch('allowedHallIds');
   const roles = Array.isArray(rolesQuery.data) ? rolesQuery.data : [];
   const selectedRole = roles.find((role) => role.id === selectedRoleId) ?? null;
+  const requiresLoginCredentials = isEmployeeSurface && roleRequiresEmployeeCredentials(selectedRole?.code);
   const hasPosAccessPermission = Boolean(selectedRole?.permissions.some((permission) => permission.scope === 'pos'));
-  const showPinField = isEmployeeSurface || hasPosAccessPermission;
+  const showPinField = isEmployeeSurface ? !requiresLoginCredentials : hasPosAccessPermission;
   const hasHallAccessPermission = Boolean(
     selectedRole?.permissions.some((permission) =>
       ['pos_halls.view', 'pos_tables.manage', 'pos_table_menu.view', 'pos_table_reservations.manage'].includes(
@@ -118,6 +120,10 @@ export const UserFormPageContent = ({ id, surface = 'user' }: UserFormPageConten
       setValue('allowedHallIds', [...selectedAllowedHallIds, selectedPrimaryHallId]);
     }
   }, [selectedAllowedHallIds, selectedPrimaryHallId, setValue]);
+
+  useEffect(() => {
+    setValue('requiresLoginCredentials', requiresLoginCredentials);
+  }, [requiresLoginCredentials, setValue]);
 
   useEffect(() => {
     if (!hasHallAccessPermission) {
@@ -190,6 +196,7 @@ export const UserFormPageContent = ({ id, surface = 'user' }: UserFormPageConten
               hallOptions={hallOptions}
               hasHallAccessPermission={hasHallAccessPermission}
               showPinField={showPinField}
+              requiresLoginCredentials={requiresLoginCredentials}
               isEditMode={isEditMode}
               isEmployeeSurface={isEmployeeSurface}
               isHallsLoading={hallsQuery.isLoading}

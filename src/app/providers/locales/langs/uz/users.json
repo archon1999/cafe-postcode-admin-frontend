@@ -6,7 +6,7 @@
     },
     "employeeList": {
       "title": "Xodimlar",
-      "description": "Restoran xodimlarini PIN va rol bo'yicha boshqaring."
+      "description": "Restoran xodimlarini PIN yoki login-parol va rol bo'yicha boshqaring."
     },
     "roles": {
       "title": "Rollar"
@@ -33,11 +33,11 @@
     },
     "employeeCreate": {
       "title": "Yangi xodim",
-      "description": "Restoran xodimini PIN va rol bilan yarating."
+      "description": "Restoran xodimini PIN yoki login-parol va rol bilan yarating."
     },
     "employeeEdit": {
       "title": "Xodimni tahrirlash",
-      "description": "Xodimning holati va ma'lumotlarini yangilang."
+      "description": "Xodimning holati, kirish usuli va ma'lumotlarini yangilang."
     },
     "employeeView": {
       "title": "Xodim tavsilotlari"
@@ -65,6 +65,8 @@
     "password": "Parol",
     "passwordCreateHint": "Ixtiyoriy. Kiritilsa, foydalanuvchi uchun parol o'rnatiladi.",
     "passwordEditHint": "Bo'sh qoldirilsa, joriy parol o'zgarmaydi.",
+    "employeePasswordCreateHint": "Admin kirishi uchun parol kiriting.",
+    "employeePasswordEditHint": "Bo'sh qoldirilsa, joriy parol saqlanadi.",
     "pin": "PIN-kod",
     "pinHint": "POS xodimi uchun 4 xonali PIN-kod.",
     "permissions": "Ruxsatlar",
@@ -95,13 +97,14 @@
     "system": "Tizimli",
     "custom": "Maxsus",
     "morePermissions": "Yana ruxsatlar",
-    "permissionsSelectedCount": "{{count}} ta ruxsat tanlangan"
+    "permissionsSelectedCount": "{{count}} ta ruxsat tanlangan",
+    "employeeLoginAccess": "Bu rol admin panel va dashboard uchun login-parol bilan kiradi."
   },
   "filters": {
     "all": "Barchasi",
     "search": "Qidiruv",
     "searchPlaceholder": "Login, ism yoki telefon bo'yicha qidiring",
-    "employeeSearchPlaceholder": "Ism yoki telefon bo'yicha qidiring",
+    "employeeSearchPlaceholder": "Login, ism yoki telefon bo'yicha qidiring",
     "searchRolesPlaceholder": "Rol nomi, tavsif yoki ruxsat bo'yicha qidiring",
     "searchPermissionsPlaceholder": "Kod, nom yoki tavsif bo'yicha qidiring",
     "clearSearch": "Qidiruvni tozalash",

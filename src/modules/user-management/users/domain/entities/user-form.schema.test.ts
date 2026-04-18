@@ -3,8 +3,10 @@ import { describe, expect, it } from 'vitest';
 import {
   buildUserPayload,
   defaultUserFormValues,
+  getUserFormSchema,
   isValidPinCode,
   mapUserToFormValues,
+  roleRequiresEmployeeCredentials,
   sanitizePinCodeInput,
   userFormSchema,
 } from './user-form.schema';
@@ -66,6 +68,20 @@ describe('userFormSchema', () => {
 
     expect(result.baseAmount).toBe(0);
   });
+
+  it('requires username and password for employee admin roles on create', () => {
+    const employeeSchema = getUserFormSchema('employee');
+    const result = employeeSchema.safeParse({
+      ...defaultUserFormValues,
+      fullName: 'Clone Admin',
+      roleId: 'role-1',
+      requiresLoginCredentials: true,
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error?.flatten().fieldErrors.username).toContain('Login talab qilinadi');
+    expect(result.error?.flatten().fieldErrors.password).toContain('Parol talab qilinadi');
+  });
 });
 
 describe('user form payload helpers', () => {
@@ -80,12 +96,18 @@ describe('user form payload helpers', () => {
       salaryType: 'monthly',
       baseAmount: null,
       kpiPercent: null,
-      role: { id: 'role-1', name: 'Waiter' },
+      role: { id: 'role-1', code: 'waiter', name: 'Waiter', description: '', isSystem: true, permissions: [] },
       permissionCodes: [],
     });
 
     expect(values.salaryType).toBe('monthly');
     expect(values.baseAmount).toBe(0);
+  });
+
+  it('detects employee roles that require login credentials', () => {
+    expect(roleRequiresEmployeeCredentials('restaurant_admin')).toBe(true);
+    expect(roleRequiresEmployeeCredentials('fast_food_admin')).toBe(true);
+    expect(roleRequiresEmployeeCredentials('waiter')).toBe(false);
   });
 
   it('builds payload with independent KPI percent', () => {
@@ -102,5 +124,42 @@ describe('user form payload helpers', () => {
     expect(payload.salaryType).toBe('monthly');
     expect(payload.baseAmount).toBe(2000000);
     expect(payload.kpiPercent).toBe(15);
+  });
+
+  it('includes username and password for employee admin payloads', () => {
+    const payload = buildUserPayload(
+      {
+        ...defaultUserFormValues,
+        username: 'clone-admin',
+        fullName: 'Clone Admin',
+        roleId: 'role-1',
+        password: 'Secret123!',
+        requiresLoginCredentials: true,
+      },
+      'employee',
+    );
+
+    expect(payload.username).toBe('clone-admin');
+    expect(payload.password).toBe('Secret123!');
+    expect(payload.pin).toBeUndefined();
+  });
+
+  it('omits login credentials for regular POS employees', () => {
+    const payload = buildUserPayload(
+      {
+        ...defaultUserFormValues,
+        username: 'internal-user',
+        fullName: 'POS Employee',
+        roleId: 'role-1',
+        password: 'IgnoredSecret123!',
+        pin: '1234',
+        requiresLoginCredentials: false,
+      },
+      'employee',
+    );
+
+    expect(payload.username).toBeUndefined();
+    expect(payload.password).toBeUndefined();
+    expect(payload.pin).toBe('1234');
   });
 });

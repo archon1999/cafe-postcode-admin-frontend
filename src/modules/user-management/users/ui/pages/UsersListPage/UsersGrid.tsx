@@ -29,7 +29,7 @@ import {
   useToggleEmployeeActiveMutation,
   useToggleUserActiveMutation,
 } from '../../../application';
-import type { UserManagementSurface } from '../../../domain';
+import { roleRequiresEmployeeCredentials, type UserManagementSurface } from '../../../domain';
 
 import { ChangeEmployeePinDialog } from './ChangeEmployeePinDialog';
 import { getUsersGridActionKeys } from './users-grid.actions';
@@ -122,6 +122,13 @@ export function UsersGrid({ surface = 'user' }: UsersGridProps) {
           },
           (row) => viewHref(row.id),
         ),
+        {
+          field: 'username',
+          headerName: t('fields.username'),
+          minWidth: 180,
+          flex: 0.9,
+          valueGetter: (_, row) => (roleRequiresEmployeeCredentials(row.role?.code) ? row.username : '-'),
+        },
       );
     } else {
       nextColumns.push({
@@ -185,9 +192,11 @@ export function UsersGrid({ surface = 'user' }: UsersGridProps) {
         minWidth: 90,
         flex: 0,
         getActions: (params) => {
+          const canChangePin = !roleRequiresEmployeeCredentials(params.row.role?.code);
           const actionKeys = getUsersGridActionKeys({
             surface,
             canEditEmployee,
+            canChangePin,
             employmentStatus: params.row.employmentStatus,
           });
 

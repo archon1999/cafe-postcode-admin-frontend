@@ -7,12 +7,14 @@ export type UsersGridActionKey = 'view' | 'edit' | 'change-pin' | 'archive';
 type GetUsersGridActionKeysParams = {
   surface: UserManagementSurface;
   canEditEmployee: boolean;
+  canChangePin?: boolean;
   employmentStatus?: AdminUser['employmentStatus'];
 };
 
 export function getUsersGridActionKeys({
   surface,
   canEditEmployee,
+  canChangePin = false,
   employmentStatus,
 }: GetUsersGridActionKeysParams): UsersGridActionKey[] {
   const actions: UsersGridActionKey[] = ['view'];
@@ -21,7 +23,7 @@ export function getUsersGridActionKeys({
     actions.push('edit');
   }
 
-  if (surface === 'employee' && canEditEmployee) {
+  if (surface === 'employee' && canEditEmployee && canChangePin) {
     actions.push('change-pin');
   }
 

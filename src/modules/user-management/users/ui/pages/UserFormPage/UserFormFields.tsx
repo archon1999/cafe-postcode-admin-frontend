@@ -24,6 +24,7 @@ type UserFormFieldsProps = {
   hallOptions: Option[];
   hasHallAccessPermission: boolean;
   showPinField: boolean;
+  requiresLoginCredentials: boolean;
   isEditMode: boolean;
   isEmployeeSurface: boolean;
   isHallsLoading: boolean;
@@ -38,6 +39,7 @@ export const UserFormFields = ({
   hallOptions,
   hasHallAccessPermission,
   showPinField,
+  requiresLoginCredentials,
   isEditMode,
   isEmployeeSurface,
   isHallsLoading,
@@ -47,21 +49,20 @@ export const UserFormFields = ({
   t,
   tCommon,
 }: UserFormFieldsProps) => (
-  <>
-    <Stack spacing={2}>
-      <Typography variant="h6">{t('sections.account')}</Typography>
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
-          gap: 3,
-        }}>
-        {isEmployeeSurface ? null : <RHFTextField<UserFormValues> name="username" label={t('fields.username')} />}
-        <RHFTextField<UserFormValues> name="fullName" label={t('fields.fullName')} />
-        <RHFPhoneInput<UserFormValues>
-          name="phone"
-          label={t('fields.phone')}
-          defaultCountry="UZ"
+    <>
+      <Stack spacing={2}>
+        <Typography variant="h6">{t('sections.account')}</Typography>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
+            gap: 3,
+          }}>
+          <RHFTextField<UserFormValues> name="fullName" label={t('fields.fullName')} />
+          <RHFPhoneInput<UserFormValues>
+            name="phone"
+            label={t('fields.phone')}
+            defaultCountry="UZ"
           placeholder={t('fields.phonePlaceholder')}
         />
 
@@ -76,20 +77,31 @@ export const UserFormFields = ({
           ))}
         </RHFSelect>
 
-        {isEmployeeSurface ? null : (
-          <RHFTextField<UserFormValues>
-            name="password"
-            label={t('fields.password')}
-            type="password"
-            helperText={isEditMode ? t('fields.passwordEditHint') : t('fields.passwordCreateHint')}
-          />
-        )}
-
         <RHFSelect<UserFormValues> name="employmentStatus" label={t('fields.employmentStatus')}>
           <MenuItem value="active">{t('status.active')}</MenuItem>
           <MenuItem value="inactive">{t('status.inactive')}</MenuItem>
           <MenuItem value="archived">{t('status.archived')}</MenuItem>
         </RHFSelect>
+
+        {!isEmployeeSurface || requiresLoginCredentials ? (
+          <RHFTextField<UserFormValues> name="username" label={t('fields.username')} />
+        ) : null}
+        {!isEmployeeSurface || requiresLoginCredentials ? (
+          <RHFTextField<UserFormValues>
+            name="password"
+            label={t('fields.password')}
+            type="password"
+            helperText={
+              isEmployeeSurface && requiresLoginCredentials
+                ? isEditMode
+                  ? t('fields.employeePasswordEditHint')
+                  : t('fields.employeePasswordCreateHint')
+                : isEditMode
+                  ? t('fields.passwordEditHint')
+                  : t('fields.passwordCreateHint')
+            }
+          />
+        ) : null}
 
         {showPinField && (
           <RHFTextField<UserFormValues>

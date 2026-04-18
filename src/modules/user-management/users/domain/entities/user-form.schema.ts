@@ -7,6 +7,7 @@ import { USER_EMPLOYMENT_STATUS_VALUES, USER_SALARY_TYPE_VALUES } from '../enums
 import type { UserManagementSurface } from './user.types';
 
 export const PIN_CODE_ERROR_MESSAGE = "PIN 4 ta raqamdan iborat bo'lishi kerak";
+export const EMPLOYEE_LOGIN_ROLE_CODES = ['restaurant_admin', 'fast_food_admin'] as const;
 
 export function isValidPinCode(value: string) {
   return /^\d{4}$/.test(value);
@@ -14,6 +15,10 @@ export function isValidPinCode(value: string) {
 
 export function sanitizePinCodeInput(value: string) {
   return value.replace(/\D/g, '').slice(0, 4);
+}
+
+export function roleRequiresEmployeeCredentials(roleCode?: string | null) {
+  return Boolean(roleCode && EMPLOYEE_LOGIN_ROLE_CODES.includes(roleCode as (typeof EMPLOYEE_LOGIN_ROLE_CODES)[number]));
 }
 
 const numberFieldWithDefaultZero = z.preprocess(
@@ -26,7 +31,7 @@ const nullableNumberField = z.preprocess(
   z.number().min(0, { message: "Qiymat 0 dan kichik bo'lmasligi kerak" }).nullable().optional(),
 );
 
-function createUserFormSchema(surface: UserManagementSurface) {
+function createUserFormSchema(surface: UserManagementSurface, isEditMode = false) {
   return z
     .object({
       username:
@@ -52,8 +57,27 @@ function createUserFormSchema(surface: UserManagementSurface) {
       allowedHallIds: z.array(z.string()).default([]),
       password: z.string().optional(),
       pin: z.string().optional(),
+      requiresLoginCredentials: z.boolean().default(false),
     })
     .superRefine((value, context) => {
+      if (surface === 'employee' && value.requiresLoginCredentials) {
+        if (!value.username?.trim()) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['username'],
+            message: 'Login talab qilinadi',
+          });
+        }
+
+        if (!isEditMode && !value.password?.trim()) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['password'],
+            message: 'Parol talab qilinadi',
+          });
+        }
+      }
+
       if (value.pin && !isValidPinCode(value.pin)) {
         context.addIssue({
           code: z.ZodIssueCode.custom,
@@ -73,7 +97,8 @@ function createUserFormSchema(surface: UserManagementSurface) {
 }
 
 export const userFormSchema = createUserFormSchema('user');
-export const getUserFormSchema = (surface: UserManagementSurface) => createUserFormSchema(surface);
+export const getUserFormSchema = (surface: UserManagementSurface, isEditMode = false) =>
+  createUserFormSchema(surface, isEditMode);
 
 export type UserFormValues = z.infer<typeof userFormSchema>;
 
@@ -95,6 +120,7 @@ export const defaultUserFormValues: UserFormValues = {
   allowedHallIds: [],
   password: '',
   pin: '',
+  requiresLoginCredentials: false,
 };
 
 export function mapUserToFormValues(user: AdminUser): UserFormValues {
@@ -116,6 +142,7 @@ export function mapUserToFormValues(user: AdminUser): UserFormValues {
     allowedHallIds: user.allowedHallIds ?? [],
     password: '',
     pin: '',
+    requiresLoginCredentials: roleRequiresEmployeeCredentials(user.role?.code),
   };
 }
 
@@ -138,12 +165,22 @@ export function buildUserPayload(values: UserFormValues, surface: UserManagement
     hallSwitchPermission: values.hallSwitchPermission,
     ...(values.primaryHallId ? { primaryHallId: values.primaryHallId } : { primaryHallId: null }),
     allowedHallIds: values.allowedHallIds,
-    ...(values.password ? { password: values.password } : {}),
-    ...(values.pin ? { pin: values.pin } : {}),
   };
 
-  if (surface === 'user') {
+  if (surface === 'user' || (surface === 'employee' && values.requiresLoginCredentials)) {
     payload.username = values.username.trim();
+  }
+
+  if (surface !== 'employee' || values.requiresLoginCredentials) {
+    if (values.password?.trim()) {
+      payload.password = values.password.trim();
+    }
+  }
+
+  if (surface !== 'employee' || !values.requiresLoginCredentials) {
+    if (values.pin) {
+      payload.pin = values.pin;
+    }
   }
 
   return payload;

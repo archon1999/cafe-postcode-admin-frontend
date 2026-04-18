@@ -8,6 +8,7 @@ describe('getUsersGridActionKeys', () => {
       getUsersGridActionKeys({
         surface: 'employee',
         canEditEmployee: true,
+        canChangePin: true,
         employmentStatus: 'active',
       }),
     ).toEqual(['view', 'edit', 'change-pin', 'archive']);
@@ -18,9 +19,21 @@ describe('getUsersGridActionKeys', () => {
       getUsersGridActionKeys({
         surface: 'employee',
         canEditEmployee: false,
+        canChangePin: false,
         employmentStatus: 'active',
       }),
     ).toEqual(['view', 'archive']);
+  });
+
+  it('omits change pin for employee rows without POS access', () => {
+    expect(
+      getUsersGridActionKeys({
+        surface: 'employee',
+        canEditEmployee: true,
+        canChangePin: false,
+        employmentStatus: 'active',
+      }),
+    ).toEqual(['view', 'edit', 'archive']);
   });
 
   it('never adds change pin for system users', () => {
@@ -28,6 +41,7 @@ describe('getUsersGridActionKeys', () => {
       getUsersGridActionKeys({
         surface: 'user',
         canEditEmployee: false,
+        canChangePin: false,
         employmentStatus: 'active',
       }),
     ).toEqual(['view', 'edit', 'archive']);

@@ -29,7 +29,7 @@ import {
   useGetHallsQuery,
   useGetUserByIdQuery,
 } from '../../../application';
-import type { UserManagementSurface } from '../../../domain';
+import { roleRequiresEmployeeCredentials, type UserManagementSurface } from '../../../domain';
 
 type UserEntry = {
   label: string;
@@ -204,6 +204,7 @@ export const UserDetailPageContent = ({ id, surface = 'user' }: UserDetailPageCo
   const noLabel = tCommon('labels.no');
   const currentStatus = user.employmentStatus ?? (user.isActive ? 'active' : 'inactive');
   const roleLabel = user.role?.name ?? t('labels.withoutRole');
+  const showEmployeeUsername = isEmployeeSurface && roleRequiresEmployeeCredentials(user.role?.code);
   const primaryHall = (hallsQuery.data ?? []).find((hall) => hall.id === user.primaryHallId);
   const primaryHallName = primaryHall
     ? formatHallDisplayName(primaryHall.name, undefined, tCommon)
@@ -227,7 +228,7 @@ export const UserDetailPageContent = ({ id, surface = 'user' }: UserDetailPageCo
     { label: t('fields.role'), value: roleLabel, icon: 'solar:shield-user-bold-duotone' },
     { label: t('fields.employmentStatus'), value: t(`status.${currentStatus}`), icon: 'solar:user-check-bold-duotone' },
   ];
-  if (!isEmployeeSurface) {
+  if (!isEmployeeSurface || showEmployeeUsername) {
     accountEntries.unshift({ label: t('fields.username'), value: user.username, icon: 'solar:user-bold-duotone' });
   }
 
@@ -317,7 +318,9 @@ export const UserDetailPageContent = ({ id, surface = 'user' }: UserDetailPageCo
                 </Stack>
 
                 <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
-                  {isEmployeeSurface ? null : <SummaryChip title={t('fields.username')}>@{user.username}</SummaryChip>}
+                  {!isEmployeeSurface || showEmployeeUsername ? (
+                    <SummaryChip title={t('fields.username')}>@{user.username}</SummaryChip>
+                  ) : null}
                   <SummaryChip title={t('fields.role')}>{roleLabel}</SummaryChip>
                   {hasHallAccessPermission ? (
                     <SummaryChip title={t('fields.allowedHalls')} icon="solar:layers-bold-duotone">
