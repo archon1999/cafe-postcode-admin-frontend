@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
@@ -18,6 +19,7 @@ import { z } from 'zod';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import type {
+  AdminFiscalDevice,
   AdminIntegrationConfig,
   AdminIntegrationConfigKind,
   AdminIntegrationConfigMode,
@@ -32,6 +34,7 @@ import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 
 import {
   useCreateIntegrationConfigMutation,
+  useDetectFiscalDevicesMutation,
   useGetIntegrationConfigsListQuery,
   useUpdateIntegrationConfigMutation,
 } from '../../application';
@@ -56,9 +59,8 @@ const PROVIDER_OPTIONS: Record<AdminIntegrationConfigKind, { value: string; labe
     { value: 'custom-payment', label: 'Custom payment' },
   ],
   fiscal: [
-    { value: 'mock-fiscal', label: 'Mock fiscal' },
     { value: 'soliq-ofd', label: 'Soliq OFD' },
-    { value: 'custom-fiscal', label: 'Custom fiscal' },
+    { value: 'mock-fiscal', label: 'Mock fiscal' },
   ],
 };
 
@@ -209,7 +211,10 @@ function readPrinterConnectionType(settings: Record<string, unknown> | undefined
 
 function valuesFromItem(item: AdminIntegrationConfig | null): Values {
   if (!item) {
-    return { ...defaultValues };
+    return {
+      ...defaultValues,
+      provider: 'soliq-ofd',
+    };
   }
 
   const settings = item.settings ?? {};
@@ -355,16 +360,21 @@ function RestaurantIntegrationDialog({
   const { t } = useTranslate('organizations');
   const isEditMode = Boolean(item);
   const createMutation = useCreateIntegrationConfigMutation();
+  const detectFiscalDevicesMutation = useDetectFiscalDevicesMutation();
   const updateMutation = useUpdateIntegrationConfigMutation(item?.id ?? '');
 
   const methods = useForm<Values>({
     resolver: zodResolver(schema),
     defaultValues,
   });
+  const [detectedFiscalDevices, setDetectedFiscalDevices] = useState<AdminFiscalDevice[]>([]);
+  const [detectError, setDetectError] = useState('');
 
   const selectedKind = methods.watch('kind');
   const selectedProvider = methods.watch('provider');
   const selectedConnectionType = methods.watch('connectionType');
+  const endpointUrl = methods.watch('endpointUrl');
+  const selectedTerminalId = methods.watch('terminalId');
   const providerOptions = useMemo(() => {
     const options = PROVIDER_OPTIONS[selectedKind];
     if (item?.kind === selectedKind && item.provider && !options.some((option) => option.value === item.provider)) {
@@ -375,6 +385,8 @@ function RestaurantIntegrationDialog({
 
   useEffect(() => {
     methods.reset(valuesFromItem(item));
+    setDetectedFiscalDevices([]);
+    setDetectError('');
   }, [item, methods, open]);
 
   useEffect(() => {
@@ -401,14 +413,28 @@ function RestaurantIntegrationDialog({
     onClose();
   });
 
+  const detectFiscalDevices = async () => {
+    setDetectError('');
+    setDetectedFiscalDevices([]);
+
+    try {
+      const devices = await detectFiscalDevicesMutation.mutateAsync(endpointUrl.trim() || undefined);
+      setDetectedFiscalDevices(devices);
+      if (devices.length === 1 && devices[0]?.terminalId) {
+        methods.setValue('terminalId', devices[0].terminalId, { shouldDirty: true, shouldTouch: true });
+      }
+      if (!devices.length) {
+        setDetectError('Fiscal qurilma topilmadi.');
+      }
+    } catch (error) {
+      setDetectError(error instanceof Error ? error.message : "Fiscal qurilmalarni aniqlab bo'lmadi.");
+    }
+  };
+
   return (
     <Dialog open={open} onClose={methods.formState.isSubmitting ? undefined : onClose} fullWidth maxWidth="sm">
       <Form methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>
-          {isEditMode
-            ? t('pages.integrationEdit.title')
-            : t('pages.integrationCreate.title')}
-        </DialogTitle>
+        <DialogTitle>{isEditMode ? t('pages.integrationEdit.title') : t('pages.integrationCreate.title')}</DialogTitle>
         <DialogContent>
           <Stack spacing={3} sx={{ pt: 1 }}>
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
@@ -439,14 +465,10 @@ function RestaurantIntegrationDialog({
             {selectedKind === 'printer' ? (
               <>
                 <Divider />
-                <Typography variant="subtitle2">
-                  {t('integrations.sections.printer')}
-                </Typography>
+                <Typography variant="subtitle2">{t('integrations.sections.printer')}</Typography>
                 {selectedProvider === 'qz-tray' ? (
                   <>
-                    <RHFSelect<Values>
-                      name="connectionType"
-                      label={t('integrations.fields.connectionType')}>
+                    <RHFSelect<Values> name="connectionType" label={t('integrations.fields.connectionType')}>
                       {PRINTER_CONNECTION_TYPE_VALUES.map((connectionType) => (
                         <MenuItem key={connectionType} value={connectionType}>
                           {getPrinterConnectionLabel(connectionType)}
@@ -485,24 +507,16 @@ function RestaurantIntegrationDialog({
                 {selectedProvider !== 'mock-printer' ? (
                   <>
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                      <RHFSelect<Values>
-                        name="paperWidthMm"
-                        label={t('integrations.fields.paperWidthMm')}>
+                      <RHFSelect<Values> name="paperWidthMm" label={t('integrations.fields.paperWidthMm')}>
                         {PAPER_WIDTH_VALUES.map((width) => (
                           <MenuItem key={width} value={width}>
-                            {t('integrations.units.millimeter', { value: width})}
+                            {t('integrations.units.millimeter', { value: width })}
                           </MenuItem>
                         ))}
                       </RHFSelect>
-                      <RHFTextField<Values>
-                        name="encoding"
-                        label={t('integrations.fields.encoding')}
-                      />
+                      <RHFTextField<Values> name="encoding" label={t('integrations.fields.encoding')} />
                     </Stack>
-                    <RHFSwitch<Values>
-                      name="cutAfterPrint"
-                      label={t('integrations.fields.cutAfterPrint')}
-                    />
+                    <RHFSwitch<Values> name="cutAfterPrint" label={t('integrations.fields.cutAfterPrint')} />
                   </>
                 ) : null}
               </>
@@ -511,58 +525,81 @@ function RestaurantIntegrationDialog({
             {selectedKind === 'payment' ? (
               <>
                 <Divider />
-                <Typography variant="subtitle2">
-                  {t('integrations.sections.payment')}
-                </Typography>
-                <RHFTextField<Values>
-                  name="terminalId"
-                  label={t('fields.terminalId')}
-                />
-                <RHFTextField<Values>
-                  name="merchantId"
-                  label={t('integrations.fields.merchantId')}
-                />
-                <RHFTextField<Values>
-                  name="endpointUrl"
-                  label={t('integrations.fields.endpointUrl')}
-                />
+                <Typography variant="subtitle2">{t('integrations.sections.payment')}</Typography>
+                <RHFTextField<Values> name="terminalId" label={t('fields.terminalId')} />
+                <RHFTextField<Values> name="merchantId" label={t('integrations.fields.merchantId')} />
+                <RHFTextField<Values> name="endpointUrl" label={t('integrations.fields.endpointUrl')} />
                 <RHFTextField<Values>
                   name="paymentQrUrl"
                   label={t('integrations.fields.paymentQrUrl')}
                   helperText={t('integrations.fields.paymentQrUrlHint')}
                 />
-                <RHFTextField<Values>
-                  name="apiKey"
-                  label={t('integrations.fields.apiKey')}
-                  type="password"
-                />
+                <RHFTextField<Values> name="apiKey" label={t('integrations.fields.apiKey')} type="password" />
               </>
             ) : null}
 
             {selectedKind === 'fiscal' ? (
               <>
                 <Divider />
-                <Typography variant="subtitle2">
-                  {t('integrations.sections.fiscal')}
-                </Typography>
-                <RHFTextField<Values>
-                  name="terminalId"
-                  label={t('fields.terminalId')}
-                />
-                <RHFTextField<Values>
-                  name="cashboxId"
-                  label={t('integrations.fields.cashboxId')}
-                />
+                <Typography variant="subtitle2">{t('integrations.sections.fiscal')}</Typography>
+                <RHFTextField<Values> name="terminalId" label={t('fields.terminalId')} />
+                {selectedProvider === 'soliq-ofd' ? (
+                  <>
+                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} alignItems={{ sm: 'center' }}>
+                      <Button
+                        variant="outlined"
+                        color="inherit"
+                        onClick={detectFiscalDevices}
+                        loading={detectFiscalDevicesMutation.isPending}>
+                        Terminallarni aniqlash
+                      </Button>
+                    </Stack>
+                    {detectError ? <Alert severity="warning">{detectError}</Alert> : null}
+                    {detectedFiscalDevices.length ? (
+                      <Stack spacing={1}>
+                        <Typography variant="body2" color="text.secondary">
+                          Topilgan terminallar
+                        </Typography>
+                        <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+                          {detectedFiscalDevices.map((device) => {
+                            const isSelected = selectedTerminalId.trim() === device.terminalId;
+                            return (
+                              <Button
+                                key={device.factoryId}
+                                variant={isSelected ? 'contained' : 'outlined'}
+                                color={isSelected ? 'black' : 'inherit'}
+                                onClick={() => {
+                                  methods.setValue('terminalId', device.terminalId, {
+                                    shouldDirty: true,
+                                    shouldTouch: true,
+                                  });
+                                }}>
+                                {device.terminalId || device.factoryId}
+                              </Button>
+                            );
+                          })}
+                        </Stack>
+                        {detectedFiscalDevices.map((device) => {
+                          const meta = [device.readerName, device.description, device.appletVersion]
+                            .filter(Boolean)
+                            .join(' | ');
+                          return (
+                            <Typography key={`${device.factoryId}-meta`} variant="caption" color="text.secondary">
+                              {device.terminalId || device.factoryId}
+                              {meta ? ` - ${meta}` : ''}
+                              {device.locked ? ' - Locked' : ''}
+                              {device.posLocked ? ' - POS locked' : ''}
+                            </Typography>
+                          );
+                        })}
+                      </Stack>
+                    ) : null}
+                  </>
+                ) : null}
+                <RHFTextField<Values> name="cashboxId" label={t('integrations.fields.cashboxId')} />
                 <RHFTextField<Values> name="taxNumber" label={t('fields.taxNumber')} />
-                <RHFTextField<Values>
-                  name="endpointUrl"
-                  label={t('integrations.fields.endpointUrl')}
-                />
-                <RHFTextField<Values>
-                  name="apiKey"
-                  label={t('integrations.fields.apiKey')}
-                  type="password"
-                />
+                <RHFTextField<Values> name="endpointUrl" label={t('integrations.fields.endpointUrl')} />
+                <RHFTextField<Values> name="apiKey" label={t('integrations.fields.apiKey')} type="password" />
               </>
             ) : null}
 
@@ -572,7 +609,7 @@ function RestaurantIntegrationDialog({
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 3 }}>
           <Button color="inherit" variant="outlined" onClick={onClose} disabled={methods.formState.isSubmitting}>
-            {t('actions.cancel', { ns: 'common'})}
+            {t('actions.cancel', { ns: 'common' })}
           </Button>
           <Button type="submit" variant="contained" color="black" loading={methods.formState.isSubmitting}>
             {isEditMode ? t('actions.save') : t('actions.create')}
@@ -810,10 +847,7 @@ export function RestaurantIntegrationsSection({
           toolbar: () => (
             <OrganizationsGridToolbar
               searchLabel={t('filters.search')}
-              searchPlaceholder={
-                searchPlaceholder ??
-                t('filters.searchIntegrationsPlaceholder')
-              }
+              searchPlaceholder={searchPlaceholder ?? t('filters.searchIntegrationsPlaceholder')}
               clearSearchLabel={t('filters.clearSearch')}
               search={search}
               onSearchChange={(value) => {
@@ -886,10 +920,7 @@ export function RestaurantIntegrationsSection({
         <RestaurantManagementAccordion
           icon="solar:plug-circle-bold-duotone"
           title={title ?? t('pages.integrations.title')}
-          description={
-            description ??
-            t('restaurantManagement.sections.integrations.description')
-          }
+          description={description ?? t('restaurantManagement.sections.integrations.description')}
           total={query.data?.total ?? 0}
           actionLabel={actionLabel ?? t('actions.createIntegration')}
           onActionClick={openCreateDialog}

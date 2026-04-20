@@ -304,6 +304,18 @@ export type AdminIntegrationConfigPayload = {
   settings: Record<string, unknown>;
 };
 
+export type AdminFiscalDevice = {
+  factoryId: string;
+  terminalId: string;
+  readerName: string;
+  description: string;
+  appletVersion: string;
+  locked: boolean;
+  posLocked: boolean;
+  posAuth: boolean;
+  endpointUrl: string;
+};
+
 export type AdminRestaurantTariff = {
   id: string;
   name: string;

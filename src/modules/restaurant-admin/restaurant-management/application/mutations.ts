@@ -7,6 +7,7 @@ import type {
   AdminPrepStationPayload,
   AdminRestaurantPayload,
 } from 'shared/api/admin-types';
+import { apiClient } from 'shared/api/http/apiClient';
 
 import { organizationsRepository } from '../data-access';
 
@@ -120,6 +121,12 @@ export function useCreateIntegrationConfigMutation() {
     onSuccess: async () => {
       await invalidateQueryKeys(queryClient, [organizationsKeys.integrationConfigs()]);
     },
+  });
+}
+
+export function useDetectFiscalDevicesMutation() {
+  return useMutation({
+    mutationFn: (endpointUrl?: string) => apiClient.getAdminFiscalDevices(endpointUrl),
   });
 }
 

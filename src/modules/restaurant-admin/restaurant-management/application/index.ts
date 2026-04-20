@@ -1,6 +1,7 @@
 export {
   useCreateCashDeskMutation,
   useCreateDistributionPointMutation,
+  useDetectFiscalDevicesMutation,
   useCreateIntegrationConfigMutation,
   useCreatePrepStationMutation,
   useCreateRestaurantMutation,

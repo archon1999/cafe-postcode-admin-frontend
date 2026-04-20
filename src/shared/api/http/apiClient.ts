@@ -14,6 +14,7 @@ import type {
   AdminDiningTable,
   AdminDiningTablesQueryParams,
   AdminDiningTablePayload,
+  AdminFiscalDevice,
   AdminHallConstructor,
   AdminHallConstructorPayload,
   AdminHall,
@@ -561,6 +562,16 @@ export const apiClient = {
   getAdminIntegrationConfigById(id: string) {
     return instance
       .get<AdminIntegrationConfig>(`/api/v1/admin/integrations/configs/${id}/`)
+      .then((response) => response.data);
+  },
+
+  getAdminFiscalDevices(endpointUrl?: string) {
+    return instance
+      .get<AdminFiscalDevice[]>('/api/v1/admin/integrations/fiscal-devices/', {
+        params: {
+          endpointUrl: endpointUrl || undefined,
+        },
+      })
       .then((response) => response.data);
   },
 
