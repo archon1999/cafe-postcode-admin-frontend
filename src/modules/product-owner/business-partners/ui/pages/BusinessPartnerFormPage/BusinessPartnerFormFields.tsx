@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 
-import { RHFPhoneInput, RHFTextField } from 'shared/ui/HookForm';
+import { RHFCheckbox, RHFPhoneInput, RHFTextField } from 'shared/ui/HookForm';
 
 import type { Values } from './BusinessPartnerFormPage';
 
@@ -45,6 +45,11 @@ export const BusinessPartnerFormFields = ({
     <RHFTextField<Values> name="directorName" label={t('fields.directorName')} />
     <RHFPhoneInput<Values> name="phone" label={t('fields.phone')} defaultCountry="UZ" />
     <RHFTextField<Values> name="email" label={t('fields.email')} />
+    <RHFCheckbox<Values>
+      name="customTariffAllowed"
+      label={t('fields.customTariffAllowed')}
+      sx={{ alignSelf: 'center' }}
+    />
     <RHFTextField<Values>
       name="address"
       label={t('fields.address')}

@@ -433,6 +433,7 @@ export type AdminBusinessPartner = {
   activatedAt?: string | null;
   deactivatedAt?: string | null;
   fakturaPayload?: Record<string, unknown>;
+  customTariffAllowed: boolean;
   restaurants?: AdminBusinessPartnerRestaurant[];
   restaurantsCount?: number;
 };
@@ -446,6 +447,7 @@ export type AdminBusinessPartnerPayload = {
   email: string;
   address: string;
   fakturaPayload?: Record<string, unknown>;
+  customTariffAllowed?: boolean;
 };
 
 export type AdminBusinessPartnerLookupResult = {
@@ -489,6 +491,7 @@ export type AdminRestaurantActivationOptions = {
   tariffs: AdminTariffOption[];
   roles: AdminRole[];
   permissions: AdminPermission[];
+  customTariffAllowed: boolean;
 };
 
 export type AdminGeneratedCredentials = {

@@ -37,6 +37,7 @@ describe('RestaurantActivationDialog', () => {
             },
           ]}
           permissions={[]}
+          customTariffAllowed
           isSubmitting={false}
           onClose={() => {}}
           onSubmit={vi.fn().mockResolvedValue(undefined)}
@@ -48,5 +49,25 @@ describe('RestaurantActivationDialog', () => {
 
     expect(screen.getByLabelText('fields.monthlyPrice')).toBeInTheDocument();
     expect(screen.getByLabelText('fields.yearlyPrice')).toBeInTheDocument();
+  });
+
+  it('hides custom activation when custom tariff is not allowed', () => {
+    render(
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <RestaurantActivationDialog
+          open
+          tariffs={[]}
+          roles={[]}
+          permissions={[]}
+          customTariffAllowed={false}
+          isSubmitting={false}
+          onClose={() => {}}
+          onSubmit={vi.fn().mockResolvedValue(undefined)}
+        />
+      </LocalizationProvider>,
+    );
+
+    expect(screen.getByLabelText('labels.existingTariff')).toBeInTheDocument();
+    expect(screen.queryByLabelText('labels.customActivation')).not.toBeInTheDocument();
   });
 });

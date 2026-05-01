@@ -105,6 +105,7 @@ type RestaurantActivationDialogProps = {
   tariffs: AdminTariffOption[];
   roles: AdminRole[];
   permissions: AdminPermission[];
+  customTariffAllowed: boolean;
   isSubmitting: boolean;
   onClose: () => void;
   onSubmit: (payload: AdminRestaurantActivationPayload) => Promise<void>;
@@ -126,6 +127,7 @@ export function RestaurantActivationDialog({
   tariffs,
   roles,
   permissions,
+  customTariffAllowed,
   isSubmitting,
   onClose,
   onSubmit,
@@ -178,6 +180,12 @@ export function RestaurantActivationDialog({
       methods.reset(defaultValues);
     }
   }, [methods, open]);
+
+  useEffect(() => {
+    if (!customTariffAllowed && activationType === 'custom') {
+      methods.setValue('activationType', 'tariff', { shouldDirty: true, shouldValidate: true });
+    }
+  }, [activationType, customTariffAllowed, methods]);
 
   useEffect(() => {
     if (activationType !== 'custom') {
@@ -237,7 +245,7 @@ export function RestaurantActivationDialog({
               row
               options={[
                 { value: 'tariff', label: t('labels.existingTariff') },
-                { value: 'custom', label: t('labels.customActivation') },
+                ...(customTariffAllowed ? [{ value: 'custom', label: t('labels.customActivation') }] : []),
               ]}
             />
 

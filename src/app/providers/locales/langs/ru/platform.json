@@ -16,6 +16,7 @@
     "clients": "Клиенты",
     "email": "Email",
     "address": "Адрес",
+    "customTariffAllowed": "Разрешение на кастомный тариф",
     "status": "Статус",
     "name": "Название",
     "classification": "Классификация",

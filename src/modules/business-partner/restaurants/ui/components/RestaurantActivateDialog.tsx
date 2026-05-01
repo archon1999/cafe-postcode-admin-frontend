@@ -34,6 +34,7 @@ export function RestaurantActivateDialog({ open, onClose, onSuccess }: Restauran
       tariffs={activationOptionsQuery.data?.tariffs ?? []}
       roles={activationOptionsQuery.data?.roles ?? []}
       permissions={activationOptionsQuery.data?.permissions ?? []}
+      customTariffAllowed={Boolean(activationOptionsQuery.data?.customTariffAllowed)}
       isSubmitting={activateMutation.isPending}
       onClose={onClose}
       onSubmit={handleSubmit}

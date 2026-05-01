@@ -35,9 +35,11 @@ const schema = z.object({
   email: z.string().email().or(z.literal('')).default(''),
   address: z.string().default(''),
   fakturaPayload: z.record(z.string(), z.unknown()).optional(),
+  customTariffAllowed: z.boolean().default(false),
 });
 
-export type Values = z.infer<typeof schema>;
+export type Values = z.input<typeof schema>;
+type SubmitValues = z.output<typeof schema>;
 
 const BusinessPartnerFormPage = () => {
   const { t } = useTranslate('platform');
@@ -56,9 +58,15 @@ const BusinessPartnerFormPage = () => {
   const entityTitle = query.data?.companyName || query.data?.legalName;
 
   useRedirectOnNotFound(query.error, isEditMode);
-  usePageTitle(isEditMode ? (entityTitle ? [listTitle, entityTitle, editTitle] : [listTitle, editTitle]) : [listTitle, createTitle]);
+  usePageTitle(
+    isEditMode
+      ? entityTitle
+        ? [listTitle, entityTitle, editTitle]
+        : [listTitle, editTitle]
+      : [listTitle, createTitle],
+  );
 
-  const methods = useForm<Values>({
+  const methods = useForm<Values, unknown, SubmitValues>({
     resolver: zodResolver(schema),
     defaultValues: {
       inn: '',
@@ -69,6 +77,7 @@ const BusinessPartnerFormPage = () => {
       email: '',
       address: '',
       fakturaPayload: {},
+      customTariffAllowed: false,
     },
   });
 
@@ -90,6 +99,7 @@ const BusinessPartnerFormPage = () => {
       email: query.data.email,
       address: query.data.address,
       fakturaPayload: query.data.fakturaPayload ?? {},
+      customTariffAllowed: query.data.customTariffAllowed,
     });
   }, [methods, query.data]);
 
@@ -134,6 +144,7 @@ const BusinessPartnerFormPage = () => {
       email: values.email.trim(),
       address: values.address.trim(),
       fakturaPayload: values.fakturaPayload,
+      customTariffAllowed: values.customTariffAllowed,
     };
 
     if (isEditMode && id) {
