@@ -1,5 +1,8 @@
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import type {
   GridColDef,
   GridColumnVisibilityModel,
@@ -27,6 +30,7 @@ import {
   getReceiptKindTranslationKey,
   getReceiptStatusColor,
 } from '../../lib/presenters';
+import { getReceiptFiscalQrUrl } from '../../lib/receipt-fiscal-qr';
 
 import { DEFAULT_RECEIPTS_GRID_FILTERS, type ReceiptsGridFilters, ReceiptsGridToolbar } from './ReceiptsGridToolbar';
 
@@ -111,6 +115,35 @@ export const ReceiptsGrid = () => {
         minWidth: 160,
         flex: 0.5,
         valueGetter: (_v, row) => formatMoney(row.paymentAmount),
+      },
+      {
+        field: 'fiscalQrCode',
+        headerName: t('fields.fiscalQrCode'),
+        minWidth: 120,
+        flex: 0.35,
+        sortable: false,
+        filterable: false,
+        renderCell: ({ row }) => {
+          const fiscalQrUrl = getReceiptFiscalQrUrl(row);
+
+          if (!fiscalQrUrl) {
+            return <Typography color="text.secondary">-</Typography>;
+          }
+
+          return (
+            <Tooltip title={t('actions.openFiscalQr')}>
+              <IconButton
+                component="a"
+                href={fiscalQrUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                size="small"
+                onClick={(event) => event.stopPropagation()}>
+                <Iconify icon="eva:external-link-fill" />
+              </IconButton>
+            </Tooltip>
+          );
+        },
       },
       {
         field: 'reprintCount',

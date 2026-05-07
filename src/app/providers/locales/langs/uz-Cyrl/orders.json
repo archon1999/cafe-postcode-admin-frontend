@@ -20,7 +20,11 @@
     "providerPayload": "Техник маълумот (JSON)",
     "receiptPayload": "Чек маълумоти (JSON)"
   },
+  "actions": {
+    "openFiscalQr": "Fiscal QR"
+  },
   "fields": {
+    "fiscalQrCode": "Fiscal QR",
     "amount": "Сумма",
     "cashDesk": "Касса",
     "cashier": "Кассир",

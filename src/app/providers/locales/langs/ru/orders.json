@@ -20,7 +20,11 @@
     "providerPayload": "Технические данные (JSON)",
     "receiptPayload": "Данные чека (JSON)"
   },
+  "actions": {
+    "openFiscalQr": "Open fiscal QR"
+  },
   "fields": {
+    "fiscalQrCode": "Fiscal QR",
     "amount": "Сумма",
     "cashDesk": "Касса",
     "cashier": "Кассир",

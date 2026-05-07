@@ -38,6 +38,9 @@
     "providerPayload": "Texnik ma'lumot (JSON)",
     "receiptPayload": "Chek ma'lumoti (JSON)"
   },
+  "actions": {
+    "openFiscalQr": "Fiscal QRni ochish"
+  },
   "fields": {
     "amount": "Summa",
     "cashDesk": "Kassa",
@@ -48,6 +51,7 @@
     "createdAt": "Yaratilgan vaqti",
     "createdBy": "Yaratgan xodim",
     "externalRef": "Tashqi referens",
+    "fiscalQrCode": "Fiscal QR",
     "hall": "Zal",
     "item": "Mahsulot",
     "itemsCount": "Mahsulotlar soni",

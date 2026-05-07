@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
@@ -9,6 +10,7 @@ import { useTranslate } from 'app/providers/locales';
 import { RoutePath } from 'app/routes';
 import { useParams, useRedirectOnNotFound } from 'shared/hooks/router';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
+import { Iconify } from 'shared/ui/Iconify';
 import { Label } from 'shared/ui/Label';
 import { LabelRowWithIcon } from 'shared/ui/LabelRowWithIcon/LabelRowWithIcon';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
@@ -21,6 +23,7 @@ import {
   getReceiptKindTranslationKey,
   getReceiptStatusColor,
 } from '../../lib/presenters';
+import { getReceiptFiscalQrUrl } from '../../lib/receipt-fiscal-qr';
 
 const ReceiptDetailPage = () => {
   const { t } = useTranslate('orders');
@@ -33,6 +36,7 @@ const ReceiptDetailPage = () => {
   if (query.isLoading) return <LoadingScreen />;
   const receipt = query.data;
   if (!receipt) return <Typography color="text.secondary">{tCommon('labels.notFound')}</Typography>;
+  const fiscalQrUrl = getReceiptFiscalQrUrl(receipt);
 
   return (
     <Content>
@@ -52,13 +56,33 @@ const ReceiptDetailPage = () => {
               <LabelRowWithIcon
                 label={t('fields.kind')}
                 value={t(getReceiptKindTranslationKey(receipt.kind))}
-                icon="solar:receipt-2-bold-duotone"
+                icon="custom:invoice-duotone"
               />
-              <LabelRowWithIcon
-                label={t('fields.provider')}
-                value={receipt.provider || '-'}
-                icon="solar:server-2-bold-duotone"
-              />
+              <LabelRowWithIcon label={t('fields.provider')} value={receipt.provider || '-'} icon="solar:inbox-bold" />
+              <Stack direction="row" spacing={1}>
+                <Iconify icon="eva:external-link-fill" width={20} height={20} />
+                <Stack direction="column" spacing={0.75}>
+                  <Box component="span" sx={{ typography: 'body2', color: 'text.secondary' }}>
+                    {t('fields.fiscalQrCode')}
+                  </Box>
+                  {fiscalQrUrl ? (
+                    <Button
+                      component="a"
+                      href={fiscalQrUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      variant="outlined"
+                      size="small"
+                      sx={{ alignSelf: 'flex-start' }}>
+                      {t('actions.openFiscalQr')}
+                    </Button>
+                  ) : (
+                    <Typography variant="subtitle2" color="text.secondary">
+                      -
+                    </Typography>
+                  )}
+                </Stack>
+              </Stack>
               <LabelRowWithIcon
                 label={t('fields.paymentMethod')}
                 value={receipt.paymentMethod ? t(getPaymentMethodTranslationKey(receipt.paymentMethod)) : '-'}
