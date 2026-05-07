@@ -551,7 +551,6 @@ export const apiClient = {
           pageSize: params?.pageSize,
           search: params?.search,
           kindIn: params?.kindIn,
-          modeIn: params?.modeIn,
           isEnabled: params?.isEnabled,
           ordering: params?.ordering,
         },
@@ -883,6 +882,16 @@ export const apiClient = {
 
   getAdminPaymentById(id: string) {
     return instance.get<AdminPayment>(`/api/v1/admin/billing/payments/${id}/`).then((response) => response.data);
+  },
+
+  retryAdminPaymentFiscal(id: string) {
+    return instance
+      .post<{
+        payment: AdminPayment;
+        receipt: AdminReceipt;
+        result: Record<string, unknown>;
+      }>(`/api/v1/admin/billing/payments/${id}/retry-fiscal/`)
+      .then((response) => response.data);
   },
 
   getAdminReceipts(params: AdminReceiptsQueryParams) {

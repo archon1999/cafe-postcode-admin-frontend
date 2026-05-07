@@ -32,6 +32,8 @@ const schema = z.object({
   phone: z.string(),
   address: z.string(),
   fakturaPayload: z.record(z.string(), z.unknown()).optional(),
+  vatEnabled: z.boolean(),
+  vatPercent: z.coerce.number().min(0).max(99),
   isActive: z.boolean(),
 });
 
@@ -63,6 +65,8 @@ const RestaurantFormPage = () => {
       phone: '',
       address: '',
       fakturaPayload: {},
+      vatEnabled: false,
+      vatPercent: 12,
       isActive: false,
     },
   });
@@ -82,6 +86,8 @@ const RestaurantFormPage = () => {
       phone: query.data.phone,
       address: query.data.address,
       fakturaPayload: query.data.fakturaPayload ?? {},
+      vatEnabled: query.data.vatEnabled,
+      vatPercent: Number(query.data.vatPercent ?? 12),
       isActive: query.data.isActive,
     });
   }, [methods, query.data]);
@@ -123,6 +129,8 @@ const RestaurantFormPage = () => {
       phone: values.phone.trim(),
       address: values.address.trim(),
       fakturaPayload: values.fakturaPayload,
+      vatEnabled: values.vatEnabled,
+      vatPercent: values.vatPercent,
       isActive: isEditMode ? values.isActive : false,
     };
 

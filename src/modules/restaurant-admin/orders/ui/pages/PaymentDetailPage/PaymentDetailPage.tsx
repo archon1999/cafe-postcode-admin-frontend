@@ -1,8 +1,10 @@
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { toast } from 'sonner';
 
 import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
@@ -14,7 +16,7 @@ import { LabelRowWithIcon } from 'shared/ui/LabelRowWithIcon/LabelRowWithIcon';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 import { formatMoney } from 'shared/utils/format-money';
 
-import { useGetPaymentByIdQuery } from '../../../application';
+import { useGetPaymentByIdQuery, useRetryPaymentFiscalMutation } from '../../../application';
 import { formatDateTime, getPaymentMethodTranslationKey, getPaymentStatusColor } from '../../lib/presenters';
 
 const PaymentDetailPage = () => {
@@ -22,6 +24,7 @@ const PaymentDetailPage = () => {
   const { t: tCommon } = useTranslate('common');
   const { id } = useParams<{ id: string }>();
   const query = useGetPaymentByIdQuery(id ?? '');
+  const retryFiscalMutation = useRetryPaymentFiscalMutation(id ?? '');
 
   useRedirectOnNotFound(query.error, !query.isLoading);
 
@@ -107,6 +110,29 @@ const PaymentDetailPage = () => {
                 <Label color={getPaymentStatusColor(payment.status)} variant="soft">
                   {t(`paymentStatuses.${payment.status}`)}
                 </Label>
+                {payment.status === 'succeeded' ? (
+                  <Button
+                    variant="contained"
+                    color="black"
+                    loading={retryFiscalMutation.isPending}
+                    onClick={() => {
+                      retryFiscalMutation
+                        .mutateAsync()
+                        .then((result) => {
+                          if (result.result?.ok) {
+                            toast.success('Fiscal chek yuborildi');
+                          } else {
+                            toast.error(String(result.result?.detail ?? 'Fiscal yuborilmadi'));
+                          }
+                        })
+                        .catch((error: unknown) => {
+                          const detail = (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
+                          toast.error(detail ?? 'Fiscal yuborilmadi');
+                        });
+                    }}>
+                    Retry fiscal
+                  </Button>
+                ) : null}
               </Stack>
             </Card>
             <Card sx={{ p: 3 }}>

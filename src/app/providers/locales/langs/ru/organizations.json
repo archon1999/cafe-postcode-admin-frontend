@@ -81,7 +81,6 @@
     "primaryHallHint": "Выберите основной зал для сотрудника.",
     "allowedHalls": "Разрешенные залы",
     "allowedHallsHint": "Список залов, в которых может работать сотрудник.",
-    "mode": "Режим",
     "kind": "Тип",
     "status": "Статус",
     "integrationChannel": "Канал интеграции",
@@ -124,7 +123,6 @@
     "clearSearch": "Очистить поиск",
     "default": "Тип по умолчанию",
     "branch": "Филиал",
-    "mode": "Режим",
     "kind": "Тип",
     "status": "Статус",
     "orderEntryMode": "Режим заказа",
@@ -177,7 +175,7 @@
     },
     "soliqIntegration": {
       "title": "Интеграция с налоговой",
-      "description": "Текущее состояние интеграции с Soliq OFD и основные идентификаторы."
+      "description": "Текущее состояние интеграции FiscalDriveService и основные идентификаторы."
     },
     "balance": {
       "title": "Баланс",
@@ -371,10 +369,16 @@
       "cutAfterPrint": "Обрезать после печати",
       "encoding": "Кодировка",
       "endpointUrl": "Endpoint URL",
+      "amountMultiplier": "Amount multiplier",
+      "amountMultiplierHint": "MARTA minor unit multiplier. Usually 100.",
+      "hmacSecret": "HMAC secret",
+      "hmacSecretHint": "Stored for the future activate flow.",
       "merchantId": "Merchant ID",
       "paperWidthMm": "Ширина бумаги",
       "paymentQrUrl": "URL QR-оплаты",
       "paymentQrUrlHint": "На следующем этапе QR для кассового чека будет браться из этого источника.",
+      "timeoutSeconds": "Timeout seconds",
+      "timeoutSecondsHint": "How long to wait for terminal response. Usually 180.",
       "printerHost": "IP-адрес принтера",
       "printerHostHint": "IP-адрес для LAN-принтера. Например: 192.168.123.100.",
       "printerName": "Имя принтера Windows",

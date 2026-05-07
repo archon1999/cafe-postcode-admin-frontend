@@ -22,7 +22,6 @@ import type {
   AdminFiscalDevice,
   AdminIntegrationConfig,
   AdminIntegrationConfigKind,
-  AdminIntegrationConfigMode,
   AdminIntegrationConfigPayload,
 } from 'shared/api/admin-types';
 import { DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_PAGINATION_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
@@ -43,25 +42,13 @@ import { OrganizationsGridToolbar } from './OrganizationsGridToolbar';
 import { RestaurantManagementAccordion } from './RestaurantManagementAccordion';
 
 const INTEGRATION_KIND_VALUES = ['printer', 'payment', 'fiscal'] as const;
-const INTEGRATION_MODE_VALUES = ['mock', 'live'] as const;
 const PAPER_WIDTH_VALUES = ['58', '80'] as const;
 const PRINTER_CONNECTION_TYPE_VALUES = ['system_printer', 'socket'] as const;
 
 const PROVIDER_OPTIONS: Record<AdminIntegrationConfigKind, { value: string; label: string }[]> = {
-  printer: [
-    { value: 'qz-tray', label: 'QZ Tray' },
-    { value: 'windows-raw', label: 'Windows raw' },
-    { value: 'mock-printer', label: 'Mock printer' },
-  ],
-  payment: [
-    { value: 'mock-payment', label: 'Mock payment' },
-    { value: 'manual-qr', label: 'Manual QR' },
-    { value: 'custom-payment', label: 'Custom payment' },
-  ],
-  fiscal: [
-    { value: 'soliq-ofd', label: 'Soliq OFD' },
-    { value: 'mock-fiscal', label: 'Mock fiscal' },
-  ],
+  printer: [{ value: 'windows-raw', label: 'Windows raw' }],
+  payment: [{ value: 'marta-softpos', label: 'MARTA SoftPOS' }],
+  fiscal: [{ value: 'fiscal-drive-service', label: 'FiscalDriveService' }],
 };
 
 const MANAGED_SETTING_KEYS = new Set([
@@ -86,6 +73,12 @@ const MANAGED_SETTING_KEYS = new Set([
   'taxNumber',
   'endpoint_url',
   'endpointUrl',
+  'timeout_seconds',
+  'timeoutSeconds',
+  'amount_multiplier',
+  'amountMultiplier',
+  'hmac_secret',
+  'hmacSecret',
   'api_key',
   'apiKey',
   'payment_qr_url',
@@ -96,7 +89,6 @@ const schema = z
   .object({
     kind: z.enum(INTEGRATION_KIND_VALUES),
     provider: z.string().min(1),
-    mode: z.enum(INTEGRATION_MODE_VALUES),
     isEnabled: z.boolean(),
     connectionType: z.enum(PRINTER_CONNECTION_TYPE_VALUES),
     printerName: z.string(),
@@ -110,40 +102,63 @@ const schema = z
     cashboxId: z.string(),
     taxNumber: z.string(),
     endpointUrl: z.string(),
+    timeoutSeconds: z.string(),
+    amountMultiplier: z.string(),
+    hmacSecret: z.string(),
     apiKey: z.string(),
     paymentQrUrl: z.string(),
   })
   .superRefine((values, ctx) => {
-    if (values.kind !== 'printer' || values.mode !== 'live') {
-      return;
-    }
-
-    if (values.provider === 'qz-tray' && values.connectionType === 'socket') {
-      if (!values.printerHost.trim()) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ['printerHost'],
-          message: 'Printer IP manzilini kiriting',
-        });
-      }
-
-      const port = Number(values.printerPort);
-      if (!Number.isInteger(port) || port <= 0 || port > 65535) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ['printerPort'],
-          message: "Port 1 dan 65535 gacha bo'lishi kerak",
-        });
-      }
-      return;
-    }
-
-    if (values.provider === 'qz-tray' || values.provider === 'windows-raw') {
-      if (!values.printerName.trim()) {
+    if (values.kind === 'printer' && values.provider === 'windows-raw') {
+      if (values.connectionType === 'socket') {
+        if (!values.printerHost.trim()) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['printerHost'],
+            message: 'LAN printer IP manzilini kiriting',
+          });
+        }
+        const port = Number(values.printerPort);
+        if (!Number.isInteger(port) || port <= 0) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['printerPort'],
+            message: "Printer porti musbat butun son bo'lishi kerak",
+          });
+        }
+      } else if (!values.printerName.trim()) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ['printerName'],
           message: 'Printer nomini kiriting',
+        });
+      }
+    }
+
+    if (values.kind === 'payment' && values.provider === 'marta-softpos') {
+      if (!values.endpointUrl.trim()) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['endpointUrl'],
+          message: 'MARTA endpoint URL kiriting',
+        });
+      }
+
+      const timeoutSeconds = Number(values.timeoutSeconds);
+      if (!Number.isInteger(timeoutSeconds) || timeoutSeconds <= 0) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['timeoutSeconds'],
+          message: "Timeout musbat butun son bo'lishi kerak",
+        });
+      }
+
+      const amountMultiplier = Number(values.amountMultiplier);
+      if (!Number.isInteger(amountMultiplier) || amountMultiplier <= 0) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['amountMultiplier'],
+          message: "Amount multiplier musbat butun son bo'lishi kerak",
         });
       }
     }
@@ -153,8 +168,7 @@ type Values = z.infer<typeof schema>;
 
 const defaultValues: Values = {
   kind: 'printer',
-  provider: 'qz-tray',
-  mode: 'live',
+  provider: 'windows-raw',
   isEnabled: true,
   connectionType: 'system_printer',
   printerName: 'POS-80 USB',
@@ -168,6 +182,9 @@ const defaultValues: Values = {
   cashboxId: '',
   taxNumber: '',
   endpointUrl: '',
+  timeoutSeconds: '180',
+  amountMultiplier: '100',
+  hmacSecret: '',
   apiKey: '',
   paymentQrUrl: '',
 };
@@ -213,7 +230,7 @@ function valuesFromItem(item: AdminIntegrationConfig | null): Values {
   if (!item) {
     return {
       ...defaultValues,
-      provider: 'soliq-ofd',
+      provider: 'fiscal-drive-service',
     };
   }
 
@@ -222,7 +239,6 @@ function valuesFromItem(item: AdminIntegrationConfig | null): Values {
   return {
     kind: item.kind,
     provider: item.provider,
-    mode: item.mode,
     isEnabled: item.isEnabled,
     connectionType: readPrinterConnectionType(settings),
     printerName: readString(settings, ['printer_name', 'printerName'], 'POS-80 USB'),
@@ -236,6 +252,9 @@ function valuesFromItem(item: AdminIntegrationConfig | null): Values {
     cashboxId: readString(settings, ['cashbox_id', 'cashboxId']),
     taxNumber: readString(settings, ['tax_number', 'taxNumber']),
     endpointUrl: readString(settings, ['endpoint_url', 'endpointUrl']),
+    timeoutSeconds: String(readSetting(settings, ['timeout_seconds', 'timeoutSeconds']) ?? '180'),
+    amountMultiplier: String(readSetting(settings, ['amount_multiplier', 'amountMultiplier']) ?? '100'),
+    hmacSecret: readString(settings, ['hmac_secret', 'hmacSecret']),
     apiKey: readString(settings, ['api_key', 'apiKey']),
     paymentQrUrl: readString(settings, ['payment_qr_url', 'paymentQrUrl']),
   };
@@ -254,19 +273,15 @@ function buildSettings(values: Values, item: AdminIntegrationConfig | null): Rec
   if (values.kind === 'printer') {
     const settings: Record<string, unknown> = {
       ...base,
+      connection_type: values.connectionType,
       paper_width_mm: Number(values.paperWidthMm),
       cut_after_print: values.cutAfterPrint,
       encoding: values.encoding.trim() || 'cp437',
     };
 
-    if (values.provider === 'qz-tray') {
-      settings.connection_type = values.connectionType;
-      if (values.connectionType === 'socket') {
-        settings.host = values.printerHost.trim();
-        settings.port = Number(values.printerPort || 9100);
-      } else {
-        settings.printer_name = values.printerName.trim();
-      }
+    if (values.provider === 'windows-raw' && values.connectionType === 'socket') {
+      settings.host = values.printerHost.trim();
+      settings.port = Number(values.printerPort || 9100);
     } else if (values.provider === 'windows-raw') {
       settings.printer_name = values.printerName.trim();
     } else if (values.printerName.trim()) {
@@ -277,7 +292,7 @@ function buildSettings(values: Values, item: AdminIntegrationConfig | null): Rec
   }
 
   if (values.kind === 'payment') {
-    return {
+    const settings: Record<string, unknown> = {
       ...base,
       terminal_id: trimOrUndefined(values.terminalId),
       merchant_id: trimOrUndefined(values.merchantId),
@@ -285,6 +300,15 @@ function buildSettings(values: Values, item: AdminIntegrationConfig | null): Rec
       api_key: trimOrUndefined(values.apiKey),
       payment_qr_url: trimOrUndefined(values.paymentQrUrl),
     };
+
+    if (values.provider === 'marta-softpos') {
+      settings.timeout_seconds = Number(values.timeoutSeconds || 180);
+      settings.amount_multiplier = Number(values.amountMultiplier || 100);
+      settings.tax_number = trimOrUndefined(values.taxNumber);
+      settings.hmac_secret = trimOrUndefined(values.hmacSecret);
+    }
+
+    return settings;
   }
 
   return {
@@ -306,10 +330,6 @@ function getKindLabel(kind: AdminIntegrationConfigKind) {
   return labels[kind];
 }
 
-function getModeLabel(mode: AdminIntegrationConfigMode) {
-  return mode === 'live' ? 'Live' : 'Mock';
-}
-
 function getPrinterConnectionLabel(connectionType: Values['connectionType']) {
   return connectionType === 'socket' ? 'LAN TCP/IP' : 'Windows/USB';
 }
@@ -318,24 +338,27 @@ function getSettingsSummary(row: AdminIntegrationConfig) {
   const settings = row.settings ?? {};
 
   if (row.kind === 'printer') {
+    const connectionType = readPrinterConnectionType(settings);
     const paperWidth = readSetting(settings, ['paper_width_mm', 'paperWidthMm']) ?? '-';
     const encoding = readString(settings, ['encoding'], 'cp437');
-    if (row.provider === 'qz-tray') {
-      const connectionType = readPrinterConnectionType(settings);
-      if (connectionType === 'socket') {
-        const host = readString(settings, ['host'], '-');
-        const port = readSetting(settings, ['port']) ?? '9100';
-        return `${getPrinterConnectionLabel(connectionType)}: ${host}:${port} | ${paperWidth}mm | ${encoding}`;
-      }
-      const printerName = readString(settings, ['printer_name', 'printerName'], '-');
-      return `${getPrinterConnectionLabel(connectionType)}: ${printerName} | ${paperWidth}mm | ${encoding}`;
+    if (connectionType === 'socket') {
+      const host = readString(settings, ['host'], '-');
+      const port = readSetting(settings, ['port']) ?? '9100';
+      return `${getPrinterConnectionLabel(connectionType)}: ${host}:${port} | ${paperWidth}mm | ${encoding}`;
     }
-
     const printerName = readString(settings, ['printer_name', 'printerName'], '-');
-    return `${printerName} | ${paperWidth}mm | ${encoding}`;
+    return `${getPrinterConnectionLabel(connectionType)}: ${printerName} | ${paperWidth}mm | ${encoding}`;
   }
 
   if (row.kind === 'payment') {
+    if (row.provider === 'marta-softpos') {
+      const endpointUrl = readString(settings, ['endpoint_url', 'endpointUrl'], '-');
+      const taxNumber = readString(settings, ['tax_number', 'taxNumber'], '-');
+      const amountMultiplier = readSetting(settings, ['amount_multiplier', 'amountMultiplier']) ?? '100';
+      const timeoutSeconds = readSetting(settings, ['timeout_seconds', 'timeoutSeconds']) ?? '180';
+      return `MARTA: ${endpointUrl} | STIR: ${taxNumber} | x${amountMultiplier} | ${timeoutSeconds}s`;
+    }
+
     const terminalId = readString(settings, ['terminal_id', 'terminalId'], '-');
     const merchantId = readString(settings, ['merchant_id', 'merchantId'], '-');
     const endpointUrl = readString(settings, ['endpoint_url', 'endpointUrl'], '-');
@@ -372,7 +395,6 @@ function RestaurantIntegrationDialog({
 
   const selectedKind = methods.watch('kind');
   const selectedProvider = methods.watch('provider');
-  const selectedConnectionType = methods.watch('connectionType');
   const endpointUrl = methods.watch('endpointUrl');
   const selectedTerminalId = methods.watch('terminalId');
   const providerOptions = useMemo(() => {
@@ -399,7 +421,6 @@ function RestaurantIntegrationDialog({
     const payload: AdminIntegrationConfigPayload = {
       kind: values.kind,
       provider: values.provider.trim(),
-      mode: values.mode,
       isEnabled: values.isEnabled,
       settings: buildSettings(values, item),
     };
@@ -445,13 +466,6 @@ function RestaurantIntegrationDialog({
                   </MenuItem>
                 ))}
               </RHFSelect>
-              <RHFSelect<Values> name="mode" label={t('fields.mode')}>
-                {INTEGRATION_MODE_VALUES.map((mode) => (
-                  <MenuItem key={mode} value={mode}>
-                    {getModeLabel(mode)}
-                  </MenuItem>
-                ))}
-              </RHFSelect>
             </Stack>
 
             <RHFSelect<Values> name="provider" label={t('integrations.fields.provider')}>
@@ -466,7 +480,7 @@ function RestaurantIntegrationDialog({
               <>
                 <Divider />
                 <Typography variant="subtitle2">{t('integrations.sections.printer')}</Typography>
-                {selectedProvider === 'qz-tray' ? (
+                {selectedProvider === 'windows-raw' ? (
                   <>
                     <RHFSelect<Values> name="connectionType" label={t('integrations.fields.connectionType')}>
                       {PRINTER_CONNECTION_TYPE_VALUES.map((connectionType) => (
@@ -475,7 +489,7 @@ function RestaurantIntegrationDialog({
                         </MenuItem>
                       ))}
                     </RHFSelect>
-                    {selectedConnectionType === 'socket' ? (
+                    {methods.watch('connectionType') === 'socket' ? (
                       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
                         <RHFTextField<Values>
                           name="printerHost"
@@ -497,28 +511,17 @@ function RestaurantIntegrationDialog({
                     )}
                   </>
                 ) : null}
-                {selectedProvider === 'windows-raw' ? (
-                  <RHFTextField<Values>
-                    name="printerName"
-                    label={t('integrations.fields.printerName')}
-                    helperText={t('integrations.fields.printerNameHint')}
-                  />
-                ) : null}
-                {selectedProvider !== 'mock-printer' ? (
-                  <>
-                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                      <RHFSelect<Values> name="paperWidthMm" label={t('integrations.fields.paperWidthMm')}>
-                        {PAPER_WIDTH_VALUES.map((width) => (
-                          <MenuItem key={width} value={width}>
-                            {t('integrations.units.millimeter', { value: width })}
-                          </MenuItem>
-                        ))}
-                      </RHFSelect>
-                      <RHFTextField<Values> name="encoding" label={t('integrations.fields.encoding')} />
-                    </Stack>
-                    <RHFSwitch<Values> name="cutAfterPrint" label={t('integrations.fields.cutAfterPrint')} />
-                  </>
-                ) : null}
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                  <RHFSelect<Values> name="paperWidthMm" label={t('integrations.fields.paperWidthMm')}>
+                    {PAPER_WIDTH_VALUES.map((width) => (
+                      <MenuItem key={width} value={width}>
+                        {t('integrations.units.millimeter', { value: width })}
+                      </MenuItem>
+                    ))}
+                  </RHFSelect>
+                  <RHFTextField<Values> name="encoding" label={t('integrations.fields.encoding')} />
+                </Stack>
+                <RHFSwitch<Values> name="cutAfterPrint" label={t('integrations.fields.cutAfterPrint')} />
               </>
             ) : null}
 
@@ -526,15 +529,42 @@ function RestaurantIntegrationDialog({
               <>
                 <Divider />
                 <Typography variant="subtitle2">{t('integrations.sections.payment')}</Typography>
-                <RHFTextField<Values> name="terminalId" label={t('fields.terminalId')} />
-                <RHFTextField<Values> name="merchantId" label={t('integrations.fields.merchantId')} />
-                <RHFTextField<Values> name="endpointUrl" label={t('integrations.fields.endpointUrl')} />
-                <RHFTextField<Values>
-                  name="paymentQrUrl"
-                  label={t('integrations.fields.paymentQrUrl')}
-                  helperText={t('integrations.fields.paymentQrUrlHint')}
-                />
-                <RHFTextField<Values> name="apiKey" label={t('integrations.fields.apiKey')} type="password" />
+                {selectedProvider === 'marta-softpos' ? (
+                  <>
+                    <RHFTextField<Values> name="endpointUrl" label={t('integrations.fields.endpointUrl')} />
+                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                      <RHFTextField<Values> name="taxNumber" label={t('fields.taxNumber')} />
+                      <RHFTextField<Values>
+                        name="amountMultiplier"
+                        label={t('integrations.fields.amountMultiplier')}
+                        helperText={t('integrations.fields.amountMultiplierHint')}
+                      />
+                    </Stack>
+                    <RHFTextField<Values>
+                      name="timeoutSeconds"
+                      label={t('integrations.fields.timeoutSeconds')}
+                      helperText={t('integrations.fields.timeoutSecondsHint')}
+                    />
+                    <RHFTextField<Values>
+                      name="hmacSecret"
+                      label={t('integrations.fields.hmacSecret')}
+                      type="password"
+                      helperText={t('integrations.fields.hmacSecretHint')}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <RHFTextField<Values> name="terminalId" label={t('fields.terminalId')} />
+                    <RHFTextField<Values> name="merchantId" label={t('integrations.fields.merchantId')} />
+                    <RHFTextField<Values> name="endpointUrl" label={t('integrations.fields.endpointUrl')} />
+                    <RHFTextField<Values>
+                      name="paymentQrUrl"
+                      label={t('integrations.fields.paymentQrUrl')}
+                      helperText={t('integrations.fields.paymentQrUrlHint')}
+                    />
+                    <RHFTextField<Values> name="apiKey" label={t('integrations.fields.apiKey')} type="password" />
+                  </>
+                )}
               </>
             ) : null}
 
@@ -543,7 +573,7 @@ function RestaurantIntegrationDialog({
                 <Divider />
                 <Typography variant="subtitle2">{t('integrations.sections.fiscal')}</Typography>
                 <RHFTextField<Values> name="terminalId" label={t('fields.terminalId')} />
-                {selectedProvider === 'soliq-ofd' ? (
+                {selectedProvider === 'fiscal-drive-service' ? (
                   <>
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} alignItems={{ sm: 'center' }}>
                       <Button
@@ -646,7 +676,6 @@ export function RestaurantIntegrationsSection({
   const [paginationModel, setPaginationModel] = useState(DEFAULT_PAGINATION_MODEL);
   const [search, setSearch] = useState('');
   const [kinds, setKinds] = useState<string[]>([]);
-  const [modes, setModes] = useState<string[]>([]);
   const [statuses, setStatuses] = useState<string[]>([]);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState(DEFAULT_COLUMN_VISIBILITY_MODEL);
   const [selectedRows, setSelectedRows] = useState<GridRowSelectionModel>(DEFAULT_SELECTION_MODEL);
@@ -672,17 +701,12 @@ export function RestaurantIntegrationsSection({
     pageSize: paginationModel.pageSize,
     search: search || undefined,
     kindIn: kinds.length ? kinds.join(',') : undefined,
-    modeIn: modes.length ? modes.join(',') : undefined,
     isEnabled: statuses.length === 1 ? statuses[0] === 'enabled' : undefined,
     ordering: getOrderingFromSortModel(sortModel),
   });
 
   const kindOptions = useMemo<FilterOption[]>(
     () => INTEGRATION_KIND_VALUES.map((kind) => ({ value: kind, label: getKindLabel(kind) })),
-    [],
-  );
-  const modeOptions = useMemo<FilterOption[]>(
-    () => INTEGRATION_MODE_VALUES.map((mode) => ({ value: mode, label: getModeLabel(mode) })),
     [],
   );
   const statusOptions = useMemo<FilterOption[]>(
@@ -707,20 +731,6 @@ export function RestaurantIntegrationsSection({
         headerName: t('integrations.fields.provider'),
         minWidth: 180,
         flex: 0.8,
-      },
-      {
-        field: 'mode',
-        headerName: t('fields.mode'),
-        minWidth: 120,
-        flex: 0.4,
-        renderCell: ({ row }) => (
-          <Chip
-            size="small"
-            label={getModeLabel(row.mode)}
-            color={row.mode === 'live' ? 'success' : 'default'}
-            variant="soft"
-          />
-        ),
       },
       {
         field: 'settings',
@@ -770,7 +780,7 @@ export function RestaurantIntegrationsSection({
     [setDialogOpen, t, tCommon],
   );
 
-  const hasActiveFilters = Boolean(search || kinds.length || modes.length || statuses.length);
+  const hasActiveFilters = Boolean(search || kinds.length || statuses.length);
   const isDialogOpen = Boolean(editingRow) || Boolean(createDialogOpen) || isCreateDialogOpen;
 
   const openCreateDialog = () => {
@@ -869,18 +879,6 @@ export function RestaurantIntegrationsSection({
                     setPaginationModel((prev) => ({ ...prev, page: 0 }));
                   },
                   testId: 'restaurant-integrations-kind-filter',
-                  emptyLabel: t('filters.all'),
-                },
-                {
-                  id: 'modes',
-                  label: t('fields.mode'),
-                  value: modes,
-                  options: modeOptions,
-                  onApply: (values) => {
-                    setModes(values);
-                    setPaginationModel((prev) => ({ ...prev, page: 0 }));
-                  },
-                  testId: 'restaurant-integrations-mode-filter',
                   emptyLabel: t('filters.all'),
                 },
                 {

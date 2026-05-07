@@ -50,6 +50,8 @@ export const RestaurantFormFields = ({ isEditMode, isLookupPending, isSubmitting
         rows={3}
         sx={{ gridColumn: { lg: '1 / -1' } }}
       />
+      <RHFSwitch<Values> name="vatEnabled" label={t('fields.vatEnabled')} />
+      <RHFTextField<Values> name="vatPercent" label="QQS / NDS (%)" type="number" />
     </Box>
 
     {isEditMode ? <RHFSwitch<Values> name="isActive" label={t('fields.status')} /> : null}

@@ -81,7 +81,6 @@
     "primaryHallHint": "Xodim uchun asosiy zalni tanlang.",
     "allowedHalls": "Ruxsat etilgan zallar",
     "allowedHallsHint": "Xodim ishlashi mumkin bo'lgan zallar ro'yxati.",
-    "mode": "Rejim",
     "kind": "Turi",
     "status": "Holat",
     "integrationChannel": "Integratsiya kanali",
@@ -124,7 +123,6 @@
     "clearSearch": "Qidiruvni tozalash",
     "default": "Asosiy turi",
     "branch": "Filial",
-    "mode": "Rejim",
     "kind": "Turi",
     "status": "Holat",
     "orderEntryMode": "Buyurtma rejimi",
@@ -177,7 +175,7 @@
     },
     "soliqIntegration": {
       "title": "Soliq bilan integratsiya",
-      "description": "Soliq OFD integratsiyasining joriy holati va asosiy identifikatorlari."
+      "description": "FiscalDriveService integratsiyasining joriy holati va asosiy identifikatorlari."
     },
     "balance": {
       "title": "Balans",
@@ -371,10 +369,16 @@
       "cutAfterPrint": "Chop etilgandan keyin kesish",
       "encoding": "Kodirovka",
       "endpointUrl": "Endpoint URL",
+      "amountMultiplier": "Amount multiplier",
+      "amountMultiplierHint": "MARTA uchun UZS minor unit koeffitsiyenti. Odatda 100.",
+      "hmacSecret": "HMAC secret",
+      "hmacSecretHint": "Kelajakdagi activate flow uchun saqlanadi.",
       "merchantId": "Merchant ID",
       "paperWidthMm": "Qog'oz kengligi",
       "paymentQrUrl": "To'lov QR URL",
       "paymentQrUrlHint": "Keyingi bosqichda kassir cheki uchun QR shu manbadan olinadi.",
+      "timeoutSeconds": "Timeout (sekund)",
+      "timeoutSecondsHint": "Terminal javobini kutish vaqti. Odatda 180.",
       "printerHost": "Printer IP manzili",
       "printerHostHint": "LAN printer uchun IP manzil. Masalan: 192.168.123.100.",
       "printerName": "Windows printer nomi",

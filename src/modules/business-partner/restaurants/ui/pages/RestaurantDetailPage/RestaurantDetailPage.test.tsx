@@ -123,8 +123,7 @@ describe('RestaurantDetailPage', () => {
         soliqIntegration: {
           configured: true,
           isEnabled: true,
-          mode: 'live',
-          provider: 'soliq-ofd',
+          provider: 'fiscal-drive-service',
           terminalId: 'TERM-1',
           cashboxId: 'BOX-1',
           taxNumber: '301234567',
@@ -169,7 +168,7 @@ describe('RestaurantDetailPage', () => {
     expect(screen.getByText('Aktiv foydalanuvchilar')).toBeInTheDocument();
     expect(screen.getByText('Soliq bilan integratsiya')).toBeInTheDocument();
     expect(screen.getByText('alpha-admin')).toBeInTheDocument();
-    expect(screen.getByText('soliq-ofd')).toBeInTheDocument();
+    expect(screen.getByText('fiscal-drive-service')).toBeInTheDocument();
     expect(screen.getAllByText('5000 som')).toHaveLength(3);
 
     fireEvent.click(screen.getByRole('button', { name: "Balansni to'ldirish" }));

@@ -256,7 +256,6 @@ const RestaurantDetailPage = () => {
                     sx={{ alignSelf: 'flex-start' }}
                   />
                 </SummaryField>
-                <SummaryField label={t('fields.mode')}>{restaurant.soliqIntegration.mode}</SummaryField>
                 <SummaryField label={t('fields.terminalId')}>
                   {restaurant.soliqIntegration.terminalId || t('labels.notSelected')}
                 </SummaryField>

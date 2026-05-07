@@ -285,13 +285,11 @@ export type AdminPrepStationPayload = {
 };
 
 export type AdminIntegrationConfigKind = 'fiscal' | 'payment' | 'printer';
-export type AdminIntegrationConfigMode = 'mock' | 'live';
 
 export type AdminIntegrationConfig = {
   id: string;
   kind: AdminIntegrationConfigKind;
   provider: string;
-  mode: AdminIntegrationConfigMode;
   isEnabled: boolean;
   settings: Record<string, unknown>;
 };
@@ -299,7 +297,6 @@ export type AdminIntegrationConfig = {
 export type AdminIntegrationConfigPayload = {
   kind: AdminIntegrationConfigKind;
   provider: string;
-  mode: AdminIntegrationConfigMode;
   isEnabled: boolean;
   settings: Record<string, unknown>;
 };
@@ -333,7 +330,6 @@ export type AdminRestaurantActiveUser = {
 export type AdminRestaurantSoliqSummary = {
   configured: boolean;
   isEnabled: boolean;
-  mode: AdminIntegrationConfigMode;
   provider: string;
   terminalId?: string | null;
   cashboxId?: string | null;
@@ -379,6 +375,8 @@ export type AdminRestaurant = {
   fakturaPayload?: Record<string, unknown>;
   currency: string;
   authCode?: string;
+  vatEnabled: boolean;
+  vatPercent: number | string;
   isActive: boolean;
   activatedAt?: string | null;
   deactivatedAt?: string | null;
@@ -406,6 +404,8 @@ export type AdminRestaurantPayload = {
   phone: string;
   address: string;
   fakturaPayload?: Record<string, unknown>;
+  vatEnabled: boolean;
+  vatPercent: number | string;
   isActive: boolean;
   tariffId?: string | null;
 };
@@ -1021,7 +1021,6 @@ export type AdminPrepStationsQueryParams = AdminListQueryParams & {
 
 export type AdminIntegrationConfigsQueryParams = AdminListQueryParams & {
   kindIn?: string;
-  modeIn?: string;
   isEnabled?: boolean;
 };
 

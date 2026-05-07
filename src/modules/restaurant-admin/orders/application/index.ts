@@ -10,3 +10,4 @@ export {
   useGetReceiptByIdQuery,
   useGetReceiptsQuery,
 } from './queries';
+export { useRetryPaymentFiscalMutation } from './mutations';
