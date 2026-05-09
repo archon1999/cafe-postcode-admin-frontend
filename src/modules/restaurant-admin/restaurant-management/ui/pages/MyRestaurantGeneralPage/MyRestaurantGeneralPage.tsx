@@ -7,12 +7,11 @@ import Typography from '@mui/material/Typography';
 import { useEffect, useState } from 'react';
 
 import { useTranslate } from 'app/providers/locales';
-import { RoutePath, canAccessMyRestaurant, RouterPathHelper } from 'app/routes';
-import { useCurrentUser } from 'modules/auth';
+import { RoutePath, canAccessMyRestaurant } from 'app/routes';
+import { useAdminRestaurantScopeId, useCurrentUser } from 'modules/auth';
 import { useRouter } from 'shared/hooks/router';
 import { Iconify } from 'shared/ui/Iconify';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
-import { RouterLink } from 'shared/ui/RouterLink';
 import { formatDate, formatDateTime } from 'shared/utils/format-time';
 
 import { useGetMyRestaurantQuery } from '../../../application';
@@ -24,7 +23,7 @@ const MyRestaurantGeneralPage = () => {
   const { t: tCommon } = useTranslate('common');
   const { profile } = useCurrentUser();
   const { replace } = useRouter();
-  const restaurantId = profile?.restaurantId ?? null;
+  const restaurantId = useAdminRestaurantScopeId();
   const canManageMyRestaurant = canAccessMyRestaurant(profile);
   const [isAuthCodeVisible, setIsAuthCodeVisible] = useState(false);
 
@@ -47,9 +46,9 @@ const MyRestaurantGeneralPage = () => {
   }
 
   const restaurant = restaurantQuery.data;
-  const tariffName = restaurant.tariff?.name ?? (restaurant.activationType === 'custom'
-    ? tPlatform('labels.customActivation')
-    : t('labels.notSelected'));
+  const tariffName =
+    restaurant.tariff?.name ??
+    (restaurant.activationType === 'custom' ? tPlatform('labels.customActivation') : t('labels.notSelected'));
   const billingPeriodLabel =
     restaurant.billingPeriod === 'monthly'
       ? tPlatform('labels.monthly')
@@ -68,9 +67,7 @@ const MyRestaurantGeneralPage = () => {
         <Card sx={{ p: 3 }}>
           <Stack spacing={3}>
             <Stack spacing={0.75}>
-              <Typography variant="h6">
-                {t('sections.myRestaurantProfile.title')}
-              </Typography>
+              <Typography variant="h6">{t('sections.myRestaurantProfile.title')}</Typography>
               <Typography variant="body2" color="text.secondary">
                 {t('sections.myRestaurantProfile.description')}
               </Typography>
@@ -155,9 +152,7 @@ const MyRestaurantGeneralPage = () => {
                       <Iconify icon={isAuthCodeVisible ? 'solar:eye-closed-bold' : 'solar:eye-bold'} width={18} />
                     }
                     onClick={() => setIsAuthCodeVisible((prev) => !prev)}>
-                    {isAuthCodeVisible
-                      ? t('actions.hideAuthCode')
-                      : t('actions.showAuthCode')}
+                    {isAuthCodeVisible ? t('actions.hideAuthCode') : t('actions.showAuthCode')}
                   </Button>
                 </Stack>
               </Stack>

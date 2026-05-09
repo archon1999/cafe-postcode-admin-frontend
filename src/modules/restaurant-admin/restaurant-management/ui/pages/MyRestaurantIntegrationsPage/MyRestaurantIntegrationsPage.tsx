@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath, canAccessMyRestaurantIntegrations } from 'app/routes';
-import { useCurrentUser } from 'modules/auth';
+import { useAdminRestaurantScopeId, useCurrentUser } from 'modules/auth';
 import { useRouter } from 'shared/hooks/router';
 import { Iconify } from 'shared/ui/Iconify';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
@@ -15,7 +15,7 @@ const MyRestaurantIntegrationsPage = () => {
   const { t } = useTranslate('organizations');
   const { profile } = useCurrentUser();
   const { replace } = useRouter();
-  const restaurantId = profile?.restaurantId ?? null;
+  const restaurantId = useAdminRestaurantScopeId();
   const canManageIntegrations = canAccessMyRestaurantIntegrations(profile);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
 
