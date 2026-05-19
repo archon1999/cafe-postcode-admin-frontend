@@ -1,4 +1,5 @@
 import { apiClient } from 'shared/api/http/apiClient';
+import { buildAdminRestaurantRequestPayload } from 'shared/api/admin-restaurant-form-data';
 
 import type { OrganizationsRepository } from '../../domain';
 
@@ -55,10 +56,10 @@ export const organizationsRepository: OrganizationsRepository = {
     return apiClient.getAdminRestaurantById(id);
   },
   createRestaurant(payload) {
-    return apiClient.createAdminRestaurant(payload);
+    return apiClient.createAdminRestaurant(buildAdminRestaurantRequestPayload(payload));
   },
   updateRestaurant(id, payload) {
-    return apiClient.updateAdminRestaurant(id, payload);
+    return apiClient.updateAdminRestaurant(id, buildAdminRestaurantRequestPayload(payload));
   },
   deleteRestaurant(id) {
     return apiClient.deleteAdminRestaurant(id);

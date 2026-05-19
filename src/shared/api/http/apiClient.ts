@@ -718,11 +718,11 @@ export const apiClient = {
       .then((response) => response.data);
   },
 
-  createAdminRestaurant(payload: AdminRestaurantPayload) {
+  createAdminRestaurant(payload: AdminRestaurantPayload | FormData) {
     return instance.post<AdminRestaurant>('/api/v1/admin/restaurants/', payload).then((response) => response.data);
   },
 
-  updateAdminRestaurant(id: string, payload: AdminRestaurantPayload) {
+  updateAdminRestaurant(id: string, payload: AdminRestaurantPayload | FormData) {
     return instance.put<AdminRestaurant>(`/api/v1/admin/restaurants/${id}/`, payload).then((response) => response.data);
   },
 

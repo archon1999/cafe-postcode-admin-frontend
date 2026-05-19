@@ -181,6 +181,8 @@ describe('RestaurantFormPage', () => {
         taxNumber: '123',
         phone: '+998900000000',
         address: 'Tashkent',
+        vatEnabled: false,
+        vatPercent: 12,
         isActive: true,
         fakturaPayload: { CompanyName: 'Existing' },
       },
@@ -266,6 +268,8 @@ describe('RestaurantFormPage', () => {
         phone: '+998337700586',
         address: 'Buxoro',
         fakturaPayload: { CompanyName: 'GULISTON RESTAURANT', CompanyInn: '311926992' },
+        vatEnabled: false,
+        vatPercent: 12,
         isActive: false,
       });
     });
@@ -281,6 +285,8 @@ describe('RestaurantFormPage', () => {
         taxNumber: '304459113',
         phone: '+998909112881',
         address: 'Toshkent',
+        vatEnabled: true,
+        vatPercent: 12,
         isActive: true,
         fakturaPayload: { CompanyName: 'BROCCOLI FOOD', CompanyInn: '304459113' },
       },
@@ -305,6 +311,8 @@ describe('RestaurantFormPage', () => {
         phone: '+998909112881',
         address: 'Toshkent',
         fakturaPayload: { CompanyName: 'BROCCOLI FOOD', CompanyInn: '304459113' },
+        vatEnabled: true,
+        vatPercent: 12,
         isActive: true,
       });
     });

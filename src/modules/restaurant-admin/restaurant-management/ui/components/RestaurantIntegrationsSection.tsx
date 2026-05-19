@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
@@ -19,7 +18,6 @@ import { z } from 'zod';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import type {
-  AdminFiscalDevice,
   AdminIntegrationConfig,
   AdminIntegrationConfigKind,
   AdminIntegrationConfigPayload,
@@ -33,7 +31,6 @@ import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 
 import {
   useCreateIntegrationConfigMutation,
-  useDetectFiscalDevicesMutation,
   useGetIntegrationConfigsListQuery,
   useUpdateIntegrationConfigMutation,
 } from '../../application';
@@ -48,8 +45,10 @@ const PRINTER_CONNECTION_TYPE_VALUES = ['system_printer', 'socket'] as const;
 const PROVIDER_OPTIONS: Record<AdminIntegrationConfigKind, { value: string; label: string }[]> = {
   printer: [{ value: 'windows-raw', label: 'Windows raw' }],
   payment: [{ value: 'marta-softpos', label: 'MARTA SoftPOS' }],
-  fiscal: [{ value: 'fiscal-drive-service', label: 'FiscalDriveService' }],
+  fiscal: [{ value: 'unikassa', label: 'Unikassa' }],
 };
+
+const UNIKASSA_DEFAULT_ENDPOINT_URL = 'http://127.0.0.1:8181/api/v1';
 
 const MANAGED_SETTING_KEYS = new Set([
   'printer_name',
@@ -230,7 +229,6 @@ function valuesFromItem(item: AdminIntegrationConfig | null): Values {
   if (!item) {
     return {
       ...defaultValues,
-      provider: 'fiscal-drive-service',
     };
   }
 
@@ -316,7 +314,7 @@ function buildSettings(values: Values, item: AdminIntegrationConfig | null): Rec
     terminal_id: trimOrUndefined(values.terminalId),
     cashbox_id: trimOrUndefined(values.cashboxId),
     tax_number: trimOrUndefined(values.taxNumber),
-    endpoint_url: trimOrUndefined(values.endpointUrl),
+    endpoint_url: trimOrUndefined(values.endpointUrl) ?? UNIKASSA_DEFAULT_ENDPOINT_URL,
     api_key: trimOrUndefined(values.apiKey),
   };
 }
@@ -383,20 +381,14 @@ function RestaurantIntegrationDialog({
   const { t } = useTranslate('organizations');
   const isEditMode = Boolean(item);
   const createMutation = useCreateIntegrationConfigMutation();
-  const detectFiscalDevicesMutation = useDetectFiscalDevicesMutation();
   const updateMutation = useUpdateIntegrationConfigMutation(item?.id ?? '');
 
   const methods = useForm<Values>({
     resolver: zodResolver(schema),
     defaultValues,
   });
-  const [detectedFiscalDevices, setDetectedFiscalDevices] = useState<AdminFiscalDevice[]>([]);
-  const [detectError, setDetectError] = useState('');
-
   const selectedKind = methods.watch('kind');
   const selectedProvider = methods.watch('provider');
-  const endpointUrl = methods.watch('endpointUrl');
-  const selectedTerminalId = methods.watch('terminalId');
   const providerOptions = useMemo(() => {
     const options = PROVIDER_OPTIONS[selectedKind];
     if (item?.kind === selectedKind && item.provider && !options.some((option) => option.value === item.provider)) {
@@ -407,8 +399,6 @@ function RestaurantIntegrationDialog({
 
   useEffect(() => {
     methods.reset(valuesFromItem(item));
-    setDetectedFiscalDevices([]);
-    setDetectError('');
   }, [item, methods, open]);
 
   useEffect(() => {
@@ -416,6 +406,12 @@ function RestaurantIntegrationDialog({
       methods.setValue('provider', providerOptions[0]?.value ?? '');
     }
   }, [methods, providerOptions, selectedProvider]);
+
+  useEffect(() => {
+    if (selectedKind === 'fiscal' && !methods.getValues('endpointUrl').trim()) {
+      methods.setValue('endpointUrl', UNIKASSA_DEFAULT_ENDPOINT_URL);
+    }
+  }, [methods, selectedKind]);
 
   const onSubmit = methods.handleSubmit(async (values) => {
     const payload: AdminIntegrationConfigPayload = {
@@ -433,24 +429,6 @@ function RestaurantIntegrationDialog({
 
     onClose();
   });
-
-  const detectFiscalDevices = async () => {
-    setDetectError('');
-    setDetectedFiscalDevices([]);
-
-    try {
-      const devices = await detectFiscalDevicesMutation.mutateAsync(endpointUrl.trim() || undefined);
-      setDetectedFiscalDevices(devices);
-      if (devices.length === 1 && devices[0]?.terminalId) {
-        methods.setValue('terminalId', devices[0].terminalId, { shouldDirty: true, shouldTouch: true });
-      }
-      if (!devices.length) {
-        setDetectError('Fiscal qurilma topilmadi.');
-      }
-    } catch (error) {
-      setDetectError(error instanceof Error ? error.message : "Fiscal qurilmalarni aniqlab bo'lmadi.");
-    }
-  };
 
   return (
     <Dialog open={open} onClose={methods.formState.isSubmitting ? undefined : onClose} fullWidth maxWidth="sm">
@@ -573,59 +551,6 @@ function RestaurantIntegrationDialog({
                 <Divider />
                 <Typography variant="subtitle2">{t('integrations.sections.fiscal')}</Typography>
                 <RHFTextField<Values> name="terminalId" label={t('fields.terminalId')} />
-                {selectedProvider === 'fiscal-drive-service' ? (
-                  <>
-                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} alignItems={{ sm: 'center' }}>
-                      <Button
-                        variant="outlined"
-                        color="inherit"
-                        onClick={detectFiscalDevices}
-                        loading={detectFiscalDevicesMutation.isPending}>
-                        Terminallarni aniqlash
-                      </Button>
-                    </Stack>
-                    {detectError ? <Alert severity="warning">{detectError}</Alert> : null}
-                    {detectedFiscalDevices.length ? (
-                      <Stack spacing={1}>
-                        <Typography variant="body2" color="text.secondary">
-                          Topilgan terminallar
-                        </Typography>
-                        <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
-                          {detectedFiscalDevices.map((device) => {
-                            const isSelected = selectedTerminalId.trim() === device.terminalId;
-                            return (
-                              <Button
-                                key={device.factoryId}
-                                variant={isSelected ? 'contained' : 'outlined'}
-                                color={isSelected ? 'black' : 'inherit'}
-                                onClick={() => {
-                                  methods.setValue('terminalId', device.terminalId, {
-                                    shouldDirty: true,
-                                    shouldTouch: true,
-                                  });
-                                }}>
-                                {device.terminalId || device.factoryId}
-                              </Button>
-                            );
-                          })}
-                        </Stack>
-                        {detectedFiscalDevices.map((device) => {
-                          const meta = [device.readerName, device.description, device.appletVersion]
-                            .filter(Boolean)
-                            .join(' | ');
-                          return (
-                            <Typography key={`${device.factoryId}-meta`} variant="caption" color="text.secondary">
-                              {device.terminalId || device.factoryId}
-                              {meta ? ` - ${meta}` : ''}
-                              {device.locked ? ' - Locked' : ''}
-                              {device.posLocked ? ' - POS locked' : ''}
-                            </Typography>
-                          );
-                        })}
-                      </Stack>
-                    ) : null}
-                  </>
-                ) : null}
                 <RHFTextField<Values> name="cashboxId" label={t('integrations.fields.cashboxId')} />
                 <RHFTextField<Values> name="taxNumber" label={t('fields.taxNumber')} />
                 <RHFTextField<Values> name="endpointUrl" label={t('integrations.fields.endpointUrl')} />

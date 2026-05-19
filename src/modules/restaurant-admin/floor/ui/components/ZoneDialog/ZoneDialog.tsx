@@ -11,6 +11,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { useTranslate } from 'app/providers/locales';
+import type { AdminZoneOrCabin } from 'shared/api/admin-types';
 import { useRedirectOnNotFound } from 'shared/hooks/router';
 import { usePageTitle } from 'shared/hooks/use-page-title';
 import { Form, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
@@ -25,7 +26,14 @@ const schema = z.object({
 
 type Values = z.infer<typeof schema>;
 
-export function ZoneDialog({ open, zoneId, onClose }: { open: boolean; zoneId?: string | null; onClose: () => void }) {
+type ZoneDialogProps = {
+  open: boolean;
+  zoneId?: string | null;
+  onClose: () => void;
+  onSaved?: (zone: AdminZoneOrCabin) => void;
+};
+
+export function ZoneDialog({ open, zoneId, onClose, onSaved }: ZoneDialogProps) {
   const { t } = useTranslate('floor');
   const isEditMode = Boolean(zoneId);
   const zoneQuery = useGetZoneByIdQuery(zoneId ?? '', { enabled: open && isEditMode });
@@ -37,9 +45,16 @@ export function ZoneDialog({ open, zoneId, onClose }: { open: boolean; zoneId?: 
   const entityTitle = zoneQuery.data?.name;
 
   useRedirectOnNotFound(zoneQuery.error, open && isEditMode);
-  usePageTitle(isEditMode ? (entityTitle ? [listTitle, entityTitle, editTitle] : [listTitle, editTitle]) : [listTitle, createTitle], {
-    enabled: open,
-  });
+  usePageTitle(
+    isEditMode
+      ? entityTitle
+        ? [listTitle, entityTitle, editTitle]
+        : [listTitle, editTitle]
+      : [listTitle, createTitle],
+    {
+      enabled: open,
+    },
+  );
 
   const methods = useForm<Values>({
     resolver: zodResolver(schema),
@@ -75,12 +90,10 @@ export function ZoneDialog({ open, zoneId, onClose }: { open: boolean; zoneId?: 
       isActive: values.isActive,
     };
 
-    if (isEditMode && zoneId) {
-      await updateMutation.mutateAsync(payload);
-    } else {
-      await createMutation.mutateAsync(payload);
-    }
+    const savedZone =
+      isEditMode && zoneId ? await updateMutation.mutateAsync(payload) : await createMutation.mutateAsync(payload);
 
+    onSaved?.(savedZone);
     onClose();
   });
 

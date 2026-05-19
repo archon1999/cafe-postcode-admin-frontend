@@ -69,10 +69,7 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
       : null,
   ].filter(Boolean) as NavSectionProps['data'][number]['items'];
 
-  pushSection(
-    isSuperuser ? t('productOwnerSection') : undefined,
-    productOwnerItems,
-  );
+  pushSection(isSuperuser ? t('productOwnerSection') : undefined, productOwnerItems);
 
   const businessPartnerItems = [
     canAccess(RoutePath.organizationRestaurantList)
@@ -84,10 +81,7 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
       : null,
   ].filter(Boolean) as NavSectionProps['data'][number]['items'];
 
-  pushSection(
-    isSuperuser ? t('businessPartnerSection') : undefined,
-    businessPartnerItems,
-  );
+  pushSection(isSuperuser ? t('businessPartnerSection') : undefined, businessPartnerItems);
 
   const orderChildren = [
     canAccess(RoutePath.orderList)
@@ -148,18 +142,18 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
   ].filter(Boolean) as NavSectionProps['data'][number]['items'];
 
   const floorChildren = [
-    canAccess(RoutePath.floorHallList)
-      ? {
-          title: t('halls'),
-          path: RoutePath.floorHallList,
-          icon: ICONS.halls,
-        }
-      : null,
     canAccess(RoutePath.floorZoneList)
       ? {
           title: t('zones'),
           path: RoutePath.floorZoneList,
           icon: ICONS.zones,
+        }
+      : null,
+    canAccess(RoutePath.floorHallList)
+      ? {
+          title: t('halls'),
+          path: RoutePath.floorHallList,
+          icon: ICONS.halls,
         }
       : null,
     canAccess(RoutePath.floorTableSessionList)
@@ -266,10 +260,7 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
       : null,
   ].filter(Boolean) as NavSectionProps['data'][number]['items'];
 
-  pushSection(
-    isSuperuser ? t('restaurantAdminSection') : undefined,
-    restaurantAdminItems,
-  );
+  pushSection(isSuperuser ? t('restaurantAdminSection') : undefined, restaurantAdminItems);
 
   const accessControlItems = [
     canAccess(RoutePath.userList)
@@ -296,10 +287,7 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
   ].filter(Boolean) as NavSectionProps['data'][number]['items'];
 
   if (isSuperuser || canAccessAccessControl(options)) {
-    pushSection(
-      isSuperuser ? t('accessControlSection') : undefined,
-      accessControlItems,
-    );
+    pushSection(isSuperuser ? t('accessControlSection') : undefined, accessControlItems);
   }
 
   return sections;

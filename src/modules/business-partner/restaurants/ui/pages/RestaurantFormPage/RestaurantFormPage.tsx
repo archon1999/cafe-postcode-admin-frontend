@@ -9,6 +9,7 @@ import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath, canAccessMyRestaurant, canAccessRestaurants } from 'app/routes';
 import { useCurrentUser } from 'modules/auth/domain/services/current-user';
+import type { AdminRestaurantPayload } from 'shared/api/admin-types';
 import { normalizeError, notifyError } from 'shared/api/errors/errorHandling';
 import { useParams, useRedirectOnNotFound, useRouter } from 'shared/hooks/router';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
@@ -32,6 +33,8 @@ const schema = z.object({
   phone: z.string(),
   address: z.string(),
   fakturaPayload: z.record(z.string(), z.unknown()).optional(),
+  posAuthBackgroundImage: z.custom<File | string | null | undefined>().optional(),
+  clearPosAuthBackgroundImage: z.boolean().optional(),
   vatEnabled: z.boolean(),
   vatPercent: z.coerce.number().min(0).max(99),
   isActive: z.boolean(),
@@ -65,6 +68,8 @@ const RestaurantFormPage = () => {
       phone: '',
       address: '',
       fakturaPayload: {},
+      posAuthBackgroundImage: null,
+      clearPosAuthBackgroundImage: false,
       vatEnabled: false,
       vatPercent: 12,
       isActive: false,
@@ -86,6 +91,8 @@ const RestaurantFormPage = () => {
       phone: query.data.phone,
       address: query.data.address,
       fakturaPayload: query.data.fakturaPayload ?? {},
+      posAuthBackgroundImage: query.data.posAuthBackgroundImageUrl ?? null,
+      clearPosAuthBackgroundImage: false,
       vatEnabled: query.data.vatEnabled,
       vatPercent: Number(query.data.vatPercent ?? 12),
       isActive: query.data.isActive,
@@ -122,7 +129,7 @@ const RestaurantFormPage = () => {
   };
 
   const onSubmit = methods.handleSubmit(async (values) => {
-    const payload = {
+    const payload: AdminRestaurantPayload = {
       name: values.name.trim(),
       legalName: values.legalName.trim(),
       taxNumber: values.taxNumber.trim(),
@@ -133,6 +140,12 @@ const RestaurantFormPage = () => {
       vatPercent: values.vatPercent,
       isActive: isEditMode ? values.isActive : false,
     };
+
+    if (values.posAuthBackgroundImage instanceof File) {
+      payload.posAuthBackgroundImage = values.posAuthBackgroundImage;
+    } else if (values.clearPosAuthBackgroundImage === true) {
+      payload.clearPosAuthBackgroundImage = true;
+    }
 
     if (isEditMode && id) {
       await updateMutation.mutateAsync(payload);

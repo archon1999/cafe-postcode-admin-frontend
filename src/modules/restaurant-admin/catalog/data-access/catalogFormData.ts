@@ -46,6 +46,10 @@ function buildCatalogFormData(payload: CatalogMutationPayload): FormData {
     appendNumber(formData, 'sortOrder', payload.sortOrder);
   }
 
+  if ('cashPaymentForbidden' in payload) {
+    appendBoolean(formData, 'cashPaymentForbidden', payload.cashPaymentForbidden);
+  }
+
   if ('category' in payload) {
     appendText(formData, 'category', payload.category);
   }

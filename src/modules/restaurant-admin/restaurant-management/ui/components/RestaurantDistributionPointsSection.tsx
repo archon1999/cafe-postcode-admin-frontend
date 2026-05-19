@@ -15,8 +15,6 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
-import { canAccessFloor } from 'app/routes';
-import { useCurrentUser } from 'modules/auth';
 import type { AdminDistributionPoint, AdminDistributionPointPayload } from 'shared/api/admin-types';
 import { DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_PAGINATION_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState } from 'shared/ui/CustomDataGrid';
@@ -25,13 +23,11 @@ import type { FilterOption } from 'shared/ui/Filters';
 import { Form, RHFSelect, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
 import { Iconify } from 'shared/ui/Iconify';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
-import { formatHallDisplayName } from 'shared/utils/format-hall-display';
 
 import {
   useCreateDistributionPointMutation,
   useDeleteDistributionPointMutation,
   useGetDistributionPointsListQuery,
-  useGetOrganizationsHallsQuery,
   useUpdateDistributionPointMutation,
 } from '../../application';
 import { ORGANIZATION_DISTRIBUTION_POINT_KIND_VALUES } from '../../domain';
@@ -43,8 +39,6 @@ import { RestaurantManagementAccordion } from './RestaurantManagementAccordion';
 const schema = z.object({
   name: z.string().min(1),
   kind: z.enum(ORGANIZATION_DISTRIBUTION_POINT_KIND_VALUES),
-  integrationChannel: z.string(),
-  assignedHall: z.string().optional(),
   isActive: z.boolean(),
 });
 
@@ -60,27 +54,19 @@ function RestaurantDistributionPointDialog({
   onClose: () => void;
 }) {
   const { t } = useTranslate('organizations');
-  const { t: tCommon } = useTranslate('common');
-  const { profile } = useCurrentUser();
   const isEditMode = Boolean(item);
-  const canManageHallAssignments = canAccessFloor(profile);
-  const hallsQuery = useGetOrganizationsHallsQuery({ enabled: open && canManageHallAssignments });
   const createMutation = useCreateDistributionPointMutation();
   const updateMutation = useUpdateDistributionPointMutation(item?.id ?? '');
 
-  const hallOptions = useMemo(() => hallsQuery.data ?? [], [hallsQuery.data]);
-
   const methods = useForm<Values>({
     resolver: zodResolver(schema),
-    defaultValues: { name: '', kind: 'hall', integrationChannel: '', assignedHall: '', isActive: true },
+    defaultValues: { name: '', kind: 'hall', isActive: true },
   });
 
   useEffect(() => {
     methods.reset({
       name: item?.name ?? '',
       kind: item?.kind ?? 'hall',
-      integrationChannel: item?.integrationChannel ?? '',
-      assignedHall: item?.assignedHall ?? '',
       isActive: item?.isActive ?? true,
     });
   }, [item, methods, open]);
@@ -89,8 +75,8 @@ function RestaurantDistributionPointDialog({
     const payload: AdminDistributionPointPayload = {
       name: values.name.trim(),
       kind: values.kind,
-      integrationChannel: values.integrationChannel.trim(),
-      assignedHall: canManageHallAssignments ? values.assignedHall || null : (item?.assignedHall ?? null),
+      integrationChannel: item?.integrationChannel ?? '',
+      assignedHall: item?.assignedHall ?? null,
       isActive: values.isActive,
     };
 
@@ -119,20 +105,6 @@ function RestaurantDistributionPointDialog({
                 </MenuItem>
               ))}
             </RHFSelect>
-            <RHFTextField<Values> name="integrationChannel" label={t('fields.integrationChannel')} />
-            {canManageHallAssignments ? (
-              <RHFSelect<Values>
-                name="assignedHall"
-                label={t('fields.assignedHall')}
-                helperText={hallsQuery.isLoading ? tCommon('labels.loading') : t('fields.assignedHallHint')}>
-                <MenuItem value="">{t('labels.notSelected')}</MenuItem>
-                {hallOptions.map((hall) => (
-                  <MenuItem key={hall.id} value={hall.id}>
-                    {formatHallDisplayName(hall.name, undefined, tCommon)}
-                  </MenuItem>
-                ))}
-              </RHFSelect>
-            ) : null}
             <RHFSwitch<Values> name="isActive" label={t('fields.status')} />
           </Stack>
         </DialogContent>
@@ -234,14 +206,6 @@ export function RestaurantDistributionPointsSection({
           <Chip size="small" label={t(getDistributionPointKindTranslationKey(row.kind))} variant="soft" />
         ),
       },
-      {
-        field: 'assignedHallName',
-        headerName: t('fields.assignedHall'),
-        minWidth: 180,
-        flex: 0.7,
-        valueGetter: (_value, row) => formatHallDisplayName(row.assignedHallName, undefined, tCommon),
-      },
-      { field: 'integrationChannel', headerName: t('fields.integrationChannel'), minWidth: 180, flex: 0.8 },
       {
         field: 'isActive',
         headerName: t('fields.status'),

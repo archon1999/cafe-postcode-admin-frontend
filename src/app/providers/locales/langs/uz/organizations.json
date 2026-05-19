@@ -88,6 +88,7 @@
     "legalName": "Yuridik nom",
     "taxNumber": "STIR",
     "authCode": "Aktivatsiya kodi",
+    "posAuthBackgroundImage": "POS kirish fon rasmi",
     "vatEnabled": "QQS / NDS yoqilgan",
     "currency": "Valyuta",
     "timezone": "Vaqt zonasi",
@@ -145,6 +146,8 @@
     "vatDisabled": "Yoqilmagan",
     "loading": "Yuklanmoqda...",
     "system": "Tizim",
+    "posAuthBackgroundImageHint": "POS kirish sahifasida ko'rinadigan restoran rasmi.",
+    "posAuthBackgroundImageFallback": "Rasm tanlanmagan. Standart fon ishlatiladi.",
     "balanceTransactionKinds": {
       "renewalCharge": "Davr uchun yechim",
       "topUp": "Balans to'ldirish"
@@ -268,6 +271,9 @@
     "editRestaurantProfile": "Mijoz profilini tahrirlash",
     "showAuthCode": "Kodni ko'rsatish",
     "hideAuthCode": "Kodni yashirish",
+    "uploadPosAuthBackgroundImage": "Rasm yuklash",
+    "replacePosAuthBackgroundImage": "Rasmni almashtirish",
+    "removePosAuthBackgroundImage": "Rasmni o'chirish",
     "createIntegration": "Yangi integratsiya",
     "topUpBalance": "Balansni to'ldirish"
   },

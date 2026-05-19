@@ -232,6 +232,10 @@ export type AdminBranchPayload = {
 
 export type AdminCashDesk = {
   id: string;
+  fiscalIntegration?: string | null;
+  fiscalIntegrationName?: string;
+  paymentIntegration?: string | null;
+  paymentIntegrationName?: string;
   name: string;
   location: string;
   enabledPaymentMethods: AdminPaymentMethod[];
@@ -244,13 +248,15 @@ export type AdminCashDesk = {
 
 export type AdminCashDeskPayload = {
   name: string;
-  location: string;
-  enabledPaymentMethods: AdminPaymentMethod[];
-  fiscalProvider: string;
-  receiptPrinterEnabled: boolean;
-  terminalId: string;
-  externalCashboxId: string;
-  isActive: boolean;
+  fiscalIntegration?: string | null;
+  paymentIntegration?: string | null;
+  location?: string;
+  enabledPaymentMethods?: AdminPaymentMethod[];
+  fiscalProvider?: string;
+  receiptPrinterEnabled?: boolean;
+  terminalId?: string;
+  externalCashboxId?: string;
+  isActive?: boolean;
 };
 
 export type AdminDistributionPoint = {
@@ -375,6 +381,7 @@ export type AdminRestaurant = {
   fakturaPayload?: Record<string, unknown>;
   currency: string;
   authCode?: string;
+  posAuthBackgroundImageUrl?: string | null;
   vatEnabled: boolean;
   vatPercent: number | string;
   isActive: boolean;
@@ -404,6 +411,8 @@ export type AdminRestaurantPayload = {
   phone: string;
   address: string;
   fakturaPayload?: Record<string, unknown>;
+  posAuthBackgroundImage?: File | null;
+  clearPosAuthBackgroundImage?: boolean;
   vatEnabled: boolean;
   vatPercent: number | string;
   isActive: boolean;
@@ -707,6 +716,7 @@ export type CatalogCategory = {
   imageUrl?: string | null;
   imageSource?: CatalogImageSource | null;
   sortOrder: number;
+  cashPaymentForbidden: boolean;
   isActive: boolean;
 };
 
@@ -723,6 +733,7 @@ export type CatalogCategoryPayload = {
   clearImage?: boolean;
   restoreMxikImage?: boolean;
   sortOrder: number;
+  cashPaymentForbidden?: boolean;
   isActive: boolean;
 };
 

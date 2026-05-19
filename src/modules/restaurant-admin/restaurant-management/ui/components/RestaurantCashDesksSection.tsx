@@ -6,12 +6,12 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import Divider from '@mui/material/Divider';
+import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import type { GridColDef, GridRowSelectionModel, GridSortModel } from '@mui/x-data-grid';
 import { gridClasses } from '@mui/x-data-grid';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, type Resolver } from 'react-hook-form';
 import { z } from 'zod';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
@@ -20,7 +20,7 @@ import { DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_PAGINATION_MODEL, DEFAULT_SELE
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState } from 'shared/ui/CustomDataGrid';
 import { ConfirmDialog } from 'shared/ui/CustomDialog';
 import type { FilterOption } from 'shared/ui/Filters';
-import { Form, RHFMultiCheckbox, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
+import { Form, RHFSelect, RHFTextField } from 'shared/ui/HookForm';
 import { Iconify } from 'shared/ui/Iconify';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 
@@ -28,6 +28,7 @@ import {
   useCreateCashDeskMutation,
   useDeleteCashDeskMutation,
   useGetCashDesksListQuery,
+  useGetIntegrationConfigsListQuery,
   useUpdateCashDeskMutation,
 } from '../../application';
 
@@ -36,16 +37,18 @@ import { RestaurantManagementAccordion } from './RestaurantManagementAccordion';
 
 const schema = z.object({
   name: z.string().min(1),
-  location: z.string(),
-  enabledPaymentMethods: z.array(z.enum(['cash', 'card', 'qr'])).min(1),
-  fiscalProvider: z.string().min(1),
-  receiptPrinterEnabled: z.boolean(),
-  terminalId: z.string(),
-  externalCashboxId: z.string(),
-  isActive: z.boolean(),
+  fiscalIntegration: z.string().min(1),
+  paymentIntegration: z.string(),
 });
 
 type Values = z.infer<typeof schema>;
+
+function getIntegrationLabel(integration: { provider: string; settings: Record<string, unknown> }) {
+  const terminalId = integration.settings.terminal_id ?? integration.settings.terminalId ?? integration.settings.fiscal;
+  const endpointUrl = integration.settings.endpoint_url ?? integration.settings.endpointUrl;
+  const suffix = terminalId ?? endpointUrl;
+  return suffix ? `${integration.provider} (${String(suffix)})` : integration.provider;
+}
 
 function RestaurantCashDeskDialog({
   open,
@@ -57,56 +60,45 @@ function RestaurantCashDeskDialog({
   onClose: () => void;
 }) {
   const { t } = useTranslate('organizations');
-  const { t: tOrders } = useTranslate('orders');
   const isEditMode = Boolean(item);
   const createMutation = useCreateCashDeskMutation();
   const updateMutation = useUpdateCashDeskMutation(item?.id ?? '');
-  const paymentMethodOptions = useMemo(
-    () => [
-      { value: 'cash', label: tOrders('paymentMethods.cash') },
-      { value: 'card', label: tOrders('paymentMethods.card') },
-      { value: 'qr', label: t('paymentMethods.qr') },
-    ],
-    [t, tOrders],
+  const fiscalIntegrationsQuery = useGetIntegrationConfigsListQuery({ page: 1, pageSize: 100, kindIn: 'fiscal', isEnabled: true });
+  const fiscalIntegrations = (fiscalIntegrationsQuery.data?.data ?? []).filter(
+    (integration) => integration.kind === 'fiscal' && integration.isEnabled,
+  );
+  const paymentIntegrationsQuery = useGetIntegrationConfigsListQuery({
+    page: 1,
+    pageSize: 100,
+    kindIn: 'payment',
+    isEnabled: true,
+  });
+  const paymentIntegrations = (paymentIntegrationsQuery.data?.data ?? []).filter(
+    (integration) => integration.kind === 'payment' && integration.provider === 'marta-softpos' && integration.isEnabled,
   );
 
   const methods = useForm<Values>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as Resolver<Values>,
     defaultValues: {
       name: '',
-      location: '',
-      enabledPaymentMethods: ['cash', 'card', 'qr'],
-      fiscalProvider: 'fiscal-drive-service',
-      receiptPrinterEnabled: true,
-      terminalId: '',
-      externalCashboxId: '',
-      isActive: true,
+      fiscalIntegration: '',
+      paymentIntegration: '',
     },
   });
 
   useEffect(() => {
     methods.reset({
       name: item?.name ?? '',
-      location: item?.location ?? '',
-      enabledPaymentMethods: item?.enabledPaymentMethods ?? ['cash', 'card', 'qr'],
-      fiscalProvider: item?.fiscalProvider ?? 'fiscal-drive-service',
-      receiptPrinterEnabled: item?.receiptPrinterEnabled ?? true,
-      terminalId: item?.terminalId ?? '',
-      externalCashboxId: item?.externalCashboxId ?? '',
-      isActive: item?.isActive ?? true,
+      fiscalIntegration: item?.fiscalIntegration ?? '',
+      paymentIntegration: item?.paymentIntegration ?? '',
     });
   }, [item, methods, open]);
 
   const onSubmit = methods.handleSubmit(async (values) => {
     const payload: AdminCashDeskPayload = {
       name: values.name.trim(),
-      location: values.location.trim(),
-      enabledPaymentMethods: values.enabledPaymentMethods,
-      fiscalProvider: values.fiscalProvider.trim(),
-      receiptPrinterEnabled: values.receiptPrinterEnabled,
-      terminalId: values.terminalId.trim(),
-      externalCashboxId: values.externalCashboxId.trim(),
-      isActive: values.isActive,
+      fiscalIntegration: values.fiscalIntegration,
+      paymentIntegration: values.paymentIntegration || null,
     };
 
     if (isEditMode && item) {
@@ -125,19 +117,27 @@ function RestaurantCashDeskDialog({
         <DialogContent>
           <Stack spacing={3} sx={{ pt: 1 }}>
             <RHFTextField<Values> name="name" label={t('fields.name')} />
-            <RHFTextField<Values> name="location" label={t('fields.location')} />
-            <RHFMultiCheckbox<Values>
-              name="enabledPaymentMethods"
-              label={t('fields.enabledPaymentMethods')}
-              options={paymentMethodOptions}
-              row
-            />
-            <RHFTextField<Values> name="fiscalProvider" label={t('fields.fiscalProvider')} />
-            <RHFTextField<Values> name="terminalId" label={t('fields.terminalId')} />
-            <RHFTextField<Values> name="externalCashboxId" label={t('fields.externalCashboxId')} />
-            <Divider />
-            <RHFSwitch<Values> name="receiptPrinterEnabled" label={t('fields.receiptPrinterEnabled')} />
-            <RHFSwitch<Values> name="isActive" label={t('fields.status')} />
+            <RHFSelect<Values>
+              name="fiscalIntegration"
+              label="Fiscal integratsiya"
+              disabled={fiscalIntegrationsQuery.isLoading}>
+              {fiscalIntegrations.map((integration) => (
+                <MenuItem key={integration.id} value={integration.id}>
+                  {getIntegrationLabel(integration)}
+                </MenuItem>
+              ))}
+            </RHFSelect>
+            <RHFSelect<Values>
+              name="paymentIntegration"
+              label="MARTA payment integratsiya"
+              disabled={paymentIntegrationsQuery.isLoading}>
+              <MenuItem value="">Ulanmagan</MenuItem>
+              {paymentIntegrations.map((integration) => (
+                <MenuItem key={integration.id} value={integration.id}>
+                  {getIntegrationLabel(integration)}
+                </MenuItem>
+              ))}
+            </RHFSelect>
           </Stack>
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 3 }}>
@@ -173,7 +173,6 @@ export function RestaurantCashDesksSection({
   onCreateDialogOpenChange?: (open: boolean) => void;
 }) {
   const { t, currentLang } = useTranslate('organizations');
-  const { t: tOrders } = useTranslate('orders');
   const { t: tCommon } = useTranslate('common');
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
 
@@ -220,25 +219,19 @@ export function RestaurantCashDesksSection({
   const columns = useMemo<GridColDef<AdminCashDesk>[]>(
     () => [
       { field: 'name', headerName: t('fields.name'), minWidth: 220, flex: 1 },
-      { field: 'location', headerName: t('fields.location'), minWidth: 220, flex: 1 },
       {
-        field: 'enabledPaymentMethods',
-        headerName: t('fields.enabledPaymentMethods'),
-        minWidth: 180,
-        flex: 0.8,
-        sortable: false,
-        renderCell: ({ row }) => (
-          <Stack direction="row" spacing={0.5} useFlexGap flexWrap="wrap">
-            {row.enabledPaymentMethods.map((method) => (
-              <Chip
-                key={method}
-                size="small"
-                label={method === 'qr' ? t('paymentMethods.qr') : tOrders(`paymentMethods.${method}`)}
-                variant="soft"
-              />
-            ))}
-          </Stack>
-        ),
+        field: 'fiscalIntegrationName',
+        headerName: 'Fiscal integratsiya',
+        minWidth: 220,
+        flex: 1,
+        renderCell: ({ row }) => row.fiscalIntegrationName || row.fiscalProvider || '-',
+      },
+      {
+        field: 'paymentIntegrationName',
+        headerName: 'MARTA terminal',
+        minWidth: 240,
+        flex: 1,
+        renderCell: ({ row }) => row.paymentIntegrationName || '-',
       },
       {
         field: 'isActive',
@@ -280,7 +273,7 @@ export function RestaurantCashDesksSection({
         ],
       },
     ],
-    [setDialogOpen, t, tCommon, tOrders],
+    [setDialogOpen, t, tCommon],
   );
 
   const hasActiveFilters = Boolean(search || statuses.length);

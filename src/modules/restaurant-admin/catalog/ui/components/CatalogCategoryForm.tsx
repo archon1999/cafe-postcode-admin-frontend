@@ -7,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, type Resolver } from 'react-hook-form';
 import { z } from 'zod';
 
 import { useTranslate } from 'app/providers/locales';
@@ -44,6 +44,7 @@ const categoryFormSchema = z.object({
   clearImage: z.boolean(),
   restoreMxikImage: z.boolean(),
   sortOrder: z.coerce.number().int().min(0),
+  cashPaymentForbidden: z.boolean(),
   isActive: z.boolean(),
 });
 
@@ -63,6 +64,7 @@ const defaultValues: CategoryFormValues = {
   clearImage: false,
   restoreMxikImage: false,
   sortOrder: 0,
+  cashPaymentForbidden: false,
   isActive: true,
 };
 
@@ -85,7 +87,7 @@ function CatalogCategoryFormInner({
   const updateMutation = useUpdateCatalogCategoryMutation(category?.id ?? '');
 
   const methods = useForm<CategoryFormValues>({
-    resolver: zodResolver(categoryFormSchema),
+    resolver: zodResolver(categoryFormSchema) as Resolver<CategoryFormValues>,
     defaultValues,
   });
 
@@ -103,6 +105,7 @@ function CatalogCategoryFormInner({
       clearImage: false,
       restoreMxikImage: false,
       sortOrder: category?.sortOrder ?? 0,
+      cashPaymentForbidden: category?.cashPaymentForbidden ?? false,
       isActive: category?.isActive ?? true,
     });
     setMxikImageUrl(category?.imageSource === 'mxik-cache' ? (category.imageUrl ?? null) : null);
@@ -201,6 +204,7 @@ function CatalogCategoryFormInner({
       clearImage: values.clearImage,
       restoreMxikImage: values.restoreMxikImage,
       sortOrder: values.sortOrder,
+      cashPaymentForbidden: values.cashPaymentForbidden,
       isActive: values.isActive,
     };
 
@@ -240,7 +244,10 @@ function CatalogCategoryFormInner({
         <RHFTextField<CategoryFormValues> name="sortOrder" label={t('fields.sortOrder')} type="number" />
       </Box>
 
-      <RHFSwitch<CategoryFormValues> name="isActive" label={t('fields.status')} />
+      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+        <RHFSwitch<CategoryFormValues> name="cashPaymentForbidden" label="Naqd to'lov taqiqlangan" />
+        <RHFSwitch<CategoryFormValues> name="isActive" label={t('fields.status')} />
+      </Stack>
     </Stack>
   );
 

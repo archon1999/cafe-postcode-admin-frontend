@@ -4,7 +4,7 @@ import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ChangeEvent } from 'react';
 
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath, canAccessMyRestaurant } from 'app/routes';
@@ -14,7 +14,7 @@ import { Iconify } from 'shared/ui/Iconify';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 import { formatDate, formatDateTime } from 'shared/utils/format-time';
 
-import { useGetMyRestaurantQuery } from '../../../application';
+import { useGetMyRestaurantQuery, useUpdateRestaurantMutation } from '../../../application';
 import { MyRestaurantSectionLayout } from '../../components/MyRestaurantSectionLayout';
 
 const MyRestaurantGeneralPage = () => {
@@ -26,10 +26,14 @@ const MyRestaurantGeneralPage = () => {
   const restaurantId = useAdminRestaurantScopeId();
   const canManageMyRestaurant = canAccessMyRestaurant(profile);
   const [isAuthCodeVisible, setIsAuthCodeVisible] = useState(false);
+  const [backgroundFile, setBackgroundFile] = useState<File | null>(null);
+  const [backgroundPreviewUrl, setBackgroundPreviewUrl] = useState<string | null>(null);
+  const [clearBackgroundImage, setClearBackgroundImage] = useState(false);
 
   const restaurantQuery = useGetMyRestaurantQuery({
     enabled: Boolean(restaurantId && canManageMyRestaurant),
   });
+  const updateRestaurantMutation = useUpdateRestaurantMutation(restaurantId ?? '');
 
   useEffect(() => {
     if (profile && (!canManageMyRestaurant || !restaurantId)) {
@@ -46,6 +50,14 @@ const MyRestaurantGeneralPage = () => {
   }
 
   const restaurant = restaurantQuery.data;
+  if (!restaurant) {
+    return <LoadingScreen />;
+  }
+
+  const visibleBackgroundUrl = clearBackgroundImage
+    ? null
+    : (backgroundPreviewUrl ?? restaurant.posAuthBackgroundImageUrl ?? null);
+  const hasPendingBackgroundChange = Boolean(backgroundFile || clearBackgroundImage);
   const tariffName =
     restaurant.tariff?.name ??
     (restaurant.activationType === 'custom' ? tPlatform('labels.customActivation') : t('labels.notSelected'));
@@ -60,6 +72,60 @@ const MyRestaurantGeneralPage = () => {
       ? `${billingPeriodLabel} · ${formatDate(restaurant.expiresOn, 'DD.MM.YYYY')}`
       : billingPeriodLabel
     : t('labels.notSelected');
+
+  const handleBackgroundFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] ?? null;
+    event.target.value = '';
+
+    if (!file) {
+      return;
+    }
+
+    if (backgroundPreviewUrl) {
+      URL.revokeObjectURL(backgroundPreviewUrl);
+    }
+
+    setBackgroundFile(file);
+    setBackgroundPreviewUrl(URL.createObjectURL(file));
+    setClearBackgroundImage(false);
+  };
+
+  const handleBackgroundRemove = () => {
+    if (backgroundPreviewUrl) {
+      URL.revokeObjectURL(backgroundPreviewUrl);
+    }
+
+    setBackgroundFile(null);
+    setBackgroundPreviewUrl(null);
+    setClearBackgroundImage(true);
+  };
+
+  const handleBackgroundSave = async () => {
+    if (!restaurant) {
+      return;
+    }
+
+    await updateRestaurantMutation.mutateAsync({
+      name: restaurant.name,
+      legalName: restaurant.legalName,
+      taxNumber: restaurant.taxNumber,
+      phone: restaurant.phone,
+      address: restaurant.address,
+      fakturaPayload: restaurant.fakturaPayload,
+      posAuthBackgroundImage: backgroundFile,
+      clearPosAuthBackgroundImage: backgroundFile ? false : clearBackgroundImage,
+      vatEnabled: restaurant.vatEnabled,
+      vatPercent: restaurant.vatPercent,
+      isActive: restaurant.isActive,
+    });
+
+    if (backgroundPreviewUrl) {
+      URL.revokeObjectURL(backgroundPreviewUrl);
+    }
+    setBackgroundFile(null);
+    setBackgroundPreviewUrl(null);
+    setClearBackgroundImage(false);
+  };
 
   return (
     <MyRestaurantSectionLayout heading={t('pages.myRestaurant.title')}>
@@ -163,6 +229,70 @@ const MyRestaurantGeneralPage = () => {
                 <Typography variant="body2">{restaurant.address || t('labels.notSelected')}</Typography>
               </Stack>
             </Box>
+          </Stack>
+        </Card>
+
+        <Card sx={{ p: 3 }}>
+          <Stack spacing={2}>
+            <Stack spacing={0.75}>
+              <Typography variant="h6">{t('fields.posAuthBackgroundImage')}</Typography>
+              <Typography variant="body2" color="text.secondary">
+                {t('labels.posAuthBackgroundImageHint')}
+              </Typography>
+            </Stack>
+
+            {visibleBackgroundUrl ? (
+              <Box
+                component="img"
+                src={visibleBackgroundUrl}
+                alt={t('fields.posAuthBackgroundImage')}
+                sx={{
+                  width: '100%',
+                  maxWidth: 520,
+                  aspectRatio: '16 / 9',
+                  objectFit: 'cover',
+                  borderRadius: 1,
+                }}
+              />
+            ) : (
+              <Box
+                sx={{
+                  width: '100%',
+                  maxWidth: 520,
+                  aspectRatio: '16 / 9',
+                  display: 'grid',
+                  placeItems: 'center',
+                  borderRadius: 1,
+                  border: (theme) => `1px dashed ${theme.palette.divider}`,
+                  color: 'text.secondary',
+                }}>
+                <Typography variant="body2">{t('labels.posAuthBackgroundImageFallback')}</Typography>
+              </Box>
+            )}
+
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} alignItems={{ sm: 'center' }}>
+              <Button variant="outlined" component="label" disabled={updateRestaurantMutation.isPending}>
+                {visibleBackgroundUrl ? t('actions.replacePosAuthBackgroundImage') : t('actions.uploadPosAuthBackgroundImage')}
+                <input hidden type="file" accept="image/*" onChange={handleBackgroundFileChange} />
+              </Button>
+              {visibleBackgroundUrl ? (
+                <Button
+                  variant="outlined"
+                  color="inherit"
+                  onClick={handleBackgroundRemove}
+                  disabled={updateRestaurantMutation.isPending}>
+                  {t('actions.removePosAuthBackgroundImage')}
+                </Button>
+              ) : null}
+              {hasPendingBackgroundChange ? (
+                <Button
+                  variant="contained"
+                  onClick={() => void handleBackgroundSave()}
+                  loading={updateRestaurantMutation.isPending}>
+                  {t('actions.save')}
+                </Button>
+              ) : null}
+            </Stack>
           </Stack>
         </Card>
       </Box>

@@ -115,7 +115,8 @@
     "type": "Тип",
     "amount": "Сумма",
     "balanceAfter": "Баланс после",
-    "user": "Пользователь"
+    "user": "Пользователь",
+    "posAuthBackgroundImage": "Фон POS входа"
   },
   "filters": {
     "all": "Все",
@@ -148,7 +149,9 @@
     "balanceTransactionKinds": {
       "renewalCharge": "Списание за период",
       "topUp": "Пополнение баланса"
-    }
+    },
+    "posAuthBackgroundImageHint": "Изображение на экране входа POS.",
+    "posAuthBackgroundImageFallback": "Изображение не выбрано. Будет использован стандартный фон."
   },
   "sections": {
     "myRestaurantProfile": {
@@ -269,7 +272,10 @@
     "createIntegration": "Новая интеграция",
     "hideAuthCode": "Скрыть код",
     "showAuthCode": "Показать код",
-    "topUpBalance": "Пополнить баланс"
+    "topUpBalance": "Пополнить баланс",
+    "uploadPosAuthBackgroundImage": "Загрузить изображение",
+    "replacePosAuthBackgroundImage": "Заменить изображение",
+    "removePosAuthBackgroundImage": "Удалить изображение"
   },
   "dialogs": {
     "deleteBranch": {

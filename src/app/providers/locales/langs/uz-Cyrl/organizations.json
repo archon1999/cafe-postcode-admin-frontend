@@ -115,7 +115,8 @@
     "type": "Тури",
     "amount": "Сумма",
     "balanceAfter": "Балансдан кейин",
-    "user": "Фойдаланувчи"
+    "user": "Фойдаланувчи",
+    "posAuthBackgroundImage": "POS кириш фон расми"
   },
   "filters": {
     "all": "Барчаси",
@@ -148,7 +149,9 @@
     "balanceTransactionKinds": {
       "renewalCharge": "Давр учун ечим",
       "topUp": "Баланс тўлдириш"
-    }
+    },
+    "posAuthBackgroundImageHint": "POS кириш саҳифасида кўринадиган ресторан расми.",
+    "posAuthBackgroundImageFallback": "Расм танланмаган. Стандарт фон ишлатилади."
   },
   "sections": {
     "myRestaurantProfile": {
@@ -269,7 +272,10 @@
     "createIntegration": "Янги интегратсия",
     "hideAuthCode": "Кодни яшириш",
     "showAuthCode": "Кодни кўрсатиш",
-    "topUpBalance": "Балансни тўлдириш"
+    "topUpBalance": "Балансни тўлдириш",
+    "uploadPosAuthBackgroundImage": "Расм юклаш",
+    "replacePosAuthBackgroundImage": "Расмни алмаштириш",
+    "removePosAuthBackgroundImage": "Расмни ўчириш"
   },
   "dialogs": {
     "deleteBranch": {
