@@ -281,12 +281,17 @@ export type AdminPrepStation = {
   id: string;
   name: string;
   kind: 'kitchen' | 'bar' | 'other';
+  printerIntegration?: string | null;
+  printerIntegrationName?: string | null;
+  cooks?: Array<{ id: string; fullName?: string; username?: string }>;
   isActive: boolean;
 };
 
 export type AdminPrepStationPayload = {
   name: string;
   kind: 'kitchen' | 'bar' | 'other';
+  printerIntegration?: string | null;
+  cookIds?: string[];
   isActive: boolean;
 };
 
@@ -716,7 +721,6 @@ export type CatalogCategory = {
   imageUrl?: string | null;
   imageSource?: CatalogImageSource | null;
   sortOrder: number;
-  cashPaymentForbidden: boolean;
   isActive: boolean;
 };
 
@@ -733,7 +737,6 @@ export type CatalogCategoryPayload = {
   clearImage?: boolean;
   restoreMxikImage?: boolean;
   sortOrder: number;
-  cashPaymentForbidden?: boolean;
   isActive: boolean;
 };
 
@@ -780,6 +783,8 @@ export type CatalogItem = {
   mxikPayload?: Record<string, unknown>;
   imageUrl?: string | null;
   imageSource?: CatalogImageSource | null;
+  requiresMarking?: boolean;
+  markingGtin?: string | null;
   description: string;
   price: number;
   isActive: boolean;
@@ -795,6 +800,8 @@ export type CatalogItemPayload = {
   mxikPayload?: Record<string, unknown>;
   imageUrl?: string | null;
   imageSource?: CatalogImageSource | '';
+  requiresMarking?: boolean;
+  markingGtin?: string;
   imageFile?: File | null;
   clearImage?: boolean;
   restoreMxikImage?: boolean;

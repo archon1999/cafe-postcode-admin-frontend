@@ -46,16 +46,20 @@ function buildCatalogFormData(payload: CatalogMutationPayload): FormData {
     appendNumber(formData, 'sortOrder', payload.sortOrder);
   }
 
-  if ('cashPaymentForbidden' in payload) {
-    appendBoolean(formData, 'cashPaymentForbidden', payload.cashPaymentForbidden);
-  }
-
   if ('category' in payload) {
     appendText(formData, 'category', payload.category);
   }
 
   if ('prepStation' in payload) {
     appendText(formData, 'prepStation', payload.prepStation);
+  }
+
+  if ('requiresMarking' in payload) {
+    appendBoolean(formData, 'requiresMarking', payload.requiresMarking);
+  }
+
+  if ('markingGtin' in payload) {
+    appendText(formData, 'markingGtin', payload.markingGtin);
   }
 
   if ('description' in payload) {

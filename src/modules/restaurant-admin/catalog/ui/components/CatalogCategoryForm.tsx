@@ -44,7 +44,6 @@ const categoryFormSchema = z.object({
   clearImage: z.boolean(),
   restoreMxikImage: z.boolean(),
   sortOrder: z.coerce.number().int().min(0),
-  cashPaymentForbidden: z.boolean(),
   isActive: z.boolean(),
 });
 
@@ -64,7 +63,6 @@ const defaultValues: CategoryFormValues = {
   clearImage: false,
   restoreMxikImage: false,
   sortOrder: 0,
-  cashPaymentForbidden: false,
   isActive: true,
 };
 
@@ -105,7 +103,6 @@ function CatalogCategoryFormInner({
       clearImage: false,
       restoreMxikImage: false,
       sortOrder: category?.sortOrder ?? 0,
-      cashPaymentForbidden: category?.cashPaymentForbidden ?? false,
       isActive: category?.isActive ?? true,
     });
     setMxikImageUrl(category?.imageSource === 'mxik-cache' ? (category.imageUrl ?? null) : null);
@@ -204,7 +201,6 @@ function CatalogCategoryFormInner({
       clearImage: values.clearImage,
       restoreMxikImage: values.restoreMxikImage,
       sortOrder: values.sortOrder,
-      cashPaymentForbidden: values.cashPaymentForbidden,
       isActive: values.isActive,
     };
 
@@ -244,10 +240,7 @@ function CatalogCategoryFormInner({
         <RHFTextField<CategoryFormValues> name="sortOrder" label={t('fields.sortOrder')} type="number" />
       </Box>
 
-      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-        <RHFSwitch<CategoryFormValues> name="cashPaymentForbidden" label="Naqd to'lov taqiqlangan" />
-        <RHFSwitch<CategoryFormValues> name="isActive" label={t('fields.status')} />
-      </Stack>
+      <RHFSwitch<CategoryFormValues> name="isActive" label={t('fields.status')} />
     </Stack>
   );
 

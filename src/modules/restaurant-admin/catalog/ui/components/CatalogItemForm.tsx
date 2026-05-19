@@ -56,6 +56,8 @@ const itemFormSchema = z.object({
   name: z.string().min(1, { message: 'Nomi talab qilinadi' }),
   category: z.string().optional(),
   prepStation: z.string().optional(),
+  requiresMarking: z.boolean(),
+  markingGtin: z.string().optional(),
   description: z.string().optional(),
   mxik: mxikOptionSchema,
   imageFile: imageFieldSchema.optional(),
@@ -83,6 +85,8 @@ const defaultValues: ItemFormValues = {
   name: '',
   category: '',
   prepStation: '',
+  requiresMarking: false,
+  markingGtin: '',
   description: '',
   mxik: null,
   imageFile: null,
@@ -211,6 +215,8 @@ function CatalogItemFormInner({
       name: item?.name ?? '',
       category: item?.category ?? defaultCategoryId ?? '',
       prepStation: item?.prepStation ?? '',
+      requiresMarking: item?.requiresMarking ?? false,
+      markingGtin: item?.markingGtin ?? '',
       description: item?.description ?? '',
       mxik: buildMxikOption(item?.mxikCode, item?.mxikName, item?.mxikPayload),
       imageFile: item?.imageUrl ?? null,
@@ -307,6 +313,8 @@ function CatalogItemFormInner({
       name: values.name.trim(),
       category: values.category || null,
       prepStation: values.prepStation || null,
+      requiresMarking: values.requiresMarking,
+      markingGtin: values.markingGtin?.trim() ?? '',
       description: values.description?.trim() ?? '',
       mxikCode: values.mxik?.code ?? '',
       mxikName: values.mxik?.name ?? '',
@@ -369,6 +377,7 @@ function CatalogItemFormInner({
             </MenuItem>
           ))}
         </RHFSelect>
+        <RHFTextField<ItemFormValues> name="markingGtin" label="Markirovka GTIN" />
         <MxikAutocompleteField<ItemFormValues>
           name="mxik"
           label={t('fields.mxikCode')}
@@ -440,6 +449,7 @@ function CatalogItemFormInner({
       </Box>
 
       <Stack spacing={2}>
+        <RHFSwitch<ItemFormValues> name="requiresMarking" label="Markirovka majburiy" />
         <RHFSwitch<ItemFormValues> name="isActive" label={t('fields.status')} />
         <RHFSwitch<ItemFormValues> name="isStoplisted" label={t('fields.stoplist')} />
       </Stack>

@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQuery } from '@tanstack/react-query';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
@@ -16,11 +17,12 @@ import { z } from 'zod';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import type { AdminPrepStation, AdminPrepStationPayload } from 'shared/api/admin-types';
+import { apiClient } from 'shared/api/http/apiClient';
 import { DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_PAGINATION_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState } from 'shared/ui/CustomDataGrid';
 import { ConfirmDialog } from 'shared/ui/CustomDialog';
 import type { FilterOption } from 'shared/ui/Filters';
-import { Form, RHFSelect, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
+import { Form, RHFMultiSelect, RHFSelect, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
 import { Iconify } from 'shared/ui/Iconify';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 
@@ -38,6 +40,8 @@ import { RestaurantManagementAccordion } from './RestaurantManagementAccordion';
 const schema = z.object({
   name: z.string().min(1),
   kind: z.enum(ORGANIZATION_PREP_STATION_KIND_VALUES),
+  printerIntegration: z.string().optional(),
+  cookIds: z.array(z.string()).default([]),
   isActive: z.boolean(),
 });
 
@@ -56,16 +60,26 @@ function RestaurantPrepStationDialog({
   const isEditMode = Boolean(item);
   const createMutation = useCreatePrepStationMutation();
   const updateMutation = useUpdatePrepStationMutation(item?.id ?? '');
+  const printerIntegrationsQuery = useQuery({
+    queryKey: ['prep-station-printer-integrations'],
+    queryFn: () => apiClient.getAdminIntegrationConfigs({ page: 1, pageSize: 100, kindIn: 'printer', isEnabled: true }),
+  });
+  const cooksQuery = useQuery({
+    queryKey: ['prep-station-cooks'],
+    queryFn: () => apiClient.getAdminEmployees({ page: 1, pageSize: 500 }),
+  });
 
   const methods = useForm<Values>({
     resolver: zodResolver(schema),
-    defaultValues: { name: '', kind: 'kitchen', isActive: true },
+    defaultValues: { name: '', kind: 'kitchen', printerIntegration: '', cookIds: [], isActive: true },
   });
 
   useEffect(() => {
     methods.reset({
       name: item?.name ?? '',
       kind: item?.kind ?? 'kitchen',
+      printerIntegration: item?.printerIntegration ?? '',
+      cookIds: item?.cooks?.map((cook) => cook.id) ?? [],
       isActive: item?.isActive ?? true,
     });
   }, [item, methods, open]);
@@ -74,6 +88,8 @@ function RestaurantPrepStationDialog({
     const payload: AdminPrepStationPayload = {
       name: values.name.trim(),
       kind: values.kind,
+      printerIntegration: values.printerIntegration || null,
+      cookIds: values.cookIds,
       isActive: values.isActive,
     };
 
@@ -100,6 +116,22 @@ function RestaurantPrepStationDialog({
                 </MenuItem>
               ))}
             </RHFSelect>
+            <RHFSelect<Values> name="printerIntegration" label="Printer integratsiya">
+              <MenuItem value="">Tanlanmagan</MenuItem>
+              {(printerIntegrationsQuery.data?.data ?? []).map((integration) => (
+                <MenuItem key={integration.id} value={integration.id}>
+                  {integration.provider}
+                </MenuItem>
+              ))}
+            </RHFSelect>
+            <RHFMultiSelect<Values>
+              name="cookIds"
+              label="Oshpazlar"
+              options={(cooksQuery.data?.data ?? []).map((cook) => ({
+                value: cook.id,
+                label: cook.fullName || cook.username,
+              }))}
+            />
             <RHFSwitch<Values> name="isActive" label={t('fields.status')} />
           </Stack>
         </DialogContent>
@@ -194,6 +226,21 @@ export function RestaurantPrepStationsSection({
         minWidth: 140,
         flex: 0.6,
         renderCell: ({ row }) => <Chip size="small" label={t(`prepStationKinds.${row.kind}`)} variant="soft" />,
+      },
+      {
+        field: 'printerIntegrationName',
+        headerName: 'Printer',
+        minWidth: 160,
+        flex: 0.7,
+        valueGetter: (_value, row) => row.printerIntegrationName || '-',
+      },
+      {
+        field: 'cooks',
+        headerName: 'Oshpazlar',
+        minWidth: 180,
+        flex: 0.8,
+        valueGetter: (_value, row) =>
+          row.cooks?.map((cook) => cook.fullName || cook.username).filter(Boolean).join(', ') || '-',
       },
       {
         field: 'isActive',
