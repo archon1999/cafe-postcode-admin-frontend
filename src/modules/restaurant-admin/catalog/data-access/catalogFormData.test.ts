@@ -13,6 +13,7 @@ describe('catalogFormData', () => {
       imageUrl: 'https://example.com/mxik.png',
       imageSource: 'manual',
       imageFile,
+      prepStation: 'station-1',
       clearImage: false,
       restoreMxikImage: true,
       sortOrder: 4,
@@ -24,6 +25,7 @@ describe('catalogFormData', () => {
     expect(formData.get('mxikPayload')).toBe('{"mxikCode":"00709001906000000","mxikName":"Salat barg"}');
     expect(formData.get('imageUrl')).toBe('https://example.com/mxik.png');
     expect(formData.get('imageSource')).toBe('manual');
+    expect(formData.get('prepStation')).toBe('station-1');
     expect(formData.get('restoreMxikImage')).toBe('true');
     expect(formData.get('sortOrder')).toBe('4');
     expect(formData.get('isActive')).toBe('true');
@@ -34,7 +36,6 @@ describe('catalogFormData', () => {
     const formData = buildCatalogItemFormData({
       name: 'Lavash',
       category: null,
-      prepStation: '',
       description: 'Issiq',
       mxikCode: '',
       mxikName: '',
@@ -49,7 +50,7 @@ describe('catalogFormData', () => {
     });
 
     expect(formData.get('category')).toBe('');
-    expect(formData.get('prepStation')).toBe('');
+    expect(formData.get('prepStation')).toBeNull();
     expect(formData.get('imageUrl')).toBe('');
     expect(formData.get('clearImage')).toBe('true');
     expect(formData.get('price')).toBe('32000');

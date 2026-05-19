@@ -16,6 +16,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
+import { useAdminRestaurantScopeId } from 'modules/auth';
 import type { AdminPrepStation, AdminPrepStationPayload } from 'shared/api/admin-types';
 import { apiClient } from 'shared/api/http/apiClient';
 import { DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_PAGINATION_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
@@ -46,6 +47,7 @@ const schema = z.object({
 });
 
 type Values = z.infer<typeof schema>;
+const KITCHEN_COOK_ROLE_CODES = new Set(['chef', 'barman', 'head_chef']);
 
 function RestaurantPrepStationDialog({
   open,
@@ -58,16 +60,29 @@ function RestaurantPrepStationDialog({
 }) {
   const { t } = useTranslate('organizations');
   const isEditMode = Boolean(item);
+  const restaurantId = useAdminRestaurantScopeId();
   const createMutation = useCreatePrepStationMutation();
   const updateMutation = useUpdatePrepStationMutation(item?.id ?? '');
   const printerIntegrationsQuery = useQuery({
-    queryKey: ['prep-station-printer-integrations'],
+    queryKey: ['prep-station-printer-integrations', restaurantId],
     queryFn: () => apiClient.getAdminIntegrationConfigs({ page: 1, pageSize: 100, kindIn: 'printer', isEnabled: true }),
+    enabled: Boolean(restaurantId),
   });
   const cooksQuery = useQuery({
-    queryKey: ['prep-station-cooks'],
+    queryKey: ['prep-station-cooks', restaurantId],
     queryFn: () => apiClient.getAdminEmployees({ page: 1, pageSize: 500 }),
+    enabled: Boolean(restaurantId),
   });
+  const cookOptions = useMemo(
+    () =>
+      (cooksQuery.data?.data ?? [])
+        .filter((cook) => cook.role?.code && KITCHEN_COOK_ROLE_CODES.has(cook.role.code))
+        .map((cook) => ({
+          value: cook.id,
+          label: cook.fullName || cook.username,
+        })),
+    [cooksQuery.data?.data],
+  );
 
   const methods = useForm<Values>({
     resolver: zodResolver(schema),
@@ -84,12 +99,27 @@ function RestaurantPrepStationDialog({
     });
   }, [item, methods, open]);
 
+  useEffect(() => {
+    if (!open || cooksQuery.isLoading) {
+      return;
+    }
+
+    const allowedCookIds = new Set(cookOptions.map((option) => option.value));
+    const currentCookIds = methods.getValues('cookIds');
+    const nextCookIds = currentCookIds.filter((cookId) => allowedCookIds.has(cookId));
+
+    if (nextCookIds.length !== currentCookIds.length) {
+      methods.setValue('cookIds', nextCookIds, { shouldDirty: true });
+    }
+  }, [cookOptions, cooksQuery.isLoading, methods, open]);
+
   const onSubmit = methods.handleSubmit(async (values) => {
+    const allowedCookIds = new Set(cookOptions.map((option) => option.value));
     const payload: AdminPrepStationPayload = {
       name: values.name.trim(),
       kind: values.kind,
       printerIntegration: values.printerIntegration || null,
-      cookIds: values.cookIds,
+      cookIds: values.cookIds.filter((cookId) => allowedCookIds.has(cookId)),
       isActive: values.isActive,
     };
 
@@ -127,10 +157,7 @@ function RestaurantPrepStationDialog({
             <RHFMultiSelect<Values>
               name="cookIds"
               label="Oshpazlar"
-              options={(cooksQuery.data?.data ?? []).map((cook) => ({
-                value: cook.id,
-                label: cook.fullName || cook.username,
-              }))}
+              options={cookOptions}
             />
             <RHFSwitch<Values> name="isActive" label={t('fields.status')} />
           </Stack>

@@ -54,14 +54,6 @@ function buildCatalogFormData(payload: CatalogMutationPayload): FormData {
     appendText(formData, 'prepStation', payload.prepStation);
   }
 
-  if ('requiresMarking' in payload) {
-    appendBoolean(formData, 'requiresMarking', payload.requiresMarking);
-  }
-
-  if ('markingGtin' in payload) {
-    appendText(formData, 'markingGtin', payload.markingGtin);
-  }
-
   if ('description' in payload) {
     appendText(formData, 'description', payload.description);
   }

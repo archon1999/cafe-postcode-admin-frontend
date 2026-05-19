@@ -718,6 +718,8 @@ export type CatalogCategory = {
   mxikCode: string;
   mxikName?: string;
   mxikPayload?: Record<string, unknown>;
+  prepStation?: string | null;
+  prepStationName?: string | null;
   imageUrl?: string | null;
   imageSource?: CatalogImageSource | null;
   sortOrder: number;
@@ -731,6 +733,7 @@ export type CatalogCategoryPayload = {
   mxikCode: string;
   mxikName?: string;
   mxikPayload?: Record<string, unknown>;
+  prepStation?: string | null;
   imageUrl?: string | null;
   imageSource?: CatalogImageSource | '';
   imageFile?: File | null;
@@ -800,8 +803,6 @@ export type CatalogItemPayload = {
   mxikPayload?: Record<string, unknown>;
   imageUrl?: string | null;
   imageSource?: CatalogImageSource | '';
-  requiresMarking?: boolean;
-  markingGtin?: string;
   imageFile?: File | null;
   clearImage?: boolean;
   restoreMxikImage?: boolean;

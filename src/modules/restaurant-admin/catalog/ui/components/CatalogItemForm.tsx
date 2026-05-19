@@ -29,7 +29,6 @@ import {
   useCreateCatalogItemMutation,
   useGetCatalogCategoriesQuery,
   useGetMxikDetailsQuery,
-  useGetPrepStationsQuery,
   useUpdateCatalogItemMutation,
 } from '../../application';
 import { getMxikPrimaryPictureUrl } from '../../data-access';
@@ -55,9 +54,6 @@ const imageFieldSchema = z.custom<File | string | null | undefined>(
 const itemFormSchema = z.object({
   name: z.string().min(1, { message: 'Nomi talab qilinadi' }),
   category: z.string().optional(),
-  prepStation: z.string().optional(),
-  requiresMarking: z.boolean(),
-  markingGtin: z.string().optional(),
   description: z.string().optional(),
   mxik: mxikOptionSchema,
   imageFile: imageFieldSchema.optional(),
@@ -84,9 +80,6 @@ type CatalogItemFormProps = {
 const defaultValues: ItemFormValues = {
   name: '',
   category: '',
-  prepStation: '',
-  requiresMarking: false,
-  markingGtin: '',
   description: '',
   mxik: null,
   imageFile: null,
@@ -188,7 +181,6 @@ function CatalogItemFormInner({
   const [mxikImageUrl, setMxikImageUrl] = useState<string | null>(null);
 
   const categoriesQuery = useGetCatalogCategoriesQuery();
-  const prepStationsQuery = useGetPrepStationsQuery();
   const createMutation = useCreateCatalogItemMutation();
   const updateMutation = useUpdateCatalogItemMutation(item?.id ?? '');
 
@@ -214,9 +206,6 @@ function CatalogItemFormInner({
     reset({
       name: item?.name ?? '',
       category: item?.category ?? defaultCategoryId ?? '',
-      prepStation: item?.prepStation ?? '',
-      requiresMarking: item?.requiresMarking ?? false,
-      markingGtin: item?.markingGtin ?? '',
       description: item?.description ?? '',
       mxik: buildMxikOption(item?.mxikCode, item?.mxikName, item?.mxikPayload),
       imageFile: item?.imageUrl ?? null,
@@ -312,9 +301,6 @@ function CatalogItemFormInner({
     const payload: CatalogItemPayload = {
       name: values.name.trim(),
       category: values.category || null,
-      prepStation: values.prepStation || null,
-      requiresMarking: values.requiresMarking,
-      markingGtin: values.markingGtin?.trim() ?? '',
       description: values.description?.trim() ?? '',
       mxikCode: values.mxik?.code ?? '',
       mxikName: values.mxik?.name ?? '',
@@ -366,18 +352,6 @@ function CatalogItemFormInner({
             </MenuItem>
           ))}
         </RHFSelect>
-        <RHFSelect<ItemFormValues>
-          name="prepStation"
-          label={t('fields.prepStation')}
-          helperText={prepStationsQuery.isLoading ? tCommon('labels.loading') : undefined}>
-          <MenuItem value="">{t('filters.all')}</MenuItem>
-          {(prepStationsQuery.data ?? []).map((station) => (
-            <MenuItem key={station.id} value={station.id}>
-              {station.name}
-            </MenuItem>
-          ))}
-        </RHFSelect>
-        <RHFTextField<ItemFormValues> name="markingGtin" label="Markirovka GTIN" />
         <MxikAutocompleteField<ItemFormValues>
           name="mxik"
           label={t('fields.mxikCode')}
@@ -449,7 +423,6 @@ function CatalogItemFormInner({
       </Box>
 
       <Stack spacing={2}>
-        <RHFSwitch<ItemFormValues> name="requiresMarking" label="Markirovka majburiy" />
         <RHFSwitch<ItemFormValues> name="isActive" label={t('fields.status')} />
         <RHFSwitch<ItemFormValues> name="isStoplisted" label={t('fields.stoplist')} />
       </Stack>

@@ -5,6 +5,7 @@ import Card from '@mui/material/Card';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import { useEffect, useState } from 'react';
 import { useForm, type Resolver } from 'react-hook-form';
@@ -13,9 +14,9 @@ import { z } from 'zod';
 import { useTranslate } from 'app/providers/locales';
 import type { CatalogCategory, CatalogCategoryPayload, CatalogImageSource } from 'shared/api/admin-types';
 import { FormActions } from 'shared/ui/FormActions';
-import { Form, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
+import { Form, RHFSelect, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
 
-import { useCreateCatalogCategoryMutation, useUpdateCatalogCategoryMutation } from '../../application';
+import { useCreateCatalogCategoryMutation, useGetPrepStationsQuery, useUpdateCatalogCategoryMutation } from '../../application';
 import { getMxikPrimaryPictureUrl } from '../../data-access';
 
 import { CatalogImageEditor } from './CatalogImageEditor';
@@ -41,6 +42,7 @@ const categoryFormSchema = z.object({
   mxik: mxikOptionSchema,
   imageFile: imageFieldSchema.optional(),
   imageSource: z.enum(['mxik-cache', 'manual', '']),
+  prepStation: z.string().optional(),
   clearImage: z.boolean(),
   restoreMxikImage: z.boolean(),
   sortOrder: z.coerce.number().int().min(0),
@@ -60,6 +62,7 @@ const defaultValues: CategoryFormValues = {
   mxik: null,
   imageFile: null,
   imageSource: '',
+  prepStation: '',
   clearImage: false,
   restoreMxikImage: false,
   sortOrder: 0,
@@ -83,6 +86,7 @@ function CatalogCategoryFormInner({
 
   const createMutation = useCreateCatalogCategoryMutation();
   const updateMutation = useUpdateCatalogCategoryMutation(category?.id ?? '');
+  const prepStationsQuery = useGetPrepStationsQuery();
 
   const methods = useForm<CategoryFormValues>({
     resolver: zodResolver(categoryFormSchema) as Resolver<CategoryFormValues>,
@@ -100,6 +104,7 @@ function CatalogCategoryFormInner({
       mxik: buildMxikOption(category?.mxikCode, category?.mxikName, category?.mxikPayload),
       imageFile: category?.imageUrl ?? null,
       imageSource: (category?.imageSource ?? '') as CatalogImageSource | '',
+      prepStation: category?.prepStation ?? '',
       clearImage: false,
       restoreMxikImage: false,
       sortOrder: category?.sortOrder ?? 0,
@@ -198,6 +203,7 @@ function CatalogCategoryFormInner({
       imageUrl: resolvedMxikImageUrl,
       imageSource: normalizedImageSource,
       imageFile: values.imageFile instanceof File ? values.imageFile : null,
+      prepStation: values.prepStation || null,
       clearImage: values.clearImage,
       restoreMxikImage: values.restoreMxikImage,
       sortOrder: values.sortOrder,
@@ -230,6 +236,17 @@ function CatalogCategoryFormInner({
           gap: 3,
         }}>
         <RHFTextField<CategoryFormValues> name="name" label={t('fields.name')} />
+        <RHFSelect<CategoryFormValues>
+          name="prepStation"
+          label={t('fields.prepStation')}
+          helperText={prepStationsQuery.isLoading ? tCommon('labels.loading') : undefined}>
+          <MenuItem value="">{t('filters.all')}</MenuItem>
+          {(prepStationsQuery.data ?? []).map((station) => (
+            <MenuItem key={station.id} value={station.id}>
+              {station.name}
+            </MenuItem>
+          ))}
+        </RHFSelect>
         <MxikAutocompleteField<CategoryFormValues>
           name="mxik"
           label={t('fields.mxikCode')}
