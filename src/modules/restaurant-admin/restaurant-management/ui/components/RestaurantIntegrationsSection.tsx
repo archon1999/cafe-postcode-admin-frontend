@@ -48,8 +48,6 @@ const PROVIDER_OPTIONS: Record<AdminIntegrationConfigKind, { value: string; labe
   fiscal: [{ value: 'unikassa', label: 'Unikassa' }],
 };
 
-const UNIKASSA_DEFAULT_ENDPOINT_URL = 'http://127.0.0.1:8181/api/v1';
-
 const MANAGED_SETTING_KEYS = new Set([
   'printer_name',
   'printerName',
@@ -306,7 +304,7 @@ function buildSettings(values: Values, item: AdminIntegrationConfig | null): Rec
     terminal_id: trimOrUndefined(values.terminalId),
     cashbox_id: trimOrUndefined(values.cashboxId),
     tax_number: trimOrUndefined(values.taxNumber),
-    endpoint_url: trimOrUndefined(values.endpointUrl) ?? UNIKASSA_DEFAULT_ENDPOINT_URL,
+    endpoint_url: trimOrUndefined(values.endpointUrl),
     api_key: trimOrUndefined(values.apiKey),
   };
 }
@@ -398,12 +396,6 @@ function RestaurantIntegrationDialog({
       methods.setValue('provider', providerOptions[0]?.value ?? '');
     }
   }, [methods, providerOptions, selectedProvider]);
-
-  useEffect(() => {
-    if (selectedKind === 'fiscal' && !methods.getValues('endpointUrl').trim()) {
-      methods.setValue('endpointUrl', UNIKASSA_DEFAULT_ENDPOINT_URL);
-    }
-  }, [methods, selectedKind]);
 
   const onSubmit = methods.handleSubmit(async (values) => {
     const payload: AdminIntegrationConfigPayload = {
@@ -549,7 +541,11 @@ function RestaurantIntegrationDialog({
                 <RHFTextField<Values> name="terminalId" label={t('fields.terminalId')} />
                 <RHFTextField<Values> name="cashboxId" label={t('integrations.fields.cashboxId')} />
                 <RHFTextField<Values> name="taxNumber" label={t('fields.taxNumber')} />
-                <RHFTextField<Values> name="endpointUrl" label={t('integrations.fields.endpointUrl')} />
+                <RHFTextField<Values>
+                  name="endpointUrl"
+                  label={t('integrations.fields.endpointUrl')}
+                  helperText="Bo'sh qoldirilsa local agent Unikassa terminalni avtomatik topadi"
+                />
                 <RHFTextField<Values> name="apiKey" label={t('integrations.fields.apiKey')} type="password" />
               </>
             ) : null}
