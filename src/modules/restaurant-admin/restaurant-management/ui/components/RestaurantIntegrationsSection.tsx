@@ -501,7 +501,11 @@ function RestaurantIntegrationDialog({
                 <Typography variant="subtitle2">{t('integrations.sections.payment')}</Typography>
                 {selectedProvider === 'marta-softpos' ? (
                   <>
-                    <RHFTextField<Values> name="endpointUrl" label={t('integrations.fields.endpointUrl')} />
+                    <RHFTextField<Values>
+                      name="endpointUrl"
+                      label={t('integrations.fields.endpointUrl')}
+                      helperText="Bo'sh qoldirilsa local agent MARTA terminalni avtomatik topadi"
+                    />
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
                       <RHFTextField<Values> name="taxNumber" label={t('fields.taxNumber')} />
                       <RHFTextField<Values>
