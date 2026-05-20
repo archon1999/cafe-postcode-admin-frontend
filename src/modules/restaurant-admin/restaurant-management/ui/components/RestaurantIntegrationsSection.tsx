@@ -135,14 +135,6 @@ const schema = z
     }
 
     if (values.kind === 'payment' && values.provider === 'marta-softpos') {
-      if (!values.endpointUrl.trim()) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ['endpointUrl'],
-          message: 'MARTA endpoint URL kiriting',
-        });
-      }
-
       const timeoutSeconds = Number(values.timeoutSeconds);
       if (!Number.isInteger(timeoutSeconds) || timeoutSeconds <= 0) {
         ctx.addIssue({
@@ -350,7 +342,7 @@ function getSettingsSummary(row: AdminIntegrationConfig) {
 
   if (row.kind === 'payment') {
     if (row.provider === 'marta-softpos') {
-      const endpointUrl = readString(settings, ['endpoint_url', 'endpointUrl'], '-');
+      const endpointUrl = readString(settings, ['endpoint_url', 'endpointUrl'], 'auto-discovery');
       const taxNumber = readString(settings, ['tax_number', 'taxNumber'], '-');
       const amountMultiplier = readSetting(settings, ['amount_multiplier', 'amountMultiplier']) ?? '100';
       const timeoutSeconds = readSetting(settings, ['timeout_seconds', 'timeoutSeconds']) ?? '180';
