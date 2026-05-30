@@ -132,6 +132,7 @@
       "fields": {
         "staffName": "Xodim",
         "orderCount": "Buyurtmalar",
+        "itemsCount": "Mahsulotlar",
         "totalSales": "Jami savdo"
       }
     },

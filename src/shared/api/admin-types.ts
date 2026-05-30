@@ -921,6 +921,8 @@ export type AdminTopStaffReportRow = {
   staffId?: string | null;
   staffName?: string | null;
   orderCount: number;
+  itemsCount?: number;
+  items_count?: number;
   totalSales: number;
 };
 

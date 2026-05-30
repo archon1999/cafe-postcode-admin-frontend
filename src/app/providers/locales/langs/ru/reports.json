@@ -124,6 +124,7 @@
       "fields": {
         "staffName": "Сотрудник",
         "orderCount": "Заказы",
+        "itemsCount": "Позиции",
         "totalSales": "Общие продажи"
       }
     },

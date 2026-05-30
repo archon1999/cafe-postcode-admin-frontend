@@ -422,6 +422,13 @@ export function ReportsTableSection({
           },
           { field: 'orderCount', headerName: t('reports.topStaff.fields.orderCount'), minWidth: 160, flex: 0.6 },
           {
+            field: 'itemsCount',
+            headerName: t('reports.topStaff.fields.itemsCount'),
+            minWidth: 140,
+            flex: 0.5,
+            valueGetter: (_value, row: AdminTopStaffReportRow) => row.itemsCount ?? row.items_count ?? 0,
+          },
+          {
             field: 'totalSales',
             headerName: t('reports.topStaff.fields.totalSales'),
             minWidth: 180,
@@ -588,7 +595,7 @@ export function ReportsTableSection({
         );
       case 'topStaff':
         return castRowIdGetter<AdminTopStaffReportRow>(
-          (row) => `${row.staffId ?? row.staffName ?? 'unknown'}-${row.orderCount}-${row.totalSales}`,
+          (row) => `${row.staffId ?? row.staffName ?? 'unknown'}-${row.orderCount}-${row.itemsCount ?? row.items_count ?? 0}-${row.totalSales}`,
         );
       default:
         return ((row: ReportTableRow) => JSON.stringify(row)) as GridRowIdGetter<ReportTableRow>;

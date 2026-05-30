@@ -124,6 +124,7 @@
       "fields": {
         "staffName": "Ходим",
         "orderCount": "Буюртмалар",
+        "itemsCount": "Маҳсулотлар",
         "totalSales": "Жами савдо"
       }
     },
