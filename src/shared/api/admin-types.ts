@@ -236,6 +236,8 @@ export type AdminCashDesk = {
   fiscalIntegrationName?: string;
   paymentIntegration?: string | null;
   paymentIntegrationName?: string;
+  printerIntegration?: string | null;
+  printerIntegrationName?: string | null;
   name: string;
   location: string;
   enabledPaymentMethods: AdminPaymentMethod[];
@@ -250,6 +252,7 @@ export type AdminCashDeskPayload = {
   name: string;
   fiscalIntegration?: string | null;
   paymentIntegration?: string | null;
+  printerIntegration?: string | null;
   location?: string;
   enabledPaymentMethods?: AdminPaymentMethod[];
   fiscalProvider?: string;
@@ -387,6 +390,8 @@ export type AdminRestaurant = {
   currency: string;
   authCode?: string;
   posAuthBackgroundImageUrl?: string | null;
+  serviceFeeEnabled: boolean;
+  serviceFeePercent: number | string;
   vatEnabled: boolean;
   vatPercent: number | string;
   isActive: boolean;
@@ -418,6 +423,8 @@ export type AdminRestaurantPayload = {
   fakturaPayload?: Record<string, unknown>;
   posAuthBackgroundImage?: File | null;
   clearPosAuthBackgroundImage?: boolean;
+  serviceFeeEnabled: boolean;
+  serviceFeePercent: number | string;
   vatEnabled: boolean;
   vatPercent: number | string;
   isActive: boolean;

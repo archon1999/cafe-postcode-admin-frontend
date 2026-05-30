@@ -114,6 +114,8 @@ const MyRestaurantGeneralPage = () => {
       fakturaPayload: restaurant.fakturaPayload,
       posAuthBackgroundImage: backgroundFile,
       clearPosAuthBackgroundImage: backgroundFile ? false : clearBackgroundImage,
+      serviceFeeEnabled: restaurant.serviceFeeEnabled,
+      serviceFeePercent: restaurant.serviceFeePercent,
       vatEnabled: restaurant.vatEnabled,
       vatPercent: restaurant.vatPercent,
       isActive: restaurant.isActive,

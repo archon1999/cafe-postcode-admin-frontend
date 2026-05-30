@@ -66,6 +66,7 @@
     "address": "Адрес",
     "phone": "Телефон",
     "serviceFeePercent": "Сервисный сбор (%)",
+    "serviceFeeEnabled": "Сервисный сбор включен",
     "phonePlaceholder": "+998 90 123 45 67",
     "default": "Основной",
     "location": "Расположение",

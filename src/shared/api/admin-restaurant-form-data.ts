@@ -33,6 +33,8 @@ export function buildAdminRestaurantRequestPayload(payload: AdminRestaurantPaylo
   appendText(formData, 'phone', payload.phone);
   appendText(formData, 'address', payload.address);
   appendJson(formData, 'fakturaPayload', payload.fakturaPayload);
+  appendText(formData, 'serviceFeeEnabled', payload.serviceFeeEnabled);
+  appendText(formData, 'serviceFeePercent', payload.serviceFeePercent);
   appendText(formData, 'vatEnabled', payload.vatEnabled);
   appendText(formData, 'vatPercent', payload.vatPercent);
   appendText(formData, 'isActive', payload.isActive);

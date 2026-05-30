@@ -39,6 +39,7 @@ const schema = z.object({
   name: z.string().min(1),
   fiscalIntegration: z.string().min(1),
   paymentIntegration: z.string(),
+  printerIntegration: z.string(),
 });
 
 type Values = z.infer<typeof schema>;
@@ -63,7 +64,12 @@ function RestaurantCashDeskDialog({
   const isEditMode = Boolean(item);
   const createMutation = useCreateCashDeskMutation();
   const updateMutation = useUpdateCashDeskMutation(item?.id ?? '');
-  const fiscalIntegrationsQuery = useGetIntegrationConfigsListQuery({ page: 1, pageSize: 100, kindIn: 'fiscal', isEnabled: true });
+  const fiscalIntegrationsQuery = useGetIntegrationConfigsListQuery({
+    page: 1,
+    pageSize: 100,
+    kindIn: 'fiscal',
+    isEnabled: true,
+  });
   const fiscalIntegrations = (fiscalIntegrationsQuery.data?.data ?? []).filter(
     (integration) => integration.kind === 'fiscal' && integration.isEnabled,
   );
@@ -74,7 +80,17 @@ function RestaurantCashDeskDialog({
     isEnabled: true,
   });
   const paymentIntegrations = (paymentIntegrationsQuery.data?.data ?? []).filter(
-    (integration) => integration.kind === 'payment' && integration.provider === 'marta-softpos' && integration.isEnabled,
+    (integration) =>
+      integration.kind === 'payment' && integration.provider === 'marta-softpos' && integration.isEnabled,
+  );
+  const printerIntegrationsQuery = useGetIntegrationConfigsListQuery({
+    page: 1,
+    pageSize: 100,
+    kindIn: 'printer',
+    isEnabled: true,
+  });
+  const printerIntegrations = (printerIntegrationsQuery.data?.data ?? []).filter(
+    (integration) => integration.kind === 'printer' && integration.isEnabled,
   );
 
   const methods = useForm<Values>({
@@ -83,6 +99,7 @@ function RestaurantCashDeskDialog({
       name: '',
       fiscalIntegration: '',
       paymentIntegration: '',
+      printerIntegration: '',
     },
   });
 
@@ -91,6 +108,7 @@ function RestaurantCashDeskDialog({
       name: item?.name ?? '',
       fiscalIntegration: item?.fiscalIntegration ?? '',
       paymentIntegration: item?.paymentIntegration ?? '',
+      printerIntegration: item?.printerIntegration ?? '',
     });
   }, [item, methods, open]);
 
@@ -99,6 +117,7 @@ function RestaurantCashDeskDialog({
       name: values.name.trim(),
       fiscalIntegration: values.fiscalIntegration,
       paymentIntegration: values.paymentIntegration || null,
+      printerIntegration: values.printerIntegration || null,
     };
 
     if (isEditMode && item) {
@@ -138,11 +157,22 @@ function RestaurantCashDeskDialog({
                 </MenuItem>
               ))}
             </RHFSelect>
+            <RHFSelect<Values>
+              name="printerIntegration"
+              label="Printer integratsiya"
+              disabled={printerIntegrationsQuery.isLoading}>
+              <MenuItem value="">Tanlanmagan</MenuItem>
+              {printerIntegrations.map((integration) => (
+                <MenuItem key={integration.id} value={integration.id}>
+                  {getIntegrationLabel(integration)}
+                </MenuItem>
+              ))}
+            </RHFSelect>
           </Stack>
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 3 }}>
           <Button color="inherit" variant="outlined" onClick={onClose} disabled={methods.formState.isSubmitting}>
-            {t('actions.cancel', { ns: 'common'})}
+            {t('actions.cancel', { ns: 'common' })}
           </Button>
           <Button type="submit" variant="contained" color="black" loading={methods.formState.isSubmitting}>
             {isEditMode ? t('actions.save') : t('actions.create')}
@@ -232,6 +262,13 @@ export function RestaurantCashDesksSection({
         minWidth: 240,
         flex: 1,
         renderCell: ({ row }) => row.paymentIntegrationName || '-',
+      },
+      {
+        field: 'printerIntegrationName',
+        headerName: 'Printer',
+        minWidth: 180,
+        flex: 0.7,
+        renderCell: ({ row }) => row.printerIntegrationName || '-',
       },
       {
         field: 'isActive',

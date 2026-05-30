@@ -66,6 +66,7 @@
     "address": "Manzil",
     "phone": "Telefon",
     "serviceFeePercent": "Xizmat haqi (%)",
+    "serviceFeeEnabled": "Xizmat haqi yoqilgan",
     "phonePlaceholder": "+998 90 123 45 67",
     "default": "Asosiy",
     "location": "Joylashuv",

@@ -158,6 +158,7 @@ function RestaurantPrepStationDialog({
               name="cookIds"
               label="Oshpazlar"
               options={cookOptions}
+              slotProps={{ inputLabel: { shrink: true } }}
             />
             <RHFSwitch<Values> name="isActive" label={t('fields.status')} />
           </Stack>

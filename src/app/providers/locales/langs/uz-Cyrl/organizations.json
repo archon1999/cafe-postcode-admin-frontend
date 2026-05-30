@@ -66,6 +66,7 @@
     "address": "Манзил",
     "phone": "Телефон",
     "serviceFeePercent": "Хизмат ҳақи (%)",
+    "serviceFeeEnabled": "Хизмат ҳақи ёқилган",
     "phonePlaceholder": "+998 90 123 45 67",
     "default": "Асосий",
     "location": "Жойлашув",

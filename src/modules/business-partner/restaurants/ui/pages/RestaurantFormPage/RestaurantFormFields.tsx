@@ -67,6 +67,8 @@ export const RestaurantFormFields = ({
           rows={3}
           sx={{ gridColumn: { lg: '1 / -1' } }}
         />
+        <RHFSwitch<Values> name="serviceFeeEnabled" label={t('fields.serviceFeeEnabled')} />
+        <RHFTextField<Values> name="serviceFeePercent" label={t('fields.serviceFeePercent')} type="number" />
         <RHFSwitch<Values> name="vatEnabled" label={t('fields.vatEnabled')} />
         <RHFTextField<Values> name="vatPercent" label="QQS / NDS (%)" type="number" />
       </Box>
