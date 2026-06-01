@@ -3,6 +3,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import { mergeClasses } from 'minimal-shared/utils';
 import { useDropzone } from 'react-dropzone';
+import { useTranslation } from 'react-i18next';
 
 import { Iconify } from 'shared/ui/Iconify';
 
@@ -26,6 +27,7 @@ export function UploadAvatar({
   onReset,
   ...dropzoneOptions
 }: UploadProps) {
+  const { t } = useTranslation('common');
   const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
     disabled,
     multiple: false,
@@ -78,7 +80,7 @@ export function UploadAvatar({
       {showFilesRejected && <RejectedFiles files={fileRejections} {...slotProps?.rejectedFiles} />}
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
         <Button onClick={onReset} variant="soft" color="black" disabled={disabled || !hasSelectedFile}>
-          Delete logo
+          {t('upload.actions.deleteLogo')}
         </Button>
       </Box>
     </UploadWrapper>

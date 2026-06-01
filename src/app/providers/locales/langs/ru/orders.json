@@ -21,7 +21,12 @@
     "receiptPayload": "Данные чека (JSON)"
   },
   "actions": {
-    "openFiscalQr": "Open fiscal QR"
+    "openFiscalQr": "Open fiscal QR",
+    "retryFiscal": "Повторить fiscal"
+  },
+  "messages": {
+    "fiscalRetrySent": "Фискальный чек отправлен",
+    "fiscalRetryFailed": "Не удалось отправить fiscal"
   },
   "fields": {
     "fiscalQrCode": "Fiscal QR",

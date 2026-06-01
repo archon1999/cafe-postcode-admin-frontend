@@ -85,6 +85,10 @@
     "kind": "Turi",
     "status": "Holat",
     "integrationChannel": "Integratsiya kanali",
+    "fiscalIntegration": "Fiscal integratsiya",
+    "paymentIntegration": "MARTA payment integratsiya",
+    "printerIntegration": "Printer integratsiya",
+    "cooks": "Oshpazlar",
     "restaurant": "Mijoz",
     "legalName": "Yuridik nom",
     "taxNumber": "STIR",
@@ -142,6 +146,7 @@
   "labels": {
     "defaultBranch": "Asosiy filial",
     "regularBranch": "Oddiy filial",
+    "notConnected": "Ulanmagan",
     "notSelected": "Tanlanmagan",
     "vatEnabled": "Yoqilgan",
     "vatDisabled": "Yoqilmagan",

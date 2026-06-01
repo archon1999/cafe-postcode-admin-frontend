@@ -7,6 +7,18 @@
     "clear": "Tozalash",
     "viewAll": "Barchasini ko'rish"
   },
+  "settings": {
+    "title": "Sozlamalar",
+    "resetAll": "Barchasini tiklash",
+    "mode": "Rejim",
+    "system": "Tizim",
+    "contrast": "Kontrast",
+    "rightToLeft": "O'ngdan chapga"
+  },
+  "table": {
+    "deselectAll": "Barcha tanlovni bekor qilish",
+    "selectedCount": "{{count}} ta tanlandi"
+  },
   "labels": {
     "details": "Tafsilotlar",
     "notFound": "Topilmadi",
@@ -75,6 +87,7 @@
   },
   "upload": {
     "actions": {
+      "deleteLogo": "Logotipni o'chirish",
       "removeAll": "Barchasini olib tashlash",
       "upload": "Yuklash",
       "uploading": "Yuklanmoqda..."

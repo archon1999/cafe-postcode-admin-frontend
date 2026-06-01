@@ -8,6 +8,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { hasKeys, varAlpha } from 'minimal-shared/utils';
 import { useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { themeConfig } from 'app/theme/theme-config';
 import { primaryColorPresets } from 'app/theme/with-settings';
@@ -28,6 +29,7 @@ import { SmallBlock, LargeBlock } from './styles';
 
 export function SettingsDrawer({ sx, defaultSettings }: SettingsDrawerProps) {
   const settings = useSettingsContext();
+  const { t } = useTranslation('common');
   const { mode, setMode, colorScheme } = useColorScheme();
 
   const visibility = {
@@ -63,12 +65,12 @@ export function SettingsDrawer({ sx, defaultSettings }: SettingsDrawerProps) {
         alignItems: 'center',
       }}>
       <Typography variant="h6" sx={{ flexGrow: 1 }}>
-        Settings
+        {t('settings.title')}
       </Typography>
 
       <FullScreenButton />
 
-      <Tooltip title="Reset all">
+      <Tooltip title={t('settings.resetAll')}>
         <IconButton onClick={handleReset}>
           <Badge color="error" variant="dot" invisible={!settings.canReset}>
             <Iconify icon="solar:restart-bold" />
@@ -76,7 +78,7 @@ export function SettingsDrawer({ sx, defaultSettings }: SettingsDrawerProps) {
         </IconButton>
       </Tooltip>
 
-      <Tooltip title="Close">
+      <Tooltip title={t('actions.cancel')}>
         <IconButton onClick={settings.onCloseDrawer}>
           <Iconify icon="mingcute:close-line" />
         </IconButton>
@@ -86,7 +88,7 @@ export function SettingsDrawer({ sx, defaultSettings }: SettingsDrawerProps) {
 
   const renderMode = () => (
     <BaseOption
-      label="Mode"
+      label={t('settings.mode')}
       selected={settings.state.mode === 'dark'}
       icon={<SvgIcon>{settingIcons.moon}</SvgIcon>}
       action={
@@ -98,7 +100,7 @@ export function SettingsDrawer({ sx, defaultSettings }: SettingsDrawerProps) {
               borderRadius: '20px',
               fontWeight: 'fontWeightSemiBold',
             }}>
-            System
+            {t('settings.system')}
           </Label>
         ) : null
       }
@@ -111,7 +113,7 @@ export function SettingsDrawer({ sx, defaultSettings }: SettingsDrawerProps) {
 
   const renderContrast = () => (
     <BaseOption
-      label="Contrast"
+      label={t('settings.contrast')}
       selected={settings.state.contrast === 'high'}
       icon={<SvgIcon>{settingIcons.contrast}</SvgIcon>}
       onChangeOption={() => {
@@ -124,7 +126,7 @@ export function SettingsDrawer({ sx, defaultSettings }: SettingsDrawerProps) {
 
   const renderDirection = () => (
     <BaseOption
-      label="Right to left"
+      label={t('settings.rightToLeft')}
       selected={settings.state.direction === 'rtl'}
       icon={<SvgIcon>{settingIcons.alignRight}</SvgIcon>}
       onChangeOption={() => {

@@ -7,6 +7,18 @@
     "clear": "Тозалаш",
     "viewAll": "Барчасини кўриш"
   },
+  "settings": {
+    "title": "Созламалар",
+    "resetAll": "Барчасини тиклаш",
+    "mode": "Режим",
+    "system": "Тизим",
+    "contrast": "Контраст",
+    "rightToLeft": "Ўнгдан чапга"
+  },
+  "table": {
+    "deselectAll": "Барча танловни бекор қилиш",
+    "selectedCount": "{{count}} та танланди"
+  },
   "labels": {
     "details": "Тафсилотлар",
     "notFound": "Топилмади",
@@ -74,6 +86,7 @@
   },
   "upload": {
     "actions": {
+      "deleteLogo": "Логотипни ўчириш",
       "removeAll": "Барчасини олиб ташлаш",
       "upload": "Юклаш",
       "uploading": "Юкланмоқда..."

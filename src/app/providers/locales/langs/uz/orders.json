@@ -39,7 +39,12 @@
     "receiptPayload": "Chek ma'lumoti (JSON)"
   },
   "actions": {
-    "openFiscalQr": "Fiscal QRni ochish"
+    "openFiscalQr": "Fiscal QRni ochish",
+    "retryFiscal": "Fiscalga qayta yuborish"
+  },
+  "messages": {
+    "fiscalRetrySent": "Fiscal chek yuborildi",
+    "fiscalRetryFailed": "Fiscal yuborilmadi"
   },
   "fields": {
     "amount": "Summa",

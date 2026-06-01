@@ -14,6 +14,7 @@ export type LogoProps = LinkProps & {
 };
 
 const FONT_FAMILY = '"Public Sans Variable", "Inter", sans-serif';
+const BRAND_NAME = 'Cafe Postcode';
 
 export function Logo({ sx, disabled, className, href = '/', isSingle = true, ...other }: LogoProps) {
   const theme = useTheme();
@@ -125,7 +126,7 @@ export function Logo({ sx, disabled, className, href = '/', isSingle = true, ...
         fontSize="22"
         fontWeight="700"
         letterSpacing="-0.5">
-        Cafe Postcode
+        {BRAND_NAME}
       </text>
     </svg>
   );

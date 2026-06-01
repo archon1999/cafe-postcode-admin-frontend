@@ -85,6 +85,10 @@
     "kind": "Тури",
     "status": "Ҳолат",
     "integrationChannel": "Интеграция канали",
+    "fiscalIntegration": "Fiscal интеграция",
+    "paymentIntegration": "MARTA payment интеграция",
+    "printerIntegration": "Printer интеграция",
+    "cooks": "Ошпазлар",
     "restaurant": "Ресторан",
     "legalName": "Юридик ном",
     "taxNumber": "СТИР",
@@ -142,6 +146,7 @@
   "labels": {
     "defaultBranch": "Асосий филиал",
     "regularBranch": "Оддий филиал",
+    "notConnected": "Уланмаган",
     "notSelected": "Танланмаган",
     "vatEnabled": "Ёқилган",
     "vatDisabled": "Ёқилмаган",

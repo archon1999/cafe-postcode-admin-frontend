@@ -85,6 +85,10 @@
     "kind": "Тип",
     "status": "Статус",
     "integrationChannel": "Канал интеграции",
+    "fiscalIntegration": "Фискальная интеграция",
+    "paymentIntegration": "MARTA payment интеграция",
+    "printerIntegration": "Интеграция принтера",
+    "cooks": "Повара",
     "restaurant": "Ресторан",
     "legalName": "Юридическое название",
     "taxNumber": "ИНН",
@@ -142,6 +146,7 @@
   "labels": {
     "defaultBranch": "Основной филиал",
     "regularBranch": "Обычный филиал",
+    "notConnected": "Не подключено",
     "notSelected": "Не выбрано",
     "vatEnabled": "Включено",
     "vatDisabled": "Выключено",

@@ -21,7 +21,12 @@
     "receiptPayload": "Чек маълумоти (JSON)"
   },
   "actions": {
-    "openFiscalQr": "Fiscal QR"
+    "openFiscalQr": "Fiscal QR",
+    "retryFiscal": "Fiscalга қайта юбориш"
+  },
+  "messages": {
+    "fiscalRetrySent": "Fiscal чек юборилди",
+    "fiscalRetryFailed": "Fiscal юборилмади"
   },
   "fields": {
     "fiscalQrCode": "Fiscal QR",

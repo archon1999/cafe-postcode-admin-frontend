@@ -120,17 +120,17 @@ const PaymentDetailPage = () => {
                         .mutateAsync()
                         .then((result) => {
                           if (result.result?.ok) {
-                            toast.success('Fiscal chek yuborildi');
+                            toast.success(t('messages.fiscalRetrySent'));
                           } else {
-                            toast.error(String(result.result?.detail ?? 'Fiscal yuborilmadi'));
+                            toast.error(String(result.result?.detail ?? t('messages.fiscalRetryFailed')));
                           }
                         })
                         .catch((error: unknown) => {
                           const detail = (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
-                          toast.error(detail ?? 'Fiscal yuborilmadi');
+                          toast.error(detail ?? t('messages.fiscalRetryFailed'));
                         });
                     }}>
-                    Retry fiscal
+                    {t('actions.retryFiscal')}
                   </Button>
                 ) : null}
               </Stack>

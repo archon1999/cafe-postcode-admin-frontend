@@ -146,8 +146,8 @@ function RestaurantPrepStationDialog({
                 </MenuItem>
               ))}
             </RHFSelect>
-            <RHFSelect<Values> name="printerIntegration" label="Printer integratsiya">
-              <MenuItem value="">Tanlanmagan</MenuItem>
+            <RHFSelect<Values> name="printerIntegration" label={t('fields.printerIntegration')}>
+              <MenuItem value="">{t('labels.notSelected')}</MenuItem>
               {(printerIntegrationsQuery.data?.data ?? []).map((integration) => (
                 <MenuItem key={integration.id} value={integration.id}>
                   {integration.provider}
@@ -156,7 +156,7 @@ function RestaurantPrepStationDialog({
             </RHFSelect>
             <RHFMultiSelect<Values>
               name="cookIds"
-              label="Oshpazlar"
+              label={t('fields.cooks')}
               options={cookOptions}
               slotProps={{ inputLabel: { shrink: true } }}
             />

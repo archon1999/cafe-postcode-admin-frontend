@@ -7,6 +7,18 @@
     "clear": "Очистить",
     "viewAll": "Показать все"
   },
+  "settings": {
+    "title": "Настройки",
+    "resetAll": "Сбросить все",
+    "mode": "Режим",
+    "system": "Система",
+    "contrast": "Контраст",
+    "rightToLeft": "Справа налево"
+  },
+  "table": {
+    "deselectAll": "Снять выделение со всех",
+    "selectedCount": "Выбрано: {{count}}"
+  },
   "labels": {
     "details": "Подробности",
     "notFound": "Не найдено",
@@ -74,6 +86,7 @@
   },
   "upload": {
     "actions": {
+      "deleteLogo": "Удалить логотип",
       "removeAll": "Удалить все",
       "upload": "Загрузить",
       "uploading": "Загрузка..."

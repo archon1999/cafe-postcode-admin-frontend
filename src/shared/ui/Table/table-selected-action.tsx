@@ -2,6 +2,7 @@ import type { BoxProps } from '@mui/material/Box';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
+import { useTranslation } from 'react-i18next';
 
 export type TableSelectedActionProps = BoxProps & {
   dense?: boolean;
@@ -20,6 +21,8 @@ export function TableSelectedAction({
   onSelectAllRows,
   ...other
 }: TableSelectedActionProps) {
+  const { t } = useTranslation('common');
+
   if (!numSelected) {
     return null;
   }
@@ -51,7 +54,7 @@ export function TableSelectedAction({
         slotProps={{
           input: {
             id: 'deselect-all-checkbox',
-            'aria-label': 'Deselect all checkbox',
+            'aria-label': t('table.deselectAll'),
           },
         }}
       />
@@ -64,7 +67,7 @@ export function TableSelectedAction({
           color: 'primary.main',
           ...(dense && { ml: 3 }),
         }}>
-        {numSelected} selected
+        {t('table.selectedCount', { count: numSelected })}
       </Typography>
 
       {action && action}

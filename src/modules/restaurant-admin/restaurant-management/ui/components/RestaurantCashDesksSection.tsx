@@ -138,7 +138,7 @@ function RestaurantCashDeskDialog({
             <RHFTextField<Values> name="name" label={t('fields.name')} />
             <RHFSelect<Values>
               name="fiscalIntegration"
-              label="Fiscal integratsiya"
+              label={t('fields.fiscalIntegration')}
               disabled={fiscalIntegrationsQuery.isLoading}>
               {fiscalIntegrations.map((integration) => (
                 <MenuItem key={integration.id} value={integration.id}>
@@ -148,9 +148,9 @@ function RestaurantCashDeskDialog({
             </RHFSelect>
             <RHFSelect<Values>
               name="paymentIntegration"
-              label="MARTA payment integratsiya"
+              label={t('fields.paymentIntegration')}
               disabled={paymentIntegrationsQuery.isLoading}>
-              <MenuItem value="">Ulanmagan</MenuItem>
+              <MenuItem value="">{t('labels.notConnected')}</MenuItem>
               {paymentIntegrations.map((integration) => (
                 <MenuItem key={integration.id} value={integration.id}>
                   {getIntegrationLabel(integration)}
@@ -159,9 +159,9 @@ function RestaurantCashDeskDialog({
             </RHFSelect>
             <RHFSelect<Values>
               name="printerIntegration"
-              label="Printer integratsiya"
+              label={t('fields.printerIntegration')}
               disabled={printerIntegrationsQuery.isLoading}>
-              <MenuItem value="">Tanlanmagan</MenuItem>
+              <MenuItem value="">{t('labels.notSelected')}</MenuItem>
               {printerIntegrations.map((integration) => (
                 <MenuItem key={integration.id} value={integration.id}>
                   {getIntegrationLabel(integration)}
