@@ -40,6 +40,12 @@ describe('admin access', () => {
     expect(canAccessAdminPath(RoutePath.organizationMyRestaurantGeneral, snapshot)).toBe(true);
   });
 
+  it('allows superuser to open my restaurant general through restaurant scope', () => {
+    const snapshot = createSnapshot([], { isSuperuser: true, restaurantAccessActive: false });
+    expect(canAccessMyRestaurantGeneral(snapshot)).toBe(true);
+    expect(canAccessAdminPath(RoutePath.organizationMyRestaurantGeneral, snapshot)).toBe(true);
+  });
+
   it('allows my restaurant integrations when integration config permission exists', () => {
     const snapshot = createSnapshot(['integration_configs.view']);
     expect(canAccessMyRestaurantIntegrations(snapshot)).toBe(true);

@@ -37,6 +37,7 @@ export interface OrganizationsRepository {
   getRestaurantById(id: string): Promise<AdminRestaurant>;
   createRestaurant(payload: AdminRestaurantPayload): Promise<AdminRestaurant>;
   updateRestaurant(id: string, payload: AdminRestaurantPayload): Promise<AdminRestaurant>;
+  updateMyRestaurantSettings(payload: AdminRestaurantPayload): Promise<AdminRestaurant>;
   deleteRestaurant(id: string): Promise<void>;
   getHalls(): Promise<AdminHall[]>;
 }

@@ -726,6 +726,12 @@ export const apiClient = {
     return instance.put<AdminRestaurant>(`/api/v1/admin/restaurants/${id}/`, payload).then((response) => response.data);
   },
 
+  updateAdminRestaurantSettings(payload: AdminRestaurantPayload | FormData) {
+    return instance
+      .put<AdminRestaurant>('/api/v1/admin/restaurants/settings/', payload)
+      .then((response) => response.data);
+  },
+
   deleteAdminRestaurant(id: string) {
     return instance.delete<void>(`/api/v1/admin/restaurants/${id}/`).then((response) => response.data);
   },

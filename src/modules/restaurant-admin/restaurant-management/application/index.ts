@@ -12,6 +12,7 @@ export {
   useUpdateCashDeskMutation,
   useUpdateDistributionPointMutation,
   useUpdateIntegrationConfigMutation,
+  useUpdateMyRestaurantSettingsMutation,
   useUpdatePrepStationMutation,
   useUpdateRestaurantMutation,
 } from './mutations';

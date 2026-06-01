@@ -2,7 +2,10 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
+import Switch from '@mui/material/Switch';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useEffect, useState, type ChangeEvent } from 'react';
 
@@ -14,7 +17,7 @@ import { Iconify } from 'shared/ui/Iconify';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 import { formatDate, formatDateTime } from 'shared/utils/format-time';
 
-import { useGetMyRestaurantQuery, useUpdateRestaurantMutation } from '../../../application';
+import { useGetMyRestaurantQuery, useUpdateMyRestaurantSettingsMutation } from '../../../application';
 import { MyRestaurantSectionLayout } from '../../components/MyRestaurantSectionLayout';
 
 const MyRestaurantGeneralPage = () => {
@@ -29,31 +32,68 @@ const MyRestaurantGeneralPage = () => {
   const [backgroundFile, setBackgroundFile] = useState<File | null>(null);
   const [backgroundPreviewUrl, setBackgroundPreviewUrl] = useState<string | null>(null);
   const [clearBackgroundImage, setClearBackgroundImage] = useState(false);
+  const [serviceFeeEnabled, setServiceFeeEnabled] = useState(false);
+  const [serviceFeePercent, setServiceFeePercent] = useState('0');
 
   const restaurantQuery = useGetMyRestaurantQuery({
     enabled: Boolean(restaurantId && canManageMyRestaurant),
   });
-  const updateRestaurantMutation = useUpdateRestaurantMutation(restaurantId ?? '');
+  const updateRestaurantSettingsMutation = useUpdateMyRestaurantSettingsMutation();
+  const restaurant = restaurantQuery.data;
+  const shouldRedirect = Boolean(profile) && (!canManageMyRestaurant || (!profile?.isSuperuser && !restaurantId));
 
   useEffect(() => {
-    if (profile && (!canManageMyRestaurant || !restaurantId)) {
+    if (shouldRedirect) {
       replace(RoutePath.main);
     }
-  }, [canManageMyRestaurant, profile, replace, restaurantId]);
+  }, [replace, shouldRedirect]);
 
-  if (profile && (!canManageMyRestaurant || !restaurantId)) {
+  useEffect(() => {
+    if (!restaurant) {
+      return;
+    }
+
+    setServiceFeeEnabled(Boolean(restaurant.serviceFeeEnabled));
+    setServiceFeePercent(String(restaurant.serviceFeePercent ?? 0));
+  }, [restaurant]);
+
+  if (shouldRedirect) {
     return null;
   }
 
-  if (!restaurantId || restaurantQuery.isLoading) {
+  if (!restaurantId) {
+    return (
+      <MyRestaurantSectionLayout heading={t('pages.myRestaurant.title')}>
+        <Card sx={{ p: 3 }}>
+          <Stack spacing={0.75}>
+            <Typography variant="h6">{t('fields.restaurant')}</Typography>
+            <Typography variant="body2" color="text.secondary">
+              {t('labels.notSelected')}
+            </Typography>
+          </Stack>
+        </Card>
+      </MyRestaurantSectionLayout>
+    );
+  }
+
+  if (restaurantQuery.isLoading) {
     return <LoadingScreen />;
   }
 
-  const restaurant = restaurantQuery.data;
   if (!restaurant) {
     return <LoadingScreen />;
   }
 
+  const serviceFeePercentValue = Number(serviceFeePercent);
+  const isServiceFeePercentValid =
+    serviceFeePercent.trim() !== '' &&
+    Number.isFinite(serviceFeePercentValue) &&
+    serviceFeePercentValue >= 0 &&
+    serviceFeePercentValue <= 99;
+  const currentServiceFeePercent = Number(restaurant.serviceFeePercent ?? 0);
+  const hasPendingServiceFeeChange =
+    serviceFeeEnabled !== Boolean(restaurant.serviceFeeEnabled) ||
+    (isServiceFeePercentValid && serviceFeePercentValue !== currentServiceFeePercent);
   const visibleBackgroundUrl = clearBackgroundImage
     ? null
     : (backgroundPreviewUrl ?? restaurant.posAuthBackgroundImageUrl ?? null);
@@ -105,7 +145,7 @@ const MyRestaurantGeneralPage = () => {
       return;
     }
 
-    await updateRestaurantMutation.mutateAsync({
+    await updateRestaurantSettingsMutation.mutateAsync({
       name: restaurant.name,
       legalName: restaurant.legalName,
       taxNumber: restaurant.taxNumber,
@@ -127,6 +167,27 @@ const MyRestaurantGeneralPage = () => {
     setBackgroundFile(null);
     setBackgroundPreviewUrl(null);
     setClearBackgroundImage(false);
+  };
+
+  const handleServiceFeeSave = async () => {
+    if (!restaurant || !isServiceFeePercentValid) {
+      return;
+    }
+
+    await updateRestaurantSettingsMutation.mutateAsync({
+      name: restaurant.name,
+      legalName: restaurant.legalName,
+      taxNumber: restaurant.taxNumber,
+      phone: restaurant.phone,
+      address: restaurant.address,
+      fakturaPayload: restaurant.fakturaPayload,
+      clearPosAuthBackgroundImage: false,
+      serviceFeeEnabled,
+      serviceFeePercent: serviceFeePercentValue,
+      vatEnabled: restaurant.vatEnabled,
+      vatPercent: restaurant.vatPercent,
+      isActive: restaurant.isActive,
+    });
   };
 
   return (
@@ -235,6 +296,55 @@ const MyRestaurantGeneralPage = () => {
         </Card>
 
         <Card sx={{ p: 3 }}>
+          <Stack spacing={2.5}>
+            <Stack spacing={0.75}>
+              <Typography variant="h6">{t('fields.serviceFeePercent')}</Typography>
+              <Typography variant="body2" color="text.secondary">
+                {t('sections.fiscalProfileDescription')}
+              </Typography>
+            </Stack>
+
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', md: 'minmax(0, 1fr) minmax(220px, 320px)' },
+                gap: 2,
+                alignItems: 'center',
+              }}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={serviceFeeEnabled}
+                    onChange={(event) => setServiceFeeEnabled(event.target.checked)}
+                    disabled={updateRestaurantSettingsMutation.isPending}
+                  />
+                }
+                label={t('fields.serviceFeeEnabled')}
+              />
+              <TextField
+                type="number"
+                label={t('fields.serviceFeePercent')}
+                value={serviceFeePercent}
+                onChange={(event) => setServiceFeePercent(event.target.value)}
+                error={!isServiceFeePercentValid}
+                inputProps={{ min: 0, max: 99, step: 0.01 }}
+                disabled={updateRestaurantSettingsMutation.isPending}
+              />
+            </Box>
+
+            <Stack direction="row" justifyContent="flex-end">
+              <Button
+                variant="contained"
+                onClick={() => void handleServiceFeeSave()}
+                disabled={!hasPendingServiceFeeChange || !isServiceFeePercentValid}
+                loading={updateRestaurantSettingsMutation.isPending}>
+                {t('actions.save')}
+              </Button>
+            </Stack>
+          </Stack>
+        </Card>
+
+        <Card sx={{ p: 3 }}>
           <Stack spacing={2}>
             <Stack spacing={0.75}>
               <Typography variant="h6">{t('fields.posAuthBackgroundImage')}</Typography>
@@ -273,8 +383,10 @@ const MyRestaurantGeneralPage = () => {
             )}
 
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} alignItems={{ sm: 'center' }}>
-              <Button variant="outlined" component="label" disabled={updateRestaurantMutation.isPending}>
-                {visibleBackgroundUrl ? t('actions.replacePosAuthBackgroundImage') : t('actions.uploadPosAuthBackgroundImage')}
+              <Button variant="outlined" component="label" disabled={updateRestaurantSettingsMutation.isPending}>
+                {visibleBackgroundUrl
+                  ? t('actions.replacePosAuthBackgroundImage')
+                  : t('actions.uploadPosAuthBackgroundImage')}
                 <input hidden type="file" accept="image/*" onChange={handleBackgroundFileChange} />
               </Button>
               {visibleBackgroundUrl ? (
@@ -282,7 +394,7 @@ const MyRestaurantGeneralPage = () => {
                   variant="outlined"
                   color="inherit"
                   onClick={handleBackgroundRemove}
-                  disabled={updateRestaurantMutation.isPending}>
+                  disabled={updateRestaurantSettingsMutation.isPending}>
                   {t('actions.removePosAuthBackgroundImage')}
                 </Button>
               ) : null}
@@ -290,7 +402,7 @@ const MyRestaurantGeneralPage = () => {
                 <Button
                   variant="contained"
                   onClick={() => void handleBackgroundSave()}
-                  loading={updateRestaurantMutation.isPending}>
+                  loading={updateRestaurantSettingsMutation.isPending}>
                   {t('actions.save')}
                 </Button>
               ) : null}

@@ -168,6 +168,20 @@ export function useUpdateRestaurantMutation(id: string) {
   });
 }
 
+export function useUpdateMyRestaurantSettingsMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: AdminRestaurantPayload) => organizationsRepository.updateMyRestaurantSettings(payload),
+    onSuccess: async (restaurant) => {
+      await invalidateQueryKeys(queryClient, [
+        organizationsKeys.restaurants(),
+        organizationsKeys.restaurantDetail(restaurant.id),
+        organizationsKeys.myRestaurant(),
+      ]);
+    },
+  });
+}
+
 export function useDeleteRestaurantMutation() {
   const queryClient = useQueryClient();
   return useMutation({
