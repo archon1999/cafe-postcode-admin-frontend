@@ -564,6 +564,17 @@ export const apiClient = {
       .then((response) => response.data);
   },
 
+  checkLocalAgentPrinter(payload: {
+    connectionType?: string;
+    printerName?: string;
+    host?: string;
+    port?: number;
+  }) {
+    return instance
+      .post<Record<string, unknown>>('/api/v1/local-agent/printer/check/', payload)
+      .then((response) => response.data);
+  },
+
   getAdminFiscalDevices(endpointUrl?: string) {
     return instance
       .get<AdminFiscalDevice[]>('/api/v1/admin/integrations/fiscal-devices/', {

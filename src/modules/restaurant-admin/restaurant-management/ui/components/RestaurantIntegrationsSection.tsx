@@ -20,6 +20,7 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
+import { apiClient } from 'shared/api';
 import type {
   AdminIntegrationConfig,
   AdminIntegrationConfigKind,
@@ -53,7 +54,6 @@ const PROVIDER_OPTIONS: Record<AdminIntegrationConfigKind, { value: string; labe
   fiscal: [{ value: 'unikassa', label: 'Unikassa' }],
 };
 
-const LOCAL_AGENT_PRINT_URL = 'http://127.0.0.1:18181';
 const stringValue = z.preprocess((value) => (value === undefined || value === null ? '' : String(value)), z.string());
 
 const MANAGED_SETTING_KEYS = new Set([
@@ -380,30 +380,23 @@ function getSettingsSummary(row: AdminIntegrationConfig) {
 }
 
 async function checkPrinterConnection(values: Values) {
-  const response = await fetch(`${LOCAL_AGENT_PRINT_URL}/printer/check`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      connectionType: values.connectionType,
-      printerName: values.printerName.trim() || undefined,
-      host: values.printerHost.trim() || undefined,
-      port: values.printerPort.trim() ? Number(values.printerPort) : undefined,
-    }),
+  const result = await apiClient.checkLocalAgentPrinter({
+    connectionType: values.connectionType,
+    printerName: values.printerName.trim() || undefined,
+    host: values.printerHost.trim() || undefined,
+    port: values.printerPort.trim() ? Number(values.printerPort) : undefined,
   });
-
-  const result = (await response.json().catch(() => ({}))) as {
+  const typedResult = result as {
     ok?: boolean;
     error?: string;
     printerName?: string;
     host?: string;
     port?: number;
   };
-  if (!response.ok || !result.ok) {
-    throw new Error(result.error || 'Local agent printer connection check failed.');
+  if (!typedResult.ok) {
+    throw new Error(typedResult.error || 'Local agent printer connection check failed.');
   }
-  return result;
+  return typedResult;
 }
 
 function RestaurantIntegrationDialog({
