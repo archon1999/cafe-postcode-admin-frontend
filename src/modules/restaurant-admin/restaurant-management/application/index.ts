@@ -7,6 +7,7 @@ export {
   useCreateRestaurantMutation,
   useDeleteCashDeskMutation,
   useDeleteDistributionPointMutation,
+  useDeleteIntegrationConfigMutation,
   useDeletePrepStationMutation,
   useDeleteRestaurantMutation,
   useUpdateCashDeskMutation,

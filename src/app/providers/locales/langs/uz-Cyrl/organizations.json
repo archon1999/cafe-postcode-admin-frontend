@@ -300,6 +300,10 @@
       "title": "Станцияни ўчириш",
       "description": "\"{{name}}\" станциясини ўчирмоқчимисиз?"
     },
+    "deleteIntegration": {
+      "title": "Интеграцияни ўчириш",
+      "description": "\"{{name}}\" интеграциясини ўчирмоқчимисиз?"
+    },
     "deleteRestaurant": {
       "title": "Ресторанни ўчириш",
       "description": "\"{{name}}\" ресторанни ўчирмоқчимисиз?"
@@ -396,9 +400,17 @@
       "printerName": "Windows принтер номи",
       "printerNameHint": "USB принтер Windows'да кўринган навбат номи. Масалан: POS-80 USB.",
       "printerPort": "Порт",
-      "printerPortHint": "Одатда 9100.",
+      "printerPortHint": "Бўш қолдирилса 9100 ишлатилади.",
       "provider": "Провайдер",
       "settings": "Созламалар"
+    },
+    "actions": {
+      "checkPrinterConnection": "Принтер уланишини текшириш"
+    },
+    "messages": {
+      "formInvalid": "Формадаги майдонларни текширинг",
+      "printerCheckSuccess": "Принтер уланди: {{target}}",
+      "printerCheckFailed": "Принтер уланмаган: {{error}}"
     },
     "sections": {
       "fiscal": "Фискал созламалар",

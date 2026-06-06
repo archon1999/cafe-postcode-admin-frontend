@@ -44,7 +44,28 @@ const schema = z.object({
 
 type Values = z.infer<typeof schema>;
 
-function getIntegrationLabel(integration: { provider: string; settings: Record<string, unknown> }) {
+function getPrinterIntegrationLabel(integration: { provider: string; settings: Record<string, unknown> }) {
+  const connectionType = integration.settings.connection_type ?? integration.settings.connectionType;
+  const printerName = integration.settings.printer_name ?? integration.settings.printerName;
+  const host = integration.settings.host;
+  const port = integration.settings.port;
+
+  if (host) {
+    return `${integration.provider} (LAN TCP/IP: ${String(host)}${port ? `:${String(port)}` : ''})`;
+  }
+
+  if (printerName) {
+    return `${integration.provider} (Windows/USB: ${String(printerName)})`;
+  }
+
+  return connectionType ? `${integration.provider} (${String(connectionType)})` : integration.provider;
+}
+
+function getIntegrationLabel(integration: { provider: string; settings: Record<string, unknown>; kind?: string }) {
+  if (integration.kind === 'printer') {
+    return getPrinterIntegrationLabel(integration);
+  }
+
   const terminalId = integration.settings.terminal_id ?? integration.settings.terminalId ?? integration.settings.fiscal;
   const endpointUrl = integration.settings.endpoint_url ?? integration.settings.endpointUrl;
   const suffix = terminalId ?? endpointUrl;

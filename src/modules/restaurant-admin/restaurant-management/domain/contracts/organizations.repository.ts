@@ -32,6 +32,7 @@ export interface OrganizationsRepository {
   getIntegrationConfigById(id: string): Promise<AdminIntegrationConfig>;
   createIntegrationConfig(payload: AdminIntegrationConfigPayload): Promise<AdminIntegrationConfig>;
   updateIntegrationConfig(id: string, payload: AdminIntegrationConfigPayload): Promise<AdminIntegrationConfig>;
+  deleteIntegrationConfig(id: string): Promise<void>;
   getRestaurants(): Promise<AdminRestaurant[]>;
   getMyRestaurant(): Promise<AdminRestaurant>;
   getRestaurantById(id: string): Promise<AdminRestaurant>;

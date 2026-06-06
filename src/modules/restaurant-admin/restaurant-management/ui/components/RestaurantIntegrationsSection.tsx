@@ -7,13 +7,16 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
+import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import type { GridColDef, GridRowSelectionModel, GridSortModel } from '@mui/x-data-grid';
 import { gridClasses } from '@mui/x-data-grid';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, type Resolver } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
@@ -24,6 +27,7 @@ import type {
 } from 'shared/api/admin-types';
 import { DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_PAGINATION_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState } from 'shared/ui/CustomDataGrid';
+import { ConfirmDialog } from 'shared/ui/CustomDialog';
 import type { FilterOption } from 'shared/ui/Filters';
 import { Form, RHFSelect, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
 import { Iconify } from 'shared/ui/Iconify';
@@ -31,6 +35,7 @@ import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 
 import {
   useCreateIntegrationConfigMutation,
+  useDeleteIntegrationConfigMutation,
   useGetIntegrationConfigsListQuery,
   useUpdateIntegrationConfigMutation,
 } from '../../application';
@@ -48,6 +53,9 @@ const PROVIDER_OPTIONS: Record<AdminIntegrationConfigKind, { value: string; labe
   fiscal: [{ value: 'unikassa', label: 'Unikassa' }],
 };
 
+const LOCAL_AGENT_PRINT_URL = 'http://127.0.0.1:18181';
+const stringValue = z.preprocess((value) => (value === undefined || value === null ? '' : String(value)), z.string());
+
 const MANAGED_SETTING_KEYS = new Set([
   'printer_name',
   'printerName',
@@ -58,6 +66,10 @@ const MANAGED_SETTING_KEYS = new Set([
   'encoding',
   'connection_type',
   'connectionType',
+  'transport',
+  'transportType',
+  'use_local_agent',
+  'useLocalAgent',
   'host',
   'port',
   'terminal_id',
@@ -88,9 +100,9 @@ const schema = z
     provider: z.string().min(1),
     isEnabled: z.boolean(),
     connectionType: z.enum(PRINTER_CONNECTION_TYPE_VALUES),
-    printerName: z.string(),
-    printerHost: z.string(),
-    printerPort: z.string(),
+    printerName: stringValue,
+    printerHost: stringValue,
+    printerPort: stringValue,
     paperWidthMm: z.enum(PAPER_WIDTH_VALUES),
     encoding: z.string(),
     cutAfterPrint: z.boolean(),
@@ -116,11 +128,11 @@ const schema = z
           });
         }
         const port = Number(values.printerPort);
-        if (!Number.isInteger(port) || port <= 0) {
+        if (values.printerPort.trim() && (!Number.isInteger(port) || port <= 0)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             path: ['printerPort'],
-            message: "Printer porti musbat butun son bo'lishi kerak",
+            message: "Printer porti bo'sh yoki musbat butun son bo'lishi kerak",
           });
         }
       } else if (!values.printerName.trim()) {
@@ -162,9 +174,9 @@ const defaultValues: Values = {
   connectionType: 'system_printer',
   printerName: 'POS-80 USB',
   printerHost: '',
-  printerPort: '9100',
+  printerPort: '',
   paperWidthMm: '80',
-  encoding: 'cp437',
+  encoding: 'cp1251',
   cutAfterPrint: true,
   terminalId: '',
   merchantId: '',
@@ -231,9 +243,9 @@ function valuesFromItem(item: AdminIntegrationConfig | null): Values {
     connectionType: readPrinterConnectionType(settings),
     printerName: readString(settings, ['printer_name', 'printerName'], 'POS-80 USB'),
     printerHost: readString(settings, ['host']),
-    printerPort: String(readSetting(settings, ['port']) ?? '9100'),
+    printerPort: String(readSetting(settings, ['port']) ?? ''),
     paperWidthMm: readPaperWidth(settings),
-    encoding: readString(settings, ['encoding'], 'cp437'),
+    encoding: readString(settings, ['encoding'], 'cp1251'),
     cutAfterPrint: readBoolean(settings, ['cut_after_print', 'cutAfterPrint'], true),
     terminalId: readString(settings, ['terminal_id', 'terminalId']),
     merchantId: readString(settings, ['merchant_id', 'merchantId']),
@@ -264,14 +276,23 @@ function buildSettings(values: Values, item: AdminIntegrationConfig | null): Rec
       connection_type: values.connectionType,
       paper_width_mm: Number(values.paperWidthMm),
       cut_after_print: values.cutAfterPrint,
-      encoding: values.encoding.trim() || 'cp437',
+      encoding: values.encoding.trim() || 'cp1251',
     };
 
     if (values.provider === 'windows-raw' && values.connectionType === 'socket') {
       settings.host = values.printerHost.trim();
-      settings.port = Number(values.printerPort || 9100);
+      const printerPort = values.printerPort.trim();
+      if (printerPort) {
+        settings.port = Number(printerPort);
+      }
+      delete settings.transport;
+      delete settings.transportType;
+      delete settings.use_local_agent;
+      delete settings.useLocalAgent;
     } else if (values.provider === 'windows-raw') {
       settings.printer_name = values.printerName.trim();
+      settings.transport = 'local-agent';
+      settings.code_page = 46;
     } else if (values.printerName.trim()) {
       settings.printer_name = values.printerName.trim();
     }
@@ -328,11 +349,12 @@ function getSettingsSummary(row: AdminIntegrationConfig) {
   if (row.kind === 'printer') {
     const connectionType = readPrinterConnectionType(settings);
     const paperWidth = readSetting(settings, ['paper_width_mm', 'paperWidthMm']) ?? '-';
-    const encoding = readString(settings, ['encoding'], 'cp437');
+    const encoding = readString(settings, ['encoding'], 'cp1251');
     if (connectionType === 'socket') {
       const host = readString(settings, ['host'], '-');
-      const port = readSetting(settings, ['port']) ?? '9100';
-      return `${getPrinterConnectionLabel(connectionType)}: ${host}:${port} | ${paperWidth}mm | ${encoding}`;
+      const port = readSetting(settings, ['port']);
+      const endpoint = port ? `${host}:${port}` : host;
+      return `${getPrinterConnectionLabel(connectionType)}: ${endpoint} | ${paperWidth}mm | ${encoding}`;
     }
     const printerName = readString(settings, ['printer_name', 'printerName'], '-');
     return `${getPrinterConnectionLabel(connectionType)}: ${printerName} | ${paperWidth}mm | ${encoding}`;
@@ -359,6 +381,33 @@ function getSettingsSummary(row: AdminIntegrationConfig) {
   return `Terminal: ${terminalId} | Kassa: ${cashboxId} | STIR: ${taxNumber}`;
 }
 
+async function checkPrinterConnection(values: Values) {
+  const response = await fetch(`${LOCAL_AGENT_PRINT_URL}/printer/check`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      connectionType: values.connectionType,
+      printerName: values.printerName.trim() || undefined,
+      host: values.printerHost.trim() || undefined,
+      port: values.printerPort.trim() ? Number(values.printerPort) : undefined,
+    }),
+  });
+
+  const result = (await response.json().catch(() => ({}))) as {
+    ok?: boolean;
+    error?: string;
+    printerName?: string;
+    host?: string;
+    port?: number;
+  };
+  if (!response.ok || !result.ok) {
+    throw new Error(result.error || 'Local agent printer connection check failed.');
+  }
+  return result;
+}
+
 function RestaurantIntegrationDialog({
   open,
   item,
@@ -372,9 +421,10 @@ function RestaurantIntegrationDialog({
   const isEditMode = Boolean(item);
   const createMutation = useCreateIntegrationConfigMutation();
   const updateMutation = useUpdateIntegrationConfigMutation(item?.id ?? '');
+  const [isCheckingPrinter, setIsCheckingPrinter] = useState(false);
 
   const methods = useForm<Values>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as Resolver<Values>,
     defaultValues,
   });
   const selectedKind = methods.watch('kind');
@@ -397,22 +447,60 @@ function RestaurantIntegrationDialog({
     }
   }, [methods, providerOptions, selectedProvider]);
 
-  const onSubmit = methods.handleSubmit(async (values) => {
-    const payload: AdminIntegrationConfigPayload = {
-      kind: values.kind,
-      provider: values.provider.trim(),
-      isEnabled: values.isEnabled,
-      settings: buildSettings(values, item),
-    };
+  const onSubmit = methods.handleSubmit(
+    async (values) => {
+      const payload: AdminIntegrationConfigPayload = {
+        kind: values.kind,
+        provider: values.provider.trim(),
+        isEnabled: values.isEnabled,
+        settings: buildSettings(values, item),
+      };
 
-    if (isEditMode && item) {
-      await updateMutation.mutateAsync(payload);
-    } else {
-      await createMutation.mutateAsync(payload);
+      if (isEditMode && item) {
+        await updateMutation.mutateAsync(payload);
+      } else {
+        await createMutation.mutateAsync(payload);
+      }
+
+      onClose();
+    },
+    (errors) => {
+      const firstError = Object.values(errors)[0];
+      toast.error(String(firstError?.message || t('integrations.messages.formInvalid')));
+    },
+  );
+
+  const onCheckPrinter = async () => {
+    const values = methods.getValues();
+    if (values.kind !== 'printer' || values.provider !== 'windows-raw') {
+      return;
     }
 
-    onClose();
-  });
+    const fieldsToValidate: Array<keyof Values> =
+      values.connectionType === 'socket' ? ['printerHost', 'printerPort'] : ['printerName'];
+    const isValid = await methods.trigger(fieldsToValidate);
+    if (!isValid) {
+      return;
+    }
+
+    setIsCheckingPrinter(true);
+    try {
+      const result = await checkPrinterConnection(values);
+      const target =
+        values.connectionType === 'socket'
+          ? `${result.host ?? values.printerHost}${result.port ? `:${result.port}` : ''}`
+          : result.printerName ?? values.printerName;
+      toast.success(t('integrations.messages.printerCheckSuccess', { target }));
+    } catch (error) {
+      toast.error(
+        t('integrations.messages.printerCheckFailed', {
+          error: error instanceof Error ? error.message : String(error),
+        }),
+      );
+    } finally {
+      setIsCheckingPrinter(false);
+    }
+  };
 
   return (
     <Dialog open={open} onClose={methods.formState.isSubmitting ? undefined : onClose} fullWidth maxWidth="sm">
@@ -452,7 +540,7 @@ function RestaurantIntegrationDialog({
                       ))}
                     </RHFSelect>
                     {methods.watch('connectionType') === 'socket' ? (
-                      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems={{ sm: 'flex-start' }}>
                         <RHFTextField<Values>
                           name="printerHost"
                           label={t('integrations.fields.printerHost')}
@@ -463,13 +551,35 @@ function RestaurantIntegrationDialog({
                           label={t('integrations.fields.printerPort')}
                           helperText={t('integrations.fields.printerPortHint')}
                         />
+                        <Tooltip title={t('integrations.actions.checkPrinterConnection')}>
+                          <IconButton
+                            type="button"
+                            color="primary"
+                            onClick={onCheckPrinter}
+                            disabled={isCheckingPrinter || methods.formState.isSubmitting}
+                            sx={{ mt: { sm: 1 } }}>
+                            <Iconify icon={isCheckingPrinter ? 'solar:refresh-bold' : 'solar:plug-circle-bold'} />
+                          </IconButton>
+                        </Tooltip>
                       </Stack>
                     ) : (
-                      <RHFTextField<Values>
-                        name="printerName"
-                        label={t('integrations.fields.printerName')}
-                        helperText={t('integrations.fields.printerNameHint')}
-                      />
+                      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems={{ sm: 'flex-start' }}>
+                        <RHFTextField<Values>
+                          name="printerName"
+                          label={t('integrations.fields.printerName')}
+                          helperText={t('integrations.fields.printerNameHint')}
+                        />
+                        <Tooltip title={t('integrations.actions.checkPrinterConnection')}>
+                          <IconButton
+                            type="button"
+                            color="primary"
+                            onClick={onCheckPrinter}
+                            disabled={isCheckingPrinter || methods.formState.isSubmitting}
+                            sx={{ mt: { sm: 1 } }}>
+                            <Iconify icon={isCheckingPrinter ? 'solar:refresh-bold' : 'solar:plug-circle-bold'} />
+                          </IconButton>
+                        </Tooltip>
+                      </Stack>
                     )}
                   </>
                 ) : null}
@@ -589,6 +699,7 @@ export function RestaurantIntegrationsSection({
   const { t, currentLang } = useTranslate('organizations');
   const { t: tCommon } = useTranslate('common');
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
+  const deleteMutation = useDeleteIntegrationConfigMutation();
 
   const [paginationModel, setPaginationModel] = useState(DEFAULT_PAGINATION_MODEL);
   const [search, setSearch] = useState('');
@@ -598,6 +709,7 @@ export function RestaurantIntegrationsSection({
   const [selectedRows, setSelectedRows] = useState<GridRowSelectionModel>(DEFAULT_SELECTION_MODEL);
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
   const [editingRow, setEditingRow] = useState<AdminIntegrationConfig | null>(null);
+  const [rowToDelete, setRowToDelete] = useState<AdminIntegrationConfig | null>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
   const setDialogOpen = useCallback(
@@ -690,6 +802,13 @@ export function RestaurantIntegrationsSection({
               setEditingRow(params.row);
               setDialogOpen(true);
             }}
+          />,
+          <CustomGridActionsCellItem
+            actionKind="delete"
+            key="delete"
+            label={t('actions.delete')}
+            icon={<Iconify icon="solar:trash-bin-trash-bold" />}
+            onClick={() => setRowToDelete(params.row)}
           />,
         ],
       },
@@ -845,6 +964,29 @@ export function RestaurantIntegrationsSection({
       )}
 
       <RestaurantIntegrationDialog open={isDialogOpen} item={editingRow} onClose={closeDialog} />
+      <ConfirmDialog
+        open={Boolean(rowToDelete)}
+        onClose={() => setRowToDelete(null)}
+        title={t('dialogs.deleteIntegration.title')}
+        content={t('dialogs.deleteIntegration.description', {
+          name: rowToDelete ? `${getKindLabel(rowToDelete.kind)}: ${rowToDelete.provider}` : '',
+        })}
+        action={
+          <Button
+            color="error"
+            variant="contained"
+            loading={deleteMutation.isPending}
+            onClick={async () => {
+              if (!rowToDelete) {
+                return;
+              }
+              await deleteMutation.mutateAsync(rowToDelete.id);
+              setRowToDelete(null);
+            }}>
+            {t('actions.delete')}
+          </Button>
+        }
+      />
     </>
   );
 }

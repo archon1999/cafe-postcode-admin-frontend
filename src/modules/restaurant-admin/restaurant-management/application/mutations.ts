@@ -144,6 +144,16 @@ export function useUpdateIntegrationConfigMutation(id: string) {
   });
 }
 
+export function useDeleteIntegrationConfigMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => organizationsRepository.deleteIntegrationConfig(id),
+    onSuccess: async () => {
+      await invalidateQueryKeys(queryClient, [organizationsKeys.integrationConfigs()]);
+    },
+  });
+}
+
 export function useCreateRestaurantMutation() {
   const queryClient = useQueryClient();
   return useMutation({

@@ -300,6 +300,10 @@
       "title": "Stansiyani o'chirish",
       "description": "\"{{name}}\" stansiyasini o'chirmoqchimisiz?"
     },
+    "deleteIntegration": {
+      "title": "Integratsiyani o'chirish",
+      "description": "\"{{name}}\" integratsiyasini o'chirmoqchimisiz?"
+    },
     "deleteRestaurant": {
       "title": "Mijozni o'chirish",
       "description": "\"{{name}}\" mijozni o'chirmoqchimisiz?"
@@ -396,9 +400,17 @@
       "printerName": "Windows printer nomi",
       "printerNameHint": "USB printer Windows'da ko'ringan navbat nomi. Masalan: POS-80 USB.",
       "printerPort": "Port",
-      "printerPortHint": "Odatda 9100.",
+      "printerPortHint": "Bo'sh qoldirilsa 9100 ishlatiladi.",
       "provider": "Provayder",
       "settings": "Sozlamalar"
+    },
+    "actions": {
+      "checkPrinterConnection": "Printer ulanishini tekshirish"
+    },
+    "messages": {
+      "formInvalid": "Formadagi maydonlarni tekshiring",
+      "printerCheckSuccess": "Printer ulandi: {{target}}",
+      "printerCheckFailed": "Printer ulanmagan: {{error}}"
     },
     "sections": {
       "fiscal": "Fiskal sozlamalar",

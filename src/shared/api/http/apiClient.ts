@@ -586,6 +586,10 @@ export const apiClient = {
       .then((response) => response.data);
   },
 
+  deleteAdminIntegrationConfig(id: string) {
+    return instance.delete<void>(`/api/v1/admin/integrations/configs/${id}/`).then((response) => response.data);
+  },
+
   getAdminBusinessPartners(params?: AdminBusinessPartnersQueryParams) {
     return instance
       .get<AdminPaginatedResponse<AdminBusinessPartner>>('/api/v1/admin/platform/business-partners/', {

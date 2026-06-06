@@ -12,7 +12,7 @@ import Stack from '@mui/material/Stack';
 import type { GridColDef, GridRowSelectionModel, GridSortModel } from '@mui/x-data-grid';
 import { gridClasses } from '@mui/x-data-grid';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, type Resolver } from 'react-hook-form';
 import { z } from 'zod';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
@@ -48,6 +48,23 @@ const schema = z.object({
 
 type Values = z.infer<typeof schema>;
 const KITCHEN_COOK_ROLE_CODES = new Set(['chef', 'barman', 'head_chef']);
+
+function getPrinterIntegrationLabel(integration: { provider: string; settings: Record<string, unknown> }) {
+  const connectionType = integration.settings.connection_type ?? integration.settings.connectionType;
+  const printerName = integration.settings.printer_name ?? integration.settings.printerName;
+  const host = integration.settings.host;
+  const port = integration.settings.port;
+
+  if (host) {
+    return `${integration.provider} (LAN TCP/IP: ${String(host)}${port ? `:${String(port)}` : ''})`;
+  }
+
+  if (printerName) {
+    return `${integration.provider} (Windows/USB: ${String(printerName)})`;
+  }
+
+  return connectionType ? `${integration.provider} (${String(connectionType)})` : integration.provider;
+}
 
 function RestaurantPrepStationDialog({
   open,
@@ -85,7 +102,7 @@ function RestaurantPrepStationDialog({
   );
 
   const methods = useForm<Values>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as Resolver<Values>,
     defaultValues: { name: '', kind: 'kitchen', printerIntegration: '', cookIds: [], isActive: true },
   });
 
@@ -119,7 +136,7 @@ function RestaurantPrepStationDialog({
       name: values.name.trim(),
       kind: values.kind,
       printerIntegration: values.printerIntegration || null,
-      cookIds: values.cookIds.filter((cookId) => allowedCookIds.has(cookId)),
+      cookIds: values.cookIds.filter((cookId: string) => allowedCookIds.has(cookId)),
       isActive: values.isActive,
     };
 
@@ -148,9 +165,11 @@ function RestaurantPrepStationDialog({
             </RHFSelect>
             <RHFSelect<Values> name="printerIntegration" label={t('fields.printerIntegration')}>
               <MenuItem value="">{t('labels.notSelected')}</MenuItem>
-              {(printerIntegrationsQuery.data?.data ?? []).map((integration) => (
+              {(printerIntegrationsQuery.data?.data ?? [])
+                .filter((integration) => integration.kind === 'printer' && integration.isEnabled)
+                .map((integration) => (
                 <MenuItem key={integration.id} value={integration.id}>
-                  {integration.provider}
+                  {getPrinterIntegrationLabel(integration)}
                 </MenuItem>
               ))}
             </RHFSelect>

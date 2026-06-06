@@ -61,6 +61,9 @@ export const organizationsRepository: OrganizationsRepository = {
   updateIntegrationConfig(id, payload) {
     return apiClient.updateAdminIntegrationConfig(id, payload);
   },
+  deleteIntegrationConfig(id) {
+    return apiClient.deleteAdminIntegrationConfig(id);
+  },
   getRestaurants() {
     return apiClient.getAdminRestaurants({ page: 1, pageSize: 500 }).then((response) => response.data);
   },

@@ -300,6 +300,10 @@
       "title": "Удалить станцию",
       "description": "Удалить станцию \"{{name}}\"?"
     },
+    "deleteIntegration": {
+      "title": "Удалить интеграцию",
+      "description": "Удалить интеграцию \"{{name}}\"?"
+    },
     "deleteRestaurant": {
       "title": "Удалить ресторан",
       "description": "Удалить ресторан \"{{name}}\"?"
@@ -396,9 +400,17 @@
       "printerName": "Имя принтера Windows",
       "printerNameHint": "Имя очереди, под которым USB-принтер отображается в Windows. Например: POS-80 USB.",
       "printerPort": "Порт",
-      "printerPortHint": "Обычно 9100.",
+      "printerPortHint": "Если оставить пустым, будет использован 9100.",
       "provider": "Провайдер",
       "settings": "Настройки"
+    },
+    "actions": {
+      "checkPrinterConnection": "Проверить подключение принтера"
+    },
+    "messages": {
+      "formInvalid": "Проверьте поля формы",
+      "printerCheckSuccess": "Принтер подключен: {{target}}",
+      "printerCheckFailed": "Принтер не подключен: {{error}}"
     },
     "sections": {
       "fiscal": "Фискальные настройки",
