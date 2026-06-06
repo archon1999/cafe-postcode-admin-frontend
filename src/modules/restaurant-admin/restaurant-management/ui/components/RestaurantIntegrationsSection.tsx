@@ -285,10 +285,8 @@ function buildSettings(values: Values, item: AdminIntegrationConfig | null): Rec
       if (printerPort) {
         settings.port = Number(printerPort);
       }
-      delete settings.transport;
-      delete settings.transportType;
-      delete settings.use_local_agent;
-      delete settings.useLocalAgent;
+      settings.transport = 'local-agent';
+      settings.code_page = 46;
     } else if (values.provider === 'windows-raw') {
       settings.printer_name = values.printerName.trim();
       settings.transport = 'local-agent';

@@ -304,6 +304,7 @@ export type AdminIntegrationConfig = {
   id: string;
   kind: AdminIntegrationConfigKind;
   provider: string;
+  displayName?: string;
   isEnabled: boolean;
   settings: Record<string, unknown>;
 };

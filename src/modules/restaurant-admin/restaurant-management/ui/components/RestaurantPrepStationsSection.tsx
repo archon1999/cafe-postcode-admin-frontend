@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useQuery } from '@tanstack/react-query';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
@@ -11,6 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import type { GridColDef, GridRowSelectionModel, GridSortModel } from '@mui/x-data-grid';
 import { gridClasses } from '@mui/x-data-grid';
+import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm, type Resolver } from 'react-hook-form';
 import { z } from 'zod';
@@ -49,7 +49,17 @@ const schema = z.object({
 type Values = z.infer<typeof schema>;
 const KITCHEN_COOK_ROLE_CODES = new Set(['chef', 'barman', 'head_chef']);
 
-function getPrinterIntegrationLabel(integration: { provider: string; settings: Record<string, unknown> }) {
+function getPrinterIntegrationLabel(integration: {
+  id?: string;
+  provider: string;
+  displayName?: string;
+  display_name?: string;
+  settings: Record<string, unknown>;
+}) {
+  if (integration.displayName || integration.display_name) {
+    return integration.displayName ?? integration.display_name;
+  }
+
   const connectionType = integration.settings.connection_type ?? integration.settings.connectionType;
   const printerName = integration.settings.printer_name ?? integration.settings.printerName;
   const host = integration.settings.host;
@@ -63,7 +73,11 @@ function getPrinterIntegrationLabel(integration: { provider: string; settings: R
     return `${integration.provider} (Windows/USB: ${String(printerName)})`;
   }
 
-  return connectionType ? `${integration.provider} (${String(connectionType)})` : integration.provider;
+  if (connectionType) {
+    return `${integration.provider} (${String(connectionType)})`;
+  }
+
+  return integration.id ? `${integration.provider} (${integration.id.slice(-6)})` : integration.provider;
 }
 
 function RestaurantPrepStationDialog({

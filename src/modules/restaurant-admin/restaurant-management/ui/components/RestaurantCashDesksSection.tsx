@@ -44,7 +44,17 @@ const schema = z.object({
 
 type Values = z.infer<typeof schema>;
 
-function getPrinterIntegrationLabel(integration: { provider: string; settings: Record<string, unknown> }) {
+function getPrinterIntegrationLabel(integration: {
+  id?: string;
+  provider: string;
+  displayName?: string;
+  display_name?: string;
+  settings: Record<string, unknown>;
+}) {
+  if (integration.displayName || integration.display_name) {
+    return integration.displayName ?? integration.display_name;
+  }
+
   const connectionType = integration.settings.connection_type ?? integration.settings.connectionType;
   const printerName = integration.settings.printer_name ?? integration.settings.printerName;
   const host = integration.settings.host;
@@ -58,10 +68,25 @@ function getPrinterIntegrationLabel(integration: { provider: string; settings: R
     return `${integration.provider} (Windows/USB: ${String(printerName)})`;
   }
 
-  return connectionType ? `${integration.provider} (${String(connectionType)})` : integration.provider;
+  if (connectionType) {
+    return `${integration.provider} (${String(connectionType)})`;
+  }
+
+  return integration.id ? `${integration.provider} (${integration.id.slice(-6)})` : integration.provider;
 }
 
-function getIntegrationLabel(integration: { provider: string; settings: Record<string, unknown>; kind?: string }) {
+function getIntegrationLabel(integration: {
+  id?: string;
+  provider: string;
+  displayName?: string;
+  display_name?: string;
+  settings: Record<string, unknown>;
+  kind?: string;
+}) {
+  if (integration.displayName || integration.display_name) {
+    return integration.displayName ?? integration.display_name;
+  }
+
   if (integration.kind === 'printer') {
     return getPrinterIntegrationLabel(integration);
   }
