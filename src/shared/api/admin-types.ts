@@ -386,6 +386,7 @@ export type AdminRestaurant = {
   legalName: string;
   taxNumber: string;
   phone: string;
+  social?: string | null;
   address: string;
   fakturaPayload?: Record<string, unknown>;
   currency: string;
@@ -420,6 +421,7 @@ export type AdminRestaurantPayload = {
   legalName: string;
   taxNumber: string;
   phone: string;
+  social: string;
   address: string;
   fakturaPayload?: Record<string, unknown>;
   posAuthBackgroundImage?: File | null;

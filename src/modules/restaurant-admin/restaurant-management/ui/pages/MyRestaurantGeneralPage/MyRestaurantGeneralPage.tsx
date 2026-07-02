@@ -150,6 +150,7 @@ const MyRestaurantGeneralPage = () => {
       legalName: restaurant.legalName,
       taxNumber: restaurant.taxNumber,
       phone: restaurant.phone,
+      social: restaurant.social ?? '',
       address: restaurant.address,
       fakturaPayload: restaurant.fakturaPayload,
       posAuthBackgroundImage: backgroundFile,
@@ -179,6 +180,7 @@ const MyRestaurantGeneralPage = () => {
       legalName: restaurant.legalName,
       taxNumber: restaurant.taxNumber,
       phone: restaurant.phone,
+      social: restaurant.social ?? '',
       address: restaurant.address,
       fakturaPayload: restaurant.fakturaPayload,
       clearPosAuthBackgroundImage: false,
@@ -243,6 +245,12 @@ const MyRestaurantGeneralPage = () => {
                   {t('fields.phone')}
                 </Typography>
                 <Typography variant="body2">{restaurant.phone || t('labels.notSelected')}</Typography>
+              </Stack>
+              <Stack spacing={0.5}>
+                <Typography variant="caption" color="text.secondary">
+                  {t('fields.social')}
+                </Typography>
+                <Typography variant="body2">{restaurant.social || t('labels.notSelected')}</Typography>
               </Stack>
               <Stack spacing={0.5}>
                 <Typography variant="caption" color="text.secondary">

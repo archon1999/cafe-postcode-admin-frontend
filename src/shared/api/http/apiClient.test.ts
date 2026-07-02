@@ -95,6 +95,7 @@ describe('apiClient query params', () => {
         legalName: '',
         taxNumber: '',
         phone: '',
+        social: '',
         address: '',
         currency: 'UZS',
         isActive: true,
@@ -106,7 +107,12 @@ describe('apiClient query params', () => {
       legalName: '',
       taxNumber: '',
       phone: '',
+      social: '',
       address: '',
+      serviceFeeEnabled: false,
+      serviceFeePercent: 0,
+      vatEnabled: false,
+      vatPercent: 12,
       isActive: true,
     });
 
@@ -115,7 +121,12 @@ describe('apiClient query params', () => {
       legalName: '',
       taxNumber: '',
       phone: '',
+      social: '',
       address: '',
+      serviceFeeEnabled: false,
+      serviceFeePercent: 0,
+      vatEnabled: false,
+      vatPercent: 12,
       isActive: true,
     });
   });

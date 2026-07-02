@@ -60,6 +60,7 @@ export const RestaurantFormFields = ({
           defaultCountry="UZ"
           placeholder={t('fields.phonePlaceholder')}
         />
+        <RHFTextField<Values> name="social" label={t('fields.social')} placeholder="Instagram: new york" />
         <RHFTextField<Values>
           name="address"
           label={t('fields.address')}

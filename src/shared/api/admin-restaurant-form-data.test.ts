@@ -10,6 +10,7 @@ describe('buildAdminRestaurantRequestPayload', () => {
     legalName: 'Restaurant LLC',
     taxNumber: '123456789',
     phone: '+998900000000',
+    social: 'Instagram: cafe',
     address: 'Tashkent',
     fakturaPayload: { CompanyName: 'Restaurant' },
     serviceFeeEnabled: true,
@@ -32,6 +33,7 @@ describe('buildAdminRestaurantRequestPayload', () => {
 
     expect(result).toBeInstanceOf(FormData);
     expect((result as FormData).get('name')).toBe('Restaurant');
+    expect((result as FormData).get('social')).toBe('Instagram: cafe');
     expect((result as FormData).get('fakturaPayload')).toBe(JSON.stringify(basePayload.fakturaPayload));
     expect((result as FormData).get('serviceFeeEnabled')).toBe('true');
     expect((result as FormData).get('serviceFeePercent')).toBe('10');

@@ -184,6 +184,7 @@ const RestaurantDetailPage = () => {
                 {restaurant.taxNumber || t('labels.notSelected')}
               </SummaryField>
               <SummaryField label={t('fields.phone')}>{restaurant.phone || t('labels.notSelected')}</SummaryField>
+              <SummaryField label={t('fields.social')}>{restaurant.social || t('labels.notSelected')}</SummaryField>
               <SummaryField label={t('fields.tariff')}>{tariffName}</SummaryField>
               <SummaryField label={tPlatform('fields.billingPeriod')}>{billingPeriodLabel}</SummaryField>
               <SummaryField label={tPlatform('fields.expiresOn')}>

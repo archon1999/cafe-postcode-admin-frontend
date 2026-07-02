@@ -65,6 +65,7 @@
     "name": "Nomi",
     "address": "Manzil",
     "phone": "Telefon",
+    "social": "Social",
     "serviceFeePercent": "Xizmat haqi (%)",
     "serviceFeeEnabled": "Xizmat haqi yoqilgan",
     "phonePlaceholder": "+998 90 123 45 67",

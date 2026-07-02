@@ -65,6 +65,7 @@
     "name": "Название",
     "address": "Адрес",
     "phone": "Телефон",
+    "social": "Соцсеть",
     "serviceFeePercent": "Сервисный сбор (%)",
     "serviceFeeEnabled": "Сервисный сбор включен",
     "phonePlaceholder": "+998 90 123 45 67",
