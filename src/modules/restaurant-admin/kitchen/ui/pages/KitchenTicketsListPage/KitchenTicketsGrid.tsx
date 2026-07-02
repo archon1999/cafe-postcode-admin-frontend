@@ -18,6 +18,7 @@ import { DEFAULT_PAGINATION_MODEL, DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_SELE
 import { useRouter } from 'shared/hooks/router';
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState, withDetailLink } from 'shared/ui/CustomDataGrid';
 import { Iconify } from 'shared/ui/Iconify';
+import { formatOrderNumberCellValue, OrderNumberCell } from 'shared/ui/OrderNumberCell';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 import { formatHallDisplayName } from 'shared/utils/format-hall-display';
 import { formatDateTime as formatTashkentDateTime } from 'shared/utils/format-time';
@@ -36,13 +37,6 @@ function formatDateTime(value?: string | null) {
   }
 
   return formatTashkentDateTime(value, 'DD.MM.YYYY HH:mm');
-}
-
-function formatOrderNumberWithDisplayName(orderNumber: number, displayName?: string | null) {
-  const normalizedDisplayName = displayName?.trim();
-  const orderLabel = `ID ${orderNumber}`;
-
-  return normalizedDisplayName ? `${orderLabel} (${normalizedDisplayName})` : orderLabel;
 }
 
 function getStatusColor(status: KitchenTicketStatus) {
@@ -112,7 +106,8 @@ export function KitchenTicketsGrid() {
           headerName: t('fields.orderNumber'),
           minWidth: 130,
           flex: 0.5,
-          valueGetter: (_value, row) => formatOrderNumberWithDisplayName(row.orderNumber, row.orderDisplayName),
+          valueGetter: (_value, row) => formatOrderNumberCellValue(row.orderNumber, row.orderDisplayName),
+          renderCell: ({ row }) => <OrderNumberCell orderNumber={row.orderNumber} displayName={row.orderDisplayName} />,
         },
         (row) => RouterPathHelper.kitchenTicketView(row.id),
       ),

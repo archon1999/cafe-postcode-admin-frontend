@@ -38,6 +38,7 @@ export function buildAdminRestaurantRequestPayload(payload: AdminRestaurantPaylo
   appendText(formData, 'serviceFeePercent', payload.serviceFeePercent);
   appendText(formData, 'vatEnabled', payload.vatEnabled);
   appendText(formData, 'vatPercent', payload.vatPercent);
+  appendText(formData, 'markingCheckEnabled', payload.markingCheckEnabled);
   appendText(formData, 'isActive', payload.isActive);
 
   if (payload.tariffId) {

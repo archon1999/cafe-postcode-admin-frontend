@@ -17,6 +17,7 @@ import { DEFAULT_PAGINATION_MODEL, DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_SELE
 import { useRouter } from 'shared/hooks/router';
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState, withDetailLink } from 'shared/ui/CustomDataGrid';
 import { Iconify } from 'shared/ui/Iconify';
+import { formatOrderNumberCellValue, OrderNumberCell } from 'shared/ui/OrderNumberCell';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 import { formatHallDisplayName } from 'shared/utils/format-hall-display';
 import { formatMoney } from 'shared/utils/format-money';
@@ -25,13 +26,6 @@ import { useGetOrdersQuery } from '../../../application';
 import { formatDateTime, getOrderChannelTranslationKey, getOrderStatusColor } from '../../lib/presenters';
 
 import { DEFAULT_ORDERS_GRID_FILTERS, type OrdersGridFilters, OrdersGridToolbar } from './OrdersGridToolbar';
-
-function formatOrderNumberWithDisplayName(orderNumber: number, displayName?: string | null) {
-  const normalizedDisplayName = displayName?.trim();
-  const orderLabel = `ID ${orderNumber}`;
-
-  return normalizedDisplayName ? `${orderLabel} (${normalizedDisplayName})` : orderLabel;
-}
 
 export const OrdersGrid = () => {
   const { t, currentLang } = useTranslate('orders');
@@ -69,7 +63,8 @@ export const OrdersGrid = () => {
           headerName: t('fields.orderNumber'),
           minWidth: 120,
           flex: 0.4,
-          valueGetter: (_v, row) => formatOrderNumberWithDisplayName(row.orderNumber, row.displayName),
+          valueGetter: (_v, row) => formatOrderNumberCellValue(row.orderNumber, row.displayName),
+          renderCell: ({ row }) => <OrderNumberCell orderNumber={row.orderNumber} displayName={row.displayName} />,
         },
         (row) => RouterPathHelper.orderView(row.id),
       ),

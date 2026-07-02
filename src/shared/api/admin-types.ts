@@ -396,6 +396,7 @@ export type AdminRestaurant = {
   serviceFeePercent: number | string;
   vatEnabled: boolean;
   vatPercent: number | string;
+  markingCheckEnabled: boolean;
   isActive: boolean;
   activatedAt?: string | null;
   deactivatedAt?: string | null;
@@ -430,6 +431,7 @@ export type AdminRestaurantPayload = {
   serviceFeePercent: number | string;
   vatEnabled: boolean;
   vatPercent: number | string;
+  markingCheckEnabled: boolean;
   isActive: boolean;
   tariffId?: string | null;
 };
@@ -622,6 +624,7 @@ export type AdminPayment = {
   id: string;
   order: string;
   orderNumber: number;
+  orderDisplayName?: string | null;
   cashDesk?: string | null;
   cashDeskName?: string | null;
   cashShiftId?: string | null;
@@ -643,6 +646,7 @@ export type AdminReceipt = {
   id: string;
   order: string;
   orderNumber: number;
+  orderDisplayName?: string | null;
   payment?: string | null;
   paymentMethod?: AdminPaymentMethod | null;
   paymentAmount?: number | null;

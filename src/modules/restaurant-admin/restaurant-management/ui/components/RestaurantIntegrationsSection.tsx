@@ -51,7 +51,10 @@ const PRINTER_CONNECTION_TYPE_VALUES = ['system_printer', 'socket'] as const;
 const PROVIDER_OPTIONS: Record<AdminIntegrationConfigKind, { value: string; label: string }[]> = {
   printer: [{ value: 'windows-raw', label: 'Windows raw' }],
   payment: [{ value: 'marta-softpos', label: 'MARTA SoftPOS' }],
-  fiscal: [{ value: 'unikassa', label: 'Unikassa' }],
+  fiscal: [
+    { value: 'fiscal-drive-service', label: 'FiscalDriveService' },
+    { value: 'unikassa', label: 'Unikassa' },
+  ],
 };
 
 const stringValue = z.preprocess((value) => (value === undefined || value === null ? '' : String(value)), z.string());
@@ -74,6 +77,8 @@ const MANAGED_SETTING_KEYS = new Set([
   'port',
   'terminal_id',
   'terminalId',
+  'factory_id',
+  'factoryId',
   'merchant_id',
   'merchantId',
   'cashbox_id',
@@ -112,6 +117,7 @@ const schema = z
     taxNumber: z.string(),
     endpointUrl: z.string(),
     timeoutSeconds: z.string(),
+    factoryId: z.string(),
     amountMultiplier: z.string(),
     hmacSecret: z.string(),
     apiKey: z.string(),
@@ -168,8 +174,8 @@ const schema = z
 type Values = z.infer<typeof schema>;
 
 const defaultValues: Values = {
-  kind: 'printer',
-  provider: 'windows-raw',
+  kind: 'fiscal',
+  provider: 'fiscal-drive-service',
   isEnabled: true,
   connectionType: 'system_printer',
   printerName: 'POS-80 USB',
@@ -184,6 +190,7 @@ const defaultValues: Values = {
   taxNumber: '',
   endpointUrl: '',
   timeoutSeconds: '180',
+  factoryId: '',
   amountMultiplier: '100',
   hmacSecret: '',
   apiKey: '',
@@ -253,6 +260,7 @@ function valuesFromItem(item: AdminIntegrationConfig | null): Values {
     taxNumber: readString(settings, ['tax_number', 'taxNumber']),
     endpointUrl: readString(settings, ['endpoint_url', 'endpointUrl']),
     timeoutSeconds: String(readSetting(settings, ['timeout_seconds', 'timeoutSeconds']) ?? '180'),
+    factoryId: readString(settings, ['factory_id', 'factoryId']),
     amountMultiplier: String(readSetting(settings, ['amount_multiplier', 'amountMultiplier']) ?? '100'),
     hmacSecret: readString(settings, ['hmac_secret', 'hmacSecret']),
     apiKey: readString(settings, ['api_key', 'apiKey']),
@@ -321,6 +329,7 @@ function buildSettings(values: Values, item: AdminIntegrationConfig | null): Rec
   return {
     ...base,
     terminal_id: trimOrUndefined(values.terminalId),
+    factory_id: trimOrUndefined(values.factoryId),
     cashbox_id: trimOrUndefined(values.cashboxId),
     tax_number: trimOrUndefined(values.taxNumber),
     endpoint_url: trimOrUndefined(values.endpointUrl),
@@ -374,9 +383,11 @@ function getSettingsSummary(row: AdminIntegrationConfig) {
   }
 
   const terminalId = readString(settings, ['terminal_id', 'terminalId'], '-');
+  const factoryId = readString(settings, ['factory_id', 'factoryId']);
   const cashboxId = readString(settings, ['cashbox_id', 'cashboxId'], '-');
   const taxNumber = readString(settings, ['tax_number', 'taxNumber'], '-');
-  return `Terminal: ${terminalId} | Kassa: ${cashboxId} | STIR: ${taxNumber}`;
+  const fiscalTarget = factoryId ? `Factory: ${factoryId}` : `Terminal: ${terminalId}`;
+  return `${fiscalTarget} | Kassa: ${cashboxId} | STIR: ${taxNumber}`;
 }
 
 async function checkPrinterConnection(values: Values) {
@@ -639,13 +650,22 @@ function RestaurantIntegrationDialog({
               <>
                 <Divider />
                 <Typography variant="subtitle2">{t('integrations.sections.fiscal')}</Typography>
+                <RHFTextField<Values>
+                  name="factoryId"
+                  label="Factory ID"
+                  helperText="Bo'sh qoldirilsa FiscalDriveService ulangan FMni terminal ID bo'yicha topadi"
+                />
                 <RHFTextField<Values> name="terminalId" label={t('fields.terminalId')} />
                 <RHFTextField<Values> name="cashboxId" label={t('integrations.fields.cashboxId')} />
                 <RHFTextField<Values> name="taxNumber" label={t('fields.taxNumber')} />
                 <RHFTextField<Values>
                   name="endpointUrl"
                   label={t('integrations.fields.endpointUrl')}
-                  helperText="Bo'sh qoldirilsa local agent Unikassa terminalni avtomatik topadi"
+                  helperText={
+                    selectedProvider === 'fiscal-drive-service'
+                      ? "Bo'sh qoldirilsa local agent FiscalDriveService'ning 127.0.0.1:3449 endpointini ishlatadi"
+                      : "Bo'sh qoldirilsa local agent Unikassa terminalni avtomatik topadi"
+                  }
                 />
                 <RHFTextField<Values> name="apiKey" label={t('integrations.fields.apiKey')} type="password" />
               </>

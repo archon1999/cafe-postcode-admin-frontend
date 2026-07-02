@@ -97,13 +97,7 @@ vi.mock('../../../application', () => ({
 }));
 
 vi.mock('./RestaurantFormFields', () => ({
-  RestaurantFormFields: ({
-    isEditMode,
-    onLookup,
-  }: {
-    isEditMode: boolean;
-    onLookup: () => void | Promise<void>;
-  }) => {
+  RestaurantFormFields: ({ isEditMode, onLookup }: { isEditMode: boolean; onLookup: () => void | Promise<void> }) => {
     const {
       watch,
       setValue,
@@ -185,6 +179,7 @@ describe('RestaurantFormPage', () => {
         serviceFeePercent: 0,
         vatEnabled: false,
         vatPercent: 12,
+        markingCheckEnabled: false,
         isActive: true,
         fakturaPayload: { CompanyName: 'Existing' },
       },
@@ -268,12 +263,14 @@ describe('RestaurantFormPage', () => {
         legalName: 'GULISTON RESTAURANT',
         taxNumber: '311926992',
         phone: '+998337700586',
-      address: 'Buxoro',
-      fakturaPayload: { CompanyName: 'GULISTON RESTAURANT', CompanyInn: '311926992' },
-      serviceFeeEnabled: false,
-      serviceFeePercent: 0,
-      vatEnabled: false,
-      vatPercent: 12,
+        social: '',
+        address: 'Buxoro',
+        fakturaPayload: { CompanyName: 'GULISTON RESTAURANT', CompanyInn: '311926992' },
+        serviceFeeEnabled: false,
+        serviceFeePercent: 0,
+        vatEnabled: false,
+        vatPercent: 12,
+        markingCheckEnabled: false,
         isActive: false,
       });
     });
@@ -293,6 +290,7 @@ describe('RestaurantFormPage', () => {
         serviceFeePercent: 10,
         vatEnabled: true,
         vatPercent: 12,
+        markingCheckEnabled: true,
         isActive: true,
         fakturaPayload: { CompanyName: 'BROCCOLI FOOD', CompanyInn: '304459113' },
       },
@@ -315,12 +313,14 @@ describe('RestaurantFormPage', () => {
         legalName: 'BROCCOLI FOOD MCHJ',
         taxNumber: '304459113',
         phone: '+998909112881',
-      address: 'Toshkent',
-      fakturaPayload: { CompanyName: 'BROCCOLI FOOD', CompanyInn: '304459113' },
-      serviceFeeEnabled: true,
-      serviceFeePercent: 10,
-      vatEnabled: true,
+        social: '',
+        address: 'Toshkent',
+        fakturaPayload: { CompanyName: 'BROCCOLI FOOD', CompanyInn: '304459113' },
+        serviceFeeEnabled: true,
+        serviceFeePercent: 10,
+        vatEnabled: true,
         vatPercent: 12,
+        markingCheckEnabled: true,
         isActive: true,
       });
     });

@@ -113,6 +113,7 @@ describe('apiClient query params', () => {
       serviceFeePercent: 0,
       vatEnabled: false,
       vatPercent: 12,
+      markingCheckEnabled: false,
       isActive: true,
     });
 
@@ -127,6 +128,7 @@ describe('apiClient query params', () => {
       serviceFeePercent: 0,
       vatEnabled: false,
       vatPercent: 12,
+      markingCheckEnabled: false,
       isActive: true,
     });
   });

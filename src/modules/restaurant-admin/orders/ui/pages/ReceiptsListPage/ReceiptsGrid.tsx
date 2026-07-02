@@ -20,6 +20,7 @@ import { DEFAULT_PAGINATION_MODEL, DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_SELE
 import { useRouter } from 'shared/hooks/router';
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState, withDetailLink } from 'shared/ui/CustomDataGrid';
 import { Iconify } from 'shared/ui/Iconify';
+import { formatOrderNumberCellValue, OrderNumberCell } from 'shared/ui/OrderNumberCell';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 import { formatMoney } from 'shared/utils/format-money';
 
@@ -70,7 +71,8 @@ export const ReceiptsGrid = () => {
           headerName: t('fields.orderNumber'),
           minWidth: 110,
           flex: 0.4,
-          valueGetter: (_v, row) => `#${row.orderNumber}`,
+          valueGetter: (_v, row) => formatOrderNumberCellValue(row.orderNumber, row.orderDisplayName),
+          renderCell: ({ row }) => <OrderNumberCell orderNumber={row.orderNumber} displayName={row.orderDisplayName} />,
         },
         (row) => RouterPathHelper.receiptView(row.id),
       ),

@@ -40,6 +40,7 @@ const schema = z.object({
   serviceFeePercent: z.coerce.number().min(0).max(99),
   vatEnabled: z.boolean(),
   vatPercent: z.coerce.number().min(0).max(99),
+  markingCheckEnabled: z.boolean(),
   isActive: z.boolean(),
 });
 
@@ -78,6 +79,7 @@ const RestaurantFormPage = () => {
       serviceFeePercent: 0,
       vatEnabled: false,
       vatPercent: 12,
+      markingCheckEnabled: false,
       isActive: false,
     },
   });
@@ -104,6 +106,7 @@ const RestaurantFormPage = () => {
       serviceFeePercent: Number(query.data.serviceFeePercent ?? 0),
       vatEnabled: query.data.vatEnabled,
       vatPercent: Number(query.data.vatPercent ?? 12),
+      markingCheckEnabled: Boolean(query.data.markingCheckEnabled ?? false),
       isActive: query.data.isActive,
     });
   }, [methods, query.data]);
@@ -150,6 +153,7 @@ const RestaurantFormPage = () => {
       serviceFeePercent: values.serviceFeePercent,
       vatEnabled: values.vatEnabled,
       vatPercent: values.vatPercent,
+      markingCheckEnabled: values.markingCheckEnabled,
       isActive: isEditMode ? values.isActive : false,
     };
 

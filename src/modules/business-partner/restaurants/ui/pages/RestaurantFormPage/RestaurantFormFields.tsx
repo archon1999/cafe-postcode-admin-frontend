@@ -72,6 +72,7 @@ export const RestaurantFormFields = ({
         <RHFTextField<Values> name="serviceFeePercent" label={t('fields.serviceFeePercent')} type="number" />
         <RHFSwitch<Values> name="vatEnabled" label={t('fields.vatEnabled')} />
         <RHFTextField<Values> name="vatPercent" label="QQS / NDS (%)" type="number" />
+        <RHFSwitch<Values> name="markingCheckEnabled" label={t('fields.markingCheckEnabled')} />
       </Box>
 
       <Stack spacing={1.5}>

@@ -17,6 +17,7 @@ describe('buildAdminRestaurantRequestPayload', () => {
     serviceFeePercent: 10,
     vatEnabled: true,
     vatPercent: 12,
+    markingCheckEnabled: true,
     isActive: true,
   };
 
@@ -37,6 +38,7 @@ describe('buildAdminRestaurantRequestPayload', () => {
     expect((result as FormData).get('fakturaPayload')).toBe(JSON.stringify(basePayload.fakturaPayload));
     expect((result as FormData).get('serviceFeeEnabled')).toBe('true');
     expect((result as FormData).get('serviceFeePercent')).toBe('10');
+    expect((result as FormData).get('markingCheckEnabled')).toBe('true');
     expect((result as FormData).get('posAuthBackgroundImage')).toBe(image);
   });
 

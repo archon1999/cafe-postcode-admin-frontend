@@ -159,6 +159,7 @@ const MyRestaurantGeneralPage = () => {
       serviceFeePercent: restaurant.serviceFeePercent,
       vatEnabled: restaurant.vatEnabled,
       vatPercent: restaurant.vatPercent,
+      markingCheckEnabled: Boolean(restaurant.markingCheckEnabled ?? false),
       isActive: restaurant.isActive,
     });
 
@@ -188,6 +189,7 @@ const MyRestaurantGeneralPage = () => {
       serviceFeePercent: serviceFeePercentValue,
       vatEnabled: restaurant.vatEnabled,
       vatPercent: restaurant.vatPercent,
+      markingCheckEnabled: Boolean(restaurant.markingCheckEnabled ?? false),
       isActive: restaurant.isActive,
     });
   };
