@@ -1,12 +1,7 @@
 import type {
-  AdminDistributionPointKind,
   AdminFeatureKitchenMode,
   AdminFeatureOrderEntryMode,
 } from 'shared/api/admin-types';
-
-export function getDistributionPointKindTranslationKey(kind: AdminDistributionPointKind) {
-  return `distributionPointKinds.${kind}` as const;
-}
 
 export function getFeatureOrderEntryModeTranslationKey(mode: AdminFeatureOrderEntryMode) {
   return `orderEntryModes.${mode}` as const;

@@ -108,14 +108,6 @@ const TITLE_RULES: TitleRule[] = [
     ],
   },
   {
-    route: AppRoutes.ORGANIZATION_MY_RESTAURANT_DISTRIBUTION_POINT_LIST,
-    namespaces: ['organizations'],
-    resolve: (_params, t) => [
-      t('organizations:pages.myRestaurant.title'),
-      t('organizations:pages.distributionPoints.title'),
-    ],
-  },
-  {
     route: AppRoutes.ORGANIZATION_MY_RESTAURANT_INTEGRATION_CONFIG_LIST,
     namespaces: ['organizations'],
     resolve: (_params, t) => [

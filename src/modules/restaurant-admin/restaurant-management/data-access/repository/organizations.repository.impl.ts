@@ -19,21 +19,6 @@ export const organizationsRepository: OrganizationsRepository = {
   deleteCashDesk(id) {
     return apiClient.deleteAdminCashDesk(id);
   },
-  getDistributionPoints() {
-    return apiClient.getAdminDistributionPoints({ page: 1, pageSize: 500 }).then((response) => response.data);
-  },
-  getDistributionPointById(id) {
-    return apiClient.getAdminDistributionPointById(id);
-  },
-  createDistributionPoint(payload) {
-    return apiClient.createAdminDistributionPoint(payload);
-  },
-  updateDistributionPoint(id, payload) {
-    return apiClient.updateAdminDistributionPoint(id, payload);
-  },
-  deleteDistributionPoint(id) {
-    return apiClient.deleteAdminDistributionPoint(id);
-  },
   getPrepStations() {
     return apiClient.getAdminPrepStations({ page: 1, pageSize: 500 }).then((response) => response.data);
   },

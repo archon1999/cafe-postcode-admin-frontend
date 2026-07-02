@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import type {
   AdminCashDeskPayload,
-  AdminDistributionPointPayload,
   AdminIntegrationConfigPayload,
   AdminPrepStationPayload,
   AdminRestaurantPayload,
@@ -43,40 +42,6 @@ export function useDeleteCashDeskMutation() {
     mutationFn: (id: string) => organizationsRepository.deleteCashDesk(id),
     onSuccess: async () => {
       await invalidateQueryKeys(queryClient, [organizationsKeys.cashDesks()]);
-    },
-  });
-}
-
-export function useCreateDistributionPointMutation() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (payload: AdminDistributionPointPayload) => organizationsRepository.createDistributionPoint(payload),
-    onSuccess: async () => {
-      await invalidateQueryKeys(queryClient, [organizationsKeys.distributionPoints()]);
-    },
-  });
-}
-
-export function useUpdateDistributionPointMutation(id: string) {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (payload: AdminDistributionPointPayload) =>
-      organizationsRepository.updateDistributionPoint(id, payload),
-    onSuccess: async () => {
-      await invalidateQueryKeys(queryClient, [
-        organizationsKeys.distributionPoints(),
-        organizationsKeys.distributionPointDetail(id),
-      ]);
-    },
-  });
-}
-
-export function useDeleteDistributionPointMutation() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (id: string) => organizationsRepository.deleteDistributionPoint(id),
-    onSuccess: async () => {
-      await invalidateQueryKeys(queryClient, [organizationsKeys.distributionPoints()]);
     },
   });
 }

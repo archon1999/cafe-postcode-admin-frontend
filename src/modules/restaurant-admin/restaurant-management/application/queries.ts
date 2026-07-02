@@ -3,8 +3,6 @@ import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
 import type {
   AdminCashDesk,
   AdminCashDesksQueryParams,
-  AdminDistributionPoint,
-  AdminDistributionPointsQueryParams,
   AdminHall,
   AdminIntegrationConfig,
   AdminIntegrationConfigsQueryParams,
@@ -46,39 +44,6 @@ export function useGetCashDeskByIdQuery(
   return useQuery({
     queryKey: organizationsKeys.cashDeskDetail(id),
     queryFn: () => organizationsRepository.getCashDeskById(id),
-    enabled: Boolean(id),
-    ...options,
-  });
-}
-
-export function useGetDistributionPointsQuery(
-  options?: Omit<UseQueryOptions<AdminDistributionPoint[]>, 'queryFn' | 'queryKey'>,
-) {
-  return useQuery({
-    queryKey: organizationsKeys.distributionPoints(),
-    queryFn: () => organizationsRepository.getDistributionPoints(),
-    ...options,
-  });
-}
-
-export function useGetDistributionPointsListQuery(
-  params: AdminDistributionPointsQueryParams,
-  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminDistributionPoint>>, 'queryFn' | 'queryKey'>,
-) {
-  return useQuery({
-    queryKey: organizationsKeys.distributionPointsList(params),
-    queryFn: () => apiClient.getAdminDistributionPoints(params),
-    ...options,
-  });
-}
-
-export function useGetDistributionPointByIdQuery(
-  id: string,
-  options?: Omit<UseQueryOptions<AdminDistributionPoint>, 'queryFn' | 'queryKey'>,
-) {
-  return useQuery({
-    queryKey: organizationsKeys.distributionPointDetail(id),
-    queryFn: () => organizationsRepository.getDistributionPointById(id),
     enabled: Boolean(id),
     ...options,
   });

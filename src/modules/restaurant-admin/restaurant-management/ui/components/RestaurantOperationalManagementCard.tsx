@@ -5,7 +5,6 @@ import Typography from '@mui/material/Typography';
 import { useTranslate } from 'app/providers/locales';
 
 import { RestaurantCashDesksSection } from './RestaurantCashDesksSection';
-import { RestaurantDistributionPointsSection } from './RestaurantDistributionPointsSection';
 import { RestaurantPrepStationsSection } from './RestaurantPrepStationsSection';
 
 type RestaurantOperationalManagementCardProps = {
@@ -50,14 +49,6 @@ export function RestaurantOperationalManagementCard({
               title={t('pages.cashDesks.title')}
               description={t('sections.myRestaurantManagement.cashDesksDescription')}
               searchPlaceholder={t('filters.searchRestaurantCashDesksPlaceholder')}
-            />
-          ) : null}
-
-          {showIntegrationsManagement ? (
-            <RestaurantDistributionPointsSection
-              title={t('pages.distributionPoints.title')}
-              description={t('sections.myRestaurantManagement.distributionPointsDescription')}
-              searchPlaceholder={t('filters.searchRestaurantDistributionPointsPlaceholder')}
             />
           ) : null}
         </Stack>

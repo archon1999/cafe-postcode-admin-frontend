@@ -64,11 +64,6 @@ const MY_RESTAURANT_PREP_STATION_PERMISSION_CODES: PermissionCode[] = [
   'prep_stations.create',
   'prep_stations.update',
 ];
-const MY_RESTAURANT_DISTRIBUTION_POINT_PERMISSION_CODES: PermissionCode[] = [
-  'distribution_points.view',
-  'distribution_points.create',
-  'distribution_points.update',
-];
 const MY_RESTAURANT_INTEGRATION_CONFIG_PERMISSION_CODES: PermissionCode[] = [
   'integration_configs.view',
   'integration_configs.create',
@@ -182,7 +177,6 @@ export function canAccessMyRestaurant(snapshot?: AdminAccessSnapshot | null) {
     canAccessMyRestaurantGeneral(snapshot) ||
     canAccessMyRestaurantCashDesks(snapshot) ||
     canAccessMyRestaurantPrepStations(snapshot) ||
-    canAccessMyRestaurantDistributionPoints(snapshot) ||
     canAccessMyRestaurantIntegrations(snapshot)
   );
 }
@@ -203,12 +197,6 @@ export function canAccessMyRestaurantPrepStations(snapshot?: AdminAccessSnapshot
   return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, MY_RESTAURANT_PREP_STATION_PERMISSION_CODES);
 }
 
-export function canAccessMyRestaurantDistributionPoints(snapshot?: AdminAccessSnapshot | null) {
-  return (
-    hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, MY_RESTAURANT_DISTRIBUTION_POINT_PERMISSION_CODES)
-  );
-}
-
 export function canAccessMyRestaurantIntegrations(snapshot?: AdminAccessSnapshot | null) {
   return (
     hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, MY_RESTAURANT_INTEGRATION_CONFIG_PERMISSION_CODES)
@@ -219,7 +207,6 @@ const MY_RESTAURANT_LANDING_CANDIDATES = [
   RoutePath.organizationMyRestaurantGeneral,
   RoutePath.organizationMyRestaurantCashDeskList,
   RoutePath.organizationMyRestaurantPrepStationList,
-  RoutePath.organizationMyRestaurantDistributionPointList,
   RoutePath.organizationMyRestaurantIntegrationConfigList,
 ] as const;
 
@@ -254,10 +241,6 @@ export function canAccessAdminPath(pathname: string, snapshot?: AdminAccessSnaps
 
   if (matchesPrefix(pathname, RoutePath.organizationMyRestaurantPrepStationList)) {
     return canAccessMyRestaurantPrepStations(snapshot);
-  }
-
-  if (matchesPrefix(pathname, RoutePath.organizationMyRestaurantDistributionPointList)) {
-    return canAccessMyRestaurantDistributionPoints(snapshot);
   }
 
   if (matchesPrefix(pathname, RoutePath.organizationMyRestaurantIntegrationConfigList)) {

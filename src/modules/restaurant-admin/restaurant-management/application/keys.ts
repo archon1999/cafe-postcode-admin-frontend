@@ -3,8 +3,6 @@ import { createKeyFactory } from 'shared/api';
 const organizationsBaseKeys = createKeyFactory('organizations');
 const cashDesksKeys = createKeyFactory('organizations', 'cashDesks');
 const cashDeskKeys = createKeyFactory('organizations', 'cashDesk');
-const distributionPointsKeys = createKeyFactory('organizations', 'distributionPoints');
-const distributionPointKeys = createKeyFactory('organizations', 'distributionPoint');
 const prepStationsKeys = createKeyFactory('organizations', 'prepStations');
 const prepStationKeys = createKeyFactory('organizations', 'prepStation');
 const integrationConfigsKeys = createKeyFactory('organizations', 'integrationConfigs');
@@ -18,9 +16,6 @@ export const organizationsKeys = {
   cashDesks: () => cashDesksKeys.all,
   cashDesksList: cashDesksKeys.list,
   cashDeskDetail: cashDeskKeys.id,
-  distributionPoints: () => distributionPointsKeys.all,
-  distributionPointsList: distributionPointsKeys.list,
-  distributionPointDetail: distributionPointKeys.id,
   prepStations: () => prepStationsKeys.all,
   prepStationsList: prepStationsKeys.list,
   prepStationDetail: prepStationKeys.id,
