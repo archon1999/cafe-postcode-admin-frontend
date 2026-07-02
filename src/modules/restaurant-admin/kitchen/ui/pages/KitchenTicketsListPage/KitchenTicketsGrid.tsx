@@ -38,6 +38,13 @@ function formatDateTime(value?: string | null) {
   return formatTashkentDateTime(value, 'DD.MM.YYYY HH:mm');
 }
 
+function formatOrderNumberWithDisplayName(orderNumber: number, displayName?: string | null) {
+  const normalizedDisplayName = displayName?.trim();
+  const orderLabel = `ID ${orderNumber}`;
+
+  return normalizedDisplayName ? `${orderLabel} (${normalizedDisplayName})` : orderLabel;
+}
+
 function getStatusColor(status: KitchenTicketStatus) {
   switch (status) {
     case 'done':
@@ -105,7 +112,7 @@ export function KitchenTicketsGrid() {
           headerName: t('fields.orderNumber'),
           minWidth: 130,
           flex: 0.5,
-          valueGetter: (_value, row) => `#${row.orderNumber}`,
+          valueGetter: (_value, row) => formatOrderNumberWithDisplayName(row.orderNumber, row.orderDisplayName),
         },
         (row) => RouterPathHelper.kitchenTicketView(row.id),
       ),

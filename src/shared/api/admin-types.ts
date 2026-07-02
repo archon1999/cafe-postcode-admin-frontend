@@ -568,6 +568,7 @@ export type AdminKitchenTicket = {
   id: string;
   order: string;
   orderNumber: number;
+  orderDisplayName?: string | null;
   prepStation: string;
   prepStationName: string;
   status: KitchenTicketStatus;
@@ -689,6 +690,7 @@ export type AdminOrder = {
   cashier?: string | null;
   cashierName?: string | null;
   orderNumber: number;
+  displayName?: string | null;
   channel: AdminOrderChannel;
   status: AdminOrderStatus;
   guestCount: number;

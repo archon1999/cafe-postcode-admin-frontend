@@ -26,6 +26,13 @@ import { formatDateTime, getOrderChannelTranslationKey, getOrderStatusColor } fr
 
 import { DEFAULT_ORDERS_GRID_FILTERS, type OrdersGridFilters, OrdersGridToolbar } from './OrdersGridToolbar';
 
+function formatOrderNumberWithDisplayName(orderNumber: number, displayName?: string | null) {
+  const normalizedDisplayName = displayName?.trim();
+  const orderLabel = `ID ${orderNumber}`;
+
+  return normalizedDisplayName ? `${orderLabel} (${normalizedDisplayName})` : orderLabel;
+}
+
 export const OrdersGrid = () => {
   const { t, currentLang } = useTranslate('orders');
   const { t: tCommon } = useTranslate('common');
@@ -62,7 +69,7 @@ export const OrdersGrid = () => {
           headerName: t('fields.orderNumber'),
           minWidth: 120,
           flex: 0.4,
-          valueGetter: (_v, row) => `#${row.orderNumber}`,
+          valueGetter: (_v, row) => formatOrderNumberWithDisplayName(row.orderNumber, row.displayName),
         },
         (row) => RouterPathHelper.orderView(row.id),
       ),
