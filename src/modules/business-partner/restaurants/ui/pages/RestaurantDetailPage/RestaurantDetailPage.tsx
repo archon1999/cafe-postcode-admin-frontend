@@ -22,6 +22,7 @@ import {
 } from 'modules/business-partner/restaurants/application';
 import type { AdminRestaurantBalanceTransaction } from 'shared/api/admin-types';
 import { useParams, useRedirectOnNotFound, useRouter } from 'shared/hooks/router';
+import { BackToListButton } from 'shared/ui/BackToListButton';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { Iconify } from 'shared/ui/Iconify';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
@@ -135,19 +136,18 @@ const RestaurantDetailPage = () => {
     <Content>
       <CustomBreadcrumbs
         heading={restaurant.name}
-        links={[
-          { name: t('pages.restaurants.title'), href: RoutePath.organizationRestaurantList },
-          { name: restaurant.name },
-        ]}
         action={
-          <Button
-            component={RouterLink}
-            href={RouterPathHelper.organizationRestaurantEdit(restaurant.id)}
-            variant="contained"
-            color="black"
-            startIcon={<Iconify icon="solar:pen-bold" />}>
-            {t('actions.edit')}
-          </Button>
+          <Stack direction="row" spacing={1}>
+            <BackToListButton href={RoutePath.organizationRestaurantList} />
+            <Button
+              component={RouterLink}
+              href={RouterPathHelper.organizationRestaurantEdit(restaurant.id)}
+              variant="contained"
+              color="black"
+              startIcon={<Iconify icon="solar:pen-bold" />}>
+              {t('actions.edit')}
+            </Button>
+          </Stack>
         }
       />
 
@@ -201,7 +201,9 @@ const RestaurantDetailPage = () => {
           <Stack spacing={2}>
             <Stack spacing={0.75}>
               <Typography variant="h6">{t('sections.activeUsers.title')}</Typography>
-              <Typography variant="body2" color="text.secondary">{t('sections.activeUsers.description')}</Typography>
+              <Typography variant="body2" color="text.secondary">
+                {t('sections.activeUsers.description')}
+              </Typography>
             </Stack>
 
             {restaurant.activeUsers.length ? (
@@ -235,7 +237,9 @@ const RestaurantDetailPage = () => {
           <Stack spacing={2}>
             <Stack spacing={0.75}>
               <Typography variant="h6">{t('sections.soliqIntegration.title')}</Typography>
-              <Typography variant="body2" color="text.secondary">{t('sections.soliqIntegration.description')}</Typography>
+              <Typography variant="body2" color="text.secondary">
+                {t('sections.soliqIntegration.description')}
+              </Typography>
             </Stack>
 
             {restaurant.soliqIntegration ? (
@@ -283,7 +287,9 @@ const RestaurantDetailPage = () => {
             <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" spacing={2}>
               <Stack spacing={0.75}>
                 <Typography variant="h6">{t('sections.balance.title')}</Typography>
-                <Typography variant="body2" color="text.secondary">{t('sections.balance.description')}</Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {t('sections.balance.description')}
+                </Typography>
               </Stack>
               <Button
                 variant="contained"
@@ -335,11 +341,15 @@ const RestaurantDetailPage = () => {
           <Stack spacing={2}>
             <Stack spacing={0.75}>
               <Typography variant="h6">{t('sections.balanceHistory.title')}</Typography>
-              <Typography variant="body2" color="text.secondary">{t('sections.balanceHistory.description')}</Typography>
+              <Typography variant="body2" color="text.secondary">
+                {t('sections.balanceHistory.description')}
+              </Typography>
             </Stack>
 
             {balanceTransactionsQuery.isLoading ? (
-              <Typography variant="body2" color="text.secondary">{t('labels.loading')}</Typography>
+              <Typography variant="body2" color="text.secondary">
+                {t('labels.loading')}
+              </Typography>
             ) : transactions.length ? (
               <Table size="small">
                 <TableHead>

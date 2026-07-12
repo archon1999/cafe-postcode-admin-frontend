@@ -13,7 +13,7 @@
   "orderItems": "Товары в заказе",
   "orderItemNotes": "Заметки к товарам",
   "payments": "Платежи",
-  "receipts": "Чеки",
+  "receipts": "Фискальные чеки",
   "kitchen": "Кухня",
   "kitchenTickets": "Кухонные заказы",
   "catalog": "Меню",
@@ -37,5 +37,8 @@
   "cashDesks": "Кассы",
   "distributionPoints": "Точки продаж",
   "prepStations": "Станции приготовления",
-  "restaurants": "Клиенты"
+  "restaurants": "Клиенты",
+  "printTemplates": "Шаблоны чеков",
+  "setup": "Настройка ресторана",
+  "restaurantSettings": "Общее и настройка"
 }

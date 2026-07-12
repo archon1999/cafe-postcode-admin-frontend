@@ -1,0 +1,74 @@
+{
+  "title": "Шаблоны чеков",
+  "description": "Настройте кухонный, обычный платёжный и фискальный чек.",
+  "kinds": {
+    "kitchen_ticket": "Кухонный чек",
+    "payment_receipt_plain": "Обычный платёжный чек",
+    "payment_receipt_fiscal": "Фискальный чек"
+  },
+  "sections": {
+    "presets": "Готовые шаблоны",
+    "blocks": "Блоки",
+    "settings": "Настройки блока",
+    "variables": "Переменные",
+    "preview": "Предпросмотр"
+  },
+  "fields": {
+    "preset": "Набор шаблонов",
+    "paperWidth": "Ширина бумаги",
+    "paperWidthValue": "{{value}} мм",
+    "text": "Текст",
+    "align": "Выравнивание",
+    "bold": "Жирный",
+    "label": "Название",
+    "value": "Значение",
+    "feedLines": "Пустые строки",
+    "publishedRevision": "Активная версия: v{{revision}}"
+  },
+  "align": { "left": "Слева", "center": "По центру", "right": "Справа" },
+  "fontSizes": { "normal": "Обычный шрифт", "large": "Крупный шрифт" },
+  "presetNames": {
+    "legacy_80": "Классический",
+    "standard_80": "Компактный",
+    "detailed_80": "Подробный",
+    "kitchen_large_80": "Крупный для кухни"
+  },
+  "presetDescriptions": {
+    "legacy_80": "Полный шаблон, близкий к прежнему виду чека.",
+    "standard_80": "Компактный шаблон повседневного чека.",
+    "detailed_80": "Показывает больше данных ресторана и заказа.",
+    "kitchen_large_80": "Печатает названия позиций кухни крупным шрифтом."
+  },
+  "actions": {
+    "loadPreset": "Загрузить пресет",
+    "addText": "Текст",
+    "addDivider": "Линия",
+    "addSpacer": "Отступ",
+    "moveUp": "Вверх",
+    "moveDown": "Вниз",
+    "delete": "Удалить",
+    "saveAndPublish": "Сохранить и активировать",
+    "saving": "Сохранение..."
+  },
+  "blockTypes": {
+    "text": "Текст",
+    "two_column_row": "Две колонки",
+    "divider": "Разделитель",
+    "spacer": "Отступ",
+    "items_table": "Позиции",
+    "totals": "Итоги",
+    "metadata": "Данные",
+    "qr": "QR-код",
+    "logo": "Логотип",
+    "feed": "Протяжка бумаги",
+    "cut": "Отрез"
+  },
+  "preview": { "qr": "QR", "empty": "Нет значения" },
+  "messages": {
+    "variableHint": "Нажмите на переменную, чтобы скопировать её, затем вставьте в значение блока.",
+    "presetLoaded": "Пресет загружен для редактирования.",
+    "published": "Новая версия шаблона активирована.",
+    "publishFailed": "Не удалось сохранить шаблон.",
+    "selectEditableBlock": "Выберите блок для редактирования."
+  }
+}

@@ -55,3 +55,36 @@ export function buildAdminRestaurantRequestPayload(payload: AdminRestaurantPaylo
 
   return formData;
 }
+
+export function buildRestaurantSelfServiceRequestPayload(
+  payload: AdminRestaurantPayload,
+): Partial<AdminRestaurantPayload> | FormData {
+  const safePayload: Partial<AdminRestaurantPayload> = {
+    name: payload.name,
+    phone: payload.phone,
+    social: payload.social,
+    address: payload.address,
+    serviceFeeEnabled: payload.serviceFeeEnabled,
+    serviceFeePercent: payload.serviceFeePercent,
+    vatEnabled: payload.vatEnabled,
+    vatPercent: payload.vatPercent,
+    markingCheckEnabled: payload.markingCheckEnabled,
+  };
+  const imageFile = payload.posAuthBackgroundImage;
+  const hasImageFile = imageFile instanceof File;
+  const shouldClearImage = payload.clearPosAuthBackgroundImage === true;
+
+  if (!hasImageFile && !shouldClearImage) {
+    return safePayload;
+  }
+
+  const formData = new FormData();
+  Object.entries(safePayload).forEach(([key, value]) => appendText(formData, key, value));
+  if (hasImageFile) {
+    formData.append('posAuthBackgroundImage', imageFile);
+  }
+  if (shouldClearImage) {
+    formData.append('clearPosAuthBackgroundImage', 'true');
+  }
+  return formData;
+}

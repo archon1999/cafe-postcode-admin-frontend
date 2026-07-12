@@ -12,6 +12,7 @@ import { useCurrentUser } from 'modules/auth/domain/services/current-user';
 import { normalizeError, notifyError } from 'shared/api/errors/errorHandling';
 import { useParams, useRedirectOnNotFound, useRouter } from 'shared/hooks/router';
 import { usePageTitle } from 'shared/hooks/use-page-title';
+import { BackToListButton } from 'shared/ui/BackToListButton';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { FormActions } from 'shared/ui/FormActions';
 import { Form } from 'shared/ui/HookForm';
@@ -164,10 +165,7 @@ const BusinessPartnerFormPage = () => {
     <Content>
       <CustomBreadcrumbs
         heading={isEditMode ? editTitle : createTitle}
-        links={[
-          { name: listTitle, href: RoutePath.platformBusinessPartnerList },
-          { name: isEditMode ? editTitle : createTitle },
-        ]}
+        action={isEditMode ? <BackToListButton href={RoutePath.platformBusinessPartnerList} /> : undefined}
       />
       <Card sx={{ p: 3 }}>
         <Form methods={methods} onSubmit={onSubmit}>

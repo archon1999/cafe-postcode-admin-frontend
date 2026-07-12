@@ -1,5 +1,7 @@
+import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 import { useTranslate } from 'app/providers/locales';
 import type { AdminSummaryReportQueryParams } from 'shared/api/admin-types';
@@ -50,6 +52,8 @@ export function ReportsSummarySection({
     try {
       const result = await reportsRepository.exportSummary(periodParams);
       downloadBlob(result.blob, result.filename);
+    } catch {
+      toast.error(t('errors.exportFailed'));
     } finally {
       setExportLoading(false);
     }
@@ -72,7 +76,11 @@ export function ReportsSummarySection({
       />
 
       <Box sx={{ mt: 3 }}>
-        <ReportSummaryCards data={summaryQuery.data} loading={summaryQuery.isLoading} />
+        {summaryQuery.isError ? (
+          <Alert severity="error">{t('errors.loadFailed')}</Alert>
+        ) : (
+          <ReportSummaryCards data={summaryQuery.data} loading={summaryQuery.isLoading} />
+        )}
       </Box>
     </>
   );

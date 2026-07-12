@@ -38,14 +38,7 @@ export type AdminPaymentStatus = 'pending' | 'succeeded' | 'failed';
 export type AdminReceiptKind = 'prebill' | 'fiscal' | 'refund';
 export type AdminReceiptStatus = 'created' | 'sent' | 'failed';
 export type AdminCashShiftStatus = 'open' | 'closed';
-export type AdminReportKey =
-  | 'summary'
-  | 'sales'
-  | 'openChecks'
-  | 'topItems'
-  | 'topStaff'
-  | 'paymentBreakdown'
-  | 'shifts';
+export type AdminReportKey = 'summary' | 'sales' | 'receipts' | 'topItems' | 'topStaff' | 'paymentBreakdown' | 'shifts';
 export type AdminReportPeriodType = 'day' | 'month' | 'year';
 export type AdminBusinessPartnerStatus = 'draft' | 'active' | 'inactive';
 export type AdminBillingPeriod = 'monthly' | 'yearly';
@@ -673,6 +666,7 @@ export type AdminCashShiftReportRow = {
   cardTotal: number;
   qrTotal: number;
   refundTotal: number;
+  precheckCount: number;
   receiptCount: number;
   reprintCount: number;
   cashierId?: string | null;
@@ -894,6 +888,8 @@ export type AdminLoginResponse = {
 };
 
 export type AdminReportSummary = {
+  grossSalesTotal: number;
+  refundsTotal: number;
   salesTotal: number;
   ordersCount: number;
   averageCheck: number;
@@ -914,6 +910,18 @@ export type AdminOpenChecksReportRow = {
   total: number;
   hallName?: string | null;
   tableName?: string | null;
+  createdAt: string;
+};
+
+export type AdminReceiptsReportRow = {
+  id: string;
+  orderNumber: number;
+  kind: 'plain' | 'fiscal';
+  status: AdminReceiptStatus;
+  amount: number;
+  paymentMethod?: AdminPaymentMethod | null;
+  cashierName?: string | null;
+  cashDeskName?: string | null;
   createdAt: string;
 };
 
@@ -1086,6 +1094,12 @@ export type AdminOpenChecksReportQueryParams = AdminListQueryParams &
   AdminReportPeriodQueryParams & {
     status?: string;
     hallId?: string;
+  };
+
+export type AdminReceiptsReportQueryParams = AdminListQueryParams &
+  AdminReportPeriodQueryParams & {
+    receiptKind?: 'plain' | 'fiscal';
+    status?: AdminReceiptStatus;
   };
 
 export type AdminTopItemsReportQueryParams = AdminListQueryParams &

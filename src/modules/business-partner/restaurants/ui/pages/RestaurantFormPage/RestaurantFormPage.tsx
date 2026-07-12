@@ -3,15 +3,14 @@ import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 
 import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath, canAccessMyRestaurant, canAccessRestaurants } from 'app/routes';
 import { useCurrentUser } from 'modules/auth/domain/services/current-user';
-import type { AdminRestaurantPayload } from 'shared/api/admin-types';
 import { normalizeError, notifyError } from 'shared/api/errors/errorHandling';
 import { useParams, useRedirectOnNotFound, useRouter } from 'shared/hooks/router';
+import { BackToListButton } from 'shared/ui/BackToListButton';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { FormActions } from 'shared/ui/FormActions';
 import { Form } from 'shared/ui/HookForm';
@@ -24,27 +23,14 @@ import {
   useUpdateRestaurantMutation,
 } from '../../../application';
 
+import {
+  restaurantFormDefaultValues,
+  restaurantFormSchema,
+  restaurantFormValuesToPayload,
+  restaurantToFormValues,
+  type RestaurantFormValues,
+} from './restaurant-form';
 import { RestaurantFormFields } from './RestaurantFormFields';
-
-const schema = z.object({
-  name: z.string().min(1),
-  legalName: z.string(),
-  taxNumber: z.string(),
-  phone: z.string(),
-  social: z.string(),
-  address: z.string(),
-  fakturaPayload: z.record(z.string(), z.unknown()).optional(),
-  posAuthBackgroundImage: z.custom<File | string | null | undefined>().optional(),
-  clearPosAuthBackgroundImage: z.boolean().optional(),
-  serviceFeeEnabled: z.boolean(),
-  serviceFeePercent: z.coerce.number().min(0).max(99),
-  vatEnabled: z.boolean(),
-  vatPercent: z.coerce.number().min(0).max(99),
-  markingCheckEnabled: z.boolean(),
-  isActive: z.boolean(),
-});
-
-export type Values = z.infer<typeof schema>;
 
 const RestaurantFormPage = () => {
   const { t } = useTranslate('organizations');
@@ -63,25 +49,9 @@ const RestaurantFormPage = () => {
 
   useRedirectOnNotFound(query.error, isEditMode);
 
-  const methods = useForm<Values>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      name: '',
-      legalName: '',
-      taxNumber: '',
-      phone: '',
-      social: '',
-      address: '',
-      fakturaPayload: {},
-      posAuthBackgroundImage: null,
-      clearPosAuthBackgroundImage: false,
-      serviceFeeEnabled: false,
-      serviceFeePercent: 0,
-      vatEnabled: false,
-      vatPercent: 12,
-      markingCheckEnabled: false,
-      isActive: false,
-    },
+  const methods = useForm<RestaurantFormValues>({
+    resolver: zodResolver(restaurantFormSchema),
+    defaultValues: restaurantFormDefaultValues,
   });
 
   useEffect(() => {
@@ -92,23 +62,7 @@ const RestaurantFormPage = () => {
 
   useEffect(() => {
     if (!query.data) return;
-    methods.reset({
-      name: query.data.name,
-      legalName: query.data.legalName,
-      taxNumber: query.data.taxNumber,
-      phone: query.data.phone,
-      social: query.data.social ?? '',
-      address: query.data.address,
-      fakturaPayload: query.data.fakturaPayload ?? {},
-      posAuthBackgroundImage: query.data.posAuthBackgroundImageUrl ?? null,
-      clearPosAuthBackgroundImage: false,
-      serviceFeeEnabled: query.data.serviceFeeEnabled,
-      serviceFeePercent: Number(query.data.serviceFeePercent ?? 0),
-      vatEnabled: query.data.vatEnabled,
-      vatPercent: Number(query.data.vatPercent ?? 12),
-      markingCheckEnabled: Boolean(query.data.markingCheckEnabled ?? false),
-      isActive: query.data.isActive,
-    });
+    methods.reset(restaurantToFormValues(query.data));
   }, [methods, query.data]);
 
   const handleLookup = async () => {
@@ -141,27 +95,7 @@ const RestaurantFormPage = () => {
   };
 
   const onSubmit = methods.handleSubmit(async (values) => {
-    const payload: AdminRestaurantPayload = {
-      name: values.name.trim(),
-      legalName: values.legalName.trim(),
-      taxNumber: values.taxNumber.trim(),
-      phone: values.phone.trim(),
-      social: values.social.trim(),
-      address: values.address.trim(),
-      fakturaPayload: values.fakturaPayload,
-      serviceFeeEnabled: values.serviceFeeEnabled,
-      serviceFeePercent: values.serviceFeePercent,
-      vatEnabled: values.vatEnabled,
-      vatPercent: values.vatPercent,
-      markingCheckEnabled: values.markingCheckEnabled,
-      isActive: isEditMode ? values.isActive : false,
-    };
-
-    if (values.posAuthBackgroundImage instanceof File) {
-      payload.posAuthBackgroundImage = values.posAuthBackgroundImage;
-    } else if (values.clearPosAuthBackgroundImage === true) {
-      payload.clearPosAuthBackgroundImage = true;
-    }
+    const payload = restaurantFormValuesToPayload(values, { isEditMode });
 
     if (isEditMode && id) {
       await updateMutation.mutateAsync(payload);
@@ -180,13 +114,7 @@ const RestaurantFormPage = () => {
     <Content>
       <CustomBreadcrumbs
         heading={isEditMode ? t('pages.restaurantEdit.title') : t('pages.restaurantCreate.title')}
-        links={[
-          {
-            name: canManageRestaurants ? t('pages.restaurants.title') : t('pages.myRestaurant.title'),
-            href: backPath,
-          },
-          { name: isEditMode ? t('pages.restaurantEdit.title') : t('pages.restaurantCreate.title') },
-        ]}
+        action={isEditMode ? <BackToListButton href={backPath} /> : undefined}
       />
       <Card sx={{ p: 3 }}>
         <Form methods={methods} onSubmit={onSubmit}>

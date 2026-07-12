@@ -19,7 +19,7 @@ const getReportTitle = (t: TFunction, reportKey?: string): string => {
   const reportTitles: Record<string, string> = {
     summary: t('reports:reports.summary.title'),
     sales: t('reports:reports.sales.title'),
-    openChecks: t('reports:reports.openChecks.title'),
+    receipts: t('reports:reports.receipts.title'),
     topItems: t('reports:reports.topItems.title'),
     topStaff: t('reports:reports.topStaff.title'),
     paymentBreakdown: t('reports:reports.paymentBreakdown.title'),
@@ -84,6 +84,11 @@ const TITLE_RULES: TitleRule[] = [
     resolve: (_params, t) => [t('organizations:pages.myRestaurant.title')],
   },
   {
+    route: AppRoutes.ORGANIZATION_MY_RESTAURANT_SETUP,
+    namespaces: ['organizations'],
+    resolve: (_params, t) => [t('organizations:pages.myRestaurant.title'), t('organizations:pages.setup.title')],
+  },
+  {
     route: AppRoutes.ORGANIZATION_MY_RESTAURANT_GENERAL,
     namespaces: ['organizations'],
     resolve: (_params, t) => [
@@ -94,26 +99,22 @@ const TITLE_RULES: TitleRule[] = [
   {
     route: AppRoutes.ORGANIZATION_MY_RESTAURANT_CASH_DESK_LIST,
     namespaces: ['organizations'],
-    resolve: (_params, t) => [
-      t('organizations:pages.myRestaurant.title'),
-      t('organizations:pages.cashDesks.title'),
-    ],
+    resolve: (_params, t) => [t('organizations:pages.myRestaurant.title'), t('organizations:pages.cashDesks.title')],
   },
   {
     route: AppRoutes.ORGANIZATION_MY_RESTAURANT_PREP_STATION_LIST,
     namespaces: ['organizations'],
-    resolve: (_params, t) => [
-      t('organizations:pages.myRestaurant.title'),
-      t('organizations:pages.prepStations.title'),
-    ],
+    resolve: (_params, t) => [t('organizations:pages.myRestaurant.title'), t('organizations:pages.prepStations.title')],
   },
   {
     route: AppRoutes.ORGANIZATION_MY_RESTAURANT_INTEGRATION_CONFIG_LIST,
     namespaces: ['organizations'],
-    resolve: (_params, t) => [
-      t('organizations:pages.myRestaurant.title'),
-      t('organizations:pages.integrations.title'),
-    ],
+    resolve: (_params, t) => [t('organizations:pages.myRestaurant.title'), t('organizations:pages.integrations.title')],
+  },
+  {
+    route: AppRoutes.ORGANIZATION_MY_RESTAURANT_PRINT_TEMPLATE_LIST,
+    namespaces: ['printing'],
+    resolve: (_params, t) => [t('printing:title')],
   },
   {
     route: AppRoutes.REPORTS,

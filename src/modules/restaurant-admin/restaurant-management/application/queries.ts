@@ -15,6 +15,7 @@ import type {
 import { apiClient } from 'shared/api/http/apiClient';
 
 import { organizationsRepository } from '../data-access';
+import { restaurantSetupRepository } from '../data-access/repository/setup.repository';
 
 import { organizationsKeys } from './keys';
 
@@ -157,5 +158,12 @@ export function useGetOrganizationsHallsQuery(options?: Omit<UseQueryOptions<Adm
     queryKey: organizationsKeys.halls(),
     queryFn: () => organizationsRepository.getHalls(),
     ...options,
+  });
+}
+
+export function useRestaurantSetupReadinessQuery() {
+  return useQuery({
+    queryKey: organizationsKeys.setupReadiness(),
+    queryFn: () => restaurantSetupRepository.getReadiness(),
   });
 }

@@ -14,7 +14,14 @@ type ReportSummaryCardsProps = {
   loading?: boolean;
 };
 
-type SummaryMetricKey = 'salesTotal' | 'ordersCount' | 'averageCheck' | 'openChecks' | 'activeTables';
+type SummaryMetricKey =
+  | 'grossSalesTotal'
+  | 'refundsTotal'
+  | 'salesTotal'
+  | 'ordersCount'
+  | 'averageCheck'
+  | 'openChecks'
+  | 'activeTables';
 type SummaryItem = {
   key: SummaryMetricKey;
   labelKey: string;
@@ -24,9 +31,21 @@ type SummaryItem = {
 
 const SUMMARY_ITEMS: SummaryItem[] = [
   {
+    key: 'grossSalesTotal',
+    labelKey: 'reports.summary.metrics.grossSalesTotal',
+    icon: 'solar:wallet-money-bold-duotone',
+    isMoney: true,
+  },
+  {
+    key: 'refundsTotal',
+    labelKey: 'reports.summary.metrics.refundsTotal',
+    icon: 'solar:undo-left-round-bold-duotone',
+    isMoney: true,
+  },
+  {
     key: 'salesTotal',
     labelKey: 'reports.summary.metrics.salesTotal',
-    icon: 'solar:wallet-money-bold-duotone',
+    icon: 'solar:chart-2-bold-duotone',
     isMoney: true,
   },
   { key: 'ordersCount', labelKey: 'reports.summary.metrics.ordersCount', icon: 'solar:bill-list-bold-duotone' },
@@ -39,6 +58,18 @@ const SUMMARY_ITEMS: SummaryItem[] = [
   { key: 'openChecks', labelKey: 'reports.summary.metrics.openChecks', icon: 'solar:document-text-bold-duotone' },
   { key: 'activeTables', labelKey: 'reports.summary.metrics.activeTables', icon: 'solar:plate-bold-duotone' },
 ] as const;
+
+function getSummaryMetricValue(data: AdminReportSummary | undefined, key: SummaryMetricKey) {
+  if (!data) {
+    return 0;
+  }
+
+  if (key === 'grossSalesTotal' && (data.grossSalesTotal === null || data.grossSalesTotal === undefined)) {
+    return Number(data.salesTotal ?? 0) + Number(data.refundsTotal ?? 0);
+  }
+
+  return Number(data[key] ?? 0);
+}
 
 export function ReportSummaryCards({ data, loading = false }: ReportSummaryCardsProps) {
   const { t } = useTranslate('reports');
@@ -58,8 +89,8 @@ export function ReportSummaryCards({ data, loading = false }: ReportSummaryCards
                 ) : (
                   <Typography variant="h3">
                     {item.isMoney
-                      ? formatMoney(data?.[item.key as keyof AdminReportSummary] ?? 0)
-                      : String(Number(data?.[item.key as keyof AdminReportSummary] ?? 0))}
+                      ? formatMoney(getSummaryMetricValue(data, item.key))
+                      : String(getSummaryMetricValue(data, item.key))}
                   </Typography>
                 )}
               </Stack>

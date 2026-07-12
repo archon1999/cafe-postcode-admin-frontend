@@ -51,6 +51,9 @@
     "myRestaurantGeneral": {
       "title": "Умумий"
     },
+    "setup": {
+      "title": "Ресторанни ишга тайёрлаш"
+    },
     "integrationCreate": {
       "title": "Янги интегратсия"
     },
@@ -61,11 +64,85 @@
       "title": "Интегратсиялар"
     }
   },
+  "setup": {
+    "actions": {
+      "testIntegration": "{{name}} уланишини текшириш",
+      "check": "Текшириш",
+      "addCashDesk": "Касса қўшиш",
+      "addPrepStation": "Станция қўшиш",
+      "apply": "Базавий конфигурацияни сақлаш",
+      "openSection": "Бўлимни очиш",
+      "downloadManifest": "Манифестни юклаш",
+      "copyCommand": "Буйруқни нусхалаш",
+      "downloadInstaller": "Windows учун Local Agentни юклаб олиш"
+    },
+    "readiness": { "progress": "Тайёрлик: {{value}}%", "remaining": "{{count}} та муҳим иш қолган" },
+    "status": { "ready": "Тайёр", "warning": "Эътибор талаб қилади", "blocked": "Бажарилиши шарт" },
+    "quick": { "title": "Тезкор базавий созлаш" },
+    "sections": { "cashDesks": "Кассалар", "prepStations": "Тайёрлаш станциялари" },
+    "cashDesk": { "title": "Касса {{number}}" },
+    "integrations": { "printer": "Принтер" },
+    "defaults": { "cashDesk": "Касса {{number}}", "kitchen": "Ошхона", "prepStation": "Станция {{number}}" },
+    "fields": {
+      "printerNameOrIp": "Принтер номи / IP манзили",
+      "martaAddressHint": "Бўш қолдирилса, MARTA автоматик аниқланади.",
+      "martaAddress": "MARTA манзили"
+    },
+    "steps": {
+      "title": "Тайёрлик қадамлари",
+      "profile": "Ресторан профили",
+      "staff": "Ходимлар ва PIN-код",
+      "service_points": "Кассалар ва хизмат нуқталари",
+      "menu": "Меню тайёрлиги",
+      "integrations": "Қурилмалар ва интеграциялар",
+      "coordinator": "Локал агент",
+      "printing": "Чек шаблонлари"
+    },
+    "issues": {
+      "generic": "Ушбу бўлим созланиши керак.",
+      "restaurant_inactive": "Ресторан фаол эмас.",
+      "missing_legal_name": "Юридик ном киритилмаган.",
+      "missing_tax_number": "СТИР киритилмаган.",
+      "missing_phone": "Телефон рақами киритилмаган.",
+      "missing_address": "Манзил киритилмаган.",
+      "missing_pos_user": "POS учун камида битта ходим яратинг.",
+      "missing_pos_pin": "Камида битта POS ходимига PIN-код белгиланг.",
+      "missing_cash_desk": "Камида битта фаол касса яратинг.",
+      "missing_prep_station": "Камида битта тайёрлаш станцияси яратинг.",
+      "missing_distribution_point": "Хизмат нуқталари яратилмаган.",
+      "empty_menu": "Менюга камида битта фаол маҳсулот қўшинг.",
+      "menu_category_without_prep_station": "Баъзи категорияларга тайёрлаш станцияси бириктирилмаган.",
+      "menu_item_without_category": "Баъзи маҳсулотларга категория бириктирилмаган.",
+      "cash_desk_printer_missing": "Кассага чек принтери бириктирилмаган.",
+      "cash_desk_payment_missing": "Кассага карта тўлови интеграцияси бириктирилмаган.",
+      "cash_desk_fiscal_missing": "Кассага фискал интеграция бириктирилмаган.",
+      "prep_station_printer_missing": "Тайёрлаш станциясига принтер бириктирилмаган.",
+      "local_agent_missing": "Локал агент ўрнатилмаган.",
+      "local_agent_offline": "Локал агент тармоқда кўринмаяпти.",
+      "print_templates_missing": "Барча чек шаблонларини тайёрланг."
+    },
+    "installer": {
+      "title": "Local Agentни ўрнатиш",
+      "description": "Installer ресторанга уланиш, autostart ва агентни ишга туширишни автоматик бажаради.",
+      "hint": "Файлни юклаб олиб очинг ва Ўрнатиш тугмасини босинг. Terminal буйруғи ёки қўлда созлаш керак эмас."
+    },
+    "messages": {
+      "integrationCheckSucceeded": "{{name}} уланиши муваффақиятли текширилди.",
+      "integrationCheckFailed": "{{name}} уланишини текшириб бўлмади.",
+      "saved": "Ресторан конфигурацияси сақланди.",
+      "saveFailed": "Конфигурацияни сақлаб бўлмади.",
+      "commandCopied": "Ўрнатиш буйруғи нусхаланди.",
+      "enrollmentFailed": "Бир марталик ўрнатиш токенини яратиб бўлмади.",
+      "installerDownloaded": "Local Agent installer юкланди.",
+      "installerDownloadFailed": "Local Agent installerni юклаб бўлмади."
+    }
+  },
   "fields": {
     "name": "Номи",
     "address": "Манзил",
     "phone": "Телефон",
     "social": "Social",
+    "vatPercent": "ҚҚС (%)",
     "serviceFeePercent": "Хизмат ҳақи (%)",
     "serviceFeeEnabled": "Хизмат ҳақи ёқилган",
     "markingCheckEnabled": "Маркировка текшируви ёқилган",
@@ -266,6 +343,7 @@
     }
   },
   "actions": {
+    "cancel": "Бекор қилиш",
     "title": "Амаллар",
     "create": "Яратиш",
     "save": "Сақлаш",
@@ -286,6 +364,7 @@
     "removePosAuthBackgroundImage": "Расмни ўчириш"
   },
   "dialogs": {
+    "profileEdit": { "title": "Ресторан профилини таҳрирлаш" },
     "deleteBranch": {
       "title": "Филиални ўчириш",
       "description": "\"{{name}}\" филиалини ўчирмоқчимисиз?"
@@ -313,6 +392,10 @@
     "balanceTopUp": {
       "title": "Балансни тўлдириш"
     }
+  },
+  "messages": {
+    "profileUpdated": "Ресторан профили янгиланди.",
+    "profileUpdateFailed": "Ресторан профилини янгилаб бўлмади."
   },
   "empty": {
     "branches": {

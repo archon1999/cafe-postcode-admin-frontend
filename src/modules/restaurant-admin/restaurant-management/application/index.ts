@@ -13,6 +13,7 @@ export {
   useUpdateMyRestaurantSettingsMutation,
   useUpdatePrepStationMutation,
   useUpdateRestaurantMutation,
+  useApplyRestaurantSetupMutation,
 } from './mutations';
 export {
   useGetCashDesksListQuery,
@@ -29,4 +30,5 @@ export {
   useGetRestaurantByIdQuery,
   useGetRestaurantsListQuery,
   useGetRestaurantsQuery,
+  useRestaurantSetupReadinessQuery,
 } from './queries';

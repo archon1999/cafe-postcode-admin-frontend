@@ -3,6 +3,8 @@ import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
 import type {
   AdminOpenChecksReportQueryParams,
   AdminOpenChecksReportRow,
+  AdminReceiptsReportQueryParams,
+  AdminReceiptsReportRow,
   AdminPaginatedResponse,
   AdminPaymentBreakdownReportQueryParams,
   AdminPaymentBreakdownReportRow,
@@ -51,6 +53,17 @@ export function useGetOpenChecksReportQuery(
   return useQuery({
     queryKey: reportsKeys.openChecks(params),
     queryFn: () => reportsRepository.getOpenChecks(params),
+    ...options,
+  });
+}
+
+export function useGetReceiptsReportQuery(
+  params: AdminReceiptsReportQueryParams,
+  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminReceiptsReportRow>>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: reportsKeys.receipts(params),
+    queryFn: () => reportsRepository.getReceipts(params),
     ...options,
   });
 }

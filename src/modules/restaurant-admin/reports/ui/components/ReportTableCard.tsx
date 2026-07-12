@@ -37,6 +37,7 @@ type ReportTableCardProps<RowModel extends GridValidRowModel> = {
   columnVisibilityModel: GridColumnVisibilityModel;
   onColumnVisibilityModelChange: (model: GridColumnVisibilityModel) => void;
   getRowId?: GridRowIdGetter<RowModel>;
+  autoRowHeight?: boolean;
   toolbar: ReactNode;
   hasActiveFilters: boolean;
   emptyState: EmptyStateMessages;
@@ -55,6 +56,7 @@ export function ReportTableCard<RowModel extends GridValidRowModel>({
   columnVisibilityModel,
   onColumnVisibilityModelChange,
   getRowId,
+  autoRowHeight = false,
   toolbar,
   hasActiveFilters,
   emptyState,
@@ -64,6 +66,8 @@ export function ReportTableCard<RowModel extends GridValidRowModel>({
       <DataGrid
         rows={rows}
         columns={columns}
+        getRowHeight={autoRowHeight ? () => 'auto' : undefined}
+        getEstimatedRowHeight={autoRowHeight ? () => 72 : undefined}
         rowCount={rowCount}
         loading={loading}
         localeText={localeText}

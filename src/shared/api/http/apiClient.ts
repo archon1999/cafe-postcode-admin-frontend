@@ -46,6 +46,8 @@ import type {
   AdminPaymentsQueryParams,
   AdminReceipt,
   AdminReceiptsQueryParams,
+  AdminReceiptsReportQueryParams,
+  AdminReceiptsReportRow,
   AdminReportExportFile,
   AdminReportSummary,
   AdminSalesReportQueryParams,
@@ -126,6 +128,7 @@ function mapReportParams(params: {
   page?: number;
   pageSize?: number;
   paymentMethod?: string;
+  receiptKind?: string;
   status?: string;
   hallId?: string;
   categoryId?: string;
@@ -141,6 +144,7 @@ function mapReportParams(params: {
     page: params.page,
     pageSize: params.pageSize,
     paymentMethod: params.paymentMethod,
+    receiptKind: params.receiptKind,
     status: params.status,
     hallId: params.hallId,
     categoryId: params.categoryId,
@@ -564,14 +568,17 @@ export const apiClient = {
       .then((response) => response.data);
   },
 
-  checkLocalAgentPrinter(payload: {
-    connectionType?: string;
-    printerName?: string;
-    host?: string;
-    port?: number;
-  }) {
+  checkLocalAgentPrinter(payload: { connectionType?: string; printerName?: string; host?: string; port?: number }) {
     return instance
       .post<Record<string, unknown>>('/api/v1/local-agent/printer/check/', payload)
+      .then((response) => response.data);
+  },
+
+  checkAdminMartaConnection(endpointUrl?: string) {
+    return instance
+      .post<{ ok: boolean; endpointUrl?: string }>('/api/v1/admin/integrations/marta/check/', {
+        endpointUrl: endpointUrl || '',
+      })
       .then((response) => response.data);
   },
 
@@ -741,7 +748,7 @@ export const apiClient = {
     return instance.put<AdminRestaurant>(`/api/v1/admin/restaurants/${id}/`, payload).then((response) => response.data);
   },
 
-  updateAdminRestaurantSettings(payload: AdminRestaurantPayload | FormData) {
+  updateAdminRestaurantSettings(payload: Partial<AdminRestaurantPayload> | FormData) {
     return instance
       .put<AdminRestaurant>('/api/v1/admin/restaurants/settings/', payload)
       .then((response) => response.data);
@@ -1057,6 +1064,26 @@ export const apiClient = {
       .then<AdminReportExportFile>((response) => ({
         blob: response.data,
         filename: extractFilename(response.headers['content-disposition'], 'open-checks-report.xlsx'),
+      }));
+  },
+
+  getAdminReceiptsReport(params: AdminReceiptsReportQueryParams) {
+    return instance
+      .get<AdminPaginatedResponse<AdminReceiptsReportRow>>('/api/v1/admin/reporting/receipts/', {
+        params: mapReportParams(params),
+      })
+      .then((response) => response.data);
+  },
+
+  exportAdminReceiptsReport(params: AdminReceiptsReportQueryParams) {
+    return instance
+      .get<Blob>('/api/v1/admin/reporting/receipts/export/', {
+        params: mapReportParams(params),
+        responseType: 'blob',
+      })
+      .then<AdminReportExportFile>((response) => ({
+        blob: response.data,
+        filename: extractFilename(response.headers['content-disposition'], 'receipts-report.xlsx'),
       }));
   },
 

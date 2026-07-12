@@ -7,7 +7,7 @@
     "orderItemNotes": { "title": "Заметки к товарам" },
     "payments": { "title": "Платежи" },
     "paymentDetail": { "title": "Платёж #{{orderNumber}}" },
-    "receipts": { "title": "Чеки" },
+    "receipts": { "title": "Фискальные чеки" },
     "receiptDetail": { "title": "Чек #{{orderNumber}}" }
   },
   "sections": {
@@ -41,6 +41,7 @@
     "hall": "Зал",
     "item": "Товар",
     "itemsCount": "Количество товаров",
+    "itemsAndTotal": "Товары и итоговая сумма",
     "kind": "Тип",
     "lineTotal": "Итого",
     "method": "Способ",

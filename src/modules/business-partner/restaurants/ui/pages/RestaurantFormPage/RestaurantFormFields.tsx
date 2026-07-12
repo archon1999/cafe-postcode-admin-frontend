@@ -6,7 +6,7 @@ import { useFormContext } from 'react-hook-form';
 
 import { RHFPhoneInput, RHFSwitch, RHFTextField, RHFUpload } from 'shared/ui/HookForm';
 
-import type { Values } from './RestaurantFormPage';
+import type { RestaurantFormValues } from './restaurant-form';
 
 type TranslateFn = (key: string, options?: Record<string, unknown>) => string;
 
@@ -16,6 +16,8 @@ type RestaurantFormFieldsProps = {
   isSubmitting: boolean;
   onLookup: () => void | Promise<void>;
   t: TranslateFn;
+  disableLegalIdentity?: boolean;
+  hideStatus?: boolean;
 };
 
 export const RestaurantFormFields = ({
@@ -24,8 +26,10 @@ export const RestaurantFormFields = ({
   isSubmitting,
   onLookup,
   t,
+  disableLegalIdentity = false,
+  hideStatus = false,
 }: RestaurantFormFieldsProps) => {
-  const { setValue, watch } = useFormContext<Values>();
+  const { setValue, watch } = useFormContext<RestaurantFormValues>();
   const backgroundImage = watch('posAuthBackgroundImage');
 
   const clearBackgroundImage = () => {
@@ -36,13 +40,21 @@ export const RestaurantFormFields = ({
   return (
     <>
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: 'repeat(2, minmax(0, 1fr))' }, gap: 3 }}>
-        <RHFTextField<Values> name="name" label={t('fields.name')} />
-        <RHFTextField<Values> name="legalName" label={t('fields.legalName')} />
+        <RHFTextField<RestaurantFormValues> name="name" label={t('fields.name')} />
+        <RHFTextField<RestaurantFormValues>
+          name="legalName"
+          label={t('fields.legalName')}
+          disabled={disableLegalIdentity}
+        />
         {isEditMode ? (
-          <RHFTextField<Values> name="taxNumber" label={t('fields.taxNumber')} />
+          <RHFTextField<RestaurantFormValues>
+            name="taxNumber"
+            label={t('fields.taxNumber')}
+            disabled={disableLegalIdentity}
+          />
         ) : (
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ alignItems: { sm: 'flex-start' } }}>
-            <RHFTextField<Values> name="taxNumber" label={t('fields.taxNumber')} />
+            <RHFTextField<RestaurantFormValues> name="taxNumber" label={t('fields.taxNumber')} />
             <Button
               type="button"
               variant="outlined"
@@ -54,32 +66,33 @@ export const RestaurantFormFields = ({
             </Button>
           </Stack>
         )}
-        <RHFPhoneInput<Values>
+        <RHFPhoneInput<RestaurantFormValues>
           name="phone"
           label={t('fields.phone')}
           defaultCountry="UZ"
           placeholder={t('fields.phonePlaceholder')}
         />
-        <RHFTextField<Values> name="social" label={t('fields.social')} placeholder="Instagram: new york" />
-        <RHFTextField<Values>
+        <RHFTextField<RestaurantFormValues> name="social" label={t('fields.social')} />
+        <RHFTextField<RestaurantFormValues>
           name="address"
           label={t('fields.address')}
           multiline
           rows={3}
           sx={{ gridColumn: { lg: '1 / -1' } }}
         />
-        <RHFSwitch<Values> name="serviceFeeEnabled" label={t('fields.serviceFeeEnabled')} />
-        <RHFTextField<Values> name="serviceFeePercent" label={t('fields.serviceFeePercent')} type="number" />
-        <RHFSwitch<Values> name="vatEnabled" label={t('fields.vatEnabled')} />
-        <RHFTextField<Values> name="vatPercent" label="QQS / NDS (%)" type="number" />
-        <RHFSwitch<Values> name="markingCheckEnabled" label={t('fields.markingCheckEnabled')} />
+        <RHFSwitch<RestaurantFormValues> name="serviceFeeEnabled" label={t('fields.serviceFeeEnabled')} />
+        <RHFTextField<RestaurantFormValues>
+          name="serviceFeePercent"
+          label={t('fields.serviceFeePercent')}
+          type="number"
+        />
+        <RHFSwitch<RestaurantFormValues> name="vatEnabled" label={t('fields.vatEnabled')} />
+        <RHFTextField<RestaurantFormValues> name="vatPercent" label={t('fields.vatPercent')} type="number" />
+        <RHFSwitch<RestaurantFormValues> name="markingCheckEnabled" label={t('fields.markingCheckEnabled')} />
       </Box>
 
-      <Stack spacing={1.5}>
+      <Stack spacing={1.5} sx={{ mt: 1 }}>
         <Typography variant="subtitle1">{t('fields.posAuthBackgroundImage')}</Typography>
-        <Typography variant="body2" color="text.secondary">
-          {t('labels.posAuthBackgroundImageHint')}
-        </Typography>
         <RHFUpload name="posAuthBackgroundImage" disabled={isSubmitting} onDelete={clearBackgroundImage} />
         {backgroundImage ? (
           <Button variant="outlined" color="inherit" onClick={clearBackgroundImage} disabled={isSubmitting}>
@@ -88,7 +101,9 @@ export const RestaurantFormFields = ({
         ) : null}
       </Stack>
 
-      {isEditMode ? <RHFSwitch<Values> name="isActive" label={t('fields.status')} /> : null}
+      {isEditMode && !hideStatus ? (
+        <RHFSwitch<RestaurantFormValues> name="isActive" label={t('fields.status')} />
+      ) : null}
     </>
   );
 };

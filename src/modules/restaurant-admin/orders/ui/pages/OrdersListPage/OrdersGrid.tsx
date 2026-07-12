@@ -1,5 +1,7 @@
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import type {
   GridColDef,
   GridColumnVisibilityModel,
@@ -61,8 +63,8 @@ export const OrdersGrid = () => {
         {
           field: 'orderNumber',
           headerName: t('fields.orderNumber'),
-          minWidth: 120,
-          flex: 0.4,
+          minWidth: 105,
+          flex: 0.35,
           valueGetter: (_v, row) => formatOrderNumberCellValue(row.orderNumber, row.displayName),
           renderCell: ({ row }) => <OrderNumberCell orderNumber={row.orderNumber} displayName={row.displayName} />,
         },
@@ -71,8 +73,8 @@ export const OrdersGrid = () => {
       {
         field: 'status',
         headerName: t('fields.status'),
-        minWidth: 140,
-        flex: 0.5,
+        minWidth: 120,
+        flex: 0.45,
         renderCell: ({ row }) => (
           <Chip
             size="small"
@@ -88,20 +90,31 @@ export const OrdersGrid = () => {
         minWidth: 140,
         flex: 0.5,
         valueGetter: (_v, row) => t(getOrderChannelTranslationKey(row.channel)),
+        renderCell: ({ row }) => (
+          <Chip size="small" label={t(getOrderChannelTranslationKey(row.channel))} variant="soft" />
+        ),
       },
       {
-        field: 'hallName',
-        headerName: t('fields.hall'),
-        minWidth: 160,
-        flex: 0.6,
-        valueGetter: (_v, row) => formatHallDisplayName(row.hallName, undefined, tCommon),
+        field: 'createdAt',
+        headerName: t('fields.createdAt'),
+        minWidth: 170,
+        flex: 0.7,
+        valueGetter: (_v, row) => formatDateTime(row.createdAt),
       },
       {
-        field: 'tableName',
-        headerName: t('fields.table'),
-        minWidth: 140,
-        flex: 0.5,
-        valueGetter: (_v, row) => row.tableName || '-',
+        field: 'itemsAndTotal',
+        headerName: t('fields.total'),
+        minWidth: 180,
+        flex: 0.65,
+        valueGetter: (_v, row) => `${row.itemsCount} • ${formatMoney(row.total)}`,
+        renderCell: ({ row }) => (
+          <Stack spacing={0.25}>
+            <Typography variant="body2">{formatMoney(row.total)}</Typography>
+            <Typography variant="caption" color="text.secondary">
+              {t('fields.itemsCount')}: {row.itemsCount}
+            </Typography>
+          </Stack>
+        ),
       },
       {
         field: 'openedByName',
@@ -117,20 +130,19 @@ export const OrdersGrid = () => {
         flex: 0.8,
         valueGetter: (_v, row) => row.cashierName || '-',
       },
-      { field: 'itemsCount', headerName: t('fields.itemsCount'), minWidth: 120, flex: 0.4 },
       {
-        field: 'total',
-        headerName: t('fields.total'),
+        field: 'hallName',
+        headerName: t('fields.hall'),
         minWidth: 160,
-        flex: 0.5,
-        valueGetter: (_v, row) => formatMoney(row.total),
+        flex: 0.6,
+        valueGetter: (_v, row) => formatHallDisplayName(row.hallName, undefined, tCommon),
       },
       {
-        field: 'createdAt',
-        headerName: t('fields.createdAt'),
-        minWidth: 170,
-        flex: 0.7,
-        valueGetter: (_v, row) => formatDateTime(row.createdAt),
+        field: 'tableName',
+        headerName: t('fields.table'),
+        minWidth: 140,
+        flex: 0.5,
+        valueGetter: (_v, row) => row.tableName || '-',
       },
       {
         field: 'closedAt',

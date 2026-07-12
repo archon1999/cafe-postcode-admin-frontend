@@ -2,6 +2,7 @@ import type { AdminReportKey } from 'shared/api/admin-types';
 
 export type ReportFilterKey =
   | 'paymentMethod'
+  | 'receiptKind'
   | 'status'
   | 'hall'
   | 'category'
@@ -47,13 +48,13 @@ export const REPORTS_REGISTRY: ReportDefinition[] = [
     defaultSort: { field: 'method', sort: 'asc' },
   },
   {
-    key: 'openChecks',
+    key: 'receipts',
     kind: 'table',
-    titleKey: 'reports.openChecks.title',
-    descriptionKey: 'reports.openChecks.description',
+    titleKey: 'reports.receipts.title',
+    descriptionKey: 'reports.receipts.description',
     icon: 'solar:bill-list-bold-duotone',
-    exportPath: '/api/v1/admin/reporting/open-checks/export/',
-    availableFilters: ['status', 'hall'],
+    exportPath: '/api/v1/admin/reporting/receipts/export/',
+    availableFilters: ['receiptKind', 'status'],
     defaultSort: { field: 'createdAt', sort: 'desc' },
   },
   {
@@ -75,16 +76,6 @@ export const REPORTS_REGISTRY: ReportDefinition[] = [
     exportPath: '/api/v1/admin/reporting/top-staff/export/',
     availableFilters: [],
     defaultSort: { field: 'totalSales', sort: 'desc' },
-  },
-  {
-    key: 'paymentBreakdown',
-    kind: 'table',
-    titleKey: 'reports.paymentBreakdown.title',
-    descriptionKey: 'reports.paymentBreakdown.description',
-    icon: 'solar:card-bold-duotone',
-    exportPath: '/api/v1/admin/reporting/payment-breakdown/export/',
-    availableFilters: ['paymentMethod'],
-    defaultSort: { field: 'total', sort: 'desc' },
   },
   {
     key: 'shifts',

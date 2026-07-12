@@ -16,7 +16,11 @@ import type { CatalogCategory, CatalogCategoryPayload, CatalogImageSource } from
 import { FormActions } from 'shared/ui/FormActions';
 import { Form, RHFSelect, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
 
-import { useCreateCatalogCategoryMutation, useGetPrepStationsQuery, useUpdateCatalogCategoryMutation } from '../../application';
+import {
+  useCreateCatalogCategoryMutation,
+  useGetPrepStationsQuery,
+  useUpdateCatalogCategoryMutation,
+} from '../../application';
 import { getMxikPrimaryPictureUrl } from '../../data-access';
 
 import { CatalogImageEditor } from './CatalogImageEditor';

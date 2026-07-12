@@ -13,7 +13,7 @@
   "orderItems": "Buyurtmadagi mahsulotlar",
   "orderItemNotes": "Mahsulot izohlari",
   "payments": "To'lovlar",
-  "receipts": "Cheklar",
+  "receipts": "Fiscal Cheklar",
   "kitchen": "Oshxona",
   "kitchenTickets": "Oshxona buyurtmalari",
   "catalog": "Menyu",
@@ -37,5 +37,8 @@
   "cashDesks": "Kassalar",
   "distributionPoints": "Tarqatish nuqtalari",
   "prepStations": "Tayyorlash stansiyalari",
-  "restaurants": "Mijozlar"
+  "restaurants": "Mijozlar",
+  "printTemplates": "Chek shablonlari",
+  "setup": "Ishga tayyorlash",
+  "restaurantSettings": "Umumiy va sozlash"
 }

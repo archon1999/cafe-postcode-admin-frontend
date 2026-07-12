@@ -9,6 +9,7 @@ import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath } from 'app/routes';
 import { useParams, useRedirectOnNotFound } from 'shared/hooks/router';
+import { BackToListButton } from 'shared/ui/BackToListButton';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { Label } from 'shared/ui/Label';
 import { LabelRowWithIcon } from 'shared/ui/LabelRowWithIcon/LabelRowWithIcon';
@@ -30,10 +31,7 @@ const OrderItemDetailPage = () => {
 
   return (
     <Content>
-      <CustomBreadcrumbs
-        heading={item.catalogItemName}
-        links={[{ name: t('pages.orderItems.title'), href: RoutePath.orderItemList }, { name: item.catalogItemName }]}
-      />
+      <CustomBreadcrumbs heading={item.catalogItemName} action={<BackToListButton href={RoutePath.orderItemList} />} />
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, md: 8 }}>
           <Card sx={{ p: 3 }}>

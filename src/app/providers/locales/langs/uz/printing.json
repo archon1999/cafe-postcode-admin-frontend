@@ -1,0 +1,142 @@
+{
+  "title": "Chek shablonlari",
+  "description": "Oshxona, oddiy to'lov va fiskal chek ko'rinishini boshqaring.",
+  "kinds": {
+    "kitchen_ticket": "Oshxona cheki",
+    "payment_receipt_plain": "Oddiy to'lov cheki",
+    "payment_receipt_fiscal": "Fiskal chek"
+  },
+  "sections": {
+    "presets": "Tayyor shablonlar",
+    "blocks": "Bloklar",
+    "settings": "Blok sozlamalari",
+    "variables": "O'zgaruvchilar",
+    "preview": "Namuna"
+  },
+  "fields": {
+    "preset": "Shablon to'plami",
+    "paperWidth": "Qog'oz kengligi",
+    "paperWidthValue": "{{value}}",
+    "text": "Matn",
+    "align": "Tekislash",
+    "bold": "Qalin",
+    "label": "Nomi",
+    "value": "Qiymati",
+    "feedLines": "Bo'sh qatorlar",
+    "publishedRevision": "Aktiv versiya: v{{revision}}",
+    "selectVariable": "O'zgaruvchini tanlang"
+  },
+  "align": { "left": "Chap", "center": "Markaz", "right": "O'ng" },
+  "fontSizes": { "normal": "Oddiy shrift", "large": "Katta shrift" },
+  "variableTitles": {
+    "restaurant": {
+      "name": "Restoran nomi",
+      "legalName": "Yuridik nomi",
+      "address": "Restoran manzili",
+      "phone": "Restoran telefoni",
+      "social": "Ijtimoiy tarmoq",
+      "taxNumber": "STIR"
+    },
+    "order": {
+      "displayNumber": "Buyurtma raqami",
+      "channel": "Buyurtma turi kodi",
+      "channelLabel": "Buyurtma turi",
+      "table": "Stol",
+      "hall": "Zal",
+      "guestCount": "Mehmonlar soni",
+      "openedAt": "Buyurtma vaqti",
+      "waiter": "Ofitsiant",
+      "cashier": "Kassir",
+      "note": "Buyurtma izohi",
+      "deliveryPhone": "Yetkazib berish telefoni",
+      "deliveryAddress": "Yetkazib berish manzili"
+    },
+    "item": {
+      "name": "Mahsulot nomi",
+      "quantity": "Mahsulot soni",
+      "unitPrice": "Birlik narxi",
+      "lineTotal": "Mahsulot summasi",
+      "vat": "Mahsulot QQS summasi",
+      "vatPercent": "Mahsulot QQS foizi",
+      "note": "Mahsulot izohi"
+    },
+    "kitchen": {
+      "ticketNumber": "Oshxona cheki raqami",
+      "prepStation": "Tayyorlash stansiyasi",
+      "createdAt": "Oshxona cheki vaqti"
+    },
+    "payment": {
+      "method": "To'lov usuli",
+      "amount": "To'lov summasi",
+      "cash": "Naqd pul",
+      "card": "Karta orqali",
+      "change": "Qaytim",
+      "paidAt": "To'langan vaqt",
+      "operationType": "To'lov operatsiyasi"
+    },
+    "totals": {
+      "subtotal": "Oraliq jami",
+      "serviceFee": "Xizmat haqi",
+      "vat": "Jami QQS summasi",
+      "vatPercent": "QQS foizi",
+      "serviceFeePercent": "Xizmat haqi foizi",
+      "total": "Yakuniy jami"
+    },
+    "fiscal": {
+      "receiptNumber": "Fiskal chek raqami",
+      "terminalId": "Terminal ID",
+      "factoryId": "Fiskal modul raqami",
+      "fiscalSign": "Fiskal belgi",
+      "qrUrl": "Fiskal QR manzili",
+      "registeredAt": "Fiskallashtirilgan vaqt"
+    },
+    "system": {
+      "copyNumber": "Nusxa raqami",
+      "isReprint": "Qayta chop etilgan"
+    }
+  },
+  "presetNames": {
+    "legacy_80": "Klassik",
+    "standard_80": "Ixcham",
+    "detailed_80": "Batafsil",
+    "kitchen_large_80": "Oshxona uchun yirik"
+  },
+  "presetDescriptions": {
+    "legacy_80": "Avvalgi chek ko'rinishiga yaqin to'liq shablon.",
+    "standard_80": "Kam joy egallaydigan kundalik chek shabloni.",
+    "detailed_80": "Restoran va buyurtma ma'lumotlari kengroq ko'rsatiladi.",
+    "kitchen_large_80": "Oshxona uchun mahsulot nomlari katta shriftda chiqadi."
+  },
+  "actions": {
+    "loadPreset": "Presetni yuklash",
+    "addText": "Matn",
+    "addDivider": "Chiziq",
+    "addSpacer": "Bo'sh joy",
+    "moveUp": "Yuqoriga",
+    "moveDown": "Pastga",
+    "delete": "O'chirish",
+    "saveAndPublish": "Saqlash va aktivlashtirish",
+    "saving": "Saqlanmoqda..."
+  },
+  "blockTypes": {
+    "text": "Matn",
+    "two_column_row": "Ikki ustun",
+    "divider": "Ajratuvchi",
+    "spacer": "Bo'sh joy",
+    "items_table": "Mahsulotlar",
+    "totals": "Jami",
+    "metadata": "Ma'lumotlar",
+    "qr": "QR kod",
+    "logo": "Logotip",
+    "feed": "Qog'oz surish",
+    "cut": "Kesish"
+  },
+  "preview": { "qr": "QR", "empty": "Qiymat yo'q" },
+  "messages": {
+    "variableHint": "O'zgaruvchini bosing — u nusxalanadi. So'ng blok qiymatiga joylashtiring.",
+    "presetLoaded": "Preset tahrirlash uchun yuklandi.",
+    "published": "Shablonning yangi versiyasi aktivlashtirildi.",
+    "publishFailed": "Shablonni saqlab bo'lmadi.",
+    "selectEditableBlock": "Tahrirlash uchun blokni tanlang."
+  }
+}

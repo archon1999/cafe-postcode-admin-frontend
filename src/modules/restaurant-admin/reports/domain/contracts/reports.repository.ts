@@ -1,6 +1,8 @@
 import type {
   AdminOpenChecksReportQueryParams,
   AdminOpenChecksReportRow,
+  AdminReceiptsReportQueryParams,
+  AdminReceiptsReportRow,
   AdminPaginatedResponse,
   AdminPaymentBreakdownReportQueryParams,
   AdminPaymentBreakdownReportRow,
@@ -24,6 +26,8 @@ export interface ReportsRepository {
   exportSales(params: AdminSalesReportQueryParams): Promise<AdminReportExportFile>;
   getOpenChecks(params: AdminOpenChecksReportQueryParams): Promise<AdminPaginatedResponse<AdminOpenChecksReportRow>>;
   exportOpenChecks(params: AdminOpenChecksReportQueryParams): Promise<AdminReportExportFile>;
+  getReceipts(params: AdminReceiptsReportQueryParams): Promise<AdminPaginatedResponse<AdminReceiptsReportRow>>;
+  exportReceipts(params: AdminReceiptsReportQueryParams): Promise<AdminReportExportFile>;
   getTopItems(params: AdminTopItemsReportQueryParams): Promise<AdminPaginatedResponse<AdminTopItemsReportRow>>;
   exportTopItems(params: AdminTopItemsReportQueryParams): Promise<AdminReportExportFile>;
   getTopStaff(params: AdminTopStaffReportQueryParams): Promise<AdminPaginatedResponse<AdminTopStaffReportRow>>;

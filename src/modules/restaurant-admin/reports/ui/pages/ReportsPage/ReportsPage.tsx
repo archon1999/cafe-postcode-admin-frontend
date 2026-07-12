@@ -96,8 +96,8 @@ const ReportsPage = () => {
   const [dateRangeState, setDateRangeState] = useState<ReportsDateRangeState>(getInitialReportsDateRangeState);
   const [search, setSearch] = useState('');
   const [paymentMethods, setPaymentMethods] = useState<string[]>([]);
+  const [receiptKinds, setReceiptKinds] = useState<string[]>([]);
   const [statuses, setStatuses] = useState<string[]>([]);
-  const [hallIds, setHallIds] = useState<string[]>([]);
   const [categoryIds, setCategoryIds] = useState<string[]>([]);
   const [cashDeskIds, setCashDeskIds] = useState<string[]>([]);
   const [cashierIds, setCashierIds] = useState<string[]>([]);
@@ -132,8 +132,8 @@ const ReportsPage = () => {
   useEffect(() => {
     setSearch('');
     setPaymentMethods([]);
+    setReceiptKinds([]);
     setStatuses([]);
-    setHallIds([]);
     setCategoryIds([]);
     setCashDeskIds([]);
     setCashierIds([]);
@@ -222,8 +222,8 @@ const ReportsPage = () => {
                 activePreset={activePreset}
                 search={search}
                 paymentMethods={paymentMethods}
+                receiptKinds={receiptKinds}
                 statuses={statuses}
-                hallIds={hallIds}
                 categoryIds={categoryIds}
                 cashDeskIds={cashDeskIds}
                 cashierIds={cashierIds}
@@ -236,8 +236,8 @@ const ReportsPage = () => {
                 onSearchChange={handleSearchChange}
                 onClearSearch={handleClearSearch}
                 onPaymentMethodsChange={setPaymentMethods}
+                onReceiptKindsChange={setReceiptKinds}
                 onStatusesChange={setStatuses}
-                onHallIdsChange={setHallIds}
                 onCategoryIdsChange={setCategoryIds}
                 onCashDeskIdsChange={setCashDeskIds}
                 onCashierIdsChange={setCashierIds}

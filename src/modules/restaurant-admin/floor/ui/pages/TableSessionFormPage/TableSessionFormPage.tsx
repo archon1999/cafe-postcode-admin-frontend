@@ -9,6 +9,7 @@ import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath } from 'app/routes';
 import { useParams, useRedirectOnNotFound, useRouter } from 'shared/hooks/router';
+import { BackToListButton } from 'shared/ui/BackToListButton';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { FormActions } from 'shared/ui/FormActions';
 import { Form } from 'shared/ui/HookForm';
@@ -99,10 +100,7 @@ const TableSessionFormPage = () => {
     <Content>
       <CustomBreadcrumbs
         heading={isEditMode ? t('pages.tableSessionEdit.title') : t('pages.tableSessionCreate.title')}
-        links={[
-          { name: t('pages.tableSessions.title'), href: RoutePath.floorTableSessionList },
-          { name: isEditMode ? t('pages.tableSessionEdit.title') : t('pages.tableSessionCreate.title') },
-        ]}
+        action={isEditMode ? <BackToListButton href={RoutePath.floorTableSessionList} /> : undefined}
       />
       <Card sx={{ p: 3 }}>
         <Form methods={methods} onSubmit={onSubmit}>

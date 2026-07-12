@@ -9,6 +9,8 @@ import type {
 import { apiClient } from 'shared/api/http/apiClient';
 
 import { organizationsRepository } from '../data-access';
+import { restaurantSetupRepository } from '../data-access/repository/setup.repository';
+import type { RestaurantSetupApplyPayload } from '../domain';
 
 import { organizationsKeys } from './keys';
 
@@ -163,6 +165,21 @@ export function useDeleteRestaurantMutation() {
     mutationFn: (id: string) => organizationsRepository.deleteRestaurant(id),
     onSuccess: async () => {
       await invalidateQueryKeys(queryClient, [organizationsKeys.restaurants()]);
+    },
+  });
+}
+
+export function useApplyRestaurantSetupMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: RestaurantSetupApplyPayload) => restaurantSetupRepository.apply(payload),
+    onSuccess: async () => {
+      await invalidateQueryKeys(queryClient, [
+        organizationsKeys.setupReadiness(),
+        organizationsKeys.cashDesks(),
+        organizationsKeys.prepStations(),
+        organizationsKeys.integrationConfigs(),
+      ]);
     },
   });
 }

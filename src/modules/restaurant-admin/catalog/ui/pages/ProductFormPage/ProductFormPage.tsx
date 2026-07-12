@@ -2,6 +2,7 @@ import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath } from 'app/routes';
 import { useParams, useRedirectOnNotFound, useRouter } from 'shared/hooks/router';
+import { BackToListButton } from 'shared/ui/BackToListButton';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 
@@ -25,19 +26,8 @@ const ProductFormPage = () => {
   return (
     <Content>
       <CustomBreadcrumbs
-        heading={
-          isEditMode
-            ? t('pages.itemEdit.title')
-            : t('pages.itemCreate.title')
-        }
-        links={[
-          { name: t('pages.items.title'), href: RoutePath.catalogItemList },
-          {
-            name: isEditMode
-              ? t('pages.itemEdit.title')
-              : t('pages.itemCreate.title'),
-          },
-        ]}
+        heading={isEditMode ? t('pages.itemEdit.title') : t('pages.itemCreate.title')}
+        action={isEditMode ? <BackToListButton href={RoutePath.catalogItemList} /> : undefined}
       />
 
       <CatalogItemFormCard

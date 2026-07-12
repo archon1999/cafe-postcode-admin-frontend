@@ -23,6 +23,10 @@
     "summary": "KPI",
     "table": "Jadval"
   },
+  "errors": {
+    "loadFailed": "Hisobot ma'lumotlarini yuklab bo'lmadi. Qayta urinib ko'ring.",
+    "exportFailed": "Excel hisobotini yuklab bo'lmadi. Qayta urinib ko'ring."
+  },
   "filters": {
     "all": "Barchasi",
     "periodType": "Davr",
@@ -36,6 +40,7 @@
     "selectEndDate": "Tugash sanasini tanlang",
     "customRange": "Ixtiyoriy oraliq",
     "paymentMethod": "To'lov usuli",
+    "receiptKind": "Chek turi",
     "status": "Holat",
     "hall": "Zal",
     "category": "Kategoriya",
@@ -47,7 +52,7 @@
     "clearSearch": "Qidiruvni tozalash",
     "searchPlaceholder": "Jadval bo'yicha qidiring",
     "searchSalesPlaceholder": "To'lov usuli bo'yicha qidiring",
-    "searchOpenChecksPlaceholder": "Buyurtma, zal yoki stol bo'yicha qidiring",
+    "searchReceiptsPlaceholder": "Buyurtma, kassir yoki kassa bo'yicha qidiring",
     "searchTopItemsPlaceholder": "Mahsulot yoki kategoriya bo'yicha qidiring",
     "searchTopStaffPlaceholder": "Xodim bo'yicha qidiring",
     "searchPaymentBreakdownPlaceholder": "To'lov usuli bo'yicha qidiring",
@@ -76,6 +81,15 @@
     "qr": "QR",
     "mixed": "Aralash"
   },
+  "receiptKinds": {
+    "precheck": "Prechek",
+    "receipt": "Chek"
+  },
+  "receiptStatuses": {
+    "created": "Yaratilgan",
+    "sent": "Yuborilgan",
+    "failed": "Xatolik"
+  },
   "statuses": {
     "open": "Ochiq",
     "submitted": "Yuborilgan",
@@ -88,7 +102,9 @@
       "title": "Umumiy ma'lumotlar",
       "description": "Tanlangan davr bo'yicha asosiy ko'rsatkichlar.",
       "metrics": {
-        "salesTotal": "Savdo summasi",
+        "grossSalesTotal": "Jami tushum",
+        "refundsTotal": "Qaytarishlar",
+        "salesTotal": "Sof tushum",
         "ordersCount": "Buyurtmalar soni",
         "averageCheck": "O'rtacha chek",
         "openChecks": "Ochiq cheklar",
@@ -96,29 +112,31 @@
       }
     },
     "sales": {
-      "title": "Sotuvlar",
-      "description": "To'lov usullari kesimida tranzaksiyalar soni va tushum.",
+      "title": "To'lovlar",
+      "description": "Muvaffaqiyatli to'lovlar soni va jami tushum.",
       "fields": {
         "method": "Usul",
         "count": "Soni",
         "total": "Jami"
       }
     },
-    "openChecks": {
-      "title": "Ochiq cheklar",
-      "description": "Hozir ochiq turgan buyurtmalar va ularning joylashuvi.",
+    "receipts": {
+      "title": "Cheklar",
+      "description": "Tanlangan davrda chiqarilgan precheklar va cheklar.",
       "fields": {
         "orderNumber": "Buyurtma",
+        "kind": "Turi",
         "status": "Holat",
-        "hallName": "Zal",
-        "tableName": "Stol",
-        "total": "Jami",
-        "createdAt": "Yaratilgan vaqti"
+        "amount": "Summa",
+        "paymentMethod": "To'lov usuli",
+        "cashierName": "Kassir",
+        "cashDeskName": "Kassa",
+        "createdAt": "Chiqarilgan vaqt"
       }
     },
     "topItems": {
-      "title": "Eng ko'p sotilgan mahsulotlar",
-      "description": "Eng ko'p sotilgan mahsulotlar va ularning tushumi.",
+      "title": "Mahsulotlar",
+      "description": "Yopilgan buyurtmalardagi eng ko'p sotilgan mahsulotlar va ularning tushumi.",
       "fields": {
         "catalogItemName": "Mahsulot",
         "categoryName": "Kategoriya",
@@ -127,8 +145,8 @@
       }
     },
     "topStaff": {
-      "title": "Eng faol xodimlar",
-      "description": "Xodimlar kesimida buyurtma soni va savdo hajmi.",
+      "title": "Xodimlar",
+      "description": "Yopilgan buyurtmalarga mahsulot kiritgan xodimlar faolligi.",
       "fields": {
         "staffName": "Xodim",
         "orderCount": "Buyurtmalar",
@@ -149,21 +167,21 @@
       "title": "Smenalar",
       "description": "Kassir smenalari, tushumlar va farqlar bo'yicha hisobot.",
       "fields": {
-        "cashierName": "Kassir",
-        "cashDeskName": "Kassa",
-        "status": "Holat",
+        "cashDeskAndCashier": "Kassa",
+        "isClosed": "Yopilgan",
         "openedAt": "Ochilgan vaqt",
         "closedAt": "Yopilgan vaqt",
+        "cashBalance": "Naqd qoldig'i",
         "openingCashAmount": "Boshlang'ich naqd",
         "expectedClosingCashAmount": "Kutilgan naqd",
         "actualClosingCashAmount": "Amaldagi naqd",
         "cashDifferenceAmount": "Farq",
-        "cashTotal": "Naqd tushum",
-        "cardTotal": "Karta tushum",
-        "qrTotal": "QR tushum",
+        "paymentTotals": "Tushumlar",
+        "cashTotal": "Naqd",
+        "cardTotal": "Karta",
         "refundTotal": "Qaytarilgan summa",
-        "receiptCount": "Cheklar soni",
-        "reprintCount": "Qayta chiqarishlar"
+        "precheckCount": "Precheklar soni",
+        "receiptCount": "Cheklar soni"
       }
     }
   },
@@ -178,14 +196,14 @@
         "description": "Qidiruv yoki filter bo'yicha mos natija topilmadi."
       }
     },
-    "openChecks": {
+    "receipts": {
       "noData": {
-        "title": "Ochiq cheklar yo'q",
-        "description": "Tanlangan davrda ochiq buyurtmalar mavjud emas."
+        "title": "Cheklar yo'q",
+        "description": "Tanlangan davrda prechek yoki chek chiqarilmagan."
       },
       "noResults": {
-        "title": "Ochiq cheklar topilmadi",
-        "description": "Tanlangan filterlar bo'yicha mos buyurtma topilmadi."
+        "title": "Cheklar topilmadi",
+        "description": "Qidiruv yoki filter bo'yicha mos chek topilmadi."
       }
     },
     "topItems": {

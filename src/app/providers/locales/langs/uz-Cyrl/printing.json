@@ -1,0 +1,74 @@
+{
+  "title": "Чек шаблонлари",
+  "description": "Ошхона, оддий тўлов ва фискал чек кўринишини бошқаринг.",
+  "kinds": {
+    "kitchen_ticket": "Ошхона чеки",
+    "payment_receipt_plain": "Оддий тўлов чеки",
+    "payment_receipt_fiscal": "Фискал чек"
+  },
+  "sections": {
+    "presets": "Тайёр шаблонлар",
+    "blocks": "Блоклар",
+    "settings": "Блок созламалари",
+    "variables": "Ўзгарувчилар",
+    "preview": "Намуна"
+  },
+  "fields": {
+    "preset": "Шаблон тўплами",
+    "paperWidth": "Қоғоз кенглиги",
+    "paperWidthValue": "{{value}} мм",
+    "text": "Матн",
+    "align": "Текислаш",
+    "bold": "Қалин",
+    "label": "Номи",
+    "value": "Қиймати",
+    "feedLines": "Бўш қаторлар",
+    "publishedRevision": "Актив версия: v{{revision}}"
+  },
+  "align": { "left": "Чап", "center": "Марказ", "right": "Ўнг" },
+  "fontSizes": { "normal": "Оддий шрифт", "large": "Катта шрифт" },
+  "presetNames": {
+    "legacy_80": "Классик",
+    "standard_80": "Ихчам",
+    "detailed_80": "Батафсил",
+    "kitchen_large_80": "Ошхона учун йирик"
+  },
+  "presetDescriptions": {
+    "legacy_80": "Аввалги чек кўринишига яқин тўлиқ шаблон.",
+    "standard_80": "Кам жой эгаллайдиган кундалик чек шаблони.",
+    "detailed_80": "Ресторан ва буюртма маълумотлари кенгроқ кўрсатилади.",
+    "kitchen_large_80": "Ошхона учун маҳсулот номлари катта шрифтда чиқади."
+  },
+  "actions": {
+    "loadPreset": "Пресетни юклаш",
+    "addText": "Матн",
+    "addDivider": "Чизиқ",
+    "addSpacer": "Бўш жой",
+    "moveUp": "Юқорига",
+    "moveDown": "Пастга",
+    "delete": "Ўчириш",
+    "saveAndPublish": "Сақлаш ва активлаштириш",
+    "saving": "Сақланмоқда..."
+  },
+  "blockTypes": {
+    "text": "Матн",
+    "two_column_row": "Икки устун",
+    "divider": "Ажратувчи",
+    "spacer": "Бўш жой",
+    "items_table": "Маҳсулотлар",
+    "totals": "Жами",
+    "metadata": "Маълумотлар",
+    "qr": "QR код",
+    "logo": "Логотип",
+    "feed": "Қоғоз суриш",
+    "cut": "Кесиш"
+  },
+  "preview": { "qr": "QR", "empty": "Қиймат йўқ" },
+  "messages": {
+    "variableHint": "Ўзгарувчини босинг — у нусхаланади. Сўнг блок қийматига жойлаштиринг.",
+    "presetLoaded": "Пресет таҳрирлаш учун юкланди.",
+    "published": "Шаблоннинг янги версияси активлаштирилди.",
+    "publishFailed": "Шаблонни сақлаб бўлмади.",
+    "selectEditableBlock": "Таҳрирлаш учун блокни танланг."
+  }
+}

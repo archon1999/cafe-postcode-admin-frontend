@@ -69,6 +69,11 @@ const MY_RESTAURANT_INTEGRATION_CONFIG_PERMISSION_CODES: PermissionCode[] = [
   'integration_configs.create',
   'integration_configs.update',
 ];
+const MY_RESTAURANT_PRINT_TEMPLATE_PERMISSION_CODES: PermissionCode[] = [
+  'print_templates.view',
+  'print_templates.create',
+  'print_templates.update',
+];
 const EMPLOYEE_PERMISSION_CODES: PermissionCode[] = ['employees.view', 'employees.create', 'employees.update'];
 
 const ADMIN_LANDING_CANDIDATES = [
@@ -174,10 +179,22 @@ export function canAccessPermissions(snapshot?: AdminAccessSnapshot | null) {
 
 export function canAccessMyRestaurant(snapshot?: AdminAccessSnapshot | null) {
   return (
+    canAccessMyRestaurantSetup(snapshot) ||
     canAccessMyRestaurantGeneral(snapshot) ||
     canAccessMyRestaurantCashDesks(snapshot) ||
     canAccessMyRestaurantPrepStations(snapshot) ||
-    canAccessMyRestaurantIntegrations(snapshot)
+    canAccessMyRestaurantIntegrations(snapshot) ||
+    canAccessMyRestaurantPrintTemplates(snapshot)
+  );
+}
+
+export function canAccessMyRestaurantSetup(snapshot?: AdminAccessSnapshot | null) {
+  return (
+    hasActiveRestaurantAccess(snapshot) &&
+    (hasAnyPermission(snapshot, MY_RESTAURANT_GENERAL_PERMISSION_CODES) ||
+      hasAnyPermission(snapshot, MY_RESTAURANT_CASH_DESK_PERMISSION_CODES) ||
+      hasAnyPermission(snapshot, MY_RESTAURANT_PREP_STATION_PERMISSION_CODES) ||
+      hasAnyPermission(snapshot, MY_RESTAURANT_INTEGRATION_CONFIG_PERMISSION_CODES))
   );
 }
 
@@ -203,11 +220,19 @@ export function canAccessMyRestaurantIntegrations(snapshot?: AdminAccessSnapshot
   );
 }
 
+export function canAccessMyRestaurantPrintTemplates(snapshot?: AdminAccessSnapshot | null) {
+  return (
+    hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, MY_RESTAURANT_PRINT_TEMPLATE_PERMISSION_CODES)
+  );
+}
+
 const MY_RESTAURANT_LANDING_CANDIDATES = [
+  RoutePath.organizationMyRestaurantSetup,
   RoutePath.organizationMyRestaurantGeneral,
   RoutePath.organizationMyRestaurantCashDeskList,
   RoutePath.organizationMyRestaurantPrepStationList,
   RoutePath.organizationMyRestaurantIntegrationConfigList,
+  RoutePath.organizationMyRestaurantPrintTemplateList,
 ] as const;
 
 function matchesRoute(pathname: string, path: string) {
@@ -231,6 +256,10 @@ export function canAccessAdminPath(pathname: string, snapshot?: AdminAccessSnaps
     return canAccessMyRestaurant(snapshot);
   }
 
+  if (matchesPrefix(pathname, RoutePath.organizationMyRestaurantSetup)) {
+    return canAccessMyRestaurantSetup(snapshot);
+  }
+
   if (matchesPrefix(pathname, RoutePath.organizationMyRestaurantGeneral)) {
     return canAccessMyRestaurantGeneral(snapshot);
   }
@@ -245,6 +274,10 @@ export function canAccessAdminPath(pathname: string, snapshot?: AdminAccessSnaps
 
   if (matchesPrefix(pathname, RoutePath.organizationMyRestaurantIntegrationConfigList)) {
     return canAccessMyRestaurantIntegrations(snapshot);
+  }
+
+  if (matchesPrefix(pathname, RoutePath.organizationMyRestaurantPrintTemplateList)) {
+    return canAccessMyRestaurantPrintTemplates(snapshot);
   }
 
   if (matchesPrefix(pathname, RoutePath.organizationRestaurantList)) {

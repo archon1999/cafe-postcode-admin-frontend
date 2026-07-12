@@ -9,6 +9,7 @@ import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath } from 'app/routes';
 import { useParams, useRedirectOnNotFound, useRouter } from 'shared/hooks/router';
+import { BackToListButton } from 'shared/ui/BackToListButton';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { FormActions } from 'shared/ui/FormActions';
 import { Form } from 'shared/ui/HookForm';
@@ -84,19 +85,8 @@ const RoleFormPage = () => {
   return (
     <Content>
       <CustomBreadcrumbs
-        heading={
-          isEditMode
-            ? t('pages.roleEdit.title')
-            : t('pages.roleCreate.title')
-        }
-        links={[
-          { name: t('pages.roles.title'), href: RoutePath.roleList },
-          {
-            name: isEditMode
-              ? t('pages.roleEdit.title')
-              : t('pages.roleCreate.title'),
-          },
-        ]}
+        heading={isEditMode ? t('pages.roleEdit.title') : t('pages.roleCreate.title')}
+        action={isEditMode ? <BackToListButton href={RoutePath.roleList} /> : undefined}
       />
 
       <Card sx={{ p: 3 }}>
@@ -106,9 +96,7 @@ const RoleFormPage = () => {
 
             <FormActions
               isSubmitting={formState.isSubmitting}
-              submitLabel={
-                isEditMode ? t('actions.save') : t('actions.roleCreateSubmit')
-              }
+              submitLabel={isEditMode ? t('actions.save') : t('actions.roleCreateSubmit')}
               onCancel={() => push(RoutePath.roleList)}
             />
           </Stack>

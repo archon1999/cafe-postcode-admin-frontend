@@ -27,13 +27,14 @@ export type NotificationItemProps = {
 
 const readerContent = (data: string) => (
   <Box
-    dangerouslySetInnerHTML={{ __html: data }}
     sx={{
       '& p': { m: 0, typography: 'body2' },
       '& a': { color: 'inherit', textDecoration: 'none' },
       '& strong': { typography: 'subtitle2' },
     }}
-  />
+  >
+    {data}
+  </Box>
 );
 
 const renderIcon = (type: string) =>

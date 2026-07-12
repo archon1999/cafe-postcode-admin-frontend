@@ -2,7 +2,10 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { buildAdminRestaurantRequestPayload } from './admin-restaurant-form-data';
+import {
+  buildAdminRestaurantRequestPayload,
+  buildRestaurantSelfServiceRequestPayload,
+} from './admin-restaurant-form-data';
 
 describe('buildAdminRestaurantRequestPayload', () => {
   const basePayload = {
@@ -50,5 +53,38 @@ describe('buildAdminRestaurantRequestPayload', () => {
 
     expect(result).toBeInstanceOf(FormData);
     expect((result as FormData).get('clearPosAuthBackgroundImage')).toBe('true');
+  });
+});
+
+describe('buildRestaurantSelfServiceRequestPayload', () => {
+  it('omits platform-owned restaurant fields', () => {
+    const result = buildRestaurantSelfServiceRequestPayload({
+      name: 'Cafe',
+      legalName: 'Legal Cafe',
+      taxNumber: '123456789',
+      phone: '+998901234567',
+      social: '@cafe',
+      address: 'Tashkent',
+      fakturaPayload: { CompanyName: 'Legal Cafe' },
+      serviceFeeEnabled: true,
+      serviceFeePercent: 10,
+      vatEnabled: true,
+      vatPercent: 12,
+      markingCheckEnabled: false,
+      isActive: true,
+      tariffId: 'forbidden-tariff',
+    });
+
+    expect(result).toEqual({
+      name: 'Cafe',
+      phone: '+998901234567',
+      social: '@cafe',
+      address: 'Tashkent',
+      serviceFeeEnabled: true,
+      serviceFeePercent: 10,
+      vatEnabled: true,
+      vatPercent: 12,
+      markingCheckEnabled: false,
+    });
   });
 });

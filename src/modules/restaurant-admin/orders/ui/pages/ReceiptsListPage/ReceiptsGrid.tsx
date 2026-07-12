@@ -16,7 +16,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { RouterPathHelper } from 'app/routes';
 import type { AdminReceipt } from 'shared/api/admin-types';
-import { DEFAULT_PAGINATION_MODEL, DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
+import { DEFAULT_PAGINATION_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
 import { useRouter } from 'shared/hooks/router';
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState, withDetailLink } from 'shared/ui/CustomDataGrid';
 import { Iconify } from 'shared/ui/Iconify';
@@ -35,6 +35,11 @@ import { getReceiptFiscalQrUrl } from '../../lib/receipt-fiscal-qr';
 
 import { DEFAULT_RECEIPTS_GRID_FILTERS, type ReceiptsGridFilters, ReceiptsGridToolbar } from './ReceiptsGridToolbar';
 
+const DEFAULT_RECEIPTS_COLUMN_VISIBILITY_MODEL: GridColumnVisibilityModel = {
+  kind: false,
+  provider: false,
+};
+
 export const ReceiptsGrid = () => {
   const { t, currentLang } = useTranslate('orders');
   const { t: tCommon } = useTranslate('common');
@@ -44,7 +49,7 @@ export const ReceiptsGrid = () => {
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_PAGINATION_MODEL);
   const [filters, setFilters] = useState<ReceiptsGridFilters>(DEFAULT_RECEIPTS_GRID_FILTERS);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(
-    DEFAULT_COLUMN_VISIBILITY_MODEL,
+    DEFAULT_RECEIPTS_COLUMN_VISIBILITY_MODEL,
   );
   const [selectedRows, setSelectedRows] = useState<GridRowSelectionModel>(DEFAULT_SELECTION_MODEL);
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
@@ -241,7 +246,7 @@ export const ReceiptsGrid = () => {
               onChange={handleFiltersChange}
               columns={columns}
               columnVisibilityModel={columnVisibilityModel}
-              defaultColumnVisibilityModel={DEFAULT_COLUMN_VISIBILITY_MODEL}
+              defaultColumnVisibilityModel={DEFAULT_RECEIPTS_COLUMN_VISIBILITY_MODEL}
               onSaveColumns={setColumnVisibilityModel}
             />
           ),

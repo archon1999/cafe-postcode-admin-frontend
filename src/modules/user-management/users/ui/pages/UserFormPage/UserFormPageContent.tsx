@@ -8,8 +8,9 @@ import { useForm } from 'react-hook-form';
 import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath, RouterPathHelper } from 'app/routes';
-import { usePageTitle } from 'shared/hooks/use-page-title';
 import { useRouter } from 'shared/hooks/router';
+import { usePageTitle } from 'shared/hooks/use-page-title';
+import { BackToListButton } from 'shared/ui/BackToListButton';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { FormActions } from 'shared/ui/FormActions';
 import { Form } from 'shared/ui/HookForm';
@@ -92,7 +93,13 @@ export const UserFormPageContent = ({ id, surface = 'user' }: UserFormPageConten
   const halls = Array.isArray(hallsQuery.data) ? hallsQuery.data : [];
   const entityTitle = userQuery.data?.fullName;
 
-  usePageTitle(isEditMode ? (entityTitle ? [listTitle, entityTitle, editTitle] : [listTitle, editTitle]) : [listTitle, createTitle]);
+  usePageTitle(
+    isEditMode
+      ? entityTitle
+        ? [listTitle, entityTitle, editTitle]
+        : [listTitle, editTitle]
+      : [listTitle, createTitle],
+  );
 
   useEffect(() => {
     if (userQuery.data) {
@@ -181,12 +188,7 @@ export const UserFormPageContent = ({ id, surface = 'user' }: UserFormPageConten
     <Content>
       <CustomBreadcrumbs
         heading={isEditMode ? editTitle : createTitle}
-        links={[
-          { name: listTitle, href: listPath },
-          {
-            name: isEditMode ? editTitle : createTitle,
-          },
-        ]}
+        action={isEditMode ? <BackToListButton href={listPath} /> : undefined}
       />
 
       <Card sx={{ p: 3 }}>

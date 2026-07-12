@@ -50,7 +50,10 @@ export function BusinessPartnerActivationDialogContent({
   const activationSchema = useMemo(
     () =>
       z.object({
-        username: z.string().trim().min(1, { message: t('validation.usernameRequired') }),
+        username: z
+          .string()
+          .trim()
+          .min(1, { message: t('validation.usernameRequired') }),
         password: z.string().min(1, { message: t('validation.passwordRequired') }),
       }),
     [t],
@@ -129,11 +132,7 @@ type BusinessPartnerActivationDialogProps = {
   onSuccess: (result: AdminPartnerActivationResult) => void;
 };
 
-export function BusinessPartnerActivationDialog({
-  open,
-  onClose,
-  onSuccess,
-}: BusinessPartnerActivationDialogProps) {
+export function BusinessPartnerActivationDialog({ open, onClose, onSuccess }: BusinessPartnerActivationDialogProps) {
   const activateMutation = useActivateBusinessPartnerMutation();
   const activationDefaultsQuery = useGetBusinessPartnerActivationDefaultsQuery(open?.id ?? '', {
     enabled: Boolean(open),

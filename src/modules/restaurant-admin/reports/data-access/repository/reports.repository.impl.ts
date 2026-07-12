@@ -27,6 +27,14 @@ export const reportsRepository: ReportsRepository = {
     return apiClient.exportAdminOpenChecksReport(params);
   },
 
+  getReceipts(params) {
+    return apiClient.getAdminReceiptsReport(params);
+  },
+
+  exportReceipts(params) {
+    return apiClient.exportAdminReceiptsReport(params);
+  },
+
   getTopItems(params) {
     return apiClient.getAdminTopItemsReport(params);
   },

@@ -10,6 +10,7 @@ const integrationConfigKeys = createKeyFactory('organizations', 'integrationConf
 const restaurantsKeys = createKeyFactory('organizations', 'restaurants');
 const restaurantKeys = createKeyFactory('organizations', 'restaurant');
 const hallsKeys = createKeyFactory('organizations', 'halls');
+const setupKeys = createKeyFactory('organizations', 'setup');
 
 export const organizationsKeys = {
   all: organizationsBaseKeys.all,
@@ -27,4 +28,5 @@ export const organizationsKeys = {
   myRestaurant: () => [...restaurantKeys.all, 'me'] as const,
   restaurantDetail: restaurantKeys.id,
   halls: () => hallsKeys.all,
+  setupReadiness: () => [...setupKeys.all, 'readiness'] as const,
 } as const;

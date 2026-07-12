@@ -1,5 +1,7 @@
+import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
+import Tooltip from '@mui/material/Tooltip';
 import type {
   GridColDef,
   GridColumnVisibilityModel,
@@ -8,15 +10,15 @@ import type {
   GridSortModel,
 } from '@mui/x-data-grid';
 import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { useGetCatalogCategoriesQuery } from 'modules/restaurant-admin/catalog/application';
-import { useGetFloorHallsQuery } from 'modules/restaurant-admin/floor/application';
 import { useGetCashDesksQuery } from 'modules/restaurant-admin/restaurant-management/application';
 import { useGetUsersQuery } from 'modules/user-management/users/application';
 import type {
-  AdminOpenChecksReportQueryParams,
-  AdminOpenChecksReportRow,
+  AdminReceiptsReportQueryParams,
+  AdminReceiptsReportRow,
   AdminPaymentBreakdownReportQueryParams,
   AdminPaymentBreakdownReportRow,
   AdminReportKey,
@@ -32,14 +34,14 @@ import type {
 import { DEFAULT_COLUMN_VISIBILITY_MODEL } from 'shared/constants';
 import { DataGridColumnsDialogButton } from 'shared/ui/CustomDataGrid';
 import type { FilterOption } from 'shared/ui/Filters';
+import { Iconify } from 'shared/ui/Iconify';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 import { downloadBlob } from 'shared/utils/download';
-import { formatHallDisplayName } from 'shared/utils/format-hall-display';
 import { formatMoney } from 'shared/utils/format-money';
 import { formatDateTime as formatTashkentDateTime } from 'shared/utils/format-time';
 
 import {
-  useGetOpenChecksReportQuery,
+  useGetReceiptsReportQuery,
   useGetPaymentBreakdownReportQuery,
   useGetSalesReportQuery,
   useGetShiftReportQuery,
@@ -56,7 +58,7 @@ import { ReportTableCard } from './ReportTableCard';
 
 type ReportTableRow =
   | AdminSalesReportRow
-  | AdminOpenChecksReportRow
+  | AdminReceiptsReportRow
   | AdminTopItemsReportRow
   | AdminTopStaffReportRow
   | AdminPaymentBreakdownReportRow
@@ -83,8 +85,8 @@ type ReportsTableSectionProps = {
   activePreset: ReportsDatePreset;
   search: string;
   paymentMethods: string[];
+  receiptKinds: string[];
   statuses: string[];
-  hallIds: string[];
   categoryIds: string[];
   cashDeskIds: string[];
   cashierIds: string[];
@@ -97,8 +99,8 @@ type ReportsTableSectionProps = {
   onSearchChange: (value: string) => void;
   onClearSearch: () => void;
   onPaymentMethodsChange: (values: string[]) => void;
+  onReceiptKindsChange: (values: string[]) => void;
   onStatusesChange: (values: string[]) => void;
-  onHallIdsChange: (values: string[]) => void;
   onCategoryIdsChange: (values: string[]) => void;
   onCashDeskIdsChange: (values: string[]) => void;
   onCashierIdsChange: (values: string[]) => void;
@@ -131,8 +133,8 @@ export function ReportsTableSection({
   activePreset,
   search,
   paymentMethods,
+  receiptKinds,
   statuses,
-  hallIds,
   categoryIds,
   cashDeskIds,
   cashierIds,
@@ -145,8 +147,8 @@ export function ReportsTableSection({
   onSearchChange,
   onClearSearch,
   onPaymentMethodsChange,
+  onReceiptKindsChange,
   onStatusesChange,
-  onHallIdsChange,
   onCategoryIdsChange,
   onCashDeskIdsChange,
   onCashierIdsChange,
@@ -156,7 +158,6 @@ export function ReportsTableSection({
   onColumnVisibilityModelChange,
 }: ReportsTableSectionProps) {
   const { t, currentLang } = useTranslate('reports');
-  const { t: tCommon } = useTranslate('common');
   const [exportLoading, setExportLoading] = useState(false);
 
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
@@ -181,17 +182,17 @@ export function ReportsTableSection({
     } satisfies AdminSalesReportQueryParams,
     { enabled: report.key === 'sales' },
   );
-  const openChecksQuery = useGetOpenChecksReportQuery(
+  const receiptsQuery = useGetReceiptsReportQuery(
     {
       ...periodParams,
       page: paginationModel.page + 1,
       pageSize: paginationModel.pageSize,
       search: search || undefined,
       status: statuses[0],
-      hallId: hallIds[0],
+      receiptKind: receiptKinds[0] as 'plain' | 'fiscal' | undefined,
       ordering,
-    } satisfies AdminOpenChecksReportQueryParams,
-    { enabled: report.key === 'openChecks' },
+    } satisfies AdminReceiptsReportQueryParams,
+    { enabled: report.key === 'receipts' },
   );
   const topItemsQuery = useGetTopItemsReportQuery(
     {
@@ -240,9 +241,6 @@ export function ReportsTableSection({
     { enabled: report.key === 'shifts' },
   );
 
-  const hallsQuery = useGetFloorHallsQuery({
-    enabled: report.key === 'openChecks',
-  });
   const categoriesQuery = useGetCatalogCategoriesQuery({
     enabled: report.key === 'topItems',
   });
@@ -268,22 +266,31 @@ export function ReportsTableSection({
     [t],
   );
   const statusOptions = useMemo<FilterOption[]>(
+    () =>
+      report.key === 'receipts'
+        ? [
+            { value: 'created', label: t('receiptStatuses.created') },
+            { value: 'sent', label: t('receiptStatuses.sent') },
+            { value: 'failed', label: t('receiptStatuses.failed') },
+          ]
+        : report.key === 'shifts'
+          ? [
+              { value: 'open', label: t('statuses.open') },
+              { value: 'closed', label: t('statuses.closed') },
+            ]
+          : [
+              { value: 'open', label: t('statuses.open') },
+              { value: 'submitted', label: t('statuses.submitted') },
+              { value: 'ready', label: t('statuses.ready') },
+            ],
+    [report.key, t],
+  );
+  const receiptKindOptions = useMemo<FilterOption[]>(
     () => [
-      { value: 'open', label: t('statuses.open') },
-      { value: 'submitted', label: t('statuses.submitted') },
-      { value: 'ready', label: t('statuses.ready') },
-      { value: 'closed', label: t('statuses.closed') },
-      { value: 'cancelled', label: t('statuses.cancelled') },
+      { value: 'plain', label: t('receiptKinds.precheck') },
+      { value: 'fiscal', label: t('receiptKinds.receipt') },
     ],
     [t],
-  );
-  const hallOptions = useMemo<FilterOption[]>(
-    () =>
-      (hallsQuery.data ?? []).map((hall) => ({
-        value: hall.id,
-        label: formatHallDisplayName(hall.name, undefined, tCommon),
-      })),
-    [hallsQuery.data, tCommon],
   );
   const categoryOptions = useMemo<FilterOption[]>(
     () => (categoriesQuery.data ?? []).map((category) => ({ value: category.id, label: category.name })),
@@ -309,8 +316,8 @@ export function ReportsTableSection({
   const activeTableQuery =
     report.key === 'sales'
       ? salesQuery
-      : report.key === 'openChecks'
-        ? openChecksQuery
+      : report.key === 'receipts'
+        ? receiptsQuery
         : report.key === 'topItems'
           ? topItemsQuery
           : report.key === 'topStaff'
@@ -339,52 +346,78 @@ export function ReportsTableSection({
             valueGetter: (_value, row: AdminSalesReportRow) => formatMoney(row.total),
           },
         ]);
-      case 'openChecks':
-        return castColumns<AdminOpenChecksReportRow>([
+      case 'receipts':
+        return castColumns<AdminReceiptsReportRow>([
           {
             field: 'orderNumber',
-            headerName: t('reports.openChecks.fields.orderNumber'),
+            headerName: t('reports.receipts.fields.orderNumber'),
             minWidth: 150,
             flex: 0.5,
-            valueGetter: (_value, row: AdminOpenChecksReportRow) => `#${row.orderNumber}`,
+            valueGetter: (_value, row: AdminReceiptsReportRow) => `#${row.orderNumber}`,
           },
           {
-            field: 'status',
-            headerName: t('reports.openChecks.fields.status'),
-            minWidth: 140,
-            flex: 0.5,
+            field: 'kind',
+            headerName: t('reports.receipts.fields.kind'),
+            minWidth: 130,
+            flex: 0.45,
             renderCell: ({ row }) => (
-              <Chip size="small" label={t(`statuses.${row.status}`)} color="warning" variant="soft" />
+              <Chip
+                size="small"
+                label={t(row.kind === 'plain' ? 'receiptKinds.precheck' : 'receiptKinds.receipt')}
+                color={row.kind === 'fiscal' ? 'success' : 'info'}
+                variant="soft"
+              />
             ),
           },
           {
-            field: 'hallName',
-            headerName: t('reports.openChecks.fields.hallName'),
-            minWidth: 180,
-            flex: 0.7,
-            valueGetter: (_value, row: AdminOpenChecksReportRow) =>
-              formatHallDisplayName(row.hallName, undefined, tCommon),
+            field: 'status',
+            headerName: t('reports.receipts.fields.status'),
+            minWidth: 140,
+            flex: 0.5,
+            renderCell: ({ row }) => (
+              <Chip
+                size="small"
+                label={t(`receiptStatuses.${row.status}`)}
+                color={row.status === 'failed' ? 'error' : row.status === 'sent' ? 'success' : 'warning'}
+                variant="soft"
+              />
+            ),
           },
           {
-            field: 'tableName',
-            headerName: t('reports.openChecks.fields.tableName'),
-            minWidth: 180,
-            flex: 0.7,
-            valueGetter: (_value, row: AdminOpenChecksReportRow) => row.tableName || '-',
-          },
-          {
-            field: 'total',
-            headerName: t('reports.openChecks.fields.total'),
+            field: 'amount',
+            headerName: t('reports.receipts.fields.amount'),
             minWidth: 160,
             flex: 0.6,
-            valueGetter: (_value, row: AdminOpenChecksReportRow) => formatMoney(row.total),
+            valueGetter: (_value, row: AdminReceiptsReportRow) => formatMoney(row.amount),
+          },
+          {
+            field: 'paymentMethod',
+            headerName: t('reports.receipts.fields.paymentMethod'),
+            minWidth: 150,
+            flex: 0.55,
+            valueGetter: (_value, row: AdminReceiptsReportRow) =>
+              row.paymentMethod ? t(`paymentMethods.${row.paymentMethod}`) : '-',
+          },
+          {
+            field: 'cashierName',
+            headerName: t('reports.receipts.fields.cashierName'),
+            minWidth: 180,
+            flex: 0.7,
+            valueGetter: (_value, row: AdminReceiptsReportRow) => row.cashierName || '-',
+          },
+          {
+            field: 'cashDeskName',
+            headerName: t('reports.receipts.fields.cashDeskName'),
+            minWidth: 150,
+            flex: 0.55,
+            valueGetter: (_value, row: AdminReceiptsReportRow) => row.cashDeskName || '-',
           },
           {
             field: 'createdAt',
-            headerName: t('reports.openChecks.fields.createdAt'),
+            headerName: t('reports.receipts.fields.createdAt'),
             minWidth: 180,
             flex: 0.7,
-            valueGetter: (_value, row: AdminOpenChecksReportRow) => formatDateTime(row.createdAt),
+            valueGetter: (_value, row: AdminReceiptsReportRow) => formatDateTime(row.createdAt),
           },
         ]);
       case 'topItems':
@@ -457,31 +490,37 @@ export function ReportsTableSection({
       case 'shifts':
         return castColumns<AdminShiftReportRow>([
           {
-            field: 'cashierName',
-            headerName: t('reports.shifts.fields.cashierName'),
-            minWidth: 220,
-            flex: 1,
-            valueGetter: (_value, row: AdminShiftReportRow) => row.cashierName || '-',
-          },
-          {
             field: 'cashDeskName',
-            headerName: t('reports.shifts.fields.cashDeskName'),
-            minWidth: 180,
-            flex: 0.8,
-            valueGetter: (_value, row: AdminShiftReportRow) => row.cashDeskName || '-',
+            headerName: t('reports.shifts.fields.cashDeskAndCashier'),
+            minWidth: 120,
+            flex: 0.5,
+            renderCell: ({ row }) => (
+              <Tooltip title={`${row.cashDeskName || '-'} (${row.cashierName || '-'})`} placement="top" arrow>
+                <Box sx={{ py: 0.75, lineHeight: 1.25, whiteSpace: 'normal' }}>
+                  <Box component="span" sx={{ display: 'block', fontWeight: 600 }}>
+                    {row.cashDeskName || '-'}
+                  </Box>
+                  <Box component="span" sx={{ color: 'text.secondary', fontSize: '0.75rem' }}>
+                    ({row.cashierName || '-'})
+                  </Box>
+                </Box>
+              </Tooltip>
+            ),
           },
           {
             field: 'status',
-            headerName: t('reports.shifts.fields.status'),
-            minWidth: 140,
-            flex: 0.5,
+            headerName: t('reports.shifts.fields.isClosed'),
+            minWidth: 100,
+            flex: 0.35,
             renderCell: ({ row }) => (
-              <Chip
-                size="small"
-                label={t(`statuses.${row.status}`)}
-                color={row.status === 'closed' ? 'success' : 'warning'}
-                variant="soft"
-              />
+              <Tooltip title={t(`statuses.${row.status}`)} placement="top" arrow>
+                <Box sx={{ display: 'flex', color: row.status === 'closed' ? 'success.main' : 'error.main' }}>
+                  <Iconify
+                    icon={row.status === 'closed' ? 'solar:check-circle-bold' : 'solar:close-circle-bold'}
+                    width={24}
+                  />
+                </Box>
+              </Tooltip>
             ),
           },
           {
@@ -500,59 +539,45 @@ export function ReportsTableSection({
           },
           {
             field: 'openingCashAmount',
-            headerName: t('reports.shifts.fields.openingCashAmount'),
-            minWidth: 160,
-            flex: 0.6,
-            valueGetter: (_value, row: AdminShiftReportRow) => formatMoney(row.openingCashAmount),
-          },
-          {
-            field: 'expectedClosingCashAmount',
-            headerName: t('reports.shifts.fields.expectedClosingCashAmount'),
-            minWidth: 170,
-            flex: 0.7,
-            valueGetter: (_value, row: AdminShiftReportRow) => formatMoney(row.expectedClosingCashAmount),
-          },
-          {
-            field: 'actualClosingCashAmount',
-            headerName: t('reports.shifts.fields.actualClosingCashAmount'),
-            minWidth: 170,
-            flex: 0.7,
-            valueGetter: (_value, row: AdminShiftReportRow) => formatMoney(row.actualClosingCashAmount),
-          },
-          {
-            field: 'cashDifferenceAmount',
-            headerName: t('reports.shifts.fields.cashDifferenceAmount'),
-            minWidth: 160,
-            flex: 0.6,
+            headerName: t('reports.shifts.fields.cashBalance'),
+            minWidth: 190,
+            flex: 0.75,
             renderCell: ({ row }) => (
-              <Chip
-                size="small"
-                label={formatMoney(row.cashDifferenceAmount)}
-                color={Number(row.cashDifferenceAmount) === 0 ? 'success' : 'warning'}
-                variant="soft"
-              />
+              <Box sx={{ py: 0.5, fontSize: '0.75rem', lineHeight: 1.35, whiteSpace: 'normal' }}>
+                <Box>
+                  {t('reports.shifts.fields.openingCashAmount')}: {formatMoney(row.openingCashAmount)}
+                </Box>
+                <Box>
+                  {t('reports.shifts.fields.expectedClosingCashAmount')}: {formatMoney(row.expectedClosingCashAmount)}
+                </Box>
+                <Box>
+                  {t('reports.shifts.fields.actualClosingCashAmount')}: {formatMoney(row.actualClosingCashAmount)}
+                </Box>
+                <Box
+                  sx={{
+                    color: Number(row.cashDifferenceAmount) === 0 ? 'success.main' : 'error.main',
+                    fontWeight: 600,
+                  }}>
+                  {t('reports.shifts.fields.cashDifferenceAmount')}: {formatMoney(row.cashDifferenceAmount)}
+                </Box>
+              </Box>
             ),
           },
           {
             field: 'cashTotal',
-            headerName: t('reports.shifts.fields.cashTotal'),
-            minWidth: 140,
-            flex: 0.55,
-            valueGetter: (_value, row: AdminShiftReportRow) => formatMoney(row.cashTotal),
-          },
-          {
-            field: 'cardTotal',
-            headerName: t('reports.shifts.fields.cardTotal'),
-            minWidth: 140,
-            flex: 0.55,
-            valueGetter: (_value, row: AdminShiftReportRow) => formatMoney(row.cardTotal),
-          },
-          {
-            field: 'qrTotal',
-            headerName: t('reports.shifts.fields.qrTotal'),
-            minWidth: 140,
-            flex: 0.55,
-            valueGetter: (_value, row: AdminShiftReportRow) => formatMoney(row.qrTotal),
+            headerName: t('reports.shifts.fields.paymentTotals'),
+            minWidth: 155,
+            flex: 0.6,
+            renderCell: ({ row }) => (
+              <Box sx={{ py: 0.75, fontSize: '0.75rem', lineHeight: 1.35, whiteSpace: 'normal' }}>
+                <Box>
+                  {t('reports.shifts.fields.cashTotal')}: {formatMoney(row.cashTotal)}
+                </Box>
+                <Box>
+                  {t('reports.shifts.fields.cardTotal')}: {formatMoney(row.cardTotal)}
+                </Box>
+              </Box>
+            ),
           },
           {
             field: 'refundTotal',
@@ -562,14 +587,14 @@ export function ReportsTableSection({
             valueGetter: (_value, row: AdminShiftReportRow) => formatMoney(row.refundTotal),
           },
           {
-            field: 'receiptCount',
-            headerName: t('reports.shifts.fields.receiptCount'),
+            field: 'precheckCount',
+            headerName: t('reports.shifts.fields.precheckCount'),
             minWidth: 130,
             flex: 0.45,
           },
           {
-            field: 'reprintCount',
-            headerName: t('reports.shifts.fields.reprintCount'),
+            field: 'receiptCount',
+            headerName: t('reports.shifts.fields.receiptCount'),
             minWidth: 130,
             flex: 0.45,
           },
@@ -577,7 +602,7 @@ export function ReportsTableSection({
       default:
         return castColumns<AdminSalesReportRow>([]);
     }
-  }, [report.key, t, tCommon]);
+  }, [report.key, t]);
 
   const getReportRowId = useMemo(() => {
     switch (report.key) {
@@ -585,8 +610,8 @@ export function ReportsTableSection({
         return castRowIdGetter<AdminSalesReportRow>((row) => row.method);
       case 'paymentBreakdown':
         return castRowIdGetter<AdminPaymentBreakdownReportRow>((row) => row.method);
-      case 'openChecks':
-        return castRowIdGetter<AdminOpenChecksReportRow>((row) => row.id);
+      case 'receipts':
+        return castRowIdGetter<AdminReceiptsReportRow>((row) => row.id);
       case 'shifts':
         return castRowIdGetter<AdminShiftReportRow>((row) => row.id);
       case 'topItems':
@@ -595,7 +620,8 @@ export function ReportsTableSection({
         );
       case 'topStaff':
         return castRowIdGetter<AdminTopStaffReportRow>(
-          (row) => `${row.staffId ?? row.staffName ?? 'unknown'}-${row.orderCount}-${row.itemsCount ?? row.items_count ?? 0}-${row.totalSales}`,
+          (row) =>
+            `${row.staffId ?? row.staffName ?? 'unknown'}-${row.orderCount}-${row.itemsCount ?? row.items_count ?? 0}-${row.totalSales}`,
         );
       default:
         return ((row: ReportTableRow) => JSON.stringify(row)) as GridRowIdGetter<ReportTableRow>;
@@ -620,6 +646,22 @@ export function ReportsTableSection({
             },
           ]
         : []),
+      ...(report.availableFilters.includes('receiptKind')
+        ? [
+            {
+              label: t('filters.receiptKind'),
+              value: receiptKinds,
+              options: receiptKindOptions,
+              onChange: (values: string[]) => onReceiptKindsChange(SINGLE_SELECT(values)),
+              onApply: (values: string[]) => {
+                onReceiptKindsChange(SINGLE_SELECT(values));
+                onPaginationModelChange({ ...paginationModel, page: 0 });
+              },
+              testId: 'reports-receipt-kind-filter',
+              emptyLabel: t('filters.all'),
+            },
+          ]
+        : []),
       ...(report.availableFilters.includes('status')
         ? [
             {
@@ -632,22 +674,6 @@ export function ReportsTableSection({
                 onPaginationModelChange({ ...paginationModel, page: 0 });
               },
               testId: 'reports-status-filter',
-              emptyLabel: t('filters.all'),
-            },
-          ]
-        : []),
-      ...(report.availableFilters.includes('hall')
-        ? [
-            {
-              label: t('filters.hall'),
-              value: hallIds,
-              options: hallOptions,
-              onChange: (values: string[]) => onHallIdsChange(SINGLE_SELECT(values)),
-              onApply: (values: string[]) => {
-                onHallIdsChange(SINGLE_SELECT(values));
-                onPaginationModelChange({ ...paginationModel, page: 0 });
-              },
-              testId: 'reports-hall-filter',
               emptyLabel: t('filters.all'),
             },
           ]
@@ -728,17 +754,17 @@ export function ReportsTableSection({
       differenceOnlyOptions,
       onCashDeskIdsChange,
       onCashierIdsChange,
-      hallIds,
-      hallOptions,
       onDifferenceOnlyChange,
       onCategoryIdsChange,
-      onHallIdsChange,
+      onReceiptKindsChange,
       onPaginationModelChange,
       onPaymentMethodsChange,
       onStatusesChange,
       paginationModel,
       paymentMethodOptions,
       paymentMethods,
+      receiptKindOptions,
+      receiptKinds,
       report.availableFilters,
       statusOptions,
       statuses,
@@ -748,7 +774,7 @@ export function ReportsTableSection({
 
   const searchPlaceholderMap: Record<TableReportKey, string> = {
     sales: t('filters.searchSalesPlaceholder'),
-    openChecks: t('filters.searchOpenChecksPlaceholder'),
+    receipts: t('filters.searchReceiptsPlaceholder'),
     topItems: t('filters.searchTopItemsPlaceholder'),
     topStaff: t('filters.searchTopStaffPlaceholder'),
     paymentBreakdown: t('filters.searchPaymentBreakdownPlaceholder'),
@@ -760,11 +786,11 @@ export function ReportsTableSection({
       noData: { title: t('empty.sales.noData.title'), description: t('empty.sales.noData.description') },
       noResults: { title: t('empty.sales.noResults.title'), description: t('empty.sales.noResults.description') },
     },
-    openChecks: {
-      noData: { title: t('empty.openChecks.noData.title'), description: t('empty.openChecks.noData.description') },
+    receipts: {
+      noData: { title: t('empty.receipts.noData.title'), description: t('empty.receipts.noData.description') },
       noResults: {
-        title: t('empty.openChecks.noResults.title'),
-        description: t('empty.openChecks.noResults.description'),
+        title: t('empty.receipts.noResults.title'),
+        description: t('empty.receipts.noResults.description'),
       },
     },
     topItems: {
@@ -814,11 +840,11 @@ export function ReportsTableSection({
       const result =
         report.key === 'sales'
           ? await reportsRepository.exportSales({ ...commonParams, paymentMethod: paymentMethods[0] })
-          : report.key === 'openChecks'
-            ? await reportsRepository.exportOpenChecks({
+          : report.key === 'receipts'
+            ? await reportsRepository.exportReceipts({
                 ...commonParams,
                 status: statuses[0],
-                hallId: hallIds[0],
+                receiptKind: receiptKinds[0] as 'plain' | 'fiscal' | undefined,
               })
             : report.key === 'topItems'
               ? await reportsRepository.exportTopItems({ ...commonParams, categoryId: categoryIds[0] })
@@ -838,6 +864,8 @@ export function ReportsTableSection({
                     });
 
       downloadBlob(result.blob, result.filename);
+    } catch {
+      toast.error(t('errors.exportFailed'));
     } finally {
       setExportLoading(false);
     }
@@ -862,46 +890,53 @@ export function ReportsTableSection({
         refreshLoading={activeTableQuery.isFetching}
         onExport={handleExport}
         exportLoading={exportLoading}
-        showSearch
+        showSearch={report.key !== 'sales' && report.key !== 'paymentBreakdown'}
       />
 
       <Box sx={{ display: 'flex', flex: 1, minHeight: 0, mt: 3 }}>
-        <ReportTableCard
-          rows={activeTableQuery.data?.data ?? []}
-          columns={activeColumns}
-          rowCount={activeTableQuery.data?.total ?? 0}
-          loading={activeTableQuery.isLoading}
-          localeText={localeText}
-          paginationModel={paginationModel}
-          onPaginationModelChange={onPaginationModelChange}
-          sortModel={sortModel}
-          onSortModelChange={onSortModelChange}
-          columnVisibilityModel={columnVisibilityModel}
-          onColumnVisibilityModelChange={onColumnVisibilityModelChange}
-          getRowId={getReportRowId}
-          toolbar={
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', px: 2.5, py: 2 }}>
-              <DataGridColumnsDialogButton
-                columns={activeColumns as GridColDef[]}
-                columnVisibilityModel={columnVisibilityModel}
-                defaultColumnVisibilityModel={DEFAULT_COLUMN_VISIBILITY_MODEL}
-                onSave={onColumnVisibilityModelChange}
-                showLabel
-              />
-            </Box>
-          }
-          hasActiveFilters={Boolean(
-            search ||
-              paymentMethods.length ||
-              statuses.length ||
-              hallIds.length ||
-              categoryIds.length ||
-              cashDeskIds.length ||
-              cashierIds.length ||
-              differenceOnly.length,
-          )}
-          emptyState={emptyStateMap[tableReportKey]}
-        />
+        {activeTableQuery.isError ? (
+          <Alert severity="error" sx={{ width: 1, alignSelf: 'flex-start' }}>
+            {t('errors.loadFailed')}
+          </Alert>
+        ) : (
+          <ReportTableCard
+            rows={activeTableQuery.data?.data ?? []}
+            columns={activeColumns}
+            rowCount={activeTableQuery.data?.total ?? 0}
+            loading={activeTableQuery.isLoading}
+            localeText={localeText}
+            paginationModel={paginationModel}
+            onPaginationModelChange={onPaginationModelChange}
+            sortModel={sortModel}
+            onSortModelChange={onSortModelChange}
+            columnVisibilityModel={columnVisibilityModel}
+            onColumnVisibilityModelChange={onColumnVisibilityModelChange}
+            getRowId={getReportRowId}
+            autoRowHeight={report.key === 'shifts'}
+            toolbar={
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end', px: 2.5, py: 2 }}>
+                <DataGridColumnsDialogButton
+                  columns={activeColumns as GridColDef[]}
+                  columnVisibilityModel={columnVisibilityModel}
+                  defaultColumnVisibilityModel={DEFAULT_COLUMN_VISIBILITY_MODEL}
+                  onSave={onColumnVisibilityModelChange}
+                  showLabel
+                />
+              </Box>
+            }
+            hasActiveFilters={Boolean(
+              search ||
+                paymentMethods.length ||
+                statuses.length ||
+                receiptKinds.length ||
+                categoryIds.length ||
+                cashDeskIds.length ||
+                cashierIds.length ||
+                differenceOnly.length,
+            )}
+            emptyState={emptyStateMap[tableReportKey]}
+          />
+        )}
       </Box>
     </>
   );

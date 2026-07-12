@@ -23,6 +23,10 @@
     "summary": "KPI",
     "table": "Жадвал"
   },
+  "errors": {
+    "loadFailed": "Ҳисобот маълумотларини юклаб бўлмади. Қайта уриниб кўринг.",
+    "exportFailed": "Excel ҳисоботини юклаб бўлмади. Қайта уриниб кўринг."
+  },
   "filters": {
     "dateRange": "Сана оралиғи",
     "all": "Барчаси",
@@ -30,18 +34,26 @@
     "date": "Сана",
     "month": "Ой",
     "year": "Йил",
+    "selectStartDate": "Бошланиш санасини танланг",
+    "selectEndDate": "Тугаш санасини танланг",
     "paymentMethod": "Тўлов усули",
+    "receiptKind": "Чек тури",
     "status": "Ҳолат",
     "hall": "Зал",
     "category": "Категория",
+    "cashDesk": "Касса",
+    "cashier": "Кассир",
+    "differenceOnly": "Фарқи бор",
+    "onlyDifferences": "Фақат фарқли сменалар",
     "search": "Қидирув",
     "clearSearch": "Қидирувни тозалаш",
     "searchPlaceholder": "Жадвал бўйича қидиринг",
     "searchSalesPlaceholder": "Тўлов усули бўйича қидиринг",
-    "searchOpenChecksPlaceholder": "Буюртма, зал ёки стол бўйича қидиринг",
+    "searchReceiptsPlaceholder": "Буюртма, кассир ёки касса бўйича қидиринг",
     "searchTopItemsPlaceholder": "Маҳсулот ёки категория бўйича қидиринг",
     "searchTopStaffPlaceholder": "Ходим бўйича қидиринг",
     "searchPaymentBreakdownPlaceholder": "Тўлов усули бўйича қидиринг",
+    "searchShiftsPlaceholder": "Кассир ёки касса бўйича қидиринг",
     "startDate": "Бошланиш санаси",
     "endDate": "Тугаш санаси",
     "customRange": "Ихтиёрий оралиқ"
@@ -66,7 +78,17 @@
   "paymentMethods": {
     "cash": "Нақд",
     "card": "Карта",
+    "qr": "QR",
     "mixed": "Аралаш"
+  },
+  "receiptKinds": {
+    "precheck": "Пречек",
+    "receipt": "Чек"
+  },
+  "receiptStatuses": {
+    "created": "Яратилган",
+    "sent": "Юборилган",
+    "failed": "Хатолик"
   },
   "statuses": {
     "open": "Очиқ",
@@ -80,7 +102,9 @@
       "title": "Умумий маълумотлар",
       "description": "Танланган давр бўйича асосий кўрсаткичлар.",
       "metrics": {
-        "salesTotal": "Савдо суммаси",
+        "grossSalesTotal": "Жами тушум",
+        "refundsTotal": "Қайтаришлар",
+        "salesTotal": "Соф тушум",
         "ordersCount": "Буюртмалар сони",
         "averageCheck": "Ўртача чек",
         "openChecks": "Очиқ чеклар",
@@ -88,29 +112,31 @@
       }
     },
     "sales": {
-      "title": "Сотувлар",
-      "description": "Тўлов усуллари кесимида транзакциялар сони ва тушум.",
+      "title": "Тўловлар",
+      "description": "Муваффақиятли тўловлар сони ва жами тушум.",
       "fields": {
         "method": "Усул",
         "count": "Сони",
         "total": "Жами"
       }
     },
-    "openChecks": {
-      "title": "Очиқ чеклар",
-      "description": "Ҳозир очиқ турган буюртмалар ва уларнинг жойлашуви.",
+    "receipts": {
+      "title": "Чеклар",
+      "description": "Танланган даврда чиқарилган пречеклар ва чеклар.",
       "fields": {
         "orderNumber": "Буюртма",
+        "kind": "Тури",
         "status": "Ҳолат",
-        "hallName": "Зал",
-        "tableName": "Стол",
-        "total": "Жами",
-        "createdAt": "Яратилган вақти"
+        "amount": "Сумма",
+        "paymentMethod": "Тўлов усули",
+        "cashierName": "Кассир",
+        "cashDeskName": "Касса",
+        "createdAt": "Чиқарилган вақт"
       }
     },
     "topItems": {
-      "title": "Энг кўп сотилган маҳсулотлар",
-      "description": "Энг кўп сотилган маҳсулотлар ва уларнинг тушуми.",
+      "title": "Маҳсулотлар",
+      "description": "Ёпилган буюртмалардаги энг кўп сотилган маҳсулотлар ва уларнинг тушуми.",
       "fields": {
         "catalogItemName": "Маҳсулот",
         "categoryName": "Категория",
@@ -119,8 +145,8 @@
       }
     },
     "topStaff": {
-      "title": "Энг фаол ходимлар",
-      "description": "Ходимлар кесимида буюртма сони ва савдо ҳажми.",
+      "title": "Ходимлар",
+      "description": "Ёпилган буюртмаларга маҳсулот киритган ходимлар фаоллиги.",
       "fields": {
         "staffName": "Ходим",
         "orderCount": "Буюртмалар",
@@ -136,6 +162,27 @@
         "count": "Сони",
         "total": "Жами"
       }
+    },
+    "shifts": {
+      "title": "Сменалар",
+      "description": "Кассир сменалари, тушумлар ва фарқлар бўйича ҳисобот.",
+      "fields": {
+        "cashDeskAndCashier": "Касса",
+        "isClosed": "Ёпилган",
+        "openedAt": "Очилган вақт",
+        "closedAt": "Ёпилган вақт",
+        "cashBalance": "Нақд қолдиғи",
+        "openingCashAmount": "Бошланғич нақд",
+        "expectedClosingCashAmount": "Кутилган нақд",
+        "actualClosingCashAmount": "Амалдаги нақд",
+        "cashDifferenceAmount": "Фарқ",
+        "paymentTotals": "Тушумлар",
+        "cashTotal": "Нақд",
+        "cardTotal": "Карта",
+        "refundTotal": "Қайтарилган сумма",
+        "precheckCount": "Пречеклар сони",
+        "receiptCount": "Чеклар сони"
+      }
     }
   },
   "empty": {
@@ -149,14 +196,14 @@
         "description": "Қидирув ёки фильтр бўйича мос натижа топилмади."
       }
     },
-    "openChecks": {
+    "receipts": {
       "noData": {
-        "title": "Очиқ чеклар йўқ",
-        "description": "Танланган даврда очиқ буюртмалар мавжуд эмас."
+        "title": "Чеклар йўқ",
+        "description": "Танланган даврда пречек ёки чек чиқарилмаган."
       },
       "noResults": {
-        "title": "Очиқ чеклар топилмади",
-        "description": "Танланган фильтрлар бўйича мос буюртма топилмади."
+        "title": "Чеклар топилмади",
+        "description": "Қидирув ёки фильтр бўйича мос чек топилмади."
       }
     },
     "topItems": {
@@ -187,6 +234,16 @@
       "noResults": {
         "title": "Тўлов таркиби топилмади",
         "description": "Танланган фильтр бўйича мос тўловлар топилмади."
+      }
+    },
+    "shifts": {
+      "noData": {
+        "title": "Сменалар топилмади",
+        "description": "Танланган даврда кассир сменалари ҳали мавжуд эмас."
+      },
+      "noResults": {
+        "title": "Смена топилмади",
+        "description": "Қидирув ёки фильтр бўйича мос смена топилмади."
       }
     }
   }

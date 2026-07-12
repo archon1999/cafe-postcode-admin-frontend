@@ -1,5 +1,6 @@
 export {
   useGetOpenChecksReportQuery,
+  useGetReceiptsReportQuery,
   useGetPaymentBreakdownReportQuery,
   useGetReportSummaryQuery,
   useGetSalesReportQuery,

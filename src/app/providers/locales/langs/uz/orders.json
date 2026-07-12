@@ -22,7 +22,7 @@
       "title": "To'lov #{{orderNumber}}"
     },
     "receipts": {
-      "title": "Cheklar"
+      "title": "Fiscal Cheklar"
     },
     "receiptDetail": {
       "title": "Chek #{{orderNumber}}"
@@ -60,6 +60,7 @@
     "hall": "Zal",
     "item": "Mahsulot",
     "itemsCount": "Mahsulotlar soni",
+    "itemsAndTotal": "Mahsulotlar va jami summa",
     "kind": "Turi",
     "lineTotal": "Jami",
     "method": "Usul",

@@ -22,14 +22,14 @@ vi.mock('app/providers/locales', () => ({
   useTranslate: () => ({
     t: (key: string) =>
       (
-        {
+        ({
           'sections.customerOverview.title': "Mijoz ma'lumotlari",
           'sections.activeUsers.title': 'Aktiv foydalanuvchilar',
           'sections.soliqIntegration.title': 'Soliq bilan integratsiya',
           'actions.topUpBalance': "Balansni to'ldirish",
           'fields.topUpAmount': "To'ldirish summasi",
           'fields.note': 'Izoh',
-        } as Record<string, string>
+        }) as Record<string, string>
       )[key] ?? key,
   }),
 }));

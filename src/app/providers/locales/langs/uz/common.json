@@ -1,5 +1,6 @@
 {
   "actions": {
+    "backToList": "Ro'yxatga qaytish",
     "title": "Amallar",
     "cancel": "Bekor qilish",
     "back": "Ortga",

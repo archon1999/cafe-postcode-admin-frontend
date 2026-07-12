@@ -7,7 +7,7 @@
     "orderItemNotes": { "title": "Маҳсулот изоҳлари" },
     "payments": { "title": "Тўловлар" },
     "paymentDetail": { "title": "Тўлов #{{orderNumber}}" },
-    "receipts": { "title": "Чеклар" },
+    "receipts": { "title": "Фискал чеклар" },
     "receiptDetail": { "title": "Чек #{{orderNumber}}" }
   },
   "sections": {
@@ -41,6 +41,7 @@
     "hall": "Зал",
     "item": "Маҳсулот",
     "itemsCount": "Маҳсулотлар сони",
+    "itemsAndTotal": "Маҳсулотлар ва жами сумма",
     "kind": "Тури",
     "lineTotal": "Жами",
     "method": "Усул",

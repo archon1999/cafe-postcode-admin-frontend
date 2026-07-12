@@ -23,6 +23,10 @@
     "summary": "KPI",
     "table": "Таблица"
   },
+  "errors": {
+    "loadFailed": "Не удалось загрузить данные отчёта. Попробуйте ещё раз.",
+    "exportFailed": "Не удалось скачать отчёт Excel. Попробуйте ещё раз."
+  },
   "filters": {
     "dateRange": "Диапазон дат",
     "all": "Все",
@@ -30,18 +34,26 @@
     "date": "Дата",
     "month": "Месяц",
     "year": "Год",
+    "selectStartDate": "Выберите дату начала",
+    "selectEndDate": "Выберите дату окончания",
     "paymentMethod": "Способ оплаты",
+    "receiptKind": "Тип чека",
     "status": "Статус",
     "hall": "Зал",
     "category": "Категория",
+    "cashDesk": "Касса",
+    "cashier": "Кассир",
+    "differenceOnly": "Есть расхождение",
+    "onlyDifferences": "Только смены с расхождениями",
     "search": "Поиск",
     "clearSearch": "Очистить поиск",
     "searchPlaceholder": "Ищите по таблице",
     "searchSalesPlaceholder": "Ищите по способу оплаты",
-    "searchOpenChecksPlaceholder": "Ищите по заказу, залу или столу",
+    "searchReceiptsPlaceholder": "Ищите по заказу, кассиру или кассе",
     "searchTopItemsPlaceholder": "Ищите по товару или категории",
     "searchTopStaffPlaceholder": "Ищите по сотруднику",
     "searchPaymentBreakdownPlaceholder": "Ищите по способу оплаты",
+    "searchShiftsPlaceholder": "Ищите по кассиру или кассе",
     "startDate": "Дата начала",
     "endDate": "Дата окончания",
     "customRange": "Произвольный диапазон"
@@ -66,7 +78,17 @@
   "paymentMethods": {
     "cash": "Наличные",
     "card": "Карта",
+    "qr": "QR",
     "mixed": "Смешанный"
+  },
+  "receiptKinds": {
+    "precheck": "Пречек",
+    "receipt": "Чек"
+  },
+  "receiptStatuses": {
+    "created": "Создан",
+    "sent": "Отправлен",
+    "failed": "Ошибка"
   },
   "statuses": {
     "open": "Открыт",
@@ -80,7 +102,9 @@
       "title": "Общие показатели",
       "description": "Основные показатели за выбранный период.",
       "metrics": {
-        "salesTotal": "Сумма продаж",
+        "grossSalesTotal": "Общая выручка",
+        "refundsTotal": "Возвраты",
+        "salesTotal": "Чистая выручка",
         "ordersCount": "Количество заказов",
         "averageCheck": "Средний чек",
         "openChecks": "Открытые чеки",
@@ -88,29 +112,31 @@
       }
     },
     "sales": {
-      "title": "Продажи",
-      "description": "Количество транзакций и выручка по способам оплаты.",
+      "title": "Оплаты",
+      "description": "Количество успешных оплат и общая выручка.",
       "fields": {
         "method": "Способ",
         "count": "Количество",
         "total": "Итого"
       }
     },
-    "openChecks": {
-      "title": "Открытые чеки",
-      "description": "Открытые заказы и их расположение.",
+    "receipts": {
+      "title": "Чеки",
+      "description": "Пречеки и чеки, созданные за выбранный период.",
       "fields": {
         "orderNumber": "Заказ",
+        "kind": "Тип",
         "status": "Статус",
-        "hallName": "Зал",
-        "tableName": "Стол",
-        "total": "Итого",
+        "amount": "Сумма",
+        "paymentMethod": "Способ оплаты",
+        "cashierName": "Кассир",
+        "cashDeskName": "Касса",
         "createdAt": "Время создания"
       }
     },
     "topItems": {
-      "title": "Самые продаваемые товары",
-      "description": "Самые продаваемые товары и их выручка.",
+      "title": "Товары",
+      "description": "Самые продаваемые товары и их выручка по закрытым заказам.",
       "fields": {
         "catalogItemName": "Товар",
         "categoryName": "Категория",
@@ -119,8 +145,8 @@
       }
     },
     "topStaff": {
-      "title": "Самые активные сотрудники",
-      "description": "Количество заказов и объём продаж по сотрудникам.",
+      "title": "Сотрудники",
+      "description": "Активность сотрудников, добавлявших товары в закрытые заказы.",
       "fields": {
         "staffName": "Сотрудник",
         "orderCount": "Заказы",
@@ -136,6 +162,27 @@
         "count": "Количество",
         "total": "Итого"
       }
+    },
+    "shifts": {
+      "title": "Смены",
+      "description": "Отчёт по кассовым сменам, выручке и расхождениям.",
+      "fields": {
+        "cashDeskAndCashier": "Касса",
+        "isClosed": "Закрыта",
+        "openedAt": "Время открытия",
+        "closedAt": "Время закрытия",
+        "cashBalance": "Остаток наличных",
+        "openingCashAmount": "Начальные наличные",
+        "expectedClosingCashAmount": "Ожидаемые наличные",
+        "actualClosingCashAmount": "Фактические наличные",
+        "cashDifferenceAmount": "Расхождение",
+        "paymentTotals": "Выручка",
+        "cashTotal": "Наличные",
+        "cardTotal": "Карта",
+        "refundTotal": "Сумма возвратов",
+        "precheckCount": "Количество пречеков",
+        "receiptCount": "Количество чеков"
+      }
     }
   },
   "empty": {
@@ -149,14 +196,14 @@
         "description": "Поиск или фильтры не дали результатов."
       }
     },
-    "openChecks": {
+    "receipts": {
       "noData": {
-        "title": "Открытых чеков нет",
-        "description": "За выбранный период открытых заказов нет."
+        "title": "Чеков нет",
+        "description": "За выбранный период пречеки и чеки не создавались."
       },
       "noResults": {
-        "title": "Открытые чеки не найдены",
-        "description": "По выбранным фильтрам заказы не найдены."
+        "title": "Чеки не найдены",
+        "description": "Поиск или фильтры не дали результатов."
       }
     },
     "topItems": {
@@ -187,6 +234,16 @@
       "noResults": {
         "title": "Структура оплат не найдена",
         "description": "По выбранному фильтру подходящих платежей не найдено."
+      }
+    },
+    "shifts": {
+      "noData": {
+        "title": "Смены не найдены",
+        "description": "За выбранный период кассовых смен нет."
+      },
+      "noResults": {
+        "title": "Смена не найдена",
+        "description": "Поиск или фильтры не дали результатов."
       }
     }
   }

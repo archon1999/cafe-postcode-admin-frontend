@@ -10,6 +10,7 @@ import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath } from 'app/routes';
 import { useParams, useRedirectOnNotFound } from 'shared/hooks/router';
+import { BackToListButton } from 'shared/ui/BackToListButton';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { Label } from 'shared/ui/Label';
 import { LabelRowWithIcon } from 'shared/ui/LabelRowWithIcon/LabelRowWithIcon';
@@ -36,7 +37,7 @@ const PaymentDetailPage = () => {
     <Content>
       <CustomBreadcrumbs
         heading={t('pages.paymentDetail.title', { orderNumber: payment.orderNumber })}
-        links={[{ name: t('pages.payments.title'), href: RoutePath.paymentList }, { name: `#${payment.orderNumber}` }]}
+        action={<BackToListButton href={RoutePath.paymentList} />}
       />
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, md: 8 }}>
@@ -126,7 +127,8 @@ const PaymentDetailPage = () => {
                           }
                         })
                         .catch((error: unknown) => {
-                          const detail = (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
+                          const detail = (error as { response?: { data?: { detail?: string } } })?.response?.data
+                            ?.detail;
                           toast.error(detail ?? t('messages.fiscalRetryFailed'));
                         });
                     }}>

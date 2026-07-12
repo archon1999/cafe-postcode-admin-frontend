@@ -182,10 +182,10 @@ function RestaurantPrepStationDialog({
               {(printerIntegrationsQuery.data?.data ?? [])
                 .filter((integration) => integration.kind === 'printer' && integration.isEnabled)
                 .map((integration) => (
-                <MenuItem key={integration.id} value={integration.id}>
-                  {getPrinterIntegrationLabel(integration)}
-                </MenuItem>
-              ))}
+                  <MenuItem key={integration.id} value={integration.id}>
+                    {getPrinterIntegrationLabel(integration)}
+                  </MenuItem>
+                ))}
             </RHFSelect>
             <RHFMultiSelect<Values>
               name="cookIds"
@@ -198,7 +198,7 @@ function RestaurantPrepStationDialog({
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 3 }}>
           <Button color="inherit" variant="outlined" onClick={onClose} disabled={methods.formState.isSubmitting}>
-            {t('actions.cancel', { ns: 'common'})}
+            {t('actions.cancel', { ns: 'common' })}
           </Button>
           <Button type="submit" variant="contained" color="black" loading={methods.formState.isSubmitting}>
             {isEditMode ? t('actions.save') : t('actions.create')}
@@ -301,7 +301,10 @@ export function RestaurantPrepStationsSection({
         minWidth: 180,
         flex: 0.8,
         valueGetter: (_value, row) =>
-          row.cooks?.map((cook) => cook.fullName || cook.username).filter(Boolean).join(', ') || '-',
+          row.cooks
+            ?.map((cook) => cook.fullName || cook.username)
+            .filter(Boolean)
+            .join(', ') || '-',
       },
       {
         field: 'isActive',

@@ -45,16 +45,13 @@ import { OrganizationsGridToolbar } from './OrganizationsGridToolbar';
 import { RestaurantManagementAccordion } from './RestaurantManagementAccordion';
 
 const INTEGRATION_KIND_VALUES = ['printer', 'payment', 'fiscal'] as const;
-const PAPER_WIDTH_VALUES = ['58', '80'] as const;
+const PAPER_WIDTH_VALUES = ['80'] as const;
 const PRINTER_CONNECTION_TYPE_VALUES = ['system_printer', 'socket'] as const;
 
 const PROVIDER_OPTIONS: Record<AdminIntegrationConfigKind, { value: string; label: string }[]> = {
   printer: [{ value: 'windows-raw', label: 'Windows raw' }],
   payment: [{ value: 'marta-softpos', label: 'MARTA SoftPOS' }],
-  fiscal: [
-    { value: 'fiscal-drive-service', label: 'FiscalDriveService' },
-    { value: 'unikassa', label: 'Unikassa' },
-  ],
+  fiscal: [{ value: 'fiscal-drive-service', label: 'Fiscal Drive' }],
 };
 
 const stringValue = z.preprocess((value) => (value === undefined || value === null ? '' : String(value)), z.string());
@@ -369,7 +366,7 @@ function getSettingsSummary(row: AdminIntegrationConfig) {
 
   if (row.kind === 'payment') {
     if (row.provider === 'marta-softpos') {
-      const endpointUrl = readString(settings, ['endpoint_url', 'endpointUrl'], 'auto-discovery');
+      const endpointUrl = readString(settings, ['endpoint_url', 'endpointUrl'], '-');
       const taxNumber = readString(settings, ['tax_number', 'taxNumber'], '-');
       const amountMultiplier = readSetting(settings, ['amount_multiplier', 'amountMultiplier']) ?? '100';
       const timeoutSeconds = readSetting(settings, ['timeout_seconds', 'timeoutSeconds']) ?? '180';
@@ -382,12 +379,8 @@ function getSettingsSummary(row: AdminIntegrationConfig) {
     return `Terminal: ${terminalId} | Merchant: ${merchantId} | ${endpointUrl}`;
   }
 
-  const terminalId = readString(settings, ['terminal_id', 'terminalId'], '-');
-  const factoryId = readString(settings, ['factory_id', 'factoryId']);
-  const cashboxId = readString(settings, ['cashbox_id', 'cashboxId'], '-');
   const taxNumber = readString(settings, ['tax_number', 'taxNumber'], '-');
-  const fiscalTarget = factoryId ? `Factory: ${factoryId}` : `Terminal: ${terminalId}`;
-  return `${fiscalTarget} | Kassa: ${cashboxId} | STIR: ${taxNumber}`;
+  return `Fiscal Drive | STIR: ${taxNumber}`;
 }
 
 async function checkPrinterConnection(values: Values) {
@@ -491,7 +484,7 @@ function RestaurantIntegrationDialog({
       const target =
         values.connectionType === 'socket'
           ? `${result.host ?? values.printerHost}${result.port ? `:${result.port}` : ''}`
-          : result.printerName ?? values.printerName;
+          : (result.printerName ?? values.printerName);
       toast.success(t('integrations.messages.printerCheckSuccess', { target }));
     } catch (error) {
       toast.error(
@@ -605,11 +598,7 @@ function RestaurantIntegrationDialog({
                 <Typography variant="subtitle2">{t('integrations.sections.payment')}</Typography>
                 {selectedProvider === 'marta-softpos' ? (
                   <>
-                    <RHFTextField<Values>
-                      name="endpointUrl"
-                      label={t('integrations.fields.endpointUrl')}
-                      helperText="Bo'sh qoldirilsa local agent MARTA terminalni avtomatik topadi"
-                    />
+                    <RHFTextField<Values> name="endpointUrl" label={t('integrations.fields.endpointUrl')} />
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
                       <RHFTextField<Values> name="taxNumber" label={t('fields.taxNumber')} />
                       <RHFTextField<Values>
@@ -650,24 +639,7 @@ function RestaurantIntegrationDialog({
               <>
                 <Divider />
                 <Typography variant="subtitle2">{t('integrations.sections.fiscal')}</Typography>
-                <RHFTextField<Values>
-                  name="factoryId"
-                  label="Factory ID"
-                  helperText="Bo'sh qoldirilsa FiscalDriveService ulangan FMni terminal ID bo'yicha topadi"
-                />
-                <RHFTextField<Values> name="terminalId" label={t('fields.terminalId')} />
-                <RHFTextField<Values> name="cashboxId" label={t('integrations.fields.cashboxId')} />
                 <RHFTextField<Values> name="taxNumber" label={t('fields.taxNumber')} />
-                <RHFTextField<Values>
-                  name="endpointUrl"
-                  label={t('integrations.fields.endpointUrl')}
-                  helperText={
-                    selectedProvider === 'fiscal-drive-service'
-                      ? "Bo'sh qoldirilsa local agent FiscalDriveService'ning 127.0.0.1:3449 endpointini ishlatadi"
-                      : "Bo'sh qoldirilsa local agent Unikassa terminalni avtomatik topadi"
-                  }
-                />
-                <RHFTextField<Values> name="apiKey" label={t('integrations.fields.apiKey')} type="password" />
               </>
             ) : null}
 

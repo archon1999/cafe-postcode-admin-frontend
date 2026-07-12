@@ -10,7 +10,8 @@ import type {
   AdminHallConstructorTable,
   AdminTableShapeVariant,
 } from 'shared/api/admin-types';
-import { useRedirectOnNotFound, useRouter } from 'shared/hooks/router';
+import { useRedirectOnNotFound } from 'shared/hooks/router';
+import { BackToListButton } from 'shared/ui/BackToListButton';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { Iconify } from 'shared/ui/Iconify';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
@@ -250,7 +251,6 @@ export type HallConstructorPageContentProps = {
 export const HallConstructorPageContent = ({ id }: HallConstructorPageContentProps) => {
   const { t } = useTranslate('floor');
   const settings = useSettingsContext();
-  const { push } = useRouter();
   const query = useGetHallConstructorQuery(id ?? '', { enabled: Boolean(id) });
   const updateMutation = useUpdateHallConstructorMutation(id ?? '');
   const mode = settings.state.mode;
@@ -509,13 +509,6 @@ export const HallConstructorPageContent = ({ id }: HallConstructorPageContentPro
     toast.success(t('messages.constructorSaved'));
   };
 
-  const handleCancel = () => {
-    if (isDirty && !window.confirm(t('dialogs.unsavedChanges.confirm'))) {
-      return;
-    }
-    push(RoutePath.floorHallList);
-  };
-
   if (query.isLoading || !draft) {
     return <LoadingScreen />;
   }
@@ -526,15 +519,9 @@ export const HallConstructorPageContent = ({ id }: HallConstructorPageContentPro
     <Content>
       <CustomBreadcrumbs
         heading={t('pages.hallConstructor.title')}
-        links={[
-          { name: t('pages.halls.title'), href: RoutePath.floorHallList },
-          { name: query.data?.hallName ? hallDisplayName : t('pages.hallConstructor.title') },
-        ]}
         action={
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5}>
-            <Button variant="outlined" color="inherit" onClick={handleCancel}>
-              {t('actions.cancel')}
-            </Button>
+            <BackToListButton href={RoutePath.floorHallList} />
             <Button variant="contained" onClick={handleSave} disabled={updateMutation.isPending}>
               {t('actions.save')}
             </Button>

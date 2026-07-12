@@ -30,10 +30,12 @@ const ICONS = {
   organizations: <Iconify icon="solar:buildings-3-bold-duotone" width={24} />,
   restaurants: <Iconify icon="solar:city-bold-duotone" width={20} />,
   restaurantManagement: <Iconify icon="solar:settings-bold-duotone" width={20} />,
+  setup: <Iconify icon="solar:checklist-minimalistic-bold-duotone" width={20} />,
   general: <Iconify icon="solar:widget-6-bold-duotone" width={20} />,
   cashDesks: <Iconify icon="solar:wallet-money-bold-duotone" width={20} />,
   prepStations: <Iconify icon="solar:chef-hat-bold-duotone" width={20} />,
   integrations: <Iconify icon="solar:plug-circle-bold-duotone" width={20} />,
+  printTemplates: <Iconify icon="solar:document-text-bold-duotone" width={20} />,
   accessControl: <Iconify icon="solar:settings-bold-duotone" width={24} />,
 };
 
@@ -104,17 +106,14 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
           icon: ICONS.receipts,
         }
       : null,
-  ].filter(Boolean) as NavSectionProps['data'][number]['items'];
-
-  const kitchenChildren = canAccess(RoutePath.kitchenTicketList)
-    ? [
-        {
+    canAccess(RoutePath.kitchenTicketList)
+      ? {
           title: t('kitchenTickets'),
           path: RoutePath.kitchenTicketList,
           icon: ICONS.kitchenTickets,
-        },
-      ]
-    : [];
+        }
+      : null,
+  ].filter(Boolean) as NavSectionProps['data'][number]['items'];
 
   const catalogChildren = [
     canAccess(RoutePath.catalogBrowser)
@@ -165,10 +164,12 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
   ].filter(Boolean) as NavSectionProps['data'][number]['items'];
 
   const myRestaurantChildren = [
-    canAccess(RoutePath.organizationMyRestaurantGeneral)
+    canAccess(RoutePath.organizationMyRestaurantSetup) || canAccess(RoutePath.organizationMyRestaurantGeneral)
       ? {
-          title: t('general'),
-          path: RoutePath.organizationMyRestaurantGeneral,
+          title: t('restaurantSettings'),
+          path: canAccess(RoutePath.organizationMyRestaurantGeneral)
+            ? RoutePath.organizationMyRestaurantGeneral
+            : RoutePath.organizationMyRestaurantSetup,
           icon: ICONS.general,
         }
       : null,
@@ -191,6 +192,13 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
           title: t('integrations'),
           path: RoutePath.organizationMyRestaurantIntegrationConfigList,
           icon: ICONS.integrations,
+        }
+      : null,
+    canAccess(RoutePath.organizationMyRestaurantPrintTemplateList)
+      ? {
+          title: t('printTemplates'),
+          path: RoutePath.organizationMyRestaurantPrintTemplateList,
+          icon: ICONS.printTemplates,
         }
       : null,
   ].filter(Boolean) as NavSectionProps['data'][number]['items'];
@@ -240,14 +248,6 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
           path: orderChildren[0].path,
           icon: ICONS.ordersGroup,
           children: orderChildren,
-        }
-      : null,
-    kitchenChildren.length
-      ? {
-          title: t('kitchen'),
-          path: kitchenChildren[0].path,
-          icon: ICONS.kitchen,
-          children: kitchenChildren,
         }
       : null,
   ].filter(Boolean) as NavSectionProps['data'][number]['items'];

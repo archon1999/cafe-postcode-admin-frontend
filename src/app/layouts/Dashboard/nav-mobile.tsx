@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import { mergeClasses } from 'minimal-shared/utils';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { usePathname } from 'shared/hooks/router';
 import { Logo } from 'shared/ui/Logo';
@@ -22,12 +22,18 @@ type NavMobileProps = NavSectionProps & {
 
 export function NavMobile({ sx, data, open, slots, onClose, className, checkPermissions, ...other }: NavMobileProps) {
   const pathname = usePathname();
+  const openRef = useRef(open);
+
+  // Keep the latest drawer state without treating opening it as a navigation event.
+  useEffect(() => {
+    openRef.current = open;
+  }, [open]);
 
   useEffect(() => {
-    if (open) {
+    if (openRef.current) {
       onClose();
     }
-  }, [onClose, open, pathname]);
+  }, [onClose, pathname]);
 
   return (
     <Drawer

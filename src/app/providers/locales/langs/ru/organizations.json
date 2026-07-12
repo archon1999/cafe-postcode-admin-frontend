@@ -51,6 +51,9 @@
     "myRestaurantGeneral": {
       "title": "Общее"
     },
+    "setup": {
+      "title": "Настройка ресторана"
+    },
     "integrationCreate": {
       "title": "Новая интеграция"
     },
@@ -61,11 +64,85 @@
       "title": "Интеграции"
     }
   },
+  "setup": {
+    "actions": {
+      "testIntegration": "Проверить подключение {{name}}",
+      "check": "Проверить",
+      "addCashDesk": "Добавить кассу",
+      "addPrepStation": "Добавить станцию",
+      "apply": "Сохранить базовую конфигурацию",
+      "openSection": "Открыть раздел",
+      "downloadManifest": "Скачать манифест",
+      "copyCommand": "Копировать команду",
+      "downloadInstaller": "Скачать Local Agent для Windows"
+    },
+    "readiness": { "progress": "Готовность: {{value}}%", "remaining": "Обязательных задач осталось: {{count}}" },
+    "status": { "ready": "Готово", "warning": "Требует внимания", "blocked": "Обязательно" },
+    "quick": { "title": "Быстрая базовая настройка" },
+    "sections": { "cashDesks": "Кассы", "prepStations": "Станции приготовления" },
+    "cashDesk": { "title": "Касса {{number}}" },
+    "integrations": { "printer": "Принтер" },
+    "defaults": { "cashDesk": "Касса {{number}}", "kitchen": "Кухня", "prepStation": "Станция {{number}}" },
+    "fields": {
+      "printerNameOrIp": "Имя принтера / IP-адрес",
+      "martaAddressHint": "Оставьте пустым для автоматического обнаружения MARTA.",
+      "martaAddress": "Адрес MARTA"
+    },
+    "steps": {
+      "title": "Этапы готовности",
+      "profile": "Профиль ресторана",
+      "staff": "Сотрудники и PIN-код",
+      "service_points": "Кассы и точки обслуживания",
+      "menu": "Готовность меню",
+      "integrations": "Устройства и интеграции",
+      "coordinator": "Локальный агент",
+      "printing": "Шаблоны чеков"
+    },
+    "issues": {
+      "generic": "Необходимо настроить этот раздел.",
+      "restaurant_inactive": "Ресторан неактивен.",
+      "missing_legal_name": "Юридическое название не заполнено.",
+      "missing_tax_number": "ИНН не заполнен.",
+      "missing_phone": "Телефон не заполнен.",
+      "missing_address": "Адрес не заполнен.",
+      "missing_pos_user": "Создайте сотрудника с доступом к POS.",
+      "missing_pos_pin": "Назначьте PIN-код сотруднику POS.",
+      "missing_cash_desk": "Создайте активную кассу.",
+      "missing_prep_station": "Создайте станцию приготовления.",
+      "missing_distribution_point": "Точки обслуживания не созданы.",
+      "empty_menu": "Добавьте активный товар в меню.",
+      "menu_category_without_prep_station": "Некоторым категориям не назначена станция приготовления.",
+      "menu_item_without_category": "Некоторым товарам не назначена категория.",
+      "cash_desk_printer_missing": "К кассе не подключён принтер чеков.",
+      "cash_desk_payment_missing": "К кассе не подключена интеграция карточных платежей.",
+      "cash_desk_fiscal_missing": "К кассе не подключена фискальная интеграция.",
+      "prep_station_printer_missing": "К станции приготовления не подключён принтер.",
+      "local_agent_missing": "Локальный агент не установлен.",
+      "local_agent_offline": "Локальный агент недоступен.",
+      "print_templates_missing": "Подготовьте все шаблоны чеков."
+    },
+    "installer": {
+      "title": "Установка Local Agent",
+      "description": "Установщик автоматически подключит ресторан, настроит автозапуск и запустит агент.",
+      "hint": "Скачайте и откройте файл, затем нажмите «Установить». Командная строка и ручная настройка не нужны."
+    },
+    "messages": {
+      "integrationCheckSucceeded": "Подключение {{name}} успешно проверено.",
+      "integrationCheckFailed": "Не удалось проверить подключение {{name}}.",
+      "saved": "Конфигурация ресторана сохранена.",
+      "saveFailed": "Не удалось сохранить конфигурацию.",
+      "commandCopied": "Команда установки скопирована.",
+      "enrollmentFailed": "Не удалось создать одноразовый токен установки.",
+      "installerDownloaded": "Установщик Local Agent загружен.",
+      "installerDownloadFailed": "Не удалось скачать установщик Local Agent."
+    }
+  },
   "fields": {
     "name": "Название",
     "address": "Адрес",
     "phone": "Телефон",
     "social": "Соцсеть",
+    "vatPercent": "НДС (%)",
     "serviceFeePercent": "Сервисный сбор (%)",
     "serviceFeeEnabled": "Сервисный сбор включен",
     "phonePlaceholder": "+998 90 123 45 67",
@@ -265,6 +342,7 @@
     }
   },
   "actions": {
+    "cancel": "Отмена",
     "title": "Действия",
     "create": "Создать",
     "save": "Сохранить",
@@ -285,6 +363,7 @@
     "removePosAuthBackgroundImage": "Удалить изображение"
   },
   "dialogs": {
+    "profileEdit": { "title": "Редактирование профиля ресторана" },
     "deleteBranch": {
       "title": "Удалить филиал",
       "description": "Удалить филиал \"{{name}}\"?"
@@ -312,6 +391,10 @@
     "balanceTopUp": {
       "title": "Пополнение баланса"
     }
+  },
+  "messages": {
+    "profileUpdated": "Профиль ресторана обновлён.",
+    "profileUpdateFailed": "Не удалось обновить профиль ресторана."
   },
   "empty": {
     "branches": {

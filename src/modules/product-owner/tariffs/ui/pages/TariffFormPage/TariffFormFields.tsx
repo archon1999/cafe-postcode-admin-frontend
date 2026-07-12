@@ -47,7 +47,7 @@ export const TariffFormFields = ({
         label={t('fields.permissions')}
         enabled={canManagePlatform}
         helperText={t('labels.permissionsAutoSelected', {
-          count: derivedPermissionCount
+          count: derivedPermissionCount,
         })}
       />
     </Box>

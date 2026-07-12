@@ -7,6 +7,7 @@ import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath } from 'app/routes';
 import { useParams, useRedirectOnNotFound } from 'shared/hooks/router';
+import { BackToListButton } from 'shared/ui/BackToListButton';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { LabelRowWithIcon } from 'shared/ui/LabelRowWithIcon/LabelRowWithIcon';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
@@ -27,10 +28,7 @@ const OrderItemNoteDetailPage = () => {
     <Content>
       <CustomBreadcrumbs
         heading={t('pages.orderItemNoteDetail.title')}
-        links={[
-          { name: t('pages.orderItemNotes.title'), href: RoutePath.orderItemNoteList },
-          { name: `#${note.orderNumber}` },
-        ]}
+        action={<BackToListButton href={RoutePath.orderItemNoteList} />}
       />
       <Card sx={{ p: 3 }}>
         <Stack spacing={2.5}>

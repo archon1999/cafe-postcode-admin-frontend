@@ -14,6 +14,7 @@ import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath, RouterPathHelper } from 'app/routes';
 import { usePageTitle } from 'shared/hooks/use-page-title';
+import { BackToListButton } from 'shared/ui/BackToListButton';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { EmptyValueChip, renderEmptyValue } from 'shared/ui/EmptyValue';
 import { Iconify, type IconifyName } from 'shared/ui/Iconify';
@@ -178,9 +179,7 @@ export const UserDetailPageContent = ({ id, surface = 'user' }: UserDetailPageCo
   const userQuery = isEmployeeSurface ? employeeUserQuery : systemUserQuery;
   const user = userQuery.data;
   const listTitle = isEmployeeSurface ? t('pages.employeeList.title') : t('pages.list.title');
-  const detailTitle = isEmployeeSurface
-    ? t('pages.employeeView.title')
-    : t('pages.view.title');
+  const detailTitle = isEmployeeSurface ? t('pages.employeeView.title') : t('pages.view.title');
   const hasHallAccessPermission = Boolean(
     user?.permissionCodes?.some((permissionCode) => HALL_ACCESS_PERMISSION_CODES.includes(permissionCode as never)),
   );
@@ -270,25 +269,21 @@ export const UserDetailPageContent = ({ id, surface = 'user' }: UserDetailPageCo
     <Content>
       <CustomBreadcrumbs
         heading={detailTitle}
-        links={[
-          {
-            name: listTitle,
-            href: isEmployeeSurface ? RoutePath.employeeList : RoutePath.userList,
-          },
-          { name: user.fullName },
-        ]}
         action={
-          !isEmployeeSurface || canEditEmployee ? (
-            <Button
-              component={RouterLink}
-              href={isEmployeeSurface ? RouterPathHelper.employeeEdit(user.id) : RouterPathHelper.userEdit(user.id)}
-              variant="contained"
-              color="black"
-              startIcon={<Iconify icon="solar:pen-bold" />}
-              data-testid="user-view-edit">
-              {t('actions.edit')}
-            </Button>
-          ) : undefined
+          <Stack direction="row" spacing={1}>
+            <BackToListButton href={isEmployeeSurface ? RoutePath.employeeList : RoutePath.userList} />
+            {!isEmployeeSurface || canEditEmployee ? (
+              <Button
+                component={RouterLink}
+                href={isEmployeeSurface ? RouterPathHelper.employeeEdit(user.id) : RouterPathHelper.userEdit(user.id)}
+                variant="contained"
+                color="black"
+                startIcon={<Iconify icon="solar:pen-bold" />}
+                data-testid="user-view-edit">
+                {t('actions.edit')}
+              </Button>
+            ) : null}
+          </Stack>
         }
         sx={{ mb: 2.5 }}
       />

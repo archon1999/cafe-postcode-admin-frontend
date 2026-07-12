@@ -87,6 +87,9 @@ const RestaurantsListPage = lazy(
 const MyRestaurantPage = lazy(
   () => import('modules/restaurant-admin/restaurant-management/ui/pages/MyRestaurantPage/MyRestaurantPage'),
 );
+const RestaurantSetupPage = lazy(
+  () => import('modules/restaurant-admin/restaurant-management/ui/pages/RestaurantSetupPage/RestaurantSetupPage'),
+);
 const MyRestaurantGeneralPage = lazy(
   () =>
     import('modules/restaurant-admin/restaurant-management/ui/pages/MyRestaurantGeneralPage/MyRestaurantGeneralPage'),
@@ -108,6 +111,9 @@ const MyRestaurantIntegrationsPage = lazy(
     import(
       'modules/restaurant-admin/restaurant-management/ui/pages/MyRestaurantIntegrationsPage/MyRestaurantIntegrationsPage'
     ),
+);
+const PrintTemplatesPage = lazy(
+  () => import('modules/restaurant-admin/printing/ui/pages/PrintTemplatesPage/PrintTemplatesPage'),
 );
 const RestaurantFormPage = lazy(
   () => import('modules/business-partner/restaurants/ui/pages/RestaurantFormPage/RestaurantFormPage'),
@@ -298,6 +304,10 @@ const mainChildren: RouteObject[] = [
     element: <MyRestaurantPage />,
   },
   {
+    path: RoutePath.organizationMyRestaurantSetup,
+    element: <RestaurantSetupPage />,
+  },
+  {
     path: RoutePath.organizationMyRestaurantGeneral,
     element: <MyRestaurantGeneralPage />,
   },
@@ -312,6 +322,10 @@ const mainChildren: RouteObject[] = [
   {
     path: RoutePath.organizationMyRestaurantIntegrationConfigList,
     element: <MyRestaurantIntegrationsPage />,
+  },
+  {
+    path: RoutePath.organizationMyRestaurantPrintTemplateList,
+    element: <PrintTemplatesPage />,
   },
   {
     path: RoutePath.organizationRestaurantCreate,

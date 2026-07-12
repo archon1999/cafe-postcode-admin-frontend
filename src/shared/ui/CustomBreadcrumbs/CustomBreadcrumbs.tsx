@@ -75,7 +75,7 @@ export function CustomBreadcrumbs({
   const renderMoreLinks = () => <MoreLinks links={moreLinks} {...slotProps?.moreLinks} />;
 
   return (
-    <BreadcrumbsRoot sx={[{ mb: { xs: 3, md: 5 } }, ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
+    <BreadcrumbsRoot sx={[{ mb: { xs: 2, md: 3 } }, ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
       <BreadcrumbsContainer {...slotProps?.container}>
         <BreadcrumbsContent {...slotProps?.content}>
           {(heading || backHref) && renderHeading()}
