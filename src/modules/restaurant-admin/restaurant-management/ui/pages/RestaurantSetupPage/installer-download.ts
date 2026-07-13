@@ -1,20 +1,15 @@
 const DEFAULT_INSTALLER_URL = '/downloads/CafePostcodeAgentSetup.exe';
-const ENROLLMENT_TOKEN_PATTERN = /^cpe_[A-Za-z0-9_-]{20,}$/;
+const RESTAURANT_CODE_PATTERN = /^[A-Za-z0-9]{6}$/;
 
-function encodeBackendUrl(backendUrl: string) {
-  const normalized = new URL(backendUrl).origin;
-  return btoa(normalized).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-}
-
-export function localAgentInstallerFileName(enrollmentToken: string, backendUrl: string) {
-  const token = enrollmentToken.trim();
-  if (!ENROLLMENT_TOKEN_PATTERN.test(token)) {
-    throw new Error('Invalid Local Agent enrollment token.');
+export function localAgentInstallerFileName(restaurantCode: string) {
+  const code = restaurantCode.trim();
+  if (!RESTAURANT_CODE_PATTERN.test(code)) {
+    throw new Error('Invalid restaurant auth code.');
   }
-  return `CafePostcodeAgentSetup-${encodeBackendUrl(backendUrl)}--${token}.exe`;
+  return `CafePostcodeAgentSetup-${code}.exe`;
 }
 
-export async function downloadLocalAgentInstaller(enrollmentToken: string, backendUrl: string) {
+export async function downloadLocalAgentInstaller(restaurantCode: string) {
   const configuredUrl = String(import.meta.env.VITE_LOCAL_AGENT_INSTALLER_URL || '').trim();
   const installerUrl = new URL(configuredUrl || DEFAULT_INSTALLER_URL, window.location.origin);
   installerUrl.searchParams.set('download', String(Date.now()));
@@ -26,7 +21,7 @@ export async function downloadLocalAgentInstaller(enrollmentToken: string, backe
   const objectUrl = URL.createObjectURL(await response.blob());
   const anchor = document.createElement('a');
   anchor.href = objectUrl;
-  anchor.download = localAgentInstallerFileName(enrollmentToken, backendUrl);
+  anchor.download = localAgentInstallerFileName(restaurantCode);
   document.body.appendChild(anchor);
   anchor.click();
   anchor.remove();

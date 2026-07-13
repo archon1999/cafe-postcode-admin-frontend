@@ -25,7 +25,6 @@ import { Iconify } from 'shared/ui/Iconify';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 
 import { useApplyRestaurantSetupMutation, useRestaurantSetupReadinessQuery } from '../../../application';
-import { restaurantSetupRepository } from '../../../data-access/repository/setup.repository';
 import type { RestaurantSetupApplyPayload, RestaurantSetupStep } from '../../../domain';
 import { MyRestaurantSectionLayout } from '../../components/MyRestaurantSectionLayout';
 import { MyRestaurantSettingsTabs } from '../../components/MyRestaurantSettingsTabs';
@@ -99,7 +98,6 @@ const RestaurantSetupPage = () => {
   const [fiscalTaxNumber, setFiscalTaxNumber] = useState('');
   const [martaAddress, setMartaAddress] = useState('');
   const [checkingIntegration, setCheckingIntegration] = useState<string | null>(null);
-  const [issuingEnrollment, setIssuingEnrollment] = useState(false);
   const hydratedRestaurantId = useRef<string | null>(null);
 
   useEffect(() => {
@@ -222,18 +220,9 @@ const RestaurantSetupPage = () => {
       return devices;
     });
 
-  const createEnrollment = async () => {
-    setIssuingEnrollment(true);
-    try {
-      return await restaurantSetupRepository.issueLocalAgentEnrollment();
-    } finally {
-      setIssuingEnrollment(false);
-    }
-  };
   const downloadInstaller = async () => {
     try {
-      const enrollment = await createEnrollment();
-      await downloadLocalAgentInstaller(enrollment.enrollmentToken, readiness.installerManifest.backendUrl);
+      await downloadLocalAgentInstaller(readiness.installerManifest.restaurantCode);
       toast.success(t('setup.messages.installerDownloaded'));
     } catch {
       toast.error(t('setup.messages.installerDownloadFailed'));
@@ -473,7 +462,6 @@ const RestaurantSetupPage = () => {
             <Alert severity="info">{t('setup.installer.hint')}</Alert>
             <Button
               variant="contained"
-              disabled={issuingEnrollment}
               startIcon={<Iconify icon="solar:download-minimalistic-linear" />}
               onClick={() => void downloadInstaller()}>
               {t('setup.actions.downloadInstaller')}

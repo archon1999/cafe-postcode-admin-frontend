@@ -16,15 +16,10 @@ export type RestaurantInstallerManifest = {
   schemaVersion: number;
   restaurantId: string;
   restaurantName: string;
+  restaurantCode: string;
   backendUrl: string;
   coordinatorMode: boolean;
   localHttpListen: string;
-};
-
-export type LocalAgentEnrollment = {
-  enrollmentToken: string;
-  expiresAt: string;
-  restaurantId: string;
 };
 
 export type RestaurantSetupReadiness = {
