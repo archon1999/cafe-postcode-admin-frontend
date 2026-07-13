@@ -107,8 +107,8 @@
         "salesTotal": "Sof tushum",
         "ordersCount": "Buyurtmalar soni",
         "averageCheck": "O'rtacha chek",
-        "openChecks": "Ochiq cheklar",
-        "activeTables": "Faol stollar"
+        "prechecksCount": "Precheklar",
+        "receiptsCount": "Cheklar"
       }
     },
     "sales": {

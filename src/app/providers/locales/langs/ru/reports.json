@@ -107,8 +107,8 @@
         "salesTotal": "Чистая выручка",
         "ordersCount": "Количество заказов",
         "averageCheck": "Средний чек",
-        "openChecks": "Открытые чеки",
-        "activeTables": "Активные столы"
+        "prechecksCount": "Пречеки",
+        "receiptsCount": "Чеки"
       }
     },
     "sales": {

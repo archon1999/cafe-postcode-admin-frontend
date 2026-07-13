@@ -107,8 +107,8 @@
         "salesTotal": "Соф тушум",
         "ordersCount": "Буюртмалар сони",
         "averageCheck": "Ўртача чек",
-        "openChecks": "Очиқ чеклар",
-        "activeTables": "Фаол столлар"
+        "prechecksCount": "Пречеклар",
+        "receiptsCount": "Чеклар"
       }
     },
     "sales": {

@@ -893,8 +893,8 @@ export type AdminReportSummary = {
   salesTotal: number;
   ordersCount: number;
   averageCheck: number;
-  openChecks: number;
-  activeTables: number;
+  prechecksCount: number;
+  receiptsCount: number;
 };
 
 export type AdminSalesReportRow = {

@@ -20,8 +20,8 @@ type SummaryMetricKey =
   | 'salesTotal'
   | 'ordersCount'
   | 'averageCheck'
-  | 'openChecks'
-  | 'activeTables';
+  | 'prechecksCount'
+  | 'receiptsCount';
 type SummaryItem = {
   key: SummaryMetricKey;
   labelKey: string;
@@ -55,8 +55,16 @@ const SUMMARY_ITEMS: SummaryItem[] = [
     icon: 'solar:chart-2-bold-duotone',
     isMoney: true,
   },
-  { key: 'openChecks', labelKey: 'reports.summary.metrics.openChecks', icon: 'solar:document-text-bold-duotone' },
-  { key: 'activeTables', labelKey: 'reports.summary.metrics.activeTables', icon: 'solar:plate-bold-duotone' },
+  {
+    key: 'prechecksCount',
+    labelKey: 'reports.summary.metrics.prechecksCount',
+    icon: 'solar:document-text-bold-duotone',
+  },
+  {
+    key: 'receiptsCount',
+    labelKey: 'reports.summary.metrics.receiptsCount',
+    icon: 'solar:bill-check-bold-duotone',
+  },
 ] as const;
 
 function getSummaryMetricValue(data: AdminReportSummary | undefined, key: SummaryMetricKey) {
