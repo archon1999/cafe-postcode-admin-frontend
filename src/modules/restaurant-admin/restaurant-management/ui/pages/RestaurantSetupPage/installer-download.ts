@@ -16,7 +16,9 @@ export function localAgentInstallerFileName(enrollmentToken: string, backendUrl:
 
 export async function downloadLocalAgentInstaller(enrollmentToken: string, backendUrl: string) {
   const configuredUrl = String(import.meta.env.VITE_LOCAL_AGENT_INSTALLER_URL || '').trim();
-  const response = await fetch(configuredUrl || DEFAULT_INSTALLER_URL, { credentials: 'same-origin' });
+  const installerUrl = new URL(configuredUrl || DEFAULT_INSTALLER_URL, window.location.origin);
+  installerUrl.searchParams.set('download', String(Date.now()));
+  const response = await fetch(installerUrl, { cache: 'no-store', credentials: 'same-origin' });
   if (!response.ok) {
     throw new Error(`Local Agent installer HTTP ${response.status}`);
   }
