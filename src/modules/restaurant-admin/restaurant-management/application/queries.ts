@@ -167,3 +167,20 @@ export function useRestaurantSetupReadinessQuery() {
     queryFn: () => restaurantSetupRepository.getReadiness(),
   });
 }
+
+export function useLocalAgentStatusQuery() {
+  return useQuery({
+    queryKey: organizationsKeys.localAgentStatus(),
+    queryFn: () => restaurantSetupRepository.getLocalAgentStatus(),
+    refetchInterval: 30_000,
+  });
+}
+
+export function useLocalAgentDiagnosticsQuery(enabled: boolean) {
+  return useQuery({
+    queryKey: organizationsKeys.localAgentDiagnostics(),
+    queryFn: () => restaurantSetupRepository.getLocalAgentDiagnostics(),
+    enabled,
+    retry: false,
+  });
+}

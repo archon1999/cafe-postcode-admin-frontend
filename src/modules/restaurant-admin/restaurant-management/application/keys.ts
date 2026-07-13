@@ -29,4 +29,6 @@ export const organizationsKeys = {
   restaurantDetail: restaurantKeys.id,
   halls: () => hallsKeys.all,
   setupReadiness: () => [...setupKeys.all, 'readiness'] as const,
+  localAgentStatus: () => [...setupKeys.all, 'local-agent-status'] as const,
+  localAgentDiagnostics: () => [...setupKeys.all, 'local-agent-diagnostics'] as const,
 } as const;

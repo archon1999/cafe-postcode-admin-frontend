@@ -126,6 +126,45 @@
       "description": "Установщик автоматически подключит ресторан, настроит автозапуск и запустит агент.",
       "hint": "Скачайте и откройте файл, затем нажмите «Установить». Командная строка и ручная настройка не нужны."
     },
+    "agentMonitoring": {
+      "title": "Диагностика системы",
+      "agent": "Local agent",
+      "server": "Связь с сервером",
+      "fiscal": "Fiscal",
+      "marta": "MARTA",
+      "printer": "Принтеры",
+      "version": "Версия агента",
+      "versionValue": "Версия: {{version}}",
+      "latestVersion": "Последняя версия",
+      "lastSuccess": "Последняя успешная синхронизация",
+      "lastAttempt": "Последняя попытка",
+      "pending": "В очереди",
+      "failed": "Ошибки",
+      "online": "Online",
+      "offline": "Offline",
+      "offlineMode": "Offline-режим",
+      "notConfigured": "Не настроено",
+      "unknown": "Неизвестно",
+      "noData": "Нет данных",
+      "update": {
+        "label": "Обновление",
+        "upToDate": "Обновлено",
+        "pending": "Ожидается обновление",
+        "disabled": "Отключено",
+        "unavailable": "Проверка недоступна"
+      },
+      "actions": {
+        "openDiagnostics": "Диагностика системы",
+        "updateNow": "Обновить сейчас",
+        "refresh": "Проверить снова",
+        "close": "Закрыть"
+      },
+      "messages": {
+        "diagnosticsFailed": "Не удалось получить диагностику Local Agent.",
+        "updateRequested": "Проверка обновления запущена.",
+        "updateFailed": "Не удалось запустить обновление."
+      }
+    },
     "messages": {
       "integrationCheckSucceeded": "Подключение {{name}} успешно проверено.",
       "integrationCheckFailed": "Не удалось проверить подключение {{name}}.",

@@ -92,3 +92,62 @@ export type RestaurantSetupApplyResponse = {
   };
   readiness: RestaurantSetupReadiness;
 };
+
+export type LocalAgentUpdateStatus = 'up_to_date' | 'pending' | 'disabled' | 'unavailable';
+
+export type LocalAgentAdminStatus = {
+  agent: {
+    id: string;
+    name: string;
+    online: boolean;
+    lastSeenAt: string | null;
+    version: string;
+    capabilities: string[];
+  } | null;
+  update: {
+    status: LocalAgentUpdateStatus;
+    currentVersion: string;
+    latestVersion: string;
+    mandatory: boolean;
+    detail: string;
+  } | null;
+};
+
+export type LocalAgentHealthComponent = {
+  configured: boolean;
+  online: boolean;
+  state: string;
+  detail?: string;
+  checkedAt?: string;
+  items?: Array<{
+    id?: string;
+    name?: string;
+    provider?: string;
+    online: boolean;
+    detail?: string;
+    checkedAt: string;
+  }>;
+};
+
+export type LocalAgentDiagnostics = {
+  agent: { online: boolean; version: string; restaurantId?: string };
+  backend: { online: boolean; offlineMode: boolean; detail?: string };
+  sync: {
+    ready: boolean;
+    lastSuccessAt?: string;
+    lastAttemptAt?: string;
+    pendingOutbox: number;
+    failedOutbox: number;
+    failedOperations?: Array<{
+      operationId: string;
+      path: string;
+      lastError: string;
+      responseStatus?: number;
+      updatedAt?: string;
+    }>;
+  };
+  fiscal: LocalAgentHealthComponent;
+  marta: LocalAgentHealthComponent;
+  printer: LocalAgentHealthComponent;
+  alerts?: Array<{ code: string; severity: string; message: string }>;
+};

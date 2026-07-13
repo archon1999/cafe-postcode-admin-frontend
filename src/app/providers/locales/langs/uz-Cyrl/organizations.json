@@ -126,6 +126,45 @@
       "description": "Installer ресторанга уланиш, autostart ва агентни ишга туширишни автоматик бажаради.",
       "hint": "Файлни юклаб олиб очинг ва Ўрнатиш тугмасини босинг. Terminal буйруғи ёки қўлда созлаш керак эмас."
     },
+    "agentMonitoring": {
+      "title": "Тизим диагностикаси",
+      "agent": "Local agent",
+      "server": "Сервер алоқаси",
+      "fiscal": "Fiscal",
+      "marta": "MARTA",
+      "printer": "Принтерлар",
+      "version": "Агент версияси",
+      "versionValue": "Версия: {{version}}",
+      "latestVersion": "Сўнгги версия",
+      "lastSuccess": "Охирги муваффақиятли sync",
+      "lastAttempt": "Охирги уриниш",
+      "pending": "Навбатдаги амаллар",
+      "failed": "Хато амаллар",
+      "online": "Online",
+      "offline": "Offline",
+      "offlineMode": "Offline режим",
+      "notConfigured": "Созланмаган",
+      "unknown": "Номаълум",
+      "noData": "Маълумот йўқ",
+      "update": {
+        "label": "Янгиланиш",
+        "upToDate": "Янгиланган",
+        "pending": "Янгиланиш кутилмоқда",
+        "disabled": "Ўчирилган",
+        "unavailable": "Текшириб бўлмади"
+      },
+      "actions": {
+        "openDiagnostics": "Тизим диагностикаси",
+        "updateNow": "Ҳозир янгилаш",
+        "refresh": "Қайта текшириш",
+        "close": "Ёпиш"
+      },
+      "messages": {
+        "diagnosticsFailed": "Local agent диагностикасини олиб бўлмади.",
+        "updateRequested": "Янгиланиш текшируви бошланди.",
+        "updateFailed": "Янгиланишни бошлатиб бўлмади."
+      }
+    },
     "messages": {
       "integrationCheckSucceeded": "{{name}} уланиши муваффақиятли текширилди.",
       "integrationCheckFailed": "{{name}} уланишини текшириб бўлмади.",

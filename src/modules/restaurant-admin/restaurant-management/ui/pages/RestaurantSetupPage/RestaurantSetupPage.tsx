@@ -30,6 +30,7 @@ import { MyRestaurantSectionLayout } from '../../components/MyRestaurantSectionL
 import { MyRestaurantSettingsTabs } from '../../components/MyRestaurantSettingsTabs';
 
 import { downloadLocalAgentInstaller } from './installer-download';
+import { LocalAgentDiagnostics } from './LocalAgentDiagnostics';
 import { getSetupPrinterSettings } from './setup-printer';
 
 type CashDeskDraft = {
@@ -430,7 +431,10 @@ const RestaurantSetupPage = () => {
                       label={t(`setup.status.${step.status}`)}
                     />
                   }>
-                  {t(`setup.steps.${step.id}`)}
+                  <Stack component="span" direction="row" alignItems="center" spacing={0.5}>
+                    <span>{t(`setup.steps.${step.id}`)}</span>
+                    {step.id === 'coordinator' ? <LocalAgentDiagnostics /> : null}
+                  </Stack>
                 </StepLabel>
                 <StepContent>
                   <Stack spacing={1.25} sx={{ pb: 2 }}>

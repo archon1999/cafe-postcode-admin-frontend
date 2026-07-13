@@ -183,3 +183,16 @@ export function useApplyRestaurantSetupMutation() {
     },
   });
 }
+
+export function useRequestLocalAgentUpdateMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => restaurantSetupRepository.requestLocalAgentUpdate(),
+    onSuccess: async () => {
+      await invalidateQueryKeys(queryClient, [
+        organizationsKeys.localAgentStatus(),
+        organizationsKeys.localAgentDiagnostics(),
+      ]);
+    },
+  });
+}

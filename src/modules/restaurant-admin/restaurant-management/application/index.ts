@@ -14,6 +14,7 @@ export {
   useUpdatePrepStationMutation,
   useUpdateRestaurantMutation,
   useApplyRestaurantSetupMutation,
+  useRequestLocalAgentUpdateMutation,
 } from './mutations';
 export {
   useGetCashDesksListQuery,
@@ -31,4 +32,6 @@ export {
   useGetRestaurantsListQuery,
   useGetRestaurantsQuery,
   useRestaurantSetupReadinessQuery,
+  useLocalAgentStatusQuery,
+  useLocalAgentDiagnosticsQuery,
 } from './queries';

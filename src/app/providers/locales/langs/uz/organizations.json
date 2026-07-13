@@ -126,6 +126,45 @@
       "description": "Installer restoranga ulanish, autostart va agentni ishga tushirishni avtomatik bajaradi.",
       "hint": "Faylni yuklab olib oching va O'rnatish tugmasini bosing. Terminal komandasi yoki qo'lda sozlash kerak emas."
     },
+    "agentMonitoring": {
+      "title": "Tizim diagnostikasi",
+      "agent": "Local agent",
+      "server": "Server aloqasi",
+      "fiscal": "Fiscal",
+      "marta": "MARTA",
+      "printer": "Printerlar",
+      "version": "Agent versiyasi",
+      "versionValue": "Versiya: {{version}}",
+      "latestVersion": "So'nggi versiya",
+      "lastSuccess": "Oxirgi muvaffaqiyatli sync",
+      "lastAttempt": "Oxirgi urinish",
+      "pending": "Navbatdagi amallar",
+      "failed": "Xato amallar",
+      "online": "Online",
+      "offline": "Offline",
+      "offlineMode": "Offline rejim",
+      "notConfigured": "Sozlanmagan",
+      "unknown": "Noma'lum",
+      "noData": "Ma'lumot yo'q",
+      "update": {
+        "label": "Yangilanish",
+        "upToDate": "Yangilangan",
+        "pending": "Yangilanish kutilmoqda",
+        "disabled": "O'chirilgan",
+        "unavailable": "Tekshirib bo'lmadi"
+      },
+      "actions": {
+        "openDiagnostics": "Tizim diagnostikasi",
+        "updateNow": "Hozir yangilash",
+        "refresh": "Qayta tekshirish",
+        "close": "Yopish"
+      },
+      "messages": {
+        "diagnosticsFailed": "Local agent diagnostikasini olib bo'lmadi.",
+        "updateRequested": "Yangilanish tekshiruvi boshlandi.",
+        "updateFailed": "Yangilanishni boshlatib bo'lmadi."
+      }
+    },
     "messages": {
       "integrationCheckSucceeded": "{{name}} ulanishi muvaffaqiyatli tekshirildi.",
       "integrationCheckFailed": "{{name}} ulanishini tekshirib bo'lmadi.",
