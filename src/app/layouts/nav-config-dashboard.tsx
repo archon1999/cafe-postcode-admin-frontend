@@ -163,16 +163,18 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
       : null,
   ].filter(Boolean) as NavSectionProps['data'][number]['items'];
 
-  const myRestaurantChildren = [
+  const myRestaurantSettingsItem =
     canAccess(RoutePath.organizationMyRestaurantSetup) || canAccess(RoutePath.organizationMyRestaurantGeneral)
       ? {
-          title: t('restaurantSettings'),
-          path: canAccess(RoutePath.organizationMyRestaurantGeneral)
-            ? RoutePath.organizationMyRestaurantGeneral
-            : RoutePath.organizationMyRestaurantSetup,
+          title: t('myRestaurant'),
+          path: canAccess(RoutePath.organizationMyRestaurantSetup)
+            ? RoutePath.organizationMyRestaurantSetup
+            : RoutePath.organizationMyRestaurantGeneral,
           icon: ICONS.general,
         }
-      : null,
+      : null;
+
+  const myRestaurantChildren = [
     canAccess(RoutePath.organizationMyRestaurantCashDeskList)
       ? {
           title: t('cashDesks'),
@@ -204,6 +206,7 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
   ].filter(Boolean) as NavSectionProps['data'][number]['items'];
 
   const restaurantAdminItems = [
+    myRestaurantSettingsItem,
     canAccess(RoutePath.reports)
       ? {
           title: t('reports'),
@@ -221,7 +224,7 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
     myRestaurantChildren.length
       ? {
           title: t('restaurantManagement'),
-          path: RoutePath.organizationMyRestaurant,
+          path: myRestaurantChildren[0].path,
           icon: ICONS.restaurantManagement,
           children: myRestaurantChildren,
         }

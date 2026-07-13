@@ -16,16 +16,6 @@ export function MyRestaurantSettingsTabs() {
 
   return (
     <Tabs value={value} variant="scrollable" scrollButtons="auto" sx={{ mb: 3, px: { xs: 1, sm: 2 } }}>
-      {canAccessMyRestaurantGeneral(profile) ? (
-        <Tab
-          value="general"
-          icon={<Iconify icon="solar:shop-2-bold-duotone" width={20} />}
-          iconPosition="start"
-          label={t('pages.myRestaurantGeneral.title')}
-          component={RouterLink}
-          href={RoutePath.organizationMyRestaurantGeneral}
-        />
-      ) : null}
       {canAccessMyRestaurantSetup(profile) ? (
         <Tab
           value="setup"
@@ -34,6 +24,16 @@ export function MyRestaurantSettingsTabs() {
           label={t('pages.setup.title')}
           component={RouterLink}
           href={RoutePath.organizationMyRestaurantSetup}
+        />
+      ) : null}
+      {canAccessMyRestaurantGeneral(profile) ? (
+        <Tab
+          value="general"
+          icon={<Iconify icon="solar:shop-2-bold-duotone" width={20} />}
+          iconPosition="start"
+          label={t('pages.myRestaurantGeneral.title')}
+          component={RouterLink}
+          href={RoutePath.organizationMyRestaurantGeneral}
         />
       ) : null}
     </Tabs>

@@ -9,6 +9,7 @@ import {
   canAccessReports,
   canUpdateEmployees,
   getDefaultAdminPath,
+  getDefaultMyRestaurantPath,
   type AdminAccessSnapshot,
 } from './admin-access';
 import { RoutePath } from './route-paths';
@@ -94,10 +95,11 @@ describe('admin access', () => {
     expect(canAccessAdminPath(RoutePath.permissionList, snapshot)).toBe(false);
   });
 
-  it('prefers reports as the restaurant-admin landing page', () => {
+  it('prefers my restaurant setup as the restaurant-admin landing page', () => {
     const snapshot = createSnapshot(['reports.view', 'restaurant_settings.view', 'cash_desks.view']);
 
-    expect(getDefaultAdminPath(snapshot)).toBe(RoutePath.reports);
+    expect(getDefaultAdminPath(snapshot)).toBe(RoutePath.organizationMyRestaurant);
+    expect(getDefaultMyRestaurantPath(snapshot)).toBe(RoutePath.organizationMyRestaurantSetup);
   });
 
   it('keeps fast-food admin on restaurant management and catalog without floor access', () => {

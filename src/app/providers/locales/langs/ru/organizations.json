@@ -49,10 +49,10 @@
       "title": "Мой ресторан"
     },
     "myRestaurantGeneral": {
-      "title": "Общее"
+      "title": "Информация"
     },
     "setup": {
-      "title": "Настройка ресторана"
+      "title": "Настройка"
     },
     "integrationCreate": {
       "title": "Новая интеграция"
