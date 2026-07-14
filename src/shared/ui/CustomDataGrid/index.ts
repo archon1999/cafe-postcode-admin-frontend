@@ -7,6 +7,7 @@ export * from './DataGridColumnsDialogButton';
 export * from './DataGridFiltersToolbar';
 
 export * from './DataGrid';
+export * from './DataGridRefreshContext';
 
 export * from './GridActionsCellItem';
 

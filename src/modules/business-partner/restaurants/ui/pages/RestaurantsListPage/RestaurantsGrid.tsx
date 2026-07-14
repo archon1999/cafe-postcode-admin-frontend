@@ -229,6 +229,8 @@ export function RestaurantsGrid() {
           columns={columns}
           rowCount={query.data?.total ?? 0}
           loading={query.isLoading || resetPasswordMutation.isPending || rotateAuthCodeMutation.isPending}
+          onRefresh={() => void query.refetch()}
+          refreshing={query.isFetching}
           localeText={localeText}
           paginationMode="server"
           sortingMode="server"

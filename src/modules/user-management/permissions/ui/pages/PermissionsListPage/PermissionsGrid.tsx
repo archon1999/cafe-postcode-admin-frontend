@@ -155,6 +155,8 @@ export const PermissionsGrid = () => {
         columns={columns}
         rowCount={permissionsQuery.data?.total ?? 0}
         loading={permissionsQuery.isLoading}
+        onRefresh={() => void permissionsQuery.refetch()}
+        refreshing={permissionsQuery.isFetching}
         localeText={localeText}
         paginationMode="server"
         sortingMode="server"

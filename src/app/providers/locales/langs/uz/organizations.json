@@ -163,6 +163,12 @@
         "diagnosticsFailed": "Local agent diagnostikasini olib bo'lmadi.",
         "updateRequested": "Yangilanish tekshiruvi boshlandi.",
         "updateFailed": "Yangilanishni boshlatib bo'lmadi."
+      },
+      "logs": {
+        "title": "Oxirgi log va xatolar",
+        "unsupported": "Bu agent versiyasi masofadan log ko'rishni qo'llamaydi.",
+        "failed": "Agent loglarini olib bo'lmadi.",
+        "empty": "Log yozuvlari yo'q."
       }
     },
     "messages": {

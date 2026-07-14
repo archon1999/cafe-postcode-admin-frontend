@@ -29,6 +29,8 @@ type ReportTableCardProps<RowModel extends GridValidRowModel> = {
   columns: GridColDef<RowModel>[];
   rowCount: number;
   loading: boolean;
+  onRefresh: () => void;
+  refreshing: boolean;
   localeText: Partial<GridLocaleText>;
   paginationModel: GridPaginationModel;
   onPaginationModelChange: (model: GridPaginationModel) => void;
@@ -48,6 +50,8 @@ export function ReportTableCard<RowModel extends GridValidRowModel>({
   columns,
   rowCount,
   loading,
+  onRefresh,
+  refreshing,
   localeText,
   paginationModel,
   onPaginationModelChange,
@@ -70,6 +74,8 @@ export function ReportTableCard<RowModel extends GridValidRowModel>({
         getEstimatedRowHeight={autoRowHeight ? () => 72 : undefined}
         rowCount={rowCount}
         loading={loading}
+        onRefresh={onRefresh}
+        refreshing={refreshing}
         localeText={localeText}
         paginationMode="server"
         sortingMode="server"

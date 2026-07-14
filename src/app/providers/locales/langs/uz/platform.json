@@ -137,37 +137,17 @@
     "actions": {
       "diagnostics": "Diagnostika",
       "refresh": "Yangilash",
-      "close": "Yopish",
-      "updateNow": "Agentni yangilash",
       "bulkUpdate": "Versiyani yangilash",
       "refreshContext": "Ma’lumotlarni yangilash",
       "restart": "Restart",
       "confirm": "Tasdiqlash"
     },
-    "diagnostics": {
-      "title": "Local Agent diagnostikasi",
-      "server": "Server aloqasi",
-      "fiscal": "Fiscal",
-      "marta": "MARTA",
-      "printer": "Printer",
-      "lastSuccess": "Oxirgi muvaffaqiyatli sinxronizatsiya",
-      "pending": "Yuborilmagan operatsiyalar",
-      "failed": "Xatoli operatsiyalar",
-      "lanEndpoints": "Local manzillar"
-    },
     "messages": {
-      "diagnosticsFailed": "Diagnostika ma'lumotlarini olib bo'lmadi.",
       "updateRequested": "Agentni yangilash buyrug'i yuborildi.",
       "updateFailed": "Agentni yangilash buyrug'ini yuborib bo'lmadi.",
       "bulkSucceeded": "{{count}} ta agent uchun buyruq bajarildi.",
       "bulkPartial": "{{succeeded}} ta muvaffaqiyatli, {{failed}} ta xato.",
       "bulkFailed": "Ommaviy amalni bajarib bo'lmadi."
-    },
-    "logs": {
-      "title": "Oxirgi log va xatolar",
-      "unsupported": "Bu agent versiyasi masofadan log ko'rishni qo'llamaydi.",
-      "failed": "Agent loglarini olib bo'lmadi.",
-      "empty": "Log yozuvlari yo'q."
     },
     "bulk": {
       "selectedLabel": "Tanlangan agentlar",

@@ -980,6 +980,13 @@ export type AdminLocalAgentDiagnostics = {
     printer?: Record<string, unknown>;
     alerts?: Array<Record<string, unknown>>;
   };
+  update: {
+    status: 'up_to_date' | 'pending' | 'disabled' | 'unavailable';
+    currentVersion: string;
+    latestVersion: string;
+    mandatory: boolean;
+    detail: string;
+  };
 };
 
 export type AdminLocalAgentUpdateResult = {

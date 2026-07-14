@@ -124,6 +124,8 @@ export function HallsGrid() {
           columns={columns}
           rowCount={query.data?.total ?? 0}
           loading={query.isLoading}
+          onRefresh={() => void query.refetch()}
+          refreshing={query.isFetching}
           localeText={localeText}
           paginationMode="server"
           sortingMode="server"

@@ -287,6 +287,8 @@ export function UsersGrid({ surface = 'user' }: UsersGridProps) {
         columns={columns}
         rowCount={usersQuery.data?.total ?? 0}
         loading={usersQuery.isLoading}
+        onRefresh={() => void usersQuery.refetch()}
+        refreshing={usersQuery.isFetching}
         localeText={localeText}
         paginationMode="server"
         sortingMode="server"

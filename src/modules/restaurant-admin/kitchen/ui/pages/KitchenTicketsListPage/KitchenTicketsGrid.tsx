@@ -237,6 +237,8 @@ export function KitchenTicketsGrid() {
         columns={columns}
         rowCount={ticketsQuery.data?.total ?? 0}
         loading={ticketsQuery.isLoading || prepStationsQuery.isLoading}
+        onRefresh={() => void ticketsQuery.refetch()}
+        refreshing={ticketsQuery.isFetching}
         localeText={localeText}
         paginationMode="server"
         sortingMode="server"

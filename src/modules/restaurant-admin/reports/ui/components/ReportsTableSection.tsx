@@ -904,6 +904,8 @@ export function ReportsTableSection({
             columns={activeColumns}
             rowCount={activeTableQuery.data?.total ?? 0}
             loading={activeTableQuery.isLoading}
+            onRefresh={handleRefresh}
+            refreshing={activeTableQuery.isFetching}
             localeText={localeText}
             paginationModel={paginationModel}
             onPaginationModelChange={onPaginationModelChange}

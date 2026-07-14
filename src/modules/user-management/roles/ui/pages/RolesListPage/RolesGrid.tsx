@@ -157,6 +157,8 @@ export const RolesGrid = () => {
           columns={columns}
           rowCount={rolesQuery.data?.total ?? 0}
           loading={rolesQuery.isLoading}
+          onRefresh={() => void rolesQuery.refetch()}
+          refreshing={rolesQuery.isFetching}
           localeText={localeText}
           rowHeight={72}
           paginationMode="server"

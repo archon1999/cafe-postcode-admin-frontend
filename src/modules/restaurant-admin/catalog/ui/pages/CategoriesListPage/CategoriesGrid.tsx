@@ -131,6 +131,8 @@ export function CategoriesGrid() {
           columns={columns}
           rowCount={categoriesQuery.data?.total ?? 0}
           loading={categoriesQuery.isLoading}
+          onRefresh={() => void categoriesQuery.refetch()}
+          refreshing={categoriesQuery.isFetching}
           localeText={localeText}
           paginationMode="server"
           sortingMode="server"

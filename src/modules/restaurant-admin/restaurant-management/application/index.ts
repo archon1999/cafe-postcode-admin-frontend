@@ -34,4 +34,5 @@ export {
   useRestaurantSetupReadinessQuery,
   useLocalAgentStatusQuery,
   useLocalAgentDiagnosticsQuery,
+  useLocalAgentLogsQuery,
 } from './queries';

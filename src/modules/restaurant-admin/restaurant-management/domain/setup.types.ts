@@ -151,3 +151,9 @@ export type LocalAgentDiagnostics = {
   printer: LocalAgentHealthComponent;
   alerts?: Array<{ code: string; severity: string; message: string }>;
 };
+
+export type LocalAgentLogs = {
+  available: boolean;
+  lines: string[];
+  detail?: string;
+};

@@ -1,16 +1,23 @@
 import type { DataGridProps, GridColDef, GridValidRowModel } from '@mui/x-data-grid';
 import { DataGrid as MuiDataGrid, useGridApiRef } from '@mui/x-data-grid';
-import { cloneElement, isValidElement, useEffect, useMemo, useRef } from 'react';
+import { cloneElement, isValidElement, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { DATA_GRID_PAGE_SIZE_OPTIONS } from 'shared/constants';
 
-type CustomDataGridProps<R extends GridValidRowModel = GridValidRowModel> = DataGridProps<R>;
+import { DataGridRefreshContext } from './DataGridRefreshContext';
+
+type CustomDataGridProps<R extends GridValidRowModel = GridValidRowModel> = DataGridProps<R> & {
+  onRefresh?: () => void | Promise<unknown>;
+  refreshing?: boolean;
+  autoRefreshIntervalMs?: number | false;
+};
 
 const DEFAULT_DATA_GRID_SX = {
   flex: 1,
   minHeight: 0,
 };
 const DEFAULT_DATA_GRID_ROW_HEIGHT = 64;
+export const DEFAULT_DATA_GRID_AUTO_REFRESH_INTERVAL_MS = 15_000;
 
 export const DataGrid = <R extends GridValidRowModel = GridValidRowModel>({
   sx,
@@ -24,12 +31,38 @@ export const DataGrid = <R extends GridValidRowModel = GridValidRowModel>({
   pageSizeOptions = DATA_GRID_PAGE_SIZE_OPTIONS,
   disableRowSelectionOnClick = true,
   disableColumnFilter = true,
+  onRefresh,
+  refreshing = false,
+  autoRefreshIntervalMs = DEFAULT_DATA_GRID_AUTO_REFRESH_INTERVAL_MS,
   ...rest
 }: CustomDataGridProps<R>) => {
   const internalApiRef = useGridApiRef();
   const apiRef = apiRefProp ?? internalApiRef;
   const previousRowsRef = useRef(rows);
   const previousRowCountRef = useRef(rowCount);
+  const refreshRef = useRef(onRefresh);
+  const refreshingRef = useRef(refreshing);
+  const hasRefresh = Boolean(onRefresh);
+
+  useEffect(() => {
+    refreshRef.current = onRefresh;
+    refreshingRef.current = refreshing;
+  }, [onRefresh, refreshing]);
+
+  const handleRefresh = useCallback(() => {
+    if (!refreshRef.current || refreshingRef.current) return;
+    void refreshRef.current();
+  }, []);
+
+  useEffect(() => {
+    if (!hasRefresh || autoRefreshIntervalMs === false || autoRefreshIntervalMs <= 0) return undefined;
+
+    const timer = window.setInterval(() => {
+      if (document.visibilityState === 'visible') handleRefresh();
+    }, autoRefreshIntervalMs);
+
+    return () => window.clearInterval(timer);
+  }, [autoRefreshIntervalMs, handleRefresh, hasRefresh]);
 
   const normalizedColumns = useMemo(
     () =>
@@ -97,20 +130,27 @@ export const DataGrid = <R extends GridValidRowModel = GridValidRowModel>({
     apiRef.current?.unstable_setColumnVirtualization?.(false);
   }, [apiRef]);
 
+  const refreshContext = useMemo(
+    () => ({ onRefresh: hasRefresh ? handleRefresh : undefined, refreshing }),
+    [handleRefresh, hasRefresh, refreshing],
+  );
+
   return (
-    <MuiDataGrid
-      {...rest}
-      apiRef={apiRef}
-      columns={normalizedColumns}
-      rows={resolvedRows}
-      rowCount={resolvedRowCount}
-      loading={loading}
-      paginationMode={paginationMode}
-      rowHeight={rowHeight}
-      pageSizeOptions={pageSizeOptions}
-      disableRowSelectionOnClick={disableRowSelectionOnClick}
-      disableColumnFilter={disableColumnFilter}
-      sx={[DEFAULT_DATA_GRID_SX, ...(Array.isArray(sx) ? sx : [sx])]}
-    />
+    <DataGridRefreshContext.Provider value={refreshContext}>
+      <MuiDataGrid
+        {...rest}
+        apiRef={apiRef}
+        columns={normalizedColumns}
+        rows={resolvedRows}
+        rowCount={resolvedRowCount}
+        loading={loading}
+        paginationMode={paginationMode}
+        rowHeight={rowHeight}
+        pageSizeOptions={pageSizeOptions}
+        disableRowSelectionOnClick={disableRowSelectionOnClick}
+        disableColumnFilter={disableColumnFilter}
+        sx={[DEFAULT_DATA_GRID_SX, ...(Array.isArray(sx) ? sx : [sx])]}
+      />
+    </DataGridRefreshContext.Provider>
   );
 };

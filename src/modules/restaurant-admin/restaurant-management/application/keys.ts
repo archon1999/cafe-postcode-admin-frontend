@@ -31,4 +31,5 @@ export const organizationsKeys = {
   setupReadiness: () => [...setupKeys.all, 'readiness'] as const,
   localAgentStatus: () => [...setupKeys.all, 'local-agent-status'] as const,
   localAgentDiagnostics: () => [...setupKeys.all, 'local-agent-diagnostics'] as const,
+  localAgentLogs: () => [...setupKeys.all, 'local-agent-logs'] as const,
 } as const;

@@ -184,3 +184,12 @@ export function useLocalAgentDiagnosticsQuery(enabled: boolean) {
     retry: false,
   });
 }
+
+export function useLocalAgentLogsQuery(enabled: boolean) {
+  return useQuery({
+    queryKey: organizationsKeys.localAgentLogs(),
+    queryFn: () => restaurantSetupRepository.getLocalAgentLogs(),
+    enabled,
+    retry: false,
+  });
+}

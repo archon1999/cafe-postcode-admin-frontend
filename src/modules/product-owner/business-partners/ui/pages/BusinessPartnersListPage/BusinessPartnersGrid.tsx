@@ -149,6 +149,8 @@ export function BusinessPartnersGrid() {
           columns={columns}
           rowCount={query.data?.total ?? 0}
           loading={query.isLoading || resetPasswordMutation.isPending}
+          onRefresh={() => void query.refetch()}
+          refreshing={query.isFetching}
           localeText={localeText}
           paginationMode="server"
           sortingMode="server"

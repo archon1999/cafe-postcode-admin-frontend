@@ -178,6 +178,8 @@ export const OrdersGrid = () => {
         columns={columns}
         rowCount={ordersQuery.data?.total ?? 0}
         loading={ordersQuery.isLoading}
+        onRefresh={() => void ordersQuery.refetch()}
+        refreshing={ordersQuery.isFetching}
         localeText={localeText}
         paginationMode="server"
         sortingMode="server"

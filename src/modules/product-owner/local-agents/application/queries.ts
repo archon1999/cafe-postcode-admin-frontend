@@ -9,8 +9,6 @@ export function useLocalAgentFleetQuery(params: AdminLocalAgentsQueryParams) {
   return useQuery({
     queryKey: localAgentFleetKeys.list(params),
     queryFn: () => apiClient.getAdminLocalAgents(params),
-    refetchInterval: 15_000,
-    refetchIntervalInBackground: true,
   });
 }
 

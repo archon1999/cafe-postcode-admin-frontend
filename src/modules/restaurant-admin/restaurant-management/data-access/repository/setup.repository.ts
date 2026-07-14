@@ -3,6 +3,7 @@ import { instance } from 'shared/api/http/axiosInstance';
 import type {
   LocalAgentAdminStatus,
   LocalAgentDiagnostics,
+  LocalAgentLogs,
   RestaurantSetupApplyPayload,
   RestaurantSetupApplyResponse,
   RestaurantSetupReadiness,
@@ -52,6 +53,9 @@ export const restaurantSetupRepository = {
     return instance
       .get<{ ok: boolean; status: LocalAgentDiagnostics }>('/api/v1/local-agent/diagnostics/')
       .then((response) => response.data.status);
+  },
+  getLocalAgentLogs() {
+    return instance.get<LocalAgentLogs>('/api/v1/local-agent/logs/').then((response) => response.data);
   },
   requestLocalAgentUpdate() {
     return instance

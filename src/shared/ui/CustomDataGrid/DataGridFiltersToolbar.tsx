@@ -1,12 +1,17 @@
 import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 import type { GridColDef, GridColumnVisibilityModel } from '@mui/x-data-grid';
 import { Toolbar } from '@mui/x-data-grid';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 
+import { useTranslate } from 'app/providers/locales';
 import { FilterSelect, type FilterOption } from 'shared/ui/Filters';
+import { Iconify } from 'shared/ui/Iconify';
 import { TableSearchInput } from 'shared/ui/TableSearchInput';
 
 import { DataGridColumnsDialogButton } from './DataGridColumnsDialogButton';
+import { useDataGridRefresh } from './DataGridRefreshContext';
 import { ToolbarContainer, ToolbarLeftPanel, ToolbarRightPanel } from './ToolbarCore';
 
 export type DataGridToolbarFilter = {
@@ -54,6 +59,8 @@ export function DataGridFiltersToolbar({
   onSaveColumns,
   rightActions,
 }: DataGridFiltersToolbarProps) {
+  const { t } = useTranslate('common');
+  const { onRefresh, refreshing } = useDataGridRefresh();
   const normalizedFilters = useMemo(() => filters, [filters]);
   const [draftValues, setDraftValues] = useState<Record<string, string[]>>(() => buildDraftMap(normalizedFilters));
 
@@ -105,6 +112,15 @@ export function DataGridFiltersToolbar({
 
         <ToolbarRightPanel>
           {rightActions}
+          {onRefresh ? (
+            <Tooltip title={t('actions.refresh')}>
+              <span>
+                <IconButton color="primary" disabled={refreshing} onClick={onRefresh}>
+                  <Iconify icon="solar:refresh-bold" />
+                </IconButton>
+              </span>
+            </Tooltip>
+          ) : null}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <DataGridColumnsDialogButton
               columns={columns}

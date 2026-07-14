@@ -173,6 +173,8 @@ export const ProductsGrid = () => {
           columns={columns}
           rowCount={itemsQuery.data?.total ?? 0}
           loading={itemsQuery.isLoading}
+          onRefresh={() => void itemsQuery.refetch()}
+          refreshing={itemsQuery.isFetching}
           localeText={localeText}
           paginationMode="server"
           sortingMode="server"
