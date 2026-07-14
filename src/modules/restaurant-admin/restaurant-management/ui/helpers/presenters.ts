@@ -1,7 +1,4 @@
-import type {
-  AdminFeatureKitchenMode,
-  AdminFeatureOrderEntryMode,
-} from 'shared/api/admin-types';
+import type { AdminFeatureKitchenMode, AdminFeatureOrderEntryMode } from 'shared/api/admin-types';
 
 export function getFeatureOrderEntryModeTranslationKey(mode: AdminFeatureOrderEntryMode) {
   return `orderEntryModes.${mode}` as const;

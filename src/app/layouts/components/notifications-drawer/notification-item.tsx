@@ -31,8 +31,7 @@ const readerContent = (data: string) => (
       '& p': { m: 0, typography: 'body2' },
       '& a': { color: 'inherit', textDecoration: 'none' },
       '& strong': { typography: 'subtitle2' },
-    }}
-  >
+    }}>
     {data}
   </Box>
 );

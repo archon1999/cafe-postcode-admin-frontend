@@ -18,7 +18,9 @@ export function sanitizePinCodeInput(value: string) {
 }
 
 export function roleRequiresEmployeeCredentials(roleCode?: string | null) {
-  return Boolean(roleCode && EMPLOYEE_LOGIN_ROLE_CODES.includes(roleCode as (typeof EMPLOYEE_LOGIN_ROLE_CODES)[number]));
+  return Boolean(
+    roleCode && EMPLOYEE_LOGIN_ROLE_CODES.includes(roleCode as (typeof EMPLOYEE_LOGIN_ROLE_CODES)[number]),
+  );
 }
 
 const numberFieldWithDefaultZero = z.preprocess(

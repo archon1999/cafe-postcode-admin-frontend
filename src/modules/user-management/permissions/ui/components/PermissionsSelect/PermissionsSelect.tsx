@@ -97,7 +97,7 @@ export function PermissionsSelect<T extends FieldValues = FieldValues>({
                     size="small"
                     variant="soft"
                     label={tUsers('labels.permissionsSelectedCount', {
-                      count: value.length
+                      count: value.length,
                     })}
                   />,
                 ];

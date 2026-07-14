@@ -26,9 +26,7 @@ export function RestaurantOperationalManagementCard({
     <Card sx={{ p: 3, mt: 3 }}>
       <Stack spacing={3}>
         <Stack spacing={0.75}>
-          <Typography variant="h6">
-            {t('sections.myRestaurantManagement.title')}
-          </Typography>
+          <Typography variant="h6">{t('sections.myRestaurantManagement.title')}</Typography>
           <Typography variant="body2" color="text.secondary">
             {t('sections.myRestaurantManagement.description')}
           </Typography>

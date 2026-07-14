@@ -24,14 +24,10 @@ export function RestaurantCredentialsDialog({ open, onClose }: RestaurantCredent
           { label: t('fields.password'), value: open.credentials.password },
         ]
       : []),
-    ...(open?.authCode
-      ? [{ label: t('fields.authCode'), value: open.authCode }]
-      : []),
+    ...(open?.authCode ? [{ label: t('fields.authCode'), value: open.authCode }] : []),
   ];
   const title =
-    open?.mode === 'auth_code'
-      ? t('dialogs.restaurantAuthCode.title')
-      : t('dialogs.restaurantCredentials.title');
+    open?.mode === 'auth_code' ? t('dialogs.restaurantAuthCode.title') : t('dialogs.restaurantCredentials.title');
   const description =
     open?.mode === 'reset'
       ? t('dialogs.restaurantCredentials.resetDescription')

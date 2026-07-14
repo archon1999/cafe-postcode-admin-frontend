@@ -21,7 +21,9 @@ export interface OrdersRepository {
   getOrderItemNoteById(id: string): Promise<AdminOrderItemNote>;
   getPayments(params: AdminPaymentsQueryParams): Promise<AdminPaginatedResponse<AdminPayment>>;
   getPaymentById(id: string): Promise<AdminPayment>;
-  retryPaymentFiscal(id: string): Promise<{ payment: AdminPayment; receipt: AdminReceipt; result: Record<string, unknown> }>;
+  retryPaymentFiscal(
+    id: string,
+  ): Promise<{ payment: AdminPayment; receipt: AdminReceipt; result: Record<string, unknown> }>;
   getReceipts(params: AdminReceiptsQueryParams): Promise<AdminPaginatedResponse<AdminReceipt>>;
   getReceiptById(id: string): Promise<AdminReceipt>;
 }

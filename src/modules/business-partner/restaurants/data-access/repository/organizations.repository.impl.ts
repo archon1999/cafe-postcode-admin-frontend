@@ -1,5 +1,5 @@
-import { apiClient } from 'shared/api/http/apiClient';
 import { buildAdminRestaurantRequestPayload } from 'shared/api/admin-restaurant-form-data';
+import { apiClient } from 'shared/api/http/apiClient';
 
 import type { OrganizationsRepository } from '../../domain';
 

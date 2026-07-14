@@ -18,7 +18,8 @@ export function BusinessPartnerClientsCell({ restaurants = [], restaurantsCount 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const visibleRestaurants = restaurants.slice(0, VISIBLE_CLIENTS_COUNT);
   const hiddenRestaurants = restaurants.slice(VISIBLE_CLIENTS_COUNT);
-  const hiddenCount = Math.max(restaurantsCount ?? restaurants.length, visibleRestaurants.length) - visibleRestaurants.length;
+  const hiddenCount =
+    Math.max(restaurantsCount ?? restaurants.length, visibleRestaurants.length) - visibleRestaurants.length;
 
   if (!restaurants.length) {
     return <Typography variant="body2">-</Typography>;

@@ -10,7 +10,8 @@ export const platformKeys = {
   businessPartners: () => businessPartnersKeys.all,
   businessPartnersList: businessPartnersKeys.list,
   businessPartnerDetail: businessPartnersKeys.detail,
-  businessPartnerActivationDefaults: (id: string) => [...businessPartnersKeys.detail(id), 'activationDefaults'] as const,
+  businessPartnerActivationDefaults: (id: string) =>
+    [...businessPartnersKeys.detail(id), 'activationDefaults'] as const,
   tariffs: () => tariffsKeys.all,
   tariffsList: tariffsKeys.list,
   tariffDetail: tariffsKeys.detail,
