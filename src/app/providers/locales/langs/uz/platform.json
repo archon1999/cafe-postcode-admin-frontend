@@ -112,6 +112,86 @@
       "customDescription": "Maxsus tarif rejimida rollar va ruxsatlarni qo'lda tanlab, restoranni shu konfiguratsiya bilan aktivlashtirasiz."
     }
   },
+  "localAgents": {
+    "title": "Local Agentlar",
+    "fields": {
+      "restaurant": "Restoran",
+      "agent": "Agent",
+      "status": "Status",
+      "version": "Versiya",
+      "lastSeen": "Oxirgi aloqa",
+      "actions": "Amallar"
+    },
+    "status": {
+      "online": "Online",
+      "offline": "Offline",
+      "notConfigured": "Sozlanmagan"
+    },
+    "filters": {
+      "search": "Qidiruv",
+      "clearSearch": "Qidiruvni tozalash",
+      "status": "Status",
+      "all": "Barchasi",
+      "searchPlaceholder": "Restoran, agent yoki versiya bo'yicha qidirish"
+    },
+    "actions": {
+      "diagnostics": "Diagnostika",
+      "refresh": "Yangilash",
+      "close": "Yopish",
+      "updateNow": "Agentni yangilash",
+      "bulkUpdate": "Versiyani yangilash",
+      "refreshContext": "Ma’lumotlarni yangilash",
+      "restart": "Restart",
+      "confirm": "Tasdiqlash"
+    },
+    "diagnostics": {
+      "title": "Local Agent diagnostikasi",
+      "server": "Server aloqasi",
+      "fiscal": "Fiscal",
+      "marta": "MARTA",
+      "printer": "Printer",
+      "lastSuccess": "Oxirgi muvaffaqiyatli sinxronizatsiya",
+      "pending": "Yuborilmagan operatsiyalar",
+      "failed": "Xatoli operatsiyalar",
+      "lanEndpoints": "Local manzillar"
+    },
+    "messages": {
+      "diagnosticsFailed": "Diagnostika ma'lumotlarini olib bo'lmadi.",
+      "updateRequested": "Agentni yangilash buyrug'i yuborildi.",
+      "updateFailed": "Agentni yangilash buyrug'ini yuborib bo'lmadi.",
+      "bulkSucceeded": "{{count}} ta agent uchun buyruq bajarildi.",
+      "bulkPartial": "{{succeeded}} ta muvaffaqiyatli, {{failed}} ta xato.",
+      "bulkFailed": "Ommaviy amalni bajarib bo'lmadi."
+    },
+    "logs": {
+      "title": "Oxirgi log va xatolar",
+      "unsupported": "Bu agent versiyasi masofadan log ko'rishni qo'llamaydi.",
+      "failed": "Agent loglarini olib bo'lmadi.",
+      "empty": "Log yozuvlari yo'q."
+    },
+    "bulk": {
+      "selectedLabel": "Tanlangan agentlar",
+      "selectedCount": "{{count}} ta",
+      "update": {
+        "title": "Agentlarni yangilash",
+        "description": "Tanlangan {{count}} ta agent uchun yangi versiyani o'rnatish buyrug'i yuborilsinmi?"
+      },
+      "refresh_context": {
+        "title": "Ma’lumotlarni yangilash",
+        "description": "Tanlangan {{count}} ta agent backenddan restoran ma’lumotlarini qayta olsinmi?"
+      },
+      "restart": {
+        "title": "Agentlarni restart qilish",
+        "description": "Tanlangan {{count}} ta agent qayta ishga tushiriladi. Davom etilsinmi?"
+      }
+    },
+    "empty": {
+      "noDataTitle": "Local Agentlar hali ulanmagan",
+      "noDataDescription": "Restoranga agent o'rnatilgach shu yerda ko'rinadi.",
+      "noResultsTitle": "Local Agent topilmadi",
+      "noResultsDescription": "Qidiruv yoki status filtrini o'zgartirib ko'ring."
+    }
+  },
   "validation": {
     "invalidJson": "JSON noto'g'ri formatda.",
     "usernameRequired": "Login talab qilinadi.",

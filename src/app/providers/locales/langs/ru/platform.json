@@ -112,6 +112,86 @@
       "title": "Продление срока тарифа"
     }
   },
+  "localAgents": {
+    "title": "Локальные агенты",
+    "fields": {
+      "restaurant": "Ресторан",
+      "agent": "Агент",
+      "status": "Статус",
+      "version": "Версия",
+      "lastSeen": "Последняя связь",
+      "actions": "Действия"
+    },
+    "status": {
+      "online": "Online",
+      "offline": "Offline",
+      "notConfigured": "Не настроено"
+    },
+    "filters": {
+      "search": "Поиск",
+      "clearSearch": "Очистить поиск",
+      "status": "Статус",
+      "all": "Все",
+      "searchPlaceholder": "Поиск по ресторану, агенту или версии"
+    },
+    "actions": {
+      "diagnostics": "Диагностика",
+      "refresh": "Обновить",
+      "close": "Закрыть",
+      "updateNow": "Обновить агент",
+      "bulkUpdate": "Обновить версию",
+      "refreshContext": "Обновить данные",
+      "restart": "Перезапустить",
+      "confirm": "Подтвердить"
+    },
+    "diagnostics": {
+      "title": "Диагностика Local Agent",
+      "server": "Связь с сервером",
+      "fiscal": "Fiscal",
+      "marta": "MARTA",
+      "printer": "Принтер",
+      "lastSuccess": "Последняя успешная синхронизация",
+      "pending": "Неотправленные операции",
+      "failed": "Ошибочные операции",
+      "lanEndpoints": "Локальные адреса"
+    },
+    "messages": {
+      "diagnosticsFailed": "Не удалось получить данные диагностики.",
+      "updateRequested": "Команда обновления агента отправлена.",
+      "updateFailed": "Не удалось отправить команду обновления агента.",
+      "bulkSucceeded": "Команда выполнена для {{count}} агентов.",
+      "bulkPartial": "Успешно: {{succeeded}}, ошибок: {{failed}}.",
+      "bulkFailed": "Не удалось выполнить массовое действие."
+    },
+    "logs": {
+      "title": "Последние логи и ошибки",
+      "unsupported": "Эта версия агента не поддерживает удаленный просмотр логов.",
+      "failed": "Не удалось получить логи агента.",
+      "empty": "Записей в логах нет."
+    },
+    "bulk": {
+      "selectedLabel": "Выбранные агенты",
+      "selectedCount": "{{count}} шт.",
+      "update": {
+        "title": "Обновить агенты",
+        "description": "Отправить команду установки новой версии выбранным агентам: {{count}}?"
+      },
+      "refresh_context": {
+        "title": "Обновить данные",
+        "description": "Выбранные агенты ({{count}}) повторно загрузят данные ресторана с backend. Продолжить?"
+      },
+      "restart": {
+        "title": "Перезапустить агенты",
+        "description": "Выбранные агенты ({{count}}) будут перезапущены. Продолжить?"
+      }
+    },
+    "empty": {
+      "noDataTitle": "Локальные агенты еще не подключены",
+      "noDataDescription": "После установки агента в ресторане он появится здесь.",
+      "noResultsTitle": "Локальный агент не найден",
+      "noResultsDescription": "Измените поиск или фильтр статуса."
+    }
+  },
   "validation": {
     "invalidJson": "Некорректный JSON.",
     "usernameRequired": "Логин обязателен.",

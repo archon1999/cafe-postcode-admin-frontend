@@ -112,6 +112,86 @@
       "title": "Тариф муддатини узайтириш"
     }
   },
+  "localAgents": {
+    "title": "Локал агентлар",
+    "fields": {
+      "restaurant": "Ресторан",
+      "agent": "Агент",
+      "status": "Статус",
+      "version": "Версия",
+      "lastSeen": "Охирги алоқа",
+      "actions": "Амаллар"
+    },
+    "status": {
+      "online": "Online",
+      "offline": "Offline",
+      "notConfigured": "Созланмаган"
+    },
+    "filters": {
+      "search": "Қидирув",
+      "clearSearch": "Қидирувни тозалаш",
+      "status": "Статус",
+      "all": "Барчаси",
+      "searchPlaceholder": "Ресторан, агент ёки версия бўйича қидириш"
+    },
+    "actions": {
+      "diagnostics": "Диагностика",
+      "refresh": "Янгилаш",
+      "close": "Ёпиш",
+      "updateNow": "Агентни янгилаш",
+      "bulkUpdate": "Версияни янгилаш",
+      "refreshContext": "Маълумотларни янгилаш",
+      "restart": "Рестарт",
+      "confirm": "Тасдиқлаш"
+    },
+    "diagnostics": {
+      "title": "Локал агент диагностикаси",
+      "server": "Сервер алоқаси",
+      "fiscal": "Fiscal",
+      "marta": "MARTA",
+      "printer": "Принтер",
+      "lastSuccess": "Охирги муваффақиятли синхронизация",
+      "pending": "Юборилмаган операциялар",
+      "failed": "Хатоли операциялар",
+      "lanEndpoints": "Локал манзиллар"
+    },
+    "messages": {
+      "diagnosticsFailed": "Диагностика маълумотларини олиб бўлмади.",
+      "updateRequested": "Агентни янгилаш буйруғи юборилди.",
+      "updateFailed": "Агентни янгилаш буйруғини юбориб бўлмади.",
+      "bulkSucceeded": "{{count}} та агент учун буйруқ бажарилди.",
+      "bulkPartial": "{{succeeded}} та муваффақиятли, {{failed}} та хато.",
+      "bulkFailed": "Оммавий амални бажариб бўлмади."
+    },
+    "logs": {
+      "title": "Охирги лог ва хатолар",
+      "unsupported": "Бу агент версияси масофадан лог кўришни қўлламайди.",
+      "failed": "Агент логларини олиб бўлмади.",
+      "empty": "Лог ёзувлари йўқ."
+    },
+    "bulk": {
+      "selectedLabel": "Танланган агентлар",
+      "selectedCount": "{{count}} та",
+      "update": {
+        "title": "Агентларни янгилаш",
+        "description": "Танланган {{count}} та агент учун янги версияни ўрнатиш буйруғи юборилсинми?"
+      },
+      "refresh_context": {
+        "title": "Маълумотларни янгилаш",
+        "description": "Танланган {{count}} та агент backendдан ресторан маълумотларини қайта олсинми?"
+      },
+      "restart": {
+        "title": "Агентларни рестарт қилиш",
+        "description": "Танланган {{count}} та агент қайта ишга туширилади. Давом этилсинми?"
+      }
+    },
+    "empty": {
+      "noDataTitle": "Локал агентлар ҳали уланмаган",
+      "noDataDescription": "Ресторанга агент ўрнатилгач шу ерда кўринади.",
+      "noResultsTitle": "Локал агент топилмади",
+      "noResultsDescription": "Қидирув ёки статус фильтрини ўзгартириб кўринг."
+    }
+  },
   "validation": {
     "invalidJson": "JSON нотўғри форматда.",
     "usernameRequired": "Логин талаб қилинади.",

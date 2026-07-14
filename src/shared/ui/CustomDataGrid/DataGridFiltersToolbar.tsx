@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import type { GridColDef, GridColumnVisibilityModel } from '@mui/x-data-grid';
 import { Toolbar } from '@mui/x-data-grid';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 
 import { FilterSelect, type FilterOption } from 'shared/ui/Filters';
 import { TableSearchInput } from 'shared/ui/TableSearchInput';
@@ -32,6 +32,7 @@ type DataGridFiltersToolbarProps = {
   columnVisibilityModel: GridColumnVisibilityModel;
   defaultColumnVisibilityModel: GridColumnVisibilityModel;
   onSaveColumns: (nextModel: GridColumnVisibilityModel) => void;
+  rightActions?: ReactNode;
 };
 
 function buildDraftMap(filters: DataGridToolbarFilter[]) {
@@ -51,6 +52,7 @@ export function DataGridFiltersToolbar({
   columnVisibilityModel,
   defaultColumnVisibilityModel,
   onSaveColumns,
+  rightActions,
 }: DataGridFiltersToolbarProps) {
   const normalizedFilters = useMemo(() => filters, [filters]);
   const [draftValues, setDraftValues] = useState<Record<string, string[]>>(() => buildDraftMap(normalizedFilters));
@@ -102,6 +104,7 @@ export function DataGridFiltersToolbar({
         </ToolbarLeftPanel>
 
         <ToolbarRightPanel>
+          {rightActions}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <DataGridColumnsDialogButton
               columns={columns}

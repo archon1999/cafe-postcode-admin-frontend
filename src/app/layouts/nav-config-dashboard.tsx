@@ -7,6 +7,7 @@ import type { NavSectionProps } from 'shared/ui/NavSection';
 const ICONS = {
   platform: <Iconify icon="solar:planet-bold-duotone" width={24} />,
   businessPartners: <Iconify icon="solar:users-group-two-rounded-bold-duotone" width={20} />,
+  localAgents: <Iconify icon="solar:server-square-bold-duotone" width={20} />,
   tariffs: <Iconify icon="solar:ticket-sale-bold-duotone" width={20} />,
   ordersGroup: <Iconify icon="solar:bill-list-bold-duotone" width={24} />,
   orders: <Iconify icon="solar:document-text-bold-duotone" width={20} />,
@@ -83,6 +84,18 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
   ].filter(Boolean) as NavSectionProps['data'][number]['items'];
 
   pushSection(isSuperuser ? t('businessPartnerSection') : undefined, businessPartnerItems);
+
+  const localAgentItems = isSuperuser
+    ? [
+        {
+          title: t('localAgents'),
+          path: RoutePath.platformLocalAgentList,
+          icon: ICONS.localAgents,
+        },
+      ]
+    : [];
+
+  pushSection(isSuperuser ? t('localAgentsSection') : undefined, localAgentItems);
 
   const orderChildren = [
     canAccess(RoutePath.orderList)

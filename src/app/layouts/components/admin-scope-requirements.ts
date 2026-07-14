@@ -4,6 +4,7 @@ const NO_SCOPE_PREFIXES = [
   RoutePath.roleList,
   RoutePath.permissionList,
   RoutePath.platformBusinessPartnerList,
+  RoutePath.platformLocalAgentList,
   RoutePath.platformTariffList,
   RoutePath.organizationRestaurantList,
 ];

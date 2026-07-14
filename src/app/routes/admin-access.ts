@@ -78,6 +78,7 @@ const EMPLOYEE_PERMISSION_CODES: PermissionCode[] = ['employees.view', 'employee
 
 const ADMIN_LANDING_CANDIDATES = [
   RoutePath.platformBusinessPartnerList,
+  RoutePath.platformLocalAgentList,
   RoutePath.platformTariffList,
   RoutePath.organizationRestaurantList,
   RoutePath.organizationMyRestaurant,
@@ -116,6 +117,10 @@ function matchesPrefix(pathname: string, prefix: string) {
 
 export function canAccessBusinessPartners(snapshot?: AdminAccessSnapshot | null) {
   return hasAnyPermission(snapshot, BUSINESS_PARTNER_PERMISSION_CODES);
+}
+
+export function canAccessLocalAgents(snapshot?: AdminAccessSnapshot | null) {
+  return Boolean(snapshot?.isSuperuser);
 }
 
 export function canAccessTariffs(snapshot?: AdminAccessSnapshot | null) {
@@ -246,6 +251,10 @@ export function canAccessAdminPath(pathname: string, snapshot?: AdminAccessSnaps
 
   if (matchesPrefix(pathname, RoutePath.platformBusinessPartnerList)) {
     return canAccessBusinessPartners(snapshot);
+  }
+
+  if (matchesPrefix(pathname, RoutePath.platformLocalAgentList)) {
+    return canAccessLocalAgents(snapshot);
   }
 
   if (matchesPrefix(pathname, RoutePath.platformTariffList)) {

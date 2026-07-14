@@ -20,6 +20,9 @@ const BusinessPartnersListPage = lazy(
 const BusinessPartnerFormPage = lazy(
   () => import('modules/product-owner/business-partners/ui/pages/BusinessPartnerFormPage/BusinessPartnerFormPage'),
 );
+const LocalAgentsPage = lazy(
+  () => import('modules/product-owner/local-agents/ui/pages/LocalAgentsPage/LocalAgentsPage'),
+);
 const TariffsListPage = lazy(() => import('modules/product-owner/tariffs/ui/pages/TariffsListPage/TariffsListPage'));
 const TariffFormPage = lazy(() => import('modules/product-owner/tariffs/ui/pages/TariffFormPage/TariffFormPage'));
 const RolesListPage = lazy(() => import('modules/user-management/roles/ui/pages/RolesListPage/RolesListPage'));
@@ -174,6 +177,10 @@ const mainChildren: RouteObject[] = [
   {
     path: RoutePath.platformBusinessPartnerEdit,
     element: <BusinessPartnerFormPage />,
+  },
+  {
+    path: RoutePath.platformLocalAgentList,
+    element: <LocalAgentsPage />,
   },
   {
     path: RoutePath.platformTariffList,

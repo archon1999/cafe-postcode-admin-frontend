@@ -951,6 +951,65 @@ export type AdminReportExportFile = {
   filename: string;
 };
 
+export type AdminLocalAgentStatus = 'online' | 'offline';
+
+export type AdminLocalAgent = {
+  id: string;
+  restaurantId: string;
+  restaurantName: string;
+  name: string;
+  status: AdminLocalAgentStatus;
+  online: boolean;
+  version: string;
+  lastSeenAt?: string | null;
+  capabilities: string[];
+  lanEndpoints: string[];
+  protocolVersion: number;
+  isActive: boolean;
+};
+
+export type AdminLocalAgentDiagnostics = {
+  ok: boolean;
+  agent: AdminLocalAgent;
+  status: {
+    agent?: Record<string, unknown>;
+    backend?: Record<string, unknown>;
+    sync?: Record<string, unknown>;
+    fiscal?: Record<string, unknown>;
+    marta?: Record<string, unknown>;
+    printer?: Record<string, unknown>;
+    alerts?: Array<Record<string, unknown>>;
+  };
+};
+
+export type AdminLocalAgentUpdateResult = {
+  ok: boolean;
+  result: Record<string, unknown>;
+};
+
+export type AdminLocalAgentLogs = {
+  ok: boolean;
+  available: boolean;
+  lines: string[];
+  detail?: string;
+};
+
+export type AdminLocalAgentBulkAction = 'update' | 'refresh_context' | 'restart';
+
+export type AdminLocalAgentBulkActionResult = {
+  ok: boolean;
+  action: AdminLocalAgentBulkAction;
+  succeeded: number;
+  failed: number;
+  results: Array<{
+    agentId: string;
+    restaurantName?: string;
+    ok: boolean;
+    detail?: string;
+    result?: Record<string, unknown>;
+  }>;
+};
+
 export type AdminPaginatedResponse<T> = {
   page: number;
   pageSize: number;
@@ -970,6 +1029,10 @@ export type AdminListQueryParams = {
   pageSize?: number;
   search?: string;
   ordering?: string;
+};
+
+export type AdminLocalAgentsQueryParams = AdminListQueryParams & {
+  status?: AdminLocalAgentStatus;
 };
 
 export type AdminReportPeriodQueryParams = {

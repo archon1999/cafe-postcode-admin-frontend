@@ -8,6 +8,7 @@ export {
   canAccessEmployees,
   canAccessFloor,
   canAccessKitchen,
+  canAccessLocalAgents,
   canAccessMyRestaurant,
   canAccessMyRestaurantCashDesks,
   canAccessMyRestaurantGeneral,
