@@ -4,8 +4,8 @@
   "platform": "windows",
   "architecture": "amd64",
   "downloadUrl": "https://admin.cafe-postcode.uz/downloads/CafePostcodeLocalAgent-0.7.8-windows-amd64.exe",
-  "sha256": "ada2ca6415de4c4476f9562c63d0052bb91a6bed8b576330a6ea2f7cba74f2d7",
-  "signature": "7VRu6YQ7INGRVJDgbbRm/R8ffRYhVz0BYguDam68scORHNWUK4c8KdYfte3kHiC8wroQARKsMTHWeFUy7hGeAA==",
-  "size": 4555776,
+  "sha256": "fc728b202b35ec1b82e104e6080464d263b5a7e354a9724c23fe2cda5ef047f3",
+  "signature": "FM+iuEwO8lhriEjLrou/jingcqLtY9KcJVzZdL2HVCUoIeC2Yx7+iby3mPeJcd9GFIPNJLPjB05Z1terDUmFAg==",
+  "size": 19968,
   "mandatory": false
 }
