@@ -56,11 +56,12 @@ const LoginPage = () => {
         </Typography>
       </Box>
 
-      <Form onSubmit={onSubmit} methods={methods}>
+      <Form onSubmit={onSubmit} methods={methods} autoComplete="on">
         <Box sx={{ gap: 3, display: 'flex', flexDirection: 'column' }}>
           <RHFTextField<LoginSchemaType>
             name="username"
             label={t('login.username')}
+            autoComplete="username"
             slotProps={{ inputLabel: { shrink: true }, htmlInput: { 'data-testid': 'login-username' } }}
           />
 
@@ -68,6 +69,7 @@ const LoginPage = () => {
             name="password"
             label={t('login.password')}
             type={showPassword ? 'text' : 'password'}
+            autoComplete="current-password"
             slotProps={{
               inputLabel: { shrink: true },
               htmlInput: { 'data-testid': 'login-password' },

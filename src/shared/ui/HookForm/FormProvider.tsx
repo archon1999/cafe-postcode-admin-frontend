@@ -6,12 +6,18 @@ export type FormProps<T extends FieldValues = FieldValues> = {
   onSubmit?: React.FormEventHandler<HTMLFormElement>;
   children: React.ReactNode;
   methods: UseFormReturn<T, any, any>;
+  autoComplete?: React.FormHTMLAttributes<HTMLFormElement>['autoComplete'];
 };
 
-export function Form<T extends FieldValues = FieldValues>({ children, onSubmit, methods }: FormProps<T>) {
+export function Form<T extends FieldValues = FieldValues>({
+  children,
+  onSubmit,
+  methods,
+  autoComplete = 'off',
+}: FormProps<T>) {
   return (
     <RHFForm {...methods}>
-      <form onSubmit={onSubmit} noValidate autoComplete="off">
+      <form onSubmit={onSubmit} noValidate autoComplete={autoComplete}>
         {children}
       </form>
     </RHFForm>

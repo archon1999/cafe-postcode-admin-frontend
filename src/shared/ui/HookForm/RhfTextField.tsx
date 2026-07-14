@@ -20,6 +20,7 @@ export function RHFTextField<T extends FieldValues = FieldValues>({
   helperText,
   slotProps,
   type = 'text',
+  autoComplete = 'new-password',
   ...other
 }: RHFTextFieldProps<T>) {
   const { control } = useFormContext<T>();
@@ -81,6 +82,7 @@ export function RHFTextField<T extends FieldValues = FieldValues>({
             field.onChange(transformedValue);
           }}
           type={isNumberType ? 'text' : type}
+          autoComplete={autoComplete}
           error={!!error}
           helperText={error?.message ?? helperText}
           slotProps={{
@@ -91,7 +93,7 @@ export function RHFTextField<T extends FieldValues = FieldValues>({
                 inputMode: 'decimal',
                 pattern: '[0-9]*\\.?[0-9]*',
               }),
-              autoComplete: 'new-password',
+              autoComplete,
             },
           }}
           {...other}
