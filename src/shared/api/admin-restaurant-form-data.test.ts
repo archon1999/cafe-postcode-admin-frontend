@@ -36,13 +36,22 @@ describe('buildAdminRestaurantRequestPayload', () => {
     });
 
     expect(result).toBeInstanceOf(FormData);
-    expect((result as FormData).get('name')).toBe('Restaurant');
-    expect((result as FormData).get('social')).toBe('Instagram: cafe');
-    expect((result as FormData).get('fakturaPayload')).toBe(JSON.stringify(basePayload.fakturaPayload));
-    expect((result as FormData).get('serviceFeeEnabled')).toBe('true');
-    expect((result as FormData).get('serviceFeePercent')).toBe('10');
-    expect((result as FormData).get('markingCheckEnabled')).toBe('true');
-    expect((result as FormData).get('posAuthBackgroundImage')).toBe(image);
+    expect(Array.from((result as FormData).entries())).toEqual([
+      ['name', 'Restaurant'],
+      ['legalName', 'Restaurant LLC'],
+      ['taxNumber', '123456789'],
+      ['phone', '+998900000000'],
+      ['social', 'Instagram: cafe'],
+      ['address', 'Tashkent'],
+      ['fakturaPayload', JSON.stringify(basePayload.fakturaPayload)],
+      ['serviceFeeEnabled', 'true'],
+      ['serviceFeePercent', '10'],
+      ['vatEnabled', 'true'],
+      ['vatPercent', '12'],
+      ['markingCheckEnabled', 'true'],
+      ['isActive', 'true'],
+      ['posAuthBackgroundImage', image],
+    ]);
   });
 
   it('builds multipart payload for background image removal', () => {
@@ -86,5 +95,40 @@ describe('buildRestaurantSelfServiceRequestPayload', () => {
       vatPercent: 12,
       markingCheckEnabled: false,
     });
+  });
+
+  it('keeps only self-service fields in multipart uploads', () => {
+    const image = new File(['image'], 'login.png', { type: 'image/png' });
+    const result = buildRestaurantSelfServiceRequestPayload({
+      name: 'Cafe',
+      legalName: 'Legal Cafe',
+      taxNumber: '123456789',
+      phone: '+998901234567',
+      social: '@cafe',
+      address: 'Tashkent',
+      fakturaPayload: { CompanyName: 'Legal Cafe' },
+      posAuthBackgroundImage: image,
+      serviceFeeEnabled: true,
+      serviceFeePercent: 10,
+      vatEnabled: true,
+      vatPercent: 12,
+      markingCheckEnabled: false,
+      isActive: true,
+      tariffId: 'forbidden-tariff',
+    });
+
+    expect(result).toBeInstanceOf(FormData);
+    expect(Array.from((result as FormData).entries())).toEqual([
+      ['name', 'Cafe'],
+      ['phone', '+998901234567'],
+      ['social', '@cafe'],
+      ['address', 'Tashkent'],
+      ['serviceFeeEnabled', 'true'],
+      ['serviceFeePercent', '10'],
+      ['vatEnabled', 'true'],
+      ['vatPercent', '12'],
+      ['markingCheckEnabled', 'false'],
+      ['posAuthBackgroundImage', image],
+    ]);
   });
 });

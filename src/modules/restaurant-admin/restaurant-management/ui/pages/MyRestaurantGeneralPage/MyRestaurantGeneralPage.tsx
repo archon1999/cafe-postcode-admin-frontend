@@ -22,6 +22,7 @@ import {
   restaurantFormSchema,
   restaurantFormValuesToPayload,
   restaurantToFormValues,
+  type RestaurantFormInput,
   type RestaurantFormValues,
 } from 'modules/business-partner/restaurants/ui/pages/RestaurantFormPage/restaurant-form';
 import { RestaurantFormFields } from 'modules/business-partner/restaurants/ui/pages/RestaurantFormPage/RestaurantFormFields';
@@ -45,7 +46,7 @@ const MyRestaurantGeneralPage = () => {
   const canManageMyRestaurant = canAccessMyRestaurant(profile);
   const [isAuthCodeVisible, setIsAuthCodeVisible] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
-  const methods = useForm<RestaurantFormValues>({
+  const methods = useForm<RestaurantFormInput, unknown, RestaurantFormValues>({
     resolver: zodResolver(restaurantFormSchema),
     defaultValues: restaurantFormDefaultValues,
   });

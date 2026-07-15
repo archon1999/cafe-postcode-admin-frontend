@@ -1,5 +1,18 @@
 import type { AdminRestaurantPayload } from './admin-types';
 
+type RestaurantSelfServicePayload = Pick<
+  AdminRestaurantPayload,
+  | 'name'
+  | 'phone'
+  | 'social'
+  | 'address'
+  | 'serviceFeeEnabled'
+  | 'serviceFeePercent'
+  | 'vatEnabled'
+  | 'vatPercent'
+  | 'markingCheckEnabled'
+>;
+
 function appendText(formData: FormData, key: string, value: string | number | boolean | null | undefined) {
   if (value === undefined || value === null) {
     return;
@@ -58,8 +71,8 @@ export function buildAdminRestaurantRequestPayload(payload: AdminRestaurantPaylo
 
 export function buildRestaurantSelfServiceRequestPayload(
   payload: AdminRestaurantPayload,
-): Partial<AdminRestaurantPayload> | FormData {
-  const safePayload: Partial<AdminRestaurantPayload> = {
+): RestaurantSelfServicePayload | FormData {
+  const safePayload: RestaurantSelfServicePayload = {
     name: payload.name,
     phone: payload.phone,
     social: payload.social,

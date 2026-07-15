@@ -20,9 +20,10 @@ export const restaurantFormSchema = z.object({
   isActive: z.boolean(),
 });
 
-export type RestaurantFormValues = z.infer<typeof restaurantFormSchema>;
+export type RestaurantFormInput = z.input<typeof restaurantFormSchema>;
+export type RestaurantFormValues = z.output<typeof restaurantFormSchema>;
 
-export const restaurantFormDefaultValues: RestaurantFormValues = {
+export const restaurantFormDefaultValues: RestaurantFormInput = {
   name: '',
   legalName: '',
   taxNumber: '',

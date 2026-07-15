@@ -28,6 +28,7 @@ import {
   restaurantFormSchema,
   restaurantFormValuesToPayload,
   restaurantToFormValues,
+  type RestaurantFormInput,
   type RestaurantFormValues,
 } from './restaurant-form';
 import { RestaurantFormFields } from './RestaurantFormFields';
@@ -49,7 +50,7 @@ const RestaurantFormPage = () => {
 
   useRedirectOnNotFound(query.error, isEditMode);
 
-  const methods = useForm<RestaurantFormValues>({
+  const methods = useForm<RestaurantFormInput, unknown, RestaurantFormValues>({
     resolver: zodResolver(restaurantFormSchema),
     defaultValues: restaurantFormDefaultValues,
   });
