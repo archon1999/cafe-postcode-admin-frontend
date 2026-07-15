@@ -2,9 +2,9 @@
 
 import '@testing-library/jest-dom/vitest';
 
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { EMPTY_VALUE_TEST_ID } from 'shared/ui/EmptyValue';
 
@@ -54,5 +54,30 @@ describe('withDetailLink', () => {
 
     expect(screen.queryByRole('link')).not.toBeInTheDocument();
     expect(screen.getByTestId(EMPTY_VALUE_TEST_ID)).toBeInTheDocument();
+  });
+
+  it('stops detail-link clicks from selecting the surrounding grid row', () => {
+    const onRowClick = vi.fn();
+    const column = withDetailLink(
+      createColumn<{ id: string; username: string }>('username', 'Username'),
+      (row) => `/users/${row.id}`,
+    );
+
+    render(
+      <MemoryRouter>
+        <div onClick={onRowClick}>
+          {column.renderCell?.({
+            field: 'username',
+            row: { id: 'user-1', username: 'alice' },
+            value: 'alice',
+            formattedValue: 'alice',
+          } as never)}
+        </div>
+      </MemoryRouter>,
+    );
+
+    fireEvent.click(screen.getByRole('link', { name: 'alice' }));
+
+    expect(onRowClick).not.toHaveBeenCalled();
   });
 });

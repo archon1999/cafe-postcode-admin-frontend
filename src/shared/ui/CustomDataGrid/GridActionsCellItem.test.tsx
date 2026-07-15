@@ -5,6 +5,7 @@ import '@testing-library/jest-dom/vitest';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import type { ElementType, ReactNode } from 'react';
 import { forwardRef } from 'react';
+import { MemoryRouter } from 'react-router';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 type MockGridActionsCellItemProps = {
@@ -15,12 +16,14 @@ type MockGridActionsCellItemProps = {
   icon?: ReactNode;
   label?: ReactNode;
   onClick?: () => void;
+  rel?: string;
   showInMenu?: boolean;
+  target?: string;
 };
 
 vi.mock('@mui/x-data-grid', () => ({
   GridActionsCellItem: forwardRef<HTMLElement, MockGridActionsCellItemProps>(function MockGridActionsCellItem(
-    { className, component, href, icon, label, onClick, showInMenu = false },
+    { className, component, href, icon, label, onClick, rel, showInMenu = false, target },
     ref,
   ) {
     const Component = component ?? (href ? 'a' : 'button');
@@ -31,7 +34,9 @@ vi.mock('@mui/x-data-grid', () => ({
         aria-label={typeof label === 'string' ? label : undefined}
         className={className}
         href={href}
-        onClick={onClick}>
+        onClick={onClick}
+        rel={rel}
+        target={target}>
         {icon}
         {showInMenu ? label : null}
       </Component>
@@ -97,5 +102,37 @@ describe('CustomGridActionsCellItem', () => {
     expect(actionButton).toHaveTextContent('View details');
     expect(actionButton).toHaveClass('custom-grid-action');
     expect(actionButton).toHaveClass('custom-grid-action--view');
+  });
+
+  it('renders internal href actions through the application router', () => {
+    render(
+      <MemoryRouter>
+        <CustomGridActionsCellItem
+          actionKind="view"
+          href="/users/user-1"
+          label="View details"
+          icon={<span data-testid="view-icon" />}
+        />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole('link', { name: 'View details' })).toHaveAttribute('href', '/users/user-1');
+  });
+
+  it('opens external href actions in a protected new tab', () => {
+    render(
+      <CustomGridActionsCellItem
+        actionKind="view"
+        href="https://example.com/details"
+        label="External details"
+        icon={<span data-testid="external-icon" />}
+      />,
+    );
+
+    const link = screen.getByRole('link', { name: 'External details' });
+
+    expect(link).toHaveAttribute('href', 'https://example.com/details');
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
   });
 });
