@@ -1,6 +1,6 @@
 import type { BoxProps } from '@mui/material/Box';
 import Box from '@mui/material/Box';
-import { Controller, useFormContext, type FieldValues, type Path } from 'react-hook-form';
+import { Controller, useFormContext, type FieldValues, type Path, type PathValue } from 'react-hook-form';
 
 import type { UploadProps } from '../Upload';
 import { Upload, UploadBox, UploadAvatar } from '../Upload';
@@ -59,8 +59,13 @@ export function RHFUploadBox({ name, ...other }: RHFUploadProps) {
   );
 }
 
-export function RHFUpload({ name, multiple, helperText, ...other }: RHFUploadProps) {
-  const { control, setValue } = useFormContext();
+export function RHFUpload<TForm extends FieldValues = FieldValues>({
+  name,
+  multiple,
+  helperText,
+  ...other
+}: RHFUploadProps<TForm>) {
+  const { control, setValue } = useFormContext<TForm>();
 
   return (
     <Controller
@@ -75,9 +80,9 @@ export function RHFUpload({ name, multiple, helperText, ...other }: RHFUploadPro
         };
 
         const onDrop = (acceptedFiles: File[]) => {
-          const value = multiple ? [...field.value, ...acceptedFiles] : acceptedFiles[0];
+          const value = multiple ? [...(field.value as File[]), ...acceptedFiles] : acceptedFiles[0];
 
-          setValue(name, value, { shouldValidate: true });
+          setValue(name, value as PathValue<TForm, Path<TForm>>, { shouldValidate: true });
         };
 
         return <Upload {...uploadProps} value={field.value} onDrop={onDrop} {...other} />;
