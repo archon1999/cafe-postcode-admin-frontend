@@ -9,7 +9,12 @@ import type { AdminSessionUser } from 'shared/api/admin-types';
 
 import { navData } from '../nav-config-dashboard';
 
-import { hasRequiredAdminScope, useAdminCreateAccess } from './admin-scope-access';
+import {
+  getMissingAdminScopeRequirement,
+  hasRequiredAdminScope,
+  resolveAdminAccessSnapshot,
+  useAdminCreateAccess,
+} from './admin-scope-access';
 import { getAdminScopeRequirement } from './admin-scope-requirements';
 
 const authState = vi.hoisted(() => ({
@@ -86,6 +91,37 @@ describe('hasRequiredAdminScope', () => {
   it('allows restaurant routes only when a restaurant scope exists', () => {
     expect(hasRequiredAdminScope('restaurant', { restaurantId: null })).toBe(false);
     expect(hasRequiredAdminScope('restaurant', { restaurantId: 'restaurant-1' })).toBe(true);
+  });
+});
+
+describe('getMissingAdminScopeRequirement', () => {
+  it('returns only the exact requirement that should render a blocker', () => {
+    expect(getMissingAdminScopeRequirement('none', { restaurantId: null })).toBeNull();
+    expect(getMissingAdminScopeRequirement('restaurant', { restaurantId: 'restaurant-1' })).toBeNull();
+    expect(getMissingAdminScopeRequirement('restaurant', { restaurantId: null })).toBe('restaurant');
+  });
+});
+
+describe('resolveAdminAccessSnapshot', () => {
+  it('keeps the unauthenticated navigation snapshot absent', () => {
+    expect(resolveAdminAccessSnapshot(null)).toBeUndefined();
+  });
+
+  it('passes only canonical access fields from a loaded profile', () => {
+    expect(
+      resolveAdminAccessSnapshot(
+        createProfile({
+          isSuperuser: false,
+          permissionCodes: ['reports.view'],
+          restaurantAccessActive: true,
+          restaurantId: 'restaurant-1',
+        }),
+      ),
+    ).toEqual({
+      isSuperuser: false,
+      permissionCodes: ['reports.view'],
+      restaurantAccessActive: true,
+    });
   });
 });
 

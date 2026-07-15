@@ -15,7 +15,7 @@ import type { NavItemProps, NavSectionProps } from 'shared/ui/NavSection';
 import { useSettingsContext } from 'shared/ui/Settings';
 
 import { AccountDrawer } from '../components/account-drawer';
-import { hasRequiredAdminScope } from '../components/admin-scope-access';
+import { getMissingAdminScopeRequirement, resolveAdminAccessSnapshot } from '../components/admin-scope-access';
 import { AdminScopeBlocker } from '../components/admin-scope-blocker';
 import { getAdminScopeRequirement } from '../components/admin-scope-requirements';
 import { AdminScopeSelector } from '../components/admin-scope-selector';
@@ -59,13 +59,7 @@ export function DashboardLayout({ sx, cssVars, children, slotProps, layoutQuery 
 
   const { value: open, onFalse: onClose, onTrue: onOpen } = useBoolean();
 
-  const navData =
-    slotProps?.nav?.data ??
-    dashboardNavData(navTranslations.t, {
-      isSuperuser: profile?.isSuperuser,
-      permissionCodes: profile?.permissionCodes,
-      restaurantAccessActive: profile?.restaurantAccessActive,
-    });
+  const navData = slotProps?.nav?.data ?? dashboardNavData(navTranslations.t, resolveAdminAccessSnapshot(profile));
 
   const isNavMini = settings.state.navLayout === 'mini';
   const isNavHorizontal = settings.state.navLayout === 'horizontal';
@@ -190,11 +184,9 @@ export function DashboardLayout({ sx, cssVars, children, slotProps, layoutQuery 
 
   const renderMain = () => {
     const selectedRestaurant = profile?.isSuperuser ? selectedRestaurantId : (profile?.restaurantId ?? null);
-    const blockerRequirement = hasRequiredAdminScope(scopeRequirement, {
+    const blockerRequirement = getMissingAdminScopeRequirement(scopeRequirement, {
       restaurantId: selectedRestaurant,
-    })
-      ? null
-      : scopeRequirement;
+    });
 
     return (
       <MainSection {...slotProps?.main}>
