@@ -3,7 +3,6 @@ import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import { useEffect, useMemo, useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 
 import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
@@ -20,20 +19,15 @@ import { LoadingScreen } from 'shared/ui/LoadingScreen';
 
 import { useCreateTariffMutation, useGetTariffByIdQuery, useUpdateTariffMutation } from '../../../application';
 
+import {
+  parseTariffPermissionIds,
+  parseTariffRoleIds,
+  tariffFormDefaultValues,
+  tariffFormSchema,
+  type TariffFormInput,
+  type TariffFormValues,
+} from './tariff-form';
 import { TariffFormFields } from './TariffFormFields';
-
-const schema = z.object({
-  name: z.string().min(1),
-  description: z.string().default(''),
-  monthlyPrice: z.union([z.number(), z.literal('')]).default(''),
-  yearlyPrice: z.union([z.number(), z.literal('')]).default(''),
-  isActive: z.boolean().default(true),
-  allowedRoleIds: z.array(z.string()).default([]),
-  permissionIds: z.array(z.string()).default([]),
-});
-
-type TariffFormValues = z.input<typeof schema>;
-export type Values = z.output<typeof schema>;
 
 const PLATFORM_ROLE_CODES = new Set(['product_owner', 'business_partner']);
 
@@ -66,17 +60,9 @@ const TariffFormPage = () => {
       : [listTitle, createTitle],
   );
 
-  const methods = useForm<TariffFormValues, unknown, Values>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      name: '',
-      description: '',
-      monthlyPrice: '',
-      yearlyPrice: '',
-      isActive: true,
-      allowedRoleIds: [],
-      permissionIds: [],
-    },
+  const methods = useForm<TariffFormInput, unknown, TariffFormValues>({
+    resolver: zodResolver(tariffFormSchema),
+    defaultValues: tariffFormDefaultValues,
   });
   const previousDerivedPermissionIdsRef = useRef<string[]>([]);
 
@@ -85,7 +71,8 @@ const TariffFormPage = () => {
     [rolesQuery.data],
   );
 
-  const selectedRoleIds = methods.watch('allowedRoleIds');
+  const watchedRoleIds = methods.watch('allowedRoleIds');
+  const selectedRoleIds = useMemo(() => parseTariffRoleIds(watchedRoleIds), [watchedRoleIds]);
   const isAllowedRoleSelectionDirty = Boolean(methods.formState.dirtyFields.allowedRoleIds);
 
   const derivedPermissionIds = useMemo(() => {
@@ -140,14 +127,14 @@ const TariffFormPage = () => {
       return;
     }
 
-    const currentPermissionIds = methods.getValues('permissionIds');
+    const currentPermissionIds = parseTariffPermissionIds(methods.getValues('permissionIds'));
     methods.setValue('permissionIds', uniquePermissionIds([...currentPermissionIds, ...newlyDerivedPermissionIds]), {
       shouldDirty: true,
       shouldValidate: false,
     });
   }, [derivedPermissionIds, isAllowedRoleSelectionDirty, methods]);
 
-  const onSubmit = methods.handleSubmit(async (values: Values) => {
+  const onSubmit = methods.handleSubmit(async (values: TariffFormValues) => {
     const payload = {
       name: values.name.trim(),
       description: values.description.trim(),

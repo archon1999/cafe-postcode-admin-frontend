@@ -8,6 +8,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { AdminPermission, AdminRole } from 'shared/api/admin-types';
 
+import { parseTariffPermissionIds, parseTariffRoleIds, tariffFormSchema } from './tariff-form';
 import TariffFormPage from './TariffFormPage';
 
 const pushMock = vi.fn();
@@ -275,6 +276,22 @@ describe('TariffFormPage role and permission behavior', () => {
       expect(screen.getByTestId('permission-ids')).toHaveTextContent(
         JSON.stringify(['permission-a', 'permission-shared']),
       );
+    });
+  });
+});
+
+describe('tariff form schema boundary', () => {
+  it('produces canonical lists and defaults from omitted raw inputs', () => {
+    expect(parseTariffRoleIds(undefined)).toEqual([]);
+    expect(parseTariffPermissionIds(undefined)).toEqual([]);
+    expect(tariffFormSchema.parse({ name: 'Starter' })).toEqual({
+      name: 'Starter',
+      description: '',
+      monthlyPrice: '',
+      yearlyPrice: '',
+      isActive: true,
+      allowedRoleIds: [],
+      permissionIds: [],
     });
   });
 });
