@@ -3,7 +3,6 @@ import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 
 import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
@@ -17,21 +16,14 @@ import { LoadingScreen } from 'shared/ui/LoadingScreen';
 
 import { useCreateRoleMutation, useGetRoleByIdQuery, useUpdateRoleMutation } from '../../../application';
 
+import {
+  type RoleFormInput,
+  type RoleFormValues,
+  roleFormDefaultValues,
+  roleFormSchema,
+  toRolePayload,
+} from './roleForm';
 import { RoleFormFields } from './RoleFormFields';
-
-const roleFormSchema = z.object({
-  name: z.string().min(1, { message: 'Nomi talab qilinadi' }),
-  description: z.string().optional(),
-  permissionIds: z.array(z.string()).default([]),
-});
-
-export type RoleFormValues = z.infer<typeof roleFormSchema>;
-
-const defaultValues: RoleFormValues = {
-  name: '',
-  description: '',
-  permissionIds: [],
-};
 
 const RoleFormPage = () => {
   const { t } = useTranslate('users');
@@ -45,9 +37,9 @@ const RoleFormPage = () => {
 
   useRedirectOnNotFound(roleQuery.error, isEditMode);
 
-  const methods = useForm<RoleFormValues>({
+  const methods = useForm<RoleFormInput, unknown, RoleFormValues>({
     resolver: zodResolver(roleFormSchema),
-    defaultValues,
+    defaultValues: roleFormDefaultValues,
   });
 
   const { handleSubmit, reset, formState } = methods;
@@ -63,11 +55,7 @@ const RoleFormPage = () => {
   }, [reset, roleQuery.data]);
 
   const onSubmit = handleSubmit(async (values) => {
-    const payload = {
-      name: values.name.trim(),
-      description: values.description?.trim() ?? '',
-      permissionIds: values.permissionIds,
-    };
+    const payload = toRolePayload(values);
 
     if (isEditMode && id) {
       await updateRoleMutation.mutateAsync(payload);

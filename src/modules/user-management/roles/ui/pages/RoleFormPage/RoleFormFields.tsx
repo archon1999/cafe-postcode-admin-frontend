@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import { PermissionsSelect } from 'modules/user-management/permissions/ui/components/PermissionsSelect/PermissionsSelect';
 import { RHFTextField } from 'shared/ui/HookForm';
 
-import type { RoleFormValues } from './RoleFormPage';
+import type { RoleFormInput } from './roleForm';
 
 type TranslateFn = (key: string, options?: Record<string, unknown>) => string;
 
@@ -18,8 +18,8 @@ export const RoleFormFields = ({ t }: RoleFormFieldsProps) => (
       gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
       gap: 3,
     }}>
-    <RHFTextField<RoleFormValues> name="name" label={t('fields.name')} />
-    <RHFTextField<RoleFormValues> name="description" label={t('fields.description')} multiline rows={4} />
-    <PermissionsSelect<RoleFormValues> name="permissionIds" label={t('fields.permissions')} />
+    <RHFTextField<RoleFormInput> name="name" label={t('fields.name')} />
+    <RHFTextField<RoleFormInput> name="description" label={t('fields.description')} multiline rows={4} />
+    <PermissionsSelect<RoleFormInput> name="permissionIds" label={t('fields.permissions')} />
   </Box>
 );
