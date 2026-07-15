@@ -12,7 +12,8 @@ type PrintBlockEditorProps = {
 };
 
 type VariableTarget =
-  | { type: 'text' | 'value' }
+  | { type: 'text' }
+  | { type: 'value' }
   | { type: 'rowLabel' | 'rowValue' | 'columnLabel' | 'columnValue'; index: number };
 
 function appendVariable(value: string, variable: string) {
@@ -63,7 +64,7 @@ export function PrintBlockEditor({ block, variables, onChange }: PrintBlockEdito
     } else if (target.type === 'columnLabel') {
       const column = block.columns?.[target.index];
       if (column) updateColumn(target.index, { ...column, label: appendVariable(column.label, selectedVariable) });
-    } else {
+    } else if (target.type === 'columnValue') {
       const column = block.columns?.[target.index];
       if (column) updateColumn(target.index, { ...column, value: appendVariable(column.value, selectedVariable) });
     }
