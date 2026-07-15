@@ -204,7 +204,7 @@ export function RestaurantActivationDialog({
       return;
     }
 
-    const currentPermissionIds = methods.getValues('permissionIds');
+    const currentPermissionIds = activationSchema.shape.permissionIds.parse(methods.getValues('permissionIds'));
     methods.setValue('permissionIds', uniqueIds([...currentPermissionIds, ...newlyDerivedPermissionIds]), {
       shouldDirty: true,
       shouldValidate: false,
