@@ -253,7 +253,7 @@ export const HallConstructorPageContent = ({ id }: HallConstructorPageContentPro
   const settings = useSettingsContext();
   const query = useGetHallConstructorQuery(id ?? '', { enabled: Boolean(id) });
   const updateMutation = useUpdateHallConstructorMutation(id ?? '');
-  const mode = settings.state.mode;
+  const previewMode = settings.state.mode === 'dark' ? 'dark' : 'light';
 
   useRedirectOnNotFound(query.error, Boolean(id));
 
@@ -575,10 +575,12 @@ export const HallConstructorPageContent = ({ id }: HallConstructorPageContentPro
                 `,
                 backgroundSize: `${GRID_CELL_SIZE + GRID_GAP_SIZE}px ${GRID_CELL_SIZE + GRID_GAP_SIZE}px`,
                 backgroundPosition: `${GRID_PADDING_SIZE / 2}px ${GRID_PADDING_SIZE / 2}px`,
-                backgroundColor: getConstructorPreviewPalette(mode, false).canvas,
-                border: `1px solid ${alpha(mode === 'dark' ? '#ffffff' : '#7d6548', mode === 'dark' ? 0.05 : 0.14)}`,
+                backgroundColor: getConstructorPreviewPalette(previewMode, false).canvas,
+                border: `1px solid ${alpha(previewMode === 'dark' ? '#ffffff' : '#7d6548', previewMode === 'dark' ? 0.05 : 0.14)}`,
                 boxShadow:
-                  mode === 'dark' ? 'inset 0 1px 0 rgba(255,255,255,0.02)' : 'inset 0 1px 0 rgba(255,255,255,0.52)',
+                  previewMode === 'dark'
+                    ? 'inset 0 1px 0 rgba(255,255,255,0.02)'
+                    : 'inset 0 1px 0 rgba(255,255,255,0.52)',
               })}>
               {draft.tables.map((table) => (
                 <Box
@@ -590,7 +592,7 @@ export const HallConstructorPageContent = ({ id }: HallConstructorPageContentPro
                   <ConstructorTableCard
                     table={table}
                     selected={table.localId === selectedTableId}
-                    mode={mode}
+                    mode={previewMode}
                     onSelect={() => setSelectedTableId(table.localId)}
                     onMoveStart={(event) => {
                       if ((event.target as HTMLElement).closest('[aria-label="Resize table"]')) {
