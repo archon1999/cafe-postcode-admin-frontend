@@ -82,6 +82,62 @@ describe('userFormSchema', () => {
     expect(result.error?.flatten().fieldErrors.username).toContain('Login talab qilinadi');
     expect(result.error?.flatten().fieldErrors.password).toContain('Parol talab qilinadi');
   });
+
+  it('allows an employee admin edit without a replacement password', () => {
+    const employeeEditSchema = getUserFormSchema('employee', true);
+    const result = employeeEditSchema.safeParse({
+      ...defaultUserFormValues,
+      username: 'manager',
+      fullName: 'Manager',
+      roleId: 'manager-role',
+      password: '',
+      requiresLoginCredentials: true,
+    });
+
+    expect(result.success).toBe(true);
+  });
+
+  it('allows a regular POS employee without login credentials', () => {
+    const employeeSchema = getUserFormSchema('employee');
+    const result = employeeSchema.safeParse({
+      ...defaultUserFormValues,
+      username: '',
+      fullName: 'Cashier',
+      roleId: 'cashier-role',
+      password: '',
+      pin: '1234',
+      requiresLoginCredentials: false,
+    });
+
+    expect(result.success).toBe(true);
+  });
+
+  it('coerces salary and integer KPI inputs to numbers', () => {
+    const result = userFormSchema.parse({
+      ...defaultUserFormValues,
+      username: 'manager',
+      fullName: 'Manager',
+      roleId: 'manager-role',
+      baseAmount: '2500000',
+      kpiPercent: '15',
+    });
+
+    expect(result.baseAmount).toBe(2500000);
+    expect(result.kpiPercent).toBe(15);
+  });
+
+  it('rejects a fractional KPI percent', () => {
+    const result = userFormSchema.safeParse({
+      ...defaultUserFormValues,
+      username: 'manager',
+      fullName: 'Manager',
+      roleId: 'manager-role',
+      kpiPercent: '12.5',
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error?.flatten().fieldErrors.kpiPercent).toContain("KPI foizi butun son bo'lishi kerak");
+  });
 });
 
 describe('user form payload helpers', () => {
@@ -161,5 +217,81 @@ describe('user form payload helpers', () => {
     expect(payload.username).toBeUndefined();
     expect(payload.password).toBeUndefined();
     expect(payload.pin).toBe('1234');
+  });
+
+  it('builds the exact employee admin payload after schema parsing', () => {
+    const values = getUserFormSchema('employee').parse({
+      ...defaultUserFormValues,
+      username: '  manager  ',
+      fullName: '  Restaurant Manager  ',
+      phone: '  +998901234567  ',
+      roleId: 'manager-role',
+      passportSeries: '  AB1234567  ',
+      pnfl: '  12345678901234  ',
+      birthDate: '',
+      salaryType: 'monthly',
+      baseAmount: '2500000',
+      kpiPercent: '15',
+      hallSwitchPermission: true,
+      primaryHallId: 'hall-1',
+      allowedHallIds: ['hall-1', 'hall-2'],
+      password: '  Secret123!  ',
+      pin: '1234',
+      requiresLoginCredentials: true,
+    });
+
+    expect(buildUserPayload(values, 'employee')).toEqual({
+      fullName: 'Restaurant Manager',
+      phone: '+998901234567',
+      roleId: 'manager-role',
+      isActive: true,
+      employmentStatus: 'active',
+      passportSeries: 'AB1234567',
+      pnfl: '12345678901234',
+      birthDate: null,
+      salaryType: 'monthly',
+      baseAmount: 2500000,
+      kpiPercent: 15,
+      hallSwitchPermission: true,
+      primaryHallId: 'hall-1',
+      allowedHallIds: ['hall-1', 'hall-2'],
+      username: 'manager',
+      password: 'Secret123!',
+    });
+  });
+
+  it('builds the exact regular POS employee payload without login credentials', () => {
+    const values = getUserFormSchema('employee').parse({
+      ...defaultUserFormValues,
+      username: 'ignored-login',
+      fullName: '  Cashier  ',
+      roleId: 'cashier-role',
+      isActive: true,
+      employmentStatus: 'archived',
+      salaryType: 'daily',
+      baseAmount: '150000',
+      kpiPercent: '',
+      password: 'IgnoredSecret123!',
+      pin: '1234',
+      requiresLoginCredentials: false,
+    });
+
+    expect(buildUserPayload(values, 'employee')).toEqual({
+      fullName: 'Cashier',
+      phone: '',
+      roleId: 'cashier-role',
+      isActive: false,
+      employmentStatus: 'archived',
+      passportSeries: '',
+      pnfl: '',
+      birthDate: null,
+      salaryType: 'daily',
+      baseAmount: 150000,
+      kpiPercent: null,
+      hallSwitchPermission: false,
+      primaryHallId: null,
+      allowedHallIds: [],
+      pin: '1234',
+    });
   });
 });
