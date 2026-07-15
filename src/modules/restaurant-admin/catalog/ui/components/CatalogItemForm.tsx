@@ -11,7 +11,6 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 
 import { useTranslate } from 'app/providers/locales';
 import type {
@@ -32,43 +31,14 @@ import {
   useUpdateCatalogItemMutation,
 } from '../../application';
 import { getMxikPrimaryPictureUrl } from '../../data-access';
+import {
+  catalogItemFormSchema,
+  type CatalogItemFormInput,
+  type CatalogItemFormValues,
+} from '../../data-access/catalogItemForm.schema';
 
 import { CatalogImageEditor } from './CatalogImageEditor';
 import { buildMxikOption, MxikAutocompleteField } from './MxikAutocompleteField';
-
-const mxikOptionSchema = z
-  .object({
-    value: z.string().min(1),
-    code: z.string().min(1),
-    label: z.string().min(1),
-    name: z.string().optional(),
-    raw: z.record(z.string(), z.unknown()).optional(),
-  })
-  .nullable()
-  .optional();
-
-const imageFieldSchema = z.custom<File | string | null | undefined>(
-  (value) => value === undefined || value === null || typeof value === 'string' || value instanceof File,
-);
-
-const itemFormSchema = z.object({
-  name: z.string().min(1, { message: 'Nomi talab qilinadi' }),
-  category: z.string().optional(),
-  description: z.string().optional(),
-  mxik: mxikOptionSchema,
-  imageFile: imageFieldSchema.optional(),
-  imageSource: z.enum(['mxik-cache', 'manual', '']),
-  clearImage: z.boolean(),
-  restoreMxikImage: z.boolean(),
-  price: z.preprocess(
-    (value) => (value === '' || value === null || value === undefined ? 0 : value),
-    z.coerce.number().int().min(0),
-  ),
-  isActive: z.boolean(),
-  isStoplisted: z.boolean(),
-});
-
-export type ItemFormValues = z.infer<typeof itemFormSchema>;
 
 type CatalogItemFormProps = {
   item?: CatalogItem | null;
@@ -77,7 +47,7 @@ type CatalogItemFormProps = {
   onSuccess?: (item: CatalogItem) => void;
 };
 
-const defaultValues: ItemFormValues = {
+const defaultValues: CatalogItemFormInput = {
   name: '',
   category: '',
   description: '',
@@ -184,8 +154,8 @@ function CatalogItemFormInner({
   const createMutation = useCreateCatalogItemMutation();
   const updateMutation = useUpdateCatalogItemMutation(item?.id ?? '');
 
-  const methods = useForm<ItemFormValues>({
-    resolver: zodResolver(itemFormSchema),
+  const methods = useForm<CatalogItemFormInput, unknown, CatalogItemFormValues>({
+    resolver: zodResolver(catalogItemFormSchema),
     defaultValues,
   });
 
@@ -325,7 +295,7 @@ function CatalogItemFormInner({
 
   const fields = (
     <Stack spacing={3} sx={isDialog ? { pt: 1 } : undefined}>
-      <CatalogImageEditor<ItemFormValues>
+      <CatalogImageEditor<CatalogItemFormInput>
         imageName="imageFile"
         imageSourceName="imageSource"
         mxikImageUrl={mxikImageUrl}
@@ -340,8 +310,8 @@ function CatalogItemFormInner({
           gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
           gap: 3,
         }}>
-        <RHFTextField<ItemFormValues> name="name" label={t('fields.name')} />
-        <RHFSelect<ItemFormValues>
+        <RHFTextField<CatalogItemFormInput> name="name" label={t('fields.name')} />
+        <RHFSelect<CatalogItemFormInput>
           name="category"
           label={t('fields.category')}
           helperText={categoriesQuery.isLoading ? tCommon('labels.loading') : undefined}>
@@ -352,7 +322,7 @@ function CatalogItemFormInner({
             </MenuItem>
           ))}
         </RHFSelect>
-        <MxikAutocompleteField<ItemFormValues>
+        <MxikAutocompleteField<CatalogItemFormInput>
           name="mxik"
           label={t('fields.mxikCode')}
           helperText={t('labels.mxikOptional')}
@@ -412,8 +382,8 @@ function CatalogItemFormInner({
             </Stack>
           </Box>
         ) : null}
-        <RHFSumCurrencyField<ItemFormValues> name="price" label={t('fields.price')} />
-        <RHFTextField<ItemFormValues>
+        <RHFSumCurrencyField<CatalogItemFormInput> name="price" label={t('fields.price')} />
+        <RHFTextField<CatalogItemFormInput>
           name="description"
           label={t('fields.description')}
           multiline
@@ -423,8 +393,8 @@ function CatalogItemFormInner({
       </Box>
 
       <Stack spacing={2}>
-        <RHFSwitch<ItemFormValues> name="isActive" label={t('fields.status')} />
-        <RHFSwitch<ItemFormValues> name="isStoplisted" label={t('fields.stoplist')} />
+        <RHFSwitch<CatalogItemFormInput> name="isActive" label={t('fields.status')} />
+        <RHFSwitch<CatalogItemFormInput> name="isStoplisted" label={t('fields.stoplist')} />
       </Stack>
     </Stack>
   );

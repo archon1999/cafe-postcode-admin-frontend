@@ -49,12 +49,21 @@ describe('catalogFormData', () => {
       isStoplisted: true,
     });
 
-    expect(formData.get('category')).toBe('');
+    expect(Object.fromEntries(formData.entries())).toEqual({
+      name: 'Lavash',
+      mxikCode: '',
+      mxikName: '',
+      mxikPayload: '{}',
+      imageUrl: '',
+      imageSource: '',
+      clearImage: 'true',
+      restoreMxikImage: 'false',
+      category: '',
+      description: 'Issiq',
+      price: '32000',
+      isActive: 'false',
+      isStoplisted: 'true',
+    });
     expect(formData.get('prepStation')).toBeNull();
-    expect(formData.get('imageUrl')).toBe('');
-    expect(formData.get('clearImage')).toBe('true');
-    expect(formData.get('price')).toBe('32000');
-    expect(formData.get('isActive')).toBe('false');
-    expect(formData.get('isStoplisted')).toBe('true');
   });
 });
