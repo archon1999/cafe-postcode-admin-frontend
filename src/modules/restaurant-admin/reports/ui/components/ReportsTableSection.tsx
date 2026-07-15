@@ -17,6 +17,7 @@ import { useGetCatalogCategoriesQuery } from 'modules/restaurant-admin/catalog/a
 import { useGetCashDesksQuery } from 'modules/restaurant-admin/restaurant-management/application';
 import { useGetUsersQuery } from 'modules/user-management/users/application';
 import type {
+  AdminReceiptStatus,
   AdminReceiptsReportQueryParams,
   AdminReceiptsReportRow,
   AdminPaymentBreakdownReportQueryParams,
@@ -77,6 +78,18 @@ type ReportEmptyState = {
 };
 
 const SINGLE_SELECT = (values: string[]) => values.slice(-1);
+
+function parseReceiptStatus(value: string | undefined): AdminReceiptStatus | undefined {
+  switch (value) {
+    case undefined:
+    case 'created':
+    case 'sent':
+    case 'failed':
+      return value;
+    default:
+      throw new Error(`Unsupported receipt status: ${value}`);
+  }
+}
 
 type ReportsTableSectionProps = {
   report: ReportDefinition;
@@ -163,6 +176,7 @@ export function ReportsTableSection({
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
   const ordering = getOrderingFromSortModel(sortModel);
   const tableReportKey = report.key as TableReportKey;
+  const receiptStatus = report.key === 'receipts' ? parseReceiptStatus(statuses[0]) : undefined;
   const periodParams = useMemo(
     () => ({
       startDate,
@@ -188,7 +202,7 @@ export function ReportsTableSection({
       page: paginationModel.page + 1,
       pageSize: paginationModel.pageSize,
       search: search || undefined,
-      status: statuses[0],
+      status: receiptStatus,
       receiptKind: receiptKinds[0] as 'plain' | 'fiscal' | undefined,
       ordering,
     } satisfies AdminReceiptsReportQueryParams,
@@ -843,7 +857,7 @@ export function ReportsTableSection({
           : report.key === 'receipts'
             ? await reportsRepository.exportReceipts({
                 ...commonParams,
-                status: statuses[0],
+                status: receiptStatus,
                 receiptKind: receiptKinds[0] as 'plain' | 'fiscal' | undefined,
               })
             : report.key === 'topItems'
