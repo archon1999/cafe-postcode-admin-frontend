@@ -21,6 +21,7 @@ export function RHFSumCurrencyField<T extends FieldValues = FieldValues>({
 }: RHFSumCurrencyFieldProps<T>) {
   const { control } = useFormContext<T>();
   const suffix = getMoneySuffix();
+  const inputSlotProps = typeof slotProps?.input === 'function' ? undefined : slotProps?.input;
 
   return (
     <Controller
@@ -53,10 +54,10 @@ export function RHFSumCurrencyField<T extends FieldValues = FieldValues>({
           slotProps={{
             ...slotProps,
             input: {
-              ...slotProps?.input,
+              ...inputSlotProps,
               endAdornment: (
                 <>
-                  {slotProps?.input?.endAdornment}
+                  {inputSlotProps?.endAdornment}
                   <InputAdornment position="end" sx={{ color: 'text.secondary', pointerEvents: 'none' }}>
                     {suffix}
                   </InputAdornment>
