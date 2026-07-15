@@ -4,42 +4,46 @@ import '@testing-library/jest-dom/vitest';
 
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import type { ElementType, ReactNode } from 'react';
-import { forwardRef } from 'react';
+import { createElement, forwardRef } from 'react';
 import { MemoryRouter } from 'react-router';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-type MockGridActionsCellItemProps = {
+type MockActionElementProps = {
   'aria-label'?: string;
   className?: string;
-  component?: ElementType<{ href?: string }>;
   href?: string;
-  icon?: ReactNode;
-  label?: ReactNode;
+  children?: ReactNode;
   onClick?: () => void;
   rel?: string;
-  showInMenu?: boolean;
   target?: string;
+};
+
+type MockGridActionsCellItemProps = Omit<MockActionElementProps, 'children'> & {
+  component?: ElementType<MockActionElementProps>;
+  icon?: ReactNode;
+  label?: ReactNode;
+  showInMenu?: boolean;
 };
 
 vi.mock('@mui/x-data-grid', () => ({
   GridActionsCellItem: forwardRef<HTMLElement, MockGridActionsCellItemProps>(function MockGridActionsCellItem(
     { className, component, href, icon, label, onClick, rel, showInMenu = false, target },
-    ref,
+    _ref,
   ) {
-    const Component = component ?? (href ? 'a' : 'button');
+    const Component: ElementType<MockActionElementProps> = component ?? (href ? 'a' : 'button');
 
-    return (
-      <Component
-        ref={ref}
-        aria-label={typeof label === 'string' ? label : undefined}
-        className={className}
-        href={href}
-        onClick={onClick}
-        rel={rel}
-        target={target}>
-        {icon}
-        {showInMenu ? label : null}
-      </Component>
+    return createElement(
+      Component,
+      {
+        'aria-label': typeof label === 'string' ? label : undefined,
+        className,
+        href,
+        onClick,
+        rel,
+        target,
+      },
+      icon,
+      showInMenu ? label : null,
     );
   }),
 }));

@@ -1,4 +1,4 @@
-import type { DataGridProps, GridColDef, GridValidRowModel } from '@mui/x-data-grid';
+import type { DataGridProps, GridActionsColDef, GridColDef, GridRowParams, GridValidRowModel } from '@mui/x-data-grid';
 import { DataGrid as MuiDataGrid, useGridApiRef } from '@mui/x-data-grid';
 import { cloneElement, isValidElement, useCallback, useEffect, useMemo, useRef } from 'react';
 
@@ -18,6 +18,9 @@ const DEFAULT_DATA_GRID_SX = {
 };
 const DEFAULT_DATA_GRID_ROW_HEIGHT = 64;
 export const DEFAULT_DATA_GRID_AUTO_REFRESH_INTERVAL_MS = 15_000;
+
+const isActionsColumn = <R extends GridValidRowModel>(column: GridColDef<R>): column is GridActionsColDef<R> =>
+  column.type === 'actions' && 'getActions' in column && typeof column.getActions === 'function';
 
 export const DataGrid = <R extends GridValidRowModel = GridValidRowModel>({
   sx,
@@ -67,7 +70,7 @@ export const DataGrid = <R extends GridValidRowModel = GridValidRowModel>({
   const normalizedColumns = useMemo(
     () =>
       columns.map((column) => {
-        if (column.type !== 'actions' || !column.getActions) {
+        if (!isActionsColumn(column)) {
           return column;
         }
 
@@ -76,8 +79,8 @@ export const DataGrid = <R extends GridValidRowModel = GridValidRowModel>({
           width: column.width ?? 56,
           minWidth: column.minWidth ?? 56,
           maxWidth: column.maxWidth ?? 56,
-          getActions: (params) =>
-            column.getActions!(params).map((action, index) => {
+          getActions: (params: GridRowParams<R>) =>
+            column.getActions(params).map((action, index) => {
               if (!isValidElement(action)) {
                 return action;
               }

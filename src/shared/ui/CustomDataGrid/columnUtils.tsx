@@ -1,6 +1,5 @@
 import Link from '@mui/material/Link';
 import type { GridColDef, GridRenderCellParams, GridValidRowModel } from '@mui/x-data-grid';
-import { createElement } from 'react';
 
 import { EMPTY_VALUE_TEXT, isEmptyValue, renderEmptyValue } from 'shared/ui/EmptyValue';
 import { RouterLink } from 'shared/ui/RouterLink';
@@ -99,16 +98,15 @@ export const withDetailLink = <T extends GridValidRowModel = GridValidRowModel>(
         return content;
       }
 
-      return createElement(
-        Link,
-        {
-          component: RouterLink,
-          href,
-          underline: 'hover',
-          sx: DETAIL_LINK_SX,
-          onClick: (event: { stopPropagation: () => void }) => event.stopPropagation(),
-        },
-        content,
+      return (
+        <Link
+          component={RouterLink}
+          href={href}
+          underline="hover"
+          sx={DETAIL_LINK_SX}
+          onClick={(event) => event.stopPropagation()}>
+          {content}
+        </Link>
       );
     },
   };
