@@ -9,6 +9,7 @@ export {
   sanitizePinCodeInput,
   mapUserToFormValues,
   PIN_CODE_ERROR_MESSAGE,
+  type UserFormInput,
   type UserFormValues,
 } from './entities/user-form.schema';
 export type { UserManagementSurface, UserModeOption } from './entities/user.types';

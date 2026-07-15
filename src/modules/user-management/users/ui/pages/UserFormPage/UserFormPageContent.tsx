@@ -34,6 +34,7 @@ import {
   mapUserToFormValues,
   roleRequiresEmployeeCredentials,
   type UserManagementSurface,
+  type UserFormInput,
   type UserFormValues,
 } from '../../../domain';
 
@@ -65,7 +66,7 @@ export const UserFormPageContent = ({ id, surface = 'user' }: UserFormPageConten
   const createEmployeeMutation = useCreateEmployeeMutation();
   const updateEmployeeMutation = useUpdateEmployeeMutation(id ?? '');
 
-  const methods = useForm<UserFormValues>({
+  const methods = useForm<UserFormInput, unknown, UserFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultUserFormValues,
   });
@@ -117,14 +118,19 @@ export const UserFormPageContent = ({ id, surface = 'user' }: UserFormPageConten
   }, [selectedEmploymentStatus, setValue]);
 
   useEffect(() => {
-    if (selectedSalaryType && (baseAmount === null || baseAmount === undefined || Number.isNaN(baseAmount))) {
+    if (
+      selectedSalaryType &&
+      (baseAmount === null || baseAmount === undefined || (typeof baseAmount === 'number' && Number.isNaN(baseAmount)))
+    ) {
       setValue('baseAmount', 0);
     }
   }, [baseAmount, selectedSalaryType, setValue]);
 
   useEffect(() => {
-    if (selectedPrimaryHallId && !selectedAllowedHallIds.includes(selectedPrimaryHallId)) {
-      setValue('allowedHallIds', [...selectedAllowedHallIds, selectedPrimaryHallId]);
+    const allowedHallIds = selectedAllowedHallIds ?? [];
+
+    if (selectedPrimaryHallId && !allowedHallIds.includes(selectedPrimaryHallId)) {
+      setValue('allowedHallIds', [...allowedHallIds, selectedPrimaryHallId]);
     }
   }, [selectedAllowedHallIds, selectedPrimaryHallId, setValue]);
 

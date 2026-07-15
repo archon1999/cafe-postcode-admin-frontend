@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 
 import { RHFDatePicker, RHFMultiSelect, RHFPhoneInput, RHFSelect, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
 
-import { sanitizePinCodeInput, type UserFormValues } from '../../../domain';
+import { sanitizePinCodeInput, type UserFormInput } from '../../../domain';
 
 type TranslateFn = (key: string, options?: Record<string, unknown>) => string;
 
@@ -30,7 +30,7 @@ type UserFormFieldsProps = {
   isHallsLoading: boolean;
   isRolesLoading: boolean;
   roles: RoleOption[];
-  selectedSalaryType: UserFormValues['salaryType'];
+  selectedSalaryType: UserFormInput['salaryType'];
   t: TranslateFn;
   tCommon: TranslateFn;
 };
@@ -58,15 +58,15 @@ export const UserFormFields = ({
           gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
           gap: 3,
         }}>
-        <RHFTextField<UserFormValues> name="fullName" label={t('fields.fullName')} />
-        <RHFPhoneInput<UserFormValues>
+        <RHFTextField<UserFormInput> name="fullName" label={t('fields.fullName')} />
+        <RHFPhoneInput<UserFormInput>
           name="phone"
           label={t('fields.phone')}
           defaultCountry="UZ"
           placeholder={t('fields.phonePlaceholder')}
         />
 
-        <RHFSelect<UserFormValues>
+        <RHFSelect<UserFormInput>
           name="roleId"
           label={t('fields.role')}
           helperText={isRolesLoading ? tCommon('labels.loading') : undefined}>
@@ -77,7 +77,7 @@ export const UserFormFields = ({
           ))}
         </RHFSelect>
 
-        <RHFSelect<UserFormValues> name="employmentStatus" label={t('fields.employmentStatus')}>
+        <RHFSelect<UserFormInput> name="employmentStatus" label={t('fields.employmentStatus')}>
           <MenuItem value="active">{t('status.active')}</MenuItem>
           <MenuItem value="inactive">{t('status.inactive')}</MenuItem>
           <MenuItem value="archived">{t('status.archived')}</MenuItem>
@@ -91,8 +91,8 @@ export const UserFormFields = ({
               gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
               gap: 3,
             }}>
-            <RHFTextField<UserFormValues> name="username" label={t('fields.username')} />
-            <RHFTextField<UserFormValues>
+            <RHFTextField<UserFormInput> name="username" label={t('fields.username')} />
+            <RHFTextField<UserFormInput>
               name="password"
               label={t('fields.password')}
               type="password"
@@ -110,7 +110,7 @@ export const UserFormFields = ({
         ) : null}
 
         {showPinField && (
-          <RHFTextField<UserFormValues>
+          <RHFTextField<UserFormInput>
             name="pin"
             label={t('fields.pin')}
             helperText={t('fields.pinHint')}
@@ -119,7 +119,7 @@ export const UserFormFields = ({
           />
         )}
 
-        <RHFDatePicker<UserFormValues>
+        <RHFDatePicker<UserFormInput>
           name="birthDate"
           label={t('fields.birthDate')}
           slotProps={{ textField: { helperText: t('fields.birthDateHint') } }}
@@ -140,7 +140,7 @@ export const UserFormFields = ({
               gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
               gap: 3,
             }}>
-            <RHFSelect<UserFormValues>
+            <RHFSelect<UserFormInput>
               name="primaryHallId"
               label={t('fields.primaryHall')}
               helperText={isHallsLoading ? tCommon('labels.loading') : t('fields.primaryHallHint')}>
@@ -152,7 +152,7 @@ export const UserFormFields = ({
               ))}
             </RHFSelect>
 
-            <RHFMultiSelect<UserFormValues>
+            <RHFMultiSelect<UserFormInput>
               name="allowedHallIds"
               label={t('fields.allowedHalls')}
               options={hallOptions}
@@ -164,7 +164,7 @@ export const UserFormFields = ({
           </Box>
 
           <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
-            <RHFSwitch<UserFormValues> name="hallSwitchPermission" label={t('fields.hallSwitchPermission')} />
+            <RHFSwitch<UserFormInput> name="hallSwitchPermission" label={t('fields.hallSwitchPermission')} />
           </Stack>
         </Stack>
       </>
@@ -180,17 +180,17 @@ export const UserFormFields = ({
           gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
           gap: 3,
         }}>
-        <RHFTextField<UserFormValues> name="passportSeries" label={t('fields.passportSeries')} />
-        <RHFTextField<UserFormValues> name="pnfl" label={t('fields.pnfl')} />
+        <RHFTextField<UserFormInput> name="passportSeries" label={t('fields.passportSeries')} />
+        <RHFTextField<UserFormInput> name="pnfl" label={t('fields.pnfl')} />
 
-        <RHFSelect<UserFormValues> name="salaryType" label={t('fields.salaryType')}>
+        <RHFSelect<UserFormInput> name="salaryType" label={t('fields.salaryType')}>
           <MenuItem value="hourly">{t('salaryType.hourly')}</MenuItem>
           <MenuItem value="daily">{t('salaryType.daily')}</MenuItem>
           <MenuItem value="monthly">{t('salaryType.monthly')}</MenuItem>
         </RHFSelect>
 
         {selectedSalaryType && (
-          <RHFTextField<UserFormValues>
+          <RHFTextField<UserFormInput>
             name="baseAmount"
             label={t('fields.baseAmount')}
             type="number"
@@ -198,7 +198,7 @@ export const UserFormFields = ({
           />
         )}
 
-        <RHFTextField<UserFormValues>
+        <RHFTextField<UserFormInput>
           name="kpiPercent"
           label={t('fields.kpiPercent')}
           type="number"

@@ -102,7 +102,10 @@ export const userFormSchema = createUserFormSchema('user');
 export const getUserFormSchema = (surface: UserManagementSurface, isEditMode = false) =>
   createUserFormSchema(surface, isEditMode);
 
-export type UserFormValues = z.infer<typeof userFormSchema>;
+type UserFormSchema = ReturnType<typeof createUserFormSchema>;
+
+export type UserFormInput = z.input<UserFormSchema>;
+export type UserFormValues = z.output<UserFormSchema>;
 
 export const defaultUserFormValues: UserFormValues = {
   username: '',
