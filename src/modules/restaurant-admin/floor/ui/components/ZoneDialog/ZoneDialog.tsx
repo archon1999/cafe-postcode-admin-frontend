@@ -8,7 +8,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 
 import { useTranslate } from 'app/providers/locales';
 import type { AdminZoneOrCabin } from 'shared/api/admin-types';
@@ -18,13 +17,13 @@ import { Form, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
 
 import { useCreateZoneMutation, useGetZoneByIdQuery, useUpdateZoneMutation } from '../../../application';
 
-const schema = z.object({
-  name: z.string().min(1),
-  sortOrder: z.coerce.number().min(0),
-  isActive: z.boolean(),
-});
-
-type Values = z.infer<typeof schema>;
+import {
+  toZonePayload,
+  type ZoneDialogFormInput,
+  type ZoneDialogFormValues,
+  zoneDialogDefaultValues,
+  zoneDialogSchema,
+} from './zoneDialog.form';
 
 type ZoneDialogProps = {
   open: boolean;
@@ -56,19 +55,19 @@ export function ZoneDialog({ open, zoneId, onClose, onSaved }: ZoneDialogProps) 
     },
   );
 
-  const methods = useForm<Values>({
-    resolver: zodResolver(schema),
-    defaultValues: { name: '', sortOrder: 0, isActive: true },
+  const methods = useForm<ZoneDialogFormInput, unknown, ZoneDialogFormValues>({
+    resolver: zodResolver(zoneDialogSchema),
+    defaultValues: zoneDialogDefaultValues,
   });
 
   useEffect(() => {
     if (!open) {
-      methods.reset({ name: '', sortOrder: 0, isActive: true });
+      methods.reset(zoneDialogDefaultValues);
       return;
     }
 
     if (!isEditMode) {
-      methods.reset({ name: '', sortOrder: 0, isActive: true });
+      methods.reset(zoneDialogDefaultValues);
       return;
     }
 
@@ -84,11 +83,7 @@ export function ZoneDialog({ open, zoneId, onClose, onSaved }: ZoneDialogProps) 
   }, [isEditMode, methods, open, zoneQuery.data]);
 
   const onSubmit = methods.handleSubmit(async (values) => {
-    const payload = {
-      name: values.name.trim(),
-      sortOrder: values.sortOrder,
-      isActive: values.isActive,
-    };
+    const payload = toZonePayload(values);
 
     const savedZone =
       isEditMode && zoneId ? await updateMutation.mutateAsync(payload) : await createMutation.mutateAsync(payload);
@@ -108,9 +103,9 @@ export function ZoneDialog({ open, zoneId, onClose, onSaved }: ZoneDialogProps) 
             </Stack>
           ) : (
             <Stack spacing={3} sx={{ pt: 1 }}>
-              <RHFTextField<Values> name="name" label={t('fields.name')} />
-              <RHFTextField<Values> name="sortOrder" label={t('fields.sortOrder')} type="number" />
-              <RHFSwitch<Values> name="isActive" label={t('fields.status')} />
+              <RHFTextField<ZoneDialogFormInput> name="name" label={t('fields.name')} />
+              <RHFTextField<ZoneDialogFormInput> name="sortOrder" label={t('fields.sortOrder')} type="number" />
+              <RHFSwitch<ZoneDialogFormInput> name="isActive" label={t('fields.status')} />
             </Stack>
           )}
         </DialogContent>

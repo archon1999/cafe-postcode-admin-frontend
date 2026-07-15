@@ -10,7 +10,6 @@ import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 
 import { useTranslate } from 'app/providers/locales';
 import { useCurrentUser } from 'modules/auth';
@@ -26,15 +25,13 @@ import {
 } from '../../../application';
 import { ZoneDialog } from '../ZoneDialog/ZoneDialog';
 
-const schema = z.object({
-  name: z.string().min(1),
-  description: z.string(),
-  sortOrder: z.coerce.number().min(0),
-  isActive: z.boolean(),
-  zoneOrCabinId: z.string().min(1),
-});
-
-type Values = z.infer<typeof schema>;
+import {
+  hallDialogDefaultValues,
+  type HallDialogFormInput,
+  type HallDialogFormValues,
+  hallDialogSchema,
+  toHallPayload,
+} from './hallDialog.form';
 
 export function HallDialog({ open, hallId, onClose }: { open: boolean; hallId?: string | null; onClose: () => void }) {
   const { t } = useTranslate('floor');
@@ -50,9 +47,9 @@ export function HallDialog({ open, hallId, onClose }: { open: boolean; hallId?: 
 
   useRedirectOnNotFound(hallQuery.error, open && isEditMode);
 
-  const methods = useForm<Values>({
-    resolver: zodResolver(schema),
-    defaultValues: { name: '', description: '', sortOrder: 0, isActive: true, zoneOrCabinId: '' },
+  const methods = useForm<HallDialogFormInput, unknown, HallDialogFormValues>({
+    resolver: zodResolver(hallDialogSchema),
+    defaultValues: hallDialogDefaultValues,
   });
 
   const zoneOptions = useMemo(
@@ -68,12 +65,12 @@ export function HallDialog({ open, hallId, onClose }: { open: boolean; hallId?: 
 
   useEffect(() => {
     if (!open) {
-      methods.reset({ name: '', description: '', sortOrder: 0, isActive: true, zoneOrCabinId: '' });
+      methods.reset(hallDialogDefaultValues);
       return;
     }
 
     if (!isEditMode) {
-      methods.reset({ name: '', description: '', sortOrder: 0, isActive: true, zoneOrCabinId: '' });
+      methods.reset(hallDialogDefaultValues);
       return;
     }
 
@@ -91,13 +88,7 @@ export function HallDialog({ open, hallId, onClose }: { open: boolean; hallId?: 
   }, [hallQuery.data, isEditMode, methods, open]);
 
   const onSubmit = methods.handleSubmit(async (values) => {
-    const payload = {
-      name: values.name.trim(),
-      description: values.description.trim(),
-      sortOrder: values.sortOrder,
-      isActive: values.isActive,
-      zoneOrCabinId: values.zoneOrCabinId,
-    };
+    const payload = toHallPayload(values);
 
     if (isEditMode && hallId) {
       await updateMutation.mutateAsync(payload);
@@ -120,10 +111,15 @@ export function HallDialog({ open, hallId, onClose }: { open: boolean; hallId?: 
               </Stack>
             ) : (
               <Stack spacing={3} sx={{ pt: 1 }}>
-                <RHFTextField<Values> name="name" label={t('fields.name')} />
-                <RHFTextField<Values> name="sortOrder" label={t('fields.sortOrder')} type="number" />
-                <RHFTextField<Values> name="description" label={t('fields.description')} multiline rows={3} />
-                <RHFSelect<Values>
+                <RHFTextField<HallDialogFormInput> name="name" label={t('fields.name')} />
+                <RHFTextField<HallDialogFormInput> name="sortOrder" label={t('fields.sortOrder')} type="number" />
+                <RHFTextField<HallDialogFormInput>
+                  name="description"
+                  label={t('fields.description')}
+                  multiline
+                  rows={3}
+                />
+                <RHFSelect<HallDialogFormInput>
                   name="zoneOrCabinId"
                   label={t('fields.zone')}
                   slotProps={{
@@ -161,7 +157,7 @@ export function HallDialog({ open, hallId, onClose }: { open: boolean; hallId?: 
                     </MenuItem>
                   ))}
                 </RHFSelect>
-                <RHFSwitch<Values> name="isActive" label={t('fields.status')} />
+                <RHFSwitch<HallDialogFormInput> name="isActive" label={t('fields.status')} />
               </Stack>
             )}
           </DialogContent>
