@@ -1,14 +1,5 @@
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
 import { useEffect, useState } from 'react';
 
 import { Content } from 'app/layouts/Dashboard';
@@ -20,67 +11,19 @@ import {
   useGetRestaurantDetailQuery,
   useTopUpRestaurantBalanceMutation,
 } from 'modules/business-partner/restaurants/application';
-import type { AdminRestaurantBalanceTransaction } from 'shared/api/admin-types';
 import { useParams, useRedirectOnNotFound, useRouter } from 'shared/hooks/router';
 import { BackToListButton } from 'shared/ui/BackToListButton';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { Iconify } from 'shared/ui/Iconify';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 import { RouterLink } from 'shared/ui/RouterLink';
-import { formatMoney } from 'shared/utils/format-money';
-import { formatDate, formatDateTime } from 'shared/utils/format-time';
 
 import { RestaurantBalanceTopUpDialog } from '../../components/RestaurantBalanceTopUpDialog';
 
-function SummaryField({
-  label,
-  children,
-  fullWidth = false,
-}: {
-  label: string;
-  children: React.ReactNode;
-  fullWidth?: boolean;
-}) {
-  return (
-    <Stack spacing={0.5} sx={{ gridColumn: fullWidth ? { md: '1 / -1' } : undefined }}>
-      <Typography variant="caption" color="text.secondary">
-        {label}
-      </Typography>
-      {typeof children === 'string' || typeof children === 'number' ? (
-        <Typography variant="body2">{children}</Typography>
-      ) : (
-        children
-      )}
-    </Stack>
-  );
-}
-
-function formatSignedMoney(value?: number | string | null) {
-  const numericValue = Number(value ?? NaN);
-
-  if (!Number.isFinite(numericValue)) {
-    return '-';
-  }
-
-  const formattedValue = formatMoney(Math.abs(numericValue));
-  return numericValue < 0 ? `-${formattedValue}` : formattedValue;
-}
-
-function getTransactionKindLabel(
-  kind: AdminRestaurantBalanceTransaction['kind'],
-  t: ReturnType<typeof useTranslate>['t'],
-) {
-  if (kind === 'renewal_charge') {
-    return t('labels.balanceTransactionKinds.renewalCharge');
-  }
-
-  return t('labels.balanceTransactionKinds.topUp');
-}
+import { RestaurantDetailSections } from './RestaurantDetailSections';
 
 const RestaurantDetailPage = () => {
   const { t } = useTranslate('organizations');
-  const { t: tCommon } = useTranslate('common');
-  const { t: tPlatform } = useTranslate('platform');
   const { profile } = useCurrentUser();
   const params = useParams();
   const id = typeof params.id === 'string' ? params.id : undefined;
@@ -115,23 +58,6 @@ const RestaurantDetailPage = () => {
   }
 
   const restaurant = detailQuery.data;
-  const transactions = balanceTransactionsQuery.data?.data ?? [];
-  const tariffName =
-    restaurant.tariff?.name ??
-    (restaurant.activationType === 'custom' ? tPlatform('labels.customActivation') : t('labels.notSelected'));
-  const billingPeriodLabel =
-    restaurant.billingPeriod === 'monthly'
-      ? tPlatform('labels.monthly')
-      : restaurant.billingPeriod === 'yearly'
-        ? tPlatform('labels.yearly')
-        : t('labels.notSelected');
-  const nextPeriodStatusLabel =
-    restaurant.balance.nextPeriodStatus === 'active'
-      ? tCommon('status.active')
-      : restaurant.balance.nextPeriodStatus === 'inactive'
-        ? tCommon('status.inactive')
-        : t('labels.notSelected');
-
   return (
     <Content>
       <CustomBreadcrumbs
@@ -151,238 +77,12 @@ const RestaurantDetailPage = () => {
         }
       />
 
-      <Stack spacing={3}>
-        <Card sx={{ p: 3 }}>
-          <Stack spacing={3}>
-            <Stack spacing={0.75}>
-              <Typography variant="h6">{t('sections.customerOverview.title')}</Typography>
-              <Typography variant="body2" color="text.secondary">
-                {t('sections.customerOverview.description')}
-              </Typography>
-            </Stack>
-
-            <Box
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
-                gap: 2.5,
-              }}>
-              <SummaryField label={t('fields.name')}>{restaurant.name}</SummaryField>
-              <SummaryField label={t('fields.status')}>
-                <Chip
-                  size="small"
-                  color={restaurant.isActive ? 'success' : 'default'}
-                  variant="soft"
-                  label={restaurant.isActive ? tCommon('status.active') : tCommon('status.inactive')}
-                  sx={{ alignSelf: 'flex-start' }}
-                />
-              </SummaryField>
-              <SummaryField label={t('fields.legalName')}>
-                {restaurant.legalName || t('labels.notSelected')}
-              </SummaryField>
-              <SummaryField label={t('fields.taxNumber')}>
-                {restaurant.taxNumber || t('labels.notSelected')}
-              </SummaryField>
-              <SummaryField label={t('fields.phone')}>{restaurant.phone || t('labels.notSelected')}</SummaryField>
-              <SummaryField label={t('fields.social')}>{restaurant.social || t('labels.notSelected')}</SummaryField>
-              <SummaryField label={t('fields.tariff')}>{tariffName}</SummaryField>
-              <SummaryField label={tPlatform('fields.billingPeriod')}>{billingPeriodLabel}</SummaryField>
-              <SummaryField label={tPlatform('fields.expiresOn')}>
-                {restaurant.expiresOn ? formatDate(restaurant.expiresOn, 'DD.MM.YYYY') : t('labels.notSelected')}
-              </SummaryField>
-              <SummaryField label={t('fields.address')} fullWidth>
-                {restaurant.address || t('labels.notSelected')}
-              </SummaryField>
-            </Box>
-          </Stack>
-        </Card>
-
-        <Card sx={{ p: 3 }}>
-          <Stack spacing={2}>
-            <Stack spacing={0.75}>
-              <Typography variant="h6">{t('sections.activeUsers.title')}</Typography>
-              <Typography variant="body2" color="text.secondary">
-                {t('sections.activeUsers.description')}
-              </Typography>
-            </Stack>
-
-            {restaurant.activeUsers.length ? (
-              <Table size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>{t('fields.name')}</TableCell>
-                    <TableCell>{tPlatform('fields.username')}</TableCell>
-                    <TableCell>{t('fields.role')}</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {restaurant.activeUsers.map((user) => (
-                    <TableRow key={user.id}>
-                      <TableCell>{user.fullName}</TableCell>
-                      <TableCell>{user.username}</TableCell>
-                      <TableCell>{user.role?.name ?? t('labels.notSelected')}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            ) : (
-              <Typography variant="body2" color="text.secondary">
-                {t('empty.activeUsers')}
-              </Typography>
-            )}
-          </Stack>
-        </Card>
-
-        <Card sx={{ p: 3 }}>
-          <Stack spacing={2}>
-            <Stack spacing={0.75}>
-              <Typography variant="h6">{t('sections.soliqIntegration.title')}</Typography>
-              <Typography variant="body2" color="text.secondary">
-                {t('sections.soliqIntegration.description')}
-              </Typography>
-            </Stack>
-
-            {restaurant.soliqIntegration ? (
-              <Box
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
-                  gap: 2.5,
-                }}>
-                <SummaryField label={t('fields.provider')}>{restaurant.soliqIntegration.provider}</SummaryField>
-                <SummaryField label={t('fields.status')}>
-                  <Chip
-                    size="small"
-                    color={restaurant.soliqIntegration.isEnabled ? 'success' : 'default'}
-                    variant="soft"
-                    label={
-                      restaurant.soliqIntegration.isEnabled ? tCommon('status.active') : tCommon('status.inactive')
-                    }
-                    sx={{ alignSelf: 'flex-start' }}
-                  />
-                </SummaryField>
-                <SummaryField label={t('fields.terminalId')}>
-                  {restaurant.soliqIntegration.terminalId || t('labels.notSelected')}
-                </SummaryField>
-                <SummaryField label={t('integrations.fields.cashboxId')}>
-                  {restaurant.soliqIntegration.cashboxId || t('labels.notSelected')}
-                </SummaryField>
-                <SummaryField label={t('fields.taxNumber')}>
-                  {restaurant.soliqIntegration.taxNumber || t('labels.notSelected')}
-                </SummaryField>
-                <SummaryField label={t('integrations.fields.endpointUrl')} fullWidth>
-                  {restaurant.soliqIntegration.endpointUrl || t('labels.notSelected')}
-                </SummaryField>
-              </Box>
-            ) : (
-              <Typography variant="body2" color="text.secondary">
-                {t('empty.soliqIntegration')}
-              </Typography>
-            )}
-          </Stack>
-        </Card>
-
-        <Card sx={{ p: 3 }}>
-          <Stack spacing={3}>
-            <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" spacing={2}>
-              <Stack spacing={0.75}>
-                <Typography variant="h6">{t('sections.balance.title')}</Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {t('sections.balance.description')}
-                </Typography>
-              </Stack>
-              <Button
-                variant="contained"
-                color="black"
-                startIcon={<Iconify icon="mingcute:add-line" />}
-                onClick={() => setTopUpDialogOpen(true)}>
-                {t('actions.topUpBalance')}
-              </Button>
-            </Stack>
-
-            <Box
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
-                gap: 2.5,
-              }}>
-              <SummaryField label={t('fields.currentBalance')}>
-                {formatMoney(restaurant.balance.currentBalance)}
-              </SummaryField>
-              <SummaryField label={t('fields.nextChargeAmount')}>
-                {restaurant.balance.nextChargeAmount !== null && restaurant.balance.nextChargeAmount !== undefined
-                  ? formatMoney(restaurant.balance.nextChargeAmount)
-                  : t('labels.notSelected')}
-              </SummaryField>
-              <SummaryField label={t('fields.nextChargeOn')}>
-                {restaurant.balance.nextChargeOn
-                  ? formatDate(restaurant.balance.nextChargeOn, 'DD.MM.YYYY')
-                  : t('labels.notSelected')}
-              </SummaryField>
-              <SummaryField label={t('fields.nextPeriodStatus')}>
-                <Chip
-                  size="small"
-                  color={restaurant.balance.nextPeriodStatus === 'active' ? 'success' : 'default'}
-                  variant="soft"
-                  label={nextPeriodStatusLabel}
-                  sx={{ alignSelf: 'flex-start' }}
-                />
-              </SummaryField>
-              <SummaryField label={t('fields.lastTopUpAt')}>
-                {restaurant.balance.lastTopUpAt
-                  ? formatDateTime(restaurant.balance.lastTopUpAt, 'DD.MM.YYYY HH:mm')
-                  : t('labels.notSelected')}
-              </SummaryField>
-            </Box>
-          </Stack>
-        </Card>
-
-        <Card sx={{ p: 3 }}>
-          <Stack spacing={2}>
-            <Stack spacing={0.75}>
-              <Typography variant="h6">{t('sections.balanceHistory.title')}</Typography>
-              <Typography variant="body2" color="text.secondary">
-                {t('sections.balanceHistory.description')}
-              </Typography>
-            </Stack>
-
-            {balanceTransactionsQuery.isLoading ? (
-              <Typography variant="body2" color="text.secondary">
-                {t('labels.loading')}
-              </Typography>
-            ) : transactions.length ? (
-              <Table size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>{t('fields.date')}</TableCell>
-                    <TableCell>{t('fields.type')}</TableCell>
-                    <TableCell>{t('fields.amount')}</TableCell>
-                    <TableCell>{t('fields.balanceAfter')}</TableCell>
-                    <TableCell>{t('fields.user')}</TableCell>
-                    <TableCell>{t('fields.note')}</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {transactions.map((transaction) => (
-                    <TableRow key={transaction.id}>
-                      <TableCell>{formatDateTime(transaction.createdAt, 'DD.MM.YYYY HH:mm')}</TableCell>
-                      <TableCell>{getTransactionKindLabel(transaction.kind, t)}</TableCell>
-                      <TableCell>{formatSignedMoney(transaction.amount)}</TableCell>
-                      <TableCell>{formatMoney(transaction.balanceAfter)}</TableCell>
-                      <TableCell>{transaction.performedBy?.fullName ?? t('labels.system')}</TableCell>
-                      <TableCell>{transaction.note || '-'}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            ) : (
-              <Typography variant="body2" color="text.secondary">
-                {t('empty.balanceTransactions')}
-              </Typography>
-            )}
-          </Stack>
-        </Card>
-      </Stack>
+      <RestaurantDetailSections
+        restaurant={restaurant}
+        transactions={balanceTransactionsQuery.data?.data ?? []}
+        transactionsLoading={balanceTransactionsQuery.isLoading}
+        onTopUp={() => setTopUpDialogOpen(true)}
+      />
 
       <RestaurantBalanceTopUpDialog
         open={topUpDialogOpen}

@@ -2,17 +2,12 @@ import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
-import CircularProgress from '@mui/material/CircularProgress';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
 import LinearProgress from '@mui/material/LinearProgress';
 import Stack from '@mui/material/Stack';
 import Step from '@mui/material/Step';
 import StepContent from '@mui/material/StepContent';
 import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
-import TextField from '@mui/material/TextField';
-import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
@@ -31,23 +26,14 @@ import { MyRestaurantSettingsTabs } from '../../components/MyRestaurantSettingsT
 
 import { downloadLocalAgentInstaller } from './installer-download';
 import { LocalAgentDiagnostics } from './LocalAgentDiagnostics';
+import {
+  newCashDesk,
+  newPrepStation,
+  RestaurantQuickSetupCard,
+  type CashDeskDraft,
+  type PrepStationDraft,
+} from './RestaurantQuickSetupCard';
 import { getSetupPrinterSettings } from './setup-printer';
-
-type CashDeskDraft = {
-  id?: string;
-  name: string;
-  printerTarget: string;
-  printerIntegrationId?: string;
-  paymentIntegrationId?: string;
-  fiscalIntegrationId?: string;
-};
-type PrepStationDraft = {
-  id?: string;
-  name: string;
-  kind: 'kitchen' | 'bar' | 'other';
-  printerTarget: string;
-  printerIntegrationId?: string;
-};
 
 const stepRoutes: Partial<Record<RestaurantSetupStep['id'], string>> = {
   profile: RoutePath.organizationMyRestaurantGeneral,
@@ -56,34 +42,6 @@ const stepRoutes: Partial<Record<RestaurantSetupStep['id'], string>> = {
   integrations: RoutePath.organizationMyRestaurantIntegrationConfigList,
   printing: RoutePath.organizationMyRestaurantPrintTemplateList,
 };
-
-const newCashDesk = (name: string): CashDeskDraft => ({
-  name,
-  printerTarget: '',
-});
-const newPrepStation = (name: string, index: number): PrepStationDraft => ({
-  name,
-  kind: index === 0 ? 'kitchen' : 'other',
-  printerTarget: '',
-});
-
-const IntegrationCheckButton = ({
-  label,
-  loading,
-  onClick,
-}: {
-  label: string;
-  loading: boolean;
-  onClick: () => void;
-}) => (
-  <Tooltip title={label}>
-    <span>
-      <IconButton aria-label={label} color="primary" disabled={loading} onClick={onClick} sx={{ mt: 0.5 }}>
-        {loading ? <CircularProgress size={20} /> : <Iconify icon="solar:check-circle-linear" />}
-      </IconButton>
-    </span>
-  </Tooltip>
-);
 
 const RestaurantSetupPage = () => {
   const { t } = useTranslate('organizations');
@@ -261,159 +219,22 @@ const RestaurantSetupPage = () => {
           </Stack>
         </Card>
 
-        <Card sx={{ p: 3 }}>
-          <Stack spacing={2.5}>
-            <Typography variant="h5">{t('setup.quick.title')}</Typography>
-
-            <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
-              <Stack direction="row" spacing={0.5} alignItems="flex-start" sx={{ flex: 1 }}>
-                <TextField
-                  fullWidth
-                  label={t('fields.taxNumber')}
-                  value={fiscalTaxNumber}
-                  onChange={(event) => setFiscalTaxNumber(event.target.value)}
-                />
-                <IntegrationCheckButton
-                  label={t('setup.actions.testIntegration', { name: 'Fiscal Drive' })}
-                  loading={checkingIntegration === 'fiscal'}
-                  onClick={() => void checkFiscal()}
-                />
-              </Stack>
-              <Stack direction="row" spacing={0.5} alignItems="flex-start" sx={{ flex: 1 }}>
-                <TextField
-                  fullWidth
-                  label={t('setup.fields.martaAddress')}
-                  helperText={t('setup.fields.martaAddressHint')}
-                  value={martaAddress}
-                  onChange={(event) => setMartaAddress(event.target.value)}
-                />
-                <IntegrationCheckButton
-                  label={t('setup.actions.testIntegration', { name: 'MARTA' })}
-                  loading={checkingIntegration === 'marta'}
-                  onClick={() => void checkMarta()}
-                />
-              </Stack>
-            </Stack>
-
-            <Divider>{t('setup.sections.cashDesks')}</Divider>
-            {cashDesks.map((desk, index) => (
-              <Card key={index} variant="outlined" sx={{ p: 2 }}>
-                <Stack spacing={2}>
-                  <Stack direction="row" justifyContent="space-between" alignItems="center">
-                    <Typography variant="subtitle1">
-                      {desk.name.trim() || t('setup.cashDesk.title', { number: index + 1 })}
-                    </Typography>
-                    {cashDesks.length > 1 ? (
-                      <IconButton
-                        aria-label={t('actions.delete')}
-                        color="error"
-                        onClick={() => setCashDesks((items) => items.filter((_, itemIndex) => itemIndex !== index))}>
-                        <Iconify icon="solar:trash-bin-trash-linear" />
-                      </IconButton>
-                    ) : null}
-                  </Stack>
-                  <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} alignItems="flex-start">
-                    <TextField
-                      fullWidth
-                      label={t('fields.name')}
-                      value={desk.name}
-                      onChange={(event) =>
-                        setCashDesks((items) =>
-                          items.map((item, i) => (i === index ? { ...item, name: event.target.value } : item)),
-                        )
-                      }
-                    />
-                    <TextField
-                      fullWidth
-                      label={t('setup.fields.printerNameOrIp')}
-                      value={desk.printerTarget}
-                      onChange={(event) =>
-                        setCashDesks((items) =>
-                          items.map((item, i) => (i === index ? { ...item, printerTarget: event.target.value } : item)),
-                        )
-                      }
-                    />
-                    <IntegrationCheckButton
-                      label={t('setup.actions.testIntegration', { name: t('setup.integrations.printer') })}
-                      loading={checkingIntegration === `cash-printer-${index}`}
-                      onClick={() => void checkPrinter(`cash-printer-${index}`, desk.printerTarget)}
-                    />
-                  </Stack>
-                </Stack>
-              </Card>
-            ))}
-            <Button
-              variant="outlined"
-              startIcon={<Iconify icon="solar:add-circle-linear" />}
-              onClick={() =>
-                setCashDesks((items) => [
-                  ...items,
-                  newCashDesk(t('setup.defaults.cashDesk', { number: items.length + 1 })),
-                ])
-              }>
-              {t('setup.actions.addCashDesk')}
-            </Button>
-
-            <Divider>{t('setup.sections.prepStations')}</Divider>
-            {prepStations.map((station, index) => (
-              <Card key={index} variant="outlined" sx={{ p: 2 }}>
-                <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} alignItems="flex-start">
-                  <TextField
-                    fullWidth
-                    label={t('fields.name')}
-                    value={station.name}
-                    onChange={(event) =>
-                      setPrepStations((items) =>
-                        items.map((item, i) => (i === index ? { ...item, name: event.target.value } : item)),
-                      )
-                    }
-                  />
-                  <TextField
-                    fullWidth
-                    label={t('setup.fields.printerNameOrIp')}
-                    value={station.printerTarget}
-                    onChange={(event) =>
-                      setPrepStations((items) =>
-                        items.map((item, i) => (i === index ? { ...item, printerTarget: event.target.value } : item)),
-                      )
-                    }
-                  />
-                  <IntegrationCheckButton
-                    label={t('setup.actions.testIntegration', { name: t('setup.integrations.printer') })}
-                    loading={checkingIntegration === `prep-printer-${index}`}
-                    onClick={() => void checkPrinter(`prep-printer-${index}`, station.printerTarget)}
-                  />
-                  {prepStations.length > 1 ? (
-                    <IconButton
-                      aria-label={t('actions.delete')}
-                      color="error"
-                      onClick={() => setPrepStations((items) => items.filter((_, itemIndex) => itemIndex !== index))}>
-                      <Iconify icon="solar:trash-bin-trash-linear" />
-                    </IconButton>
-                  ) : null}
-                </Stack>
-              </Card>
-            ))}
-            <Button
-              variant="outlined"
-              startIcon={<Iconify icon="solar:add-circle-linear" />}
-              onClick={() =>
-                setPrepStations((items) => [
-                  ...items,
-                  newPrepStation(t('setup.defaults.prepStation', { number: items.length + 1 }), items.length),
-                ])
-              }>
-              {t('setup.actions.addPrepStation')}
-            </Button>
-            <Button
-              variant="contained"
-              size="large"
-              disabled={applyMutation.isPending}
-              onClick={() => void applySetup()}>
-              {t('setup.actions.apply')}
-            </Button>
-          </Stack>
-        </Card>
+        <RestaurantQuickSetupCard
+          cashDesks={cashDesks}
+          prepStations={prepStations}
+          fiscalTaxNumber={fiscalTaxNumber}
+          martaAddress={martaAddress}
+          checkingIntegration={checkingIntegration}
+          saving={applyMutation.isPending}
+          setCashDesks={setCashDesks}
+          setPrepStations={setPrepStations}
+          onFiscalTaxNumberChange={setFiscalTaxNumber}
+          onMartaAddressChange={setMartaAddress}
+          onCheckFiscal={() => void checkFiscal()}
+          onCheckMarta={() => void checkMarta()}
+          onCheckPrinter={(key, target) => void checkPrinter(key, target)}
+          onApply={() => void applySetup()}
+        />
 
         <Card sx={{ p: 3 }}>
           <Typography variant="h5" sx={{ mb: 2 }}>

@@ -1,28 +1,16 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import Divider from '@mui/material/Divider';
-import MenuItem from '@mui/material/MenuItem';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { useTranslate } from 'app/providers/locales';
-import type {
-  AdminMxikDetails,
-  AdminMxikPackage,
-  CatalogImageSource,
-  CatalogItem,
-  CatalogItemPayload,
-} from 'shared/api/admin-types';
+import type { CatalogImageSource, CatalogItem, CatalogItemPayload } from 'shared/api/admin-types';
 import { FormActions } from 'shared/ui/FormActions';
-import { Form, RHFSelect, RHFSumCurrencyField, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
-import { LabelRow } from 'shared/ui/LabelRow/LabelRow';
+import { Form } from 'shared/ui/HookForm';
 
 import {
   useCreateCatalogItemMutation,
@@ -37,8 +25,9 @@ import {
   type CatalogItemFormValues,
 } from '../../data-access/catalogItemForm.schema';
 
-import { CatalogImageEditor } from './CatalogImageEditor';
-import { buildMxikOption, MxikAutocompleteField } from './MxikAutocompleteField';
+import { CatalogItemFormFields } from './CatalogItemFormFields';
+import { getMxikDetailLang, getMxikImageLang } from './catalogItemMxik';
+import { buildMxikOption } from './MxikAutocompleteField';
 
 type CatalogItemFormProps = {
   item?: CatalogItem | null;
@@ -61,83 +50,6 @@ const defaultValues: CatalogItemFormInput = {
   isStoplisted: false,
 };
 
-function getMxikDetailLang(lang: string) {
-  return lang === 'ru' ? 'ru' : 'uz_latn';
-}
-
-function getMxikImageLang(lang: string) {
-  return lang === 'ru' ? 'ru' : 'uz';
-}
-
-function formatMxikFlag(value: number | null | undefined, yesLabel: string, noLabel: string) {
-  if (value === null || value === undefined) {
-    return '';
-  }
-
-  if (value === 1) {
-    return `${yesLabel} (${value})`;
-  }
-
-  if (value === 0) {
-    return `${noLabel} (${value})`;
-  }
-
-  return String(value);
-}
-
-function formatPackageValue(pkg: AdminMxikPackage | null | undefined) {
-  if (!pkg) {
-    return '';
-  }
-
-  return [pkg.code, pkg.name || pkg.unitName || pkg.containerName].filter(Boolean).join(' - ');
-}
-
-function getLabelStatus(details: AdminMxikDetails | null | undefined, fallbackRaw?: Record<string, unknown>) {
-  if (details?.labelStatus !== null && details?.labelStatus !== undefined) {
-    return details.labelStatus;
-  }
-
-  const rawValue = fallbackRaw?.label;
-  return typeof rawValue === 'number' ? rawValue : null;
-}
-
-function getCashSaleStatus(details: AdminMxikDetails | null | undefined, fallbackRaw?: Record<string, unknown>) {
-  if (details?.cashSale !== null && details?.cashSale !== undefined) {
-    return details.cashSale;
-  }
-
-  const rawValue = fallbackRaw?.cashSale;
-  return typeof rawValue === 'number' ? rawValue : null;
-}
-
-function formatCashSaleRestriction(
-  value: number | null | undefined,
-  labels: {
-    forbidden: string;
-    limited: string;
-    unlimited: string;
-  },
-) {
-  if (value === null || value === undefined) {
-    return '';
-  }
-
-  if (value === 0) {
-    return labels.forbidden;
-  }
-
-  if (value === 1) {
-    return labels.limited;
-  }
-
-  if (value === 2) {
-    return labels.unlimited;
-  }
-
-  return String(value);
-}
-
 function CatalogItemFormInner({
   item,
   defaultCategoryId,
@@ -149,16 +61,13 @@ function CatalogItemFormInner({
   const { t: tCommon } = useTranslate('common');
   const isEditMode = Boolean(item?.id);
   const [mxikImageUrl, setMxikImageUrl] = useState<string | null>(null);
-
   const categoriesQuery = useGetCatalogCategoriesQuery();
   const createMutation = useCreateCatalogItemMutation();
   const updateMutation = useUpdateCatalogItemMutation(item?.id ?? '');
-
   const methods = useForm<CatalogItemFormInput, unknown, CatalogItemFormValues>({
     resolver: zodResolver(catalogItemFormSchema),
     defaultValues,
   });
-
   const { handleSubmit, reset, formState, watch, setValue, getValues } = methods;
   const selectedMxik = watch('mxik');
   const selectedImage = watch('imageFile');
@@ -167,10 +76,6 @@ function CatalogItemFormInner({
     { enabled: Boolean(selectedMxik?.code) },
   );
   const isSubmitting = formState.isSubmitting || createMutation.isPending || updateMutation.isPending;
-  const mxikNameValue = mxikDetailsQuery.data?.name || selectedMxik?.name || '';
-  const primaryPackage = mxikDetailsQuery.data?.primaryPackage ?? null;
-  const cashSaleStatus = getCashSaleStatus(mxikDetailsQuery.data, selectedMxik?.raw);
-  const labelStatus = getLabelStatus(mxikDetailsQuery.data, selectedMxik?.raw);
 
   useEffect(() => {
     reset({
@@ -190,10 +95,7 @@ function CatalogItemFormInner({
   }, [defaultCategoryId, item, reset]);
 
   useEffect(() => {
-    if (!(selectedImage instanceof File)) {
-      return;
-    }
-
+    if (!(selectedImage instanceof File)) return;
     setValue('imageSource', 'manual', { shouldDirty: true, shouldValidate: true });
     setValue('clearImage', false, { shouldDirty: true });
     setValue('restoreMxikImage', false, { shouldDirty: true });
@@ -201,7 +103,6 @@ function CatalogItemFormInner({
 
   useEffect(() => {
     let isActive = true;
-
     if (!selectedMxik?.code) {
       setMxikImageUrl(null);
       if (getValues('imageSource') !== 'manual') {
@@ -217,17 +118,9 @@ function CatalogItemFormInner({
     void (async () => {
       const nextImageUrl =
         (await getMxikPrimaryPictureUrl(selectedMxik.code, getMxikImageLang(currentLang.value))) || null;
-
-      if (!isActive) {
-        return;
-      }
-
+      if (!isActive) return;
       setMxikImageUrl(nextImageUrl);
-
-      if (getValues('imageSource') === 'manual') {
-        return;
-      }
-
+      if (getValues('imageSource') === 'manual') return;
       setValue('clearImage', false, { shouldDirty: false });
       setValue('restoreMxikImage', false, { shouldDirty: false });
       setValue('imageFile', nextImageUrl, { shouldDirty: false });
@@ -239,14 +132,13 @@ function CatalogItemFormInner({
     };
   }, [currentLang.value, getValues, selectedMxik?.code, setValue]);
 
-  const handleClearImage = () => {
+  const clearImage = () => {
     setValue('imageFile', null, { shouldDirty: true, shouldValidate: true });
     setValue('imageSource', '', { shouldDirty: true, shouldValidate: true });
     setValue('clearImage', true, { shouldDirty: true });
     setValue('restoreMxikImage', false, { shouldDirty: true });
   };
-
-  const handleRestoreMxikImage = () => {
+  const restoreMxikImage = () => {
     setValue('imageFile', mxikImageUrl, { shouldDirty: true, shouldValidate: true });
     setValue('imageSource', mxikImageUrl ? 'mxik-cache' : '', { shouldDirty: true, shouldValidate: true });
     setValue('clearImage', false, { shouldDirty: true });
@@ -267,7 +159,6 @@ function CatalogItemFormInner({
               ? 'mxik-cache'
               : ''
             : values.imageSource;
-
     const payload: CatalogItemPayload = {
       name: values.name.trim(),
       category: values.category || null,
@@ -284,119 +175,26 @@ function CatalogItemFormInner({
       isActive: values.isActive,
       isStoplisted: values.isStoplisted,
     };
-
     const savedItem =
       isEditMode && item ? await updateMutation.mutateAsync(payload) : await createMutation.mutateAsync(payload);
-
     onSuccess?.(savedItem);
   });
 
   const title = isEditMode ? t('pages.itemEdit.title') : t('pages.itemCreate.title');
-
   const fields = (
-    <Stack spacing={3} sx={isDialog ? { pt: 1 } : undefined}>
-      <CatalogImageEditor<CatalogItemFormInput>
-        imageName="imageFile"
-        imageSourceName="imageSource"
-        mxikImageUrl={mxikImageUrl}
-        disabled={isSubmitting}
-        onClearImage={handleClearImage}
-        onRestoreMxikImage={handleRestoreMxikImage}
-      />
-
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
-          gap: 3,
-        }}>
-        <RHFTextField<CatalogItemFormInput> name="name" label={t('fields.name')} />
-        <RHFSelect<CatalogItemFormInput>
-          name="category"
-          label={t('fields.category')}
-          helperText={categoriesQuery.isLoading ? tCommon('labels.loading') : undefined}>
-          <MenuItem value="">{t('filters.all')}</MenuItem>
-          {(categoriesQuery.data ?? []).map((category) => (
-            <MenuItem key={category.id} value={category.id}>
-              {category.name}
-            </MenuItem>
-          ))}
-        </RHFSelect>
-        <MxikAutocompleteField<CatalogItemFormInput>
-          name="mxik"
-          label={t('fields.mxikCode')}
-          helperText={t('labels.mxikOptional')}
-          placeholder={t('actions.searchMxik')}
-          onPicked={(picked) => {
-            if (!picked?.name) {
-              return;
-            }
-
-            setValue('name', picked.name, { shouldDirty: true, shouldValidate: true });
-          }}
-        />
-        {selectedMxik?.code ? (
-          <Box
-            sx={{
-              gridColumn: { xs: 'auto', md: '1 / -1' },
-              border: '1px solid',
-              borderColor: 'divider',
-              borderRadius: 1,
-              bgcolor: 'background.neutral',
-              p: 2,
-            }}>
-            <Stack spacing={1.25} divider={<Divider flexItem />}>
-              <Typography variant="subtitle2">{t('labels.mxikDetails')}</Typography>
-              <LabelRow
-                label={t('fields.mxikProductName')}
-                value={mxikDetailsQuery.isLoading && !mxikNameValue ? tCommon('labels.loading') : mxikNameValue}
-              />
-              <LabelRow
-                label={t('fields.packageCodeWithField')}
-                value={
-                  mxikDetailsQuery.isLoading && !primaryPackage
-                    ? tCommon('labels.loading')
-                    : formatPackageValue(primaryPackage)
-                }
-              />
-              <LabelRow
-                label={t('fields.cashSaleRestriction')}
-                value={
-                  mxikDetailsQuery.isLoading && cashSaleStatus === null
-                    ? tCommon('labels.loading')
-                    : formatCashSaleRestriction(cashSaleStatus, {
-                        forbidden: t('labels.cashSaleForbidden'),
-                        limited: t('labels.cashSaleLimited'),
-                        unlimited: t('labels.cashSaleUnlimited'),
-                      })
-                }
-              />
-              <LabelRow
-                label={t('fields.labelStatusWithField')}
-                value={
-                  mxikDetailsQuery.isLoading && labelStatus === null
-                    ? tCommon('labels.loading')
-                    : formatMxikFlag(labelStatus, tCommon('labels.yes'), tCommon('labels.no'))
-                }
-              />
-            </Stack>
-          </Box>
-        ) : null}
-        <RHFSumCurrencyField<CatalogItemFormInput> name="price" label={t('fields.price')} />
-        <RHFTextField<CatalogItemFormInput>
-          name="description"
-          label={t('fields.description')}
-          multiline
-          rows={4}
-          sx={{ gridColumn: { xs: 'auto', md: '1 / -1' } }}
-        />
-      </Box>
-
-      <Stack spacing={2}>
-        <RHFSwitch<CatalogItemFormInput> name="isActive" label={t('fields.status')} />
-        <RHFSwitch<CatalogItemFormInput> name="isStoplisted" label={t('fields.stoplist')} />
-      </Stack>
-    </Stack>
+    <CatalogItemFormFields
+      categories={categoriesQuery.data ?? []}
+      categoriesLoading={categoriesQuery.isLoading}
+      disabled={isSubmitting}
+      isDialog={isDialog}
+      mxikDetails={mxikDetailsQuery.data}
+      mxikDetailsLoading={mxikDetailsQuery.isLoading}
+      mxikImageUrl={mxikImageUrl}
+      selectedMxik={selectedMxik}
+      onClearImage={clearImage}
+      onRestoreMxikImage={restoreMxikImage}
+      onMxikNamePicked={(name) => setValue('name', name, { shouldDirty: true, shouldValidate: true })}
+    />
   );
 
   if (isDialog) {
