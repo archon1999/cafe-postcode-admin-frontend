@@ -1,6 +1,5 @@
 import Chip from '@mui/material/Chip';
 import type { ChipProps } from '@mui/material/Chip';
-import { isValidElement } from 'react';
 import type { ReactNode } from 'react';
 
 export const EMPTY_VALUE_TEST_ID = 'empty-value-chip';

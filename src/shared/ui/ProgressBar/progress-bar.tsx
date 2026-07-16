@@ -60,7 +60,7 @@ function useProgressBar() {
       const originalMethod = window.history[method];
 
       window.history[method] = new Proxy(originalMethod, {
-        apply: (target, thisArg, args: [data: any, unused: string, url?: string | URL | null]) => {
+        apply: (target, thisArg, args: [data: unknown, unused: string, url?: string | URL | null]) => {
           const newUrl = args[2];
           if (typeof newUrl === 'string') {
             handleNavigation(new URL(newUrl, window.location.origin).href);

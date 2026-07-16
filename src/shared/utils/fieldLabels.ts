@@ -1,7 +1,9 @@
+import type { TFunction } from 'i18next';
+
 export const getFieldLabel = (
   field: string,
-  t: any,
-  tabType: 'general' | 'equipment' | 'recurring' = 'general',
+  t: TFunction,
+  _tabType: 'general' | 'equipment' | 'recurring' = 'general',
 ): string => {
   const fieldLabels: Record<string, string> = {
     first_name: t('view.labels.firstName'),

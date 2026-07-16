@@ -29,7 +29,7 @@ export function RHFUploadAvatar<TForm extends FieldValues = FieldValues>({
         const onDrop = (acceptedFiles: File[]) => {
           const value = acceptedFiles[0];
 
-          setValue(name, value as any, { shouldValidate: true });
+          setValue(name, value as PathValue<TForm, Path<TForm>>, { shouldValidate: true });
         };
 
         const onReset = () => {

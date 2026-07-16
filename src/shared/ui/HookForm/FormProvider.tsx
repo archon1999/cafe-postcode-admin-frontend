@@ -5,7 +5,7 @@ import { FormProvider as RHFForm } from 'react-hook-form';
 export type FormProps<T extends FieldValues = FieldValues> = {
   onSubmit?: React.FormEventHandler<HTMLFormElement>;
   children: React.ReactNode;
-  methods: UseFormReturn<T, any, any>;
+  methods: UseFormReturn<T>;
   autoComplete?: React.FormHTMLAttributes<HTMLFormElement>['autoComplete'];
 };
 

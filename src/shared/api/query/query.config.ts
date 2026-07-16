@@ -1,4 +1,5 @@
 import { QueryClient, QueryCache, MutationCache } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 
 import { notifyError, normalizeError, isCanceled } from 'shared/api';
 
@@ -26,8 +27,8 @@ export const queryClient = new QueryClient({
       staleTime: 0,
       gcTime: 2_000,
       refetchOnWindowFocus: false,
-      retry: (failureCount, error: any) => {
-        const status = error?.response?.status;
+      retry: (failureCount, error: unknown) => {
+        const status = isAxiosError(error) ? error.response?.status : undefined;
         if (status && status < 500) return false;
         return failureCount < 2;
       },

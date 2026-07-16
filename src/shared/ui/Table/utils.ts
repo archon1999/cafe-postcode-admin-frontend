@@ -6,13 +6,20 @@ export function emptyRows(page: number, rowsPerPage: number, arrayLength: number
   return page ? Math.max(0, page * rowsPerPage - arrayLength) : 0;
 }
 
-function getNestedProperty<T>(obj: T, key: string): any {
-  return key.split('.').reduce((acc: any, part: string) => acc && acc[part], obj);
+type Comparable = number | string;
+
+function getNestedProperty(obj: unknown, key: string): Comparable {
+  const value = key.split('.').reduce<unknown>((current, part) => {
+    if (typeof current !== 'object' || current === null) return undefined;
+    return (current as Record<string, unknown>)[part];
+  }, obj);
+
+  return typeof value === 'number' || typeof value === 'string' ? value : '';
 }
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  const aValue = getNestedProperty(a, orderBy as string);
-  const bValue = getNestedProperty(b, orderBy as string);
+  const aValue = getNestedProperty(a, String(orderBy));
+  const bValue = getNestedProperty(b, String(orderBy));
 
   if (bValue < aValue) {
     return -1;
@@ -25,7 +32,7 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   return 0;
 }
 
-export function getComparator<Key extends keyof any>(
+export function getComparator<Key extends PropertyKey>(
   order: 'asc' | 'desc',
   orderBy: Key,
 ): (a: { [key in Key]: number | string }, b: { [key in Key]: number | string }) => number {

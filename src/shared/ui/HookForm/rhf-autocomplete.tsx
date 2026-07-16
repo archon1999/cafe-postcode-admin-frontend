@@ -10,7 +10,10 @@ type FreeSolo = boolean | undefined;
 
 type ExcludedProps = 'renderInput';
 
-export type AutocompleteBaseProps = Omit<AutocompleteProps<any, Multiple, DisableClearable, FreeSolo>, ExcludedProps>;
+export type AutocompleteBaseProps = Omit<
+  AutocompleteProps<unknown, Multiple, DisableClearable, FreeSolo>,
+  ExcludedProps
+>;
 
 export type RHFAutocompleteProps = AutocompleteBaseProps & {
   name: string;

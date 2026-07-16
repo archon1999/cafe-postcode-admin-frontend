@@ -7,7 +7,7 @@ import { type FieldValues, useFormContext, Controller, type Path } from 'react-h
 
 import type { AutocompleteBaseProps } from './RhfAutocomplete';
 
-export type OptionBase = { label: string; value: string | number; [k: string]: any };
+export type OptionBase = { label: string; value: string | number; [k: string]: unknown };
 
 type BaseAutocompleteProps<
   TOption,
@@ -27,17 +27,17 @@ type BaseAutocompleteProps<
   | 'renderInput'
 >;
 
-type WithQueryProps<TForm extends FieldValues, TQueryData, TOption extends OptionBase> = {
+type WithQueryProps<TForm extends FieldValues, TQueryData, TOption extends OptionBase, TQueryParams extends object> = {
   name: Path<TForm>;
   label?: string;
   placeholder?: string;
   helperText?: string;
 
   useQueryHook: (
-    params: Record<string, any>,
+    params: TQueryParams,
     options?: Omit<UseQueryOptions<TQueryData>, 'queryKey' | 'queryFn'>,
   ) => UseQueryResult<TQueryData>;
-  queryFilters?: Record<string, any>;
+  queryFilters?: TQueryParams;
   transformData: (data: TQueryData | undefined) => TOption[];
 
   enableSearch?: boolean;
@@ -61,7 +61,7 @@ type WithQueryProps<TForm extends FieldValues, TQueryData, TOption extends Optio
 
   dependsOn?: Path<TForm>[];
   resetOnDependencyChange?: boolean;
-  getDependencyValue?: (fieldValue: any) => any;
+  getDependencyValue?: (fieldValue: unknown) => unknown;
   required?: boolean;
 };
 
@@ -72,7 +72,8 @@ export type RHFAutocompleteWithQueryProps<
   TMultiple extends boolean | undefined,
   TDisableClearable extends boolean | undefined,
   TFreeSolo extends boolean | undefined,
-> = WithQueryProps<TForm, TQueryData, TOption> &
+  TQueryParams extends object = Record<string, unknown>,
+> = WithQueryProps<TForm, TQueryData, TOption, TQueryParams> &
   BaseAutocompleteProps<TOption, TMultiple, TDisableClearable, TFreeSolo>;
 
 export function RHFAutocompleteWithQuery<
@@ -82,6 +83,7 @@ export function RHFAutocompleteWithQuery<
   TMultiple extends boolean = false,
   TDisableClearable extends boolean = false,
   TFreeSolo extends boolean = false,
+  TQueryParams extends object = Record<string, unknown>,
 >({
   name,
   label,
@@ -89,7 +91,7 @@ export function RHFAutocompleteWithQuery<
   helperText,
   disabled,
   useQueryHook,
-  queryFilters = {},
+  queryFilters = {} as TQueryParams,
   transformData,
   enableSearch = true,
   searchKey = 'search',
@@ -103,19 +105,30 @@ export function RHFAutocompleteWithQuery<
   slotProps,
   dependsOn = [],
   resetOnDependencyChange = true,
-  getDependencyValue = (val) => val?.value ?? null,
+  getDependencyValue = (val) => {
+    if (typeof val !== 'object' || val === null || !('value' in val)) return null;
+    return val.value;
+  },
   required = false,
   renderOption: renderOptionProp,
 
   ...other
-}: RHFAutocompleteWithQueryProps<TForm, TQueryData, TOption, TMultiple, TDisableClearable, TFreeSolo>) {
+}: RHFAutocompleteWithQueryProps<
+  TForm,
+  TQueryData,
+  TOption,
+  TMultiple,
+  TDisableClearable,
+  TFreeSolo,
+  TQueryParams
+>) {
   const { control, watch, resetField } = useFormContext<TForm>();
   const [debouncedSearch, setDebouncedSearch] = useState<string>('');
   const [open, setOpen] = useState<boolean>(false);
   const watchedValue = watch(name);
 
   const isInitialMount = useRef(true);
-  const prevDependencyValuesRef = useRef<any[]>([]);
+  const prevDependencyValuesRef = useRef<unknown[]>([]);
 
   const { textField, ...otherSlotProps } = slotProps ?? {};
 
@@ -165,9 +178,9 @@ export function RHFAutocompleteWithQuery<
     };
   }, [debouncedSetSearch]);
 
-  const finalQueryFilters = useMemo(() => {
+  const finalQueryFilters = useMemo<TQueryParams>(() => {
     if (!enableSearch || !debouncedSearch) return queryFilters;
-    return { ...queryFilters, [searchKey]: debouncedSearch };
+    return { ...queryFilters, [searchKey]: debouncedSearch } as TQueryParams;
   }, [queryFilters, debouncedSearch, enableSearch, searchKey]);
 
   const hasInitialValue = useMemo(() => {
@@ -277,7 +290,7 @@ export function RHFAutocompleteWithQuery<
       name={name}
       control={control}
       render={({ field, fieldState }) => {
-        const formValue = field.value as any;
+        const formValue = field.value as unknown;
 
         const selectedOption: TOption | TOption[] | null = (() => {
           if (other.multiple) {
@@ -311,7 +324,7 @@ export function RHFAutocompleteWithQuery<
               setOpen(false);
             }}
             options={options}
-            value={selectedOption as any}
+            value={selectedOption as AutocompleteProps<TOption, TMultiple, TDisableClearable, TFreeSolo>['value']}
             loading={isLoading}
             disabled={disabled}
             filterOptions={filterOptions}
@@ -342,7 +355,8 @@ export function RHFAutocompleteWithQuery<
                 placeholder={placeholder}
                 error={!!fieldState.error || isError}
                 helperText={
-                  fieldState.error?.message ?? (isError ? ((error as any)?.message ?? errorText) : helperText)
+                  fieldState.error?.message ??
+                  (isError ? (error instanceof Error ? error.message : errorText) : helperText)
                 }
                 slotProps={{
                   ...textField?.slotProps,

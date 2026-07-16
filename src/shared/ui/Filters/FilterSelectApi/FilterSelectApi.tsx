@@ -5,11 +5,11 @@ import { useEffect, useMemo, useState } from 'react';
 
 export type FilterOption = { value: string | number; label: string };
 
-type FilterSelectApiProps<TData> = {
+type FilterSelectApiProps<TData, TFilters> = {
   label: string;
   value: Array<string | number>;
   useQueryHook: (
-    filters: any,
+    filters: TFilters,
     options?: Omit<UseQueryOptions<TData, Error>, 'queryKey' | 'queryFn'>,
   ) => UseQueryResult<TData, Error>;
   mapDataToOptions: (data: TData) => FilterOption[];
@@ -18,14 +18,14 @@ type FilterSelectApiProps<TData> = {
   loadingText?: string;
   errorText?: string;
   emptyText?: string;
-  filters?: any;
+  filters?: TFilters;
   fullWidth?: boolean;
   menuContainer?: HTMLElement | null;
   inputTestId?: string;
   emptyLabel?: string;
 };
 
-export function FilterSelectApi<TData>({
+export function FilterSelectApi<TData, TFilters extends object = Record<string, unknown>>({
   label,
   value,
   useQueryHook,
@@ -34,17 +34,18 @@ export function FilterSelectApi<TData>({
   loadingText = 'Loading...',
   errorText = 'Failed to load data',
   emptyText = 'No options available',
-  filters = {},
+  filters,
   fullWidth = false,
   menuContainer,
   inputTestId,
   emptyLabel = 'All',
-}: FilterSelectApiProps<TData>) {
+}: FilterSelectApiProps<TData, TFilters>) {
   const [isOpen, setIsOpen] = useState(false);
   const [options, setOptions] = useState<FilterOption[]>([]);
 
   const shouldEnableQuery = isOpen || value.length > 0;
-  const { data, isLoading, isError, error } = useQueryHook(filters, {
+  const queryFilters = filters ?? ({} as TFilters);
+  const { data, isLoading, isError, error } = useQueryHook(queryFilters, {
     enabled: shouldEnableQuery,
   });
 

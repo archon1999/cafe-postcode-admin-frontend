@@ -9,11 +9,15 @@ export function FullScreenButton() {
 
   const handleToggleFullscreen = useCallback(() => {
     if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
-      setFullscreen(true);
+      void document.documentElement
+        .requestFullscreen()
+        .then(() => setFullscreen(true))
+        .catch(() => setFullscreen(false));
     } else if (document.exitFullscreen) {
-      document.exitFullscreen();
-      setFullscreen(false);
+      void document
+        .exitFullscreen()
+        .then(() => setFullscreen(false))
+        .catch(() => setFullscreen(true));
     }
   }, []);
 

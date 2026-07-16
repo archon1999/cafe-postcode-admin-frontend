@@ -1,6 +1,6 @@
 import type { TextFieldProps } from '@mui/material/TextField';
 import TextField from '@mui/material/TextField';
-import { Controller, useFormContext, type FieldPath, type FieldValues } from 'react-hook-form';
+import { Controller, useFormContext, type ControllerProps, type FieldPath, type FieldValues } from 'react-hook-form';
 
 import { sanitizeZipCode, ZIP_CODE_MAX_LENGTH } from 'shared/utils/zip-code';
 
@@ -9,7 +9,7 @@ export type RHFZipCodeFieldProps<T extends FieldValues = FieldValues> = Omit<
   'name' | 'value' | 'onChange' | 'type'
 > & {
   name: FieldPath<T>;
-  rules?: any;
+  rules?: ControllerProps<T, FieldPath<T>>['rules'];
 };
 
 export function RHFZipCodeField<T extends FieldValues = FieldValues>({

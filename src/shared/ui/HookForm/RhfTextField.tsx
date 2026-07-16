@@ -1,11 +1,11 @@
 import type { TextFieldProps } from '@mui/material/TextField';
 import TextField from '@mui/material/TextField';
 import { transformValue, transformValueOnBlur, transformValueOnChange } from 'minimal-shared/utils';
-import { Controller, useFormContext, type FieldPath, type FieldValues } from 'react-hook-form';
+import { Controller, useFormContext, type ControllerProps, type FieldPath, type FieldValues } from 'react-hook-form';
 
 export type RHFTextFieldProps<T extends FieldValues = FieldValues> = TextFieldProps & {
   name: FieldPath<T>;
-  rules?: any;
+  rules?: ControllerProps<T, FieldPath<T>>['rules'];
   numberMax?: number;
   integerOnly?: boolean;
   sanitizeValue?: (value: string) => string;

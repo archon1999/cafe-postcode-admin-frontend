@@ -1,13 +1,13 @@
-import type { UseFormReturn } from 'react-hook-form';
+import type { FieldValues, UseFormReturn } from 'react-hook-form';
 import { FormProvider as RHFForm } from 'react-hook-form';
 
-export type FormProps = {
+export type FormProps<T extends FieldValues = FieldValues> = {
   onSubmit?: () => void;
   children: React.ReactNode;
-  methods: UseFormReturn<any>;
+  methods: UseFormReturn<T>;
 };
 
-export function Form({ children, onSubmit, methods }: FormProps) {
+export function Form<T extends FieldValues = FieldValues>({ children, onSubmit, methods }: FormProps<T>) {
   return (
     <RHFForm {...methods}>
       <form onSubmit={onSubmit} noValidate autoComplete="off">

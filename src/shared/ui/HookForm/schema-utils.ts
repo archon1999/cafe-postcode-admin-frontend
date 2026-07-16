@@ -111,6 +111,6 @@ export function testCase<T extends z.ZodTypeAny>(schema: T, values: unknown[]) {
     const label = success ? color.green(`✅ Valid - ${serializedValue}`) : color.red(`❌ Error - ${serializedValue}`);
     const payload = success ? data : z.treeifyError(error);
 
-    console.info(`${label} ${type}:`, JSON.stringify(payload, null, 2));
+    console.warn(`${label} ${type}:`, JSON.stringify(payload, null, 2));
   });
 }

@@ -2,7 +2,7 @@ import type { AutocompleteProps } from '@mui/material/Autocomplete';
 import Autocomplete from '@mui/material/Autocomplete';
 import type { TextFieldProps } from '@mui/material/TextField';
 import TextField from '@mui/material/TextField';
-import { Controller, useFormContext, type FieldPath, type FieldValues } from 'react-hook-form';
+import { Controller, useFormContext, type FieldPath, type FieldValues, type PathValue } from 'react-hook-form';
 
 type Multiple = boolean | undefined;
 type DisableClearable = boolean | undefined;
@@ -10,9 +10,12 @@ type FreeSolo = boolean | undefined;
 
 type ExcludedProps = 'renderInput';
 
-export type AutocompleteBaseProps = Omit<AutocompleteProps<any, Multiple, DisableClearable, FreeSolo>, ExcludedProps>;
+export type AutocompleteBaseProps<TOption = unknown> = Omit<
+  AutocompleteProps<TOption, Multiple, DisableClearable, FreeSolo>,
+  ExcludedProps
+>;
 
-export type RHFAutocompleteProps<T extends FieldValues = FieldValues> = AutocompleteBaseProps & {
+export type RHFAutocompleteProps<T extends FieldValues = FieldValues, TOption = unknown> = AutocompleteBaseProps<TOption> & {
   name: FieldPath<T>;
   label?: string;
   placeholder?: string;
@@ -22,15 +25,15 @@ export type RHFAutocompleteProps<T extends FieldValues = FieldValues> = Autocomp
   };
 };
 
-export function RHFAutocomplete<T extends FieldValues = FieldValues>({
+export function RHFAutocomplete<T extends FieldValues = FieldValues, TOption = unknown>({
   name,
   label,
   slotProps,
   helperText,
   placeholder,
   ...other
-}: RHFAutocompleteProps<T>) {
-  const { control, setValue } = useFormContext();
+}: RHFAutocompleteProps<T, TOption>) {
+  const { control, setValue } = useFormContext<T>();
 
   const { textField, ...otherSlotProps } = slotProps ?? {};
 
@@ -42,7 +45,9 @@ export function RHFAutocomplete<T extends FieldValues = FieldValues>({
         <Autocomplete
           {...field}
           id={`${name}-rhf-autocomplete`}
-          onChange={(_event, newValue) => setValue(name, newValue, { shouldValidate: true })}
+          onChange={(_event, newValue) =>
+            setValue(name, newValue as PathValue<T, FieldPath<T>>, { shouldValidate: true })
+          }
           renderInput={(params) => (
             <TextField
               {...params}

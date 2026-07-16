@@ -19,7 +19,7 @@ export function SettingsProvider({
 
   const onToggleDrawer = useCallback(() => {
     setOpenDrawer((prev) => !prev);
-  }, []);
+  }, [defaultSettings.version, onReset, storageKey]);
 
   const onCloseDrawer = useCallback(() => {
     setOpenDrawer(false);

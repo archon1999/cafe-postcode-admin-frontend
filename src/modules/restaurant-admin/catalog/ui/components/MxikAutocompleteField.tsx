@@ -56,7 +56,15 @@ export function MxikAutocompleteField<TForm extends FieldValues>({
   const providerLang = currentLang.value === 'ru' ? 'ru' : 'uz';
 
   return (
-    <RHFAutocompleteWithQuery<TForm, AdminMxikLookupResult[], MxikOption, false, false, false>
+    <RHFAutocompleteWithQuery<
+      TForm,
+      AdminMxikLookupResult[],
+      MxikOption,
+      false,
+      false,
+      false,
+      Parameters<typeof useSearchMxikQuery>[0]
+    >
       name={name}
       label={label}
       helperText={helperText}
