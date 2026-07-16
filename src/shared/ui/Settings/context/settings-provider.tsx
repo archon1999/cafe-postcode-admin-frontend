@@ -17,19 +17,19 @@ export function SettingsProvider({
 
   const [openDrawer, setOpenDrawer] = useState(false);
 
+  const onReset = useCallback(() => {
+    resetState(defaultSettings);
+  }, [defaultSettings, resetState]);
+
   const onToggleDrawer = useCallback(() => {
     setOpenDrawer((prev) => !prev);
-  }, [defaultSettings.version, onReset, storageKey]);
+  }, []);
 
   const onCloseDrawer = useCallback(() => {
     setOpenDrawer(false);
   }, []);
 
   const canReset = !isEqual(state, defaultSettings);
-
-  const onReset = useCallback(() => {
-    resetState(defaultSettings);
-  }, [defaultSettings, resetState]);
 
   useEffect(() => {
     const storedValue = getStorageValue<SettingsState>(storageKey);
@@ -43,7 +43,7 @@ export function SettingsProvider({
         onReset();
       }
     }
-  }, []);
+  }, [defaultSettings.version, onReset, storageKey]);
 
   const memoizedValue = useMemo(
     () => ({

@@ -1,12 +1,11 @@
 import GlobalStyles from '@mui/material/GlobalStyles';
 import type { Theme, CSSObject } from '@mui/material/styles';
 import type { TFunction } from 'i18next';
+import { useTranslation } from 'react-i18next';
 import { isRouteErrorResponse } from 'react-router';
 
-import { useTranslate } from 'app/providers/locales';
-
 export function ErrorBoundary() {
-  const { t } = useTranslate('messages');
+  const { t } = useTranslation('messages');
 
   return (
     <>
