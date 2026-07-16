@@ -113,15 +113,7 @@ export function RHFAutocompleteWithQuery<
   renderOption: renderOptionProp,
 
   ...other
-}: RHFAutocompleteWithQueryProps<
-  TForm,
-  TQueryData,
-  TOption,
-  TMultiple,
-  TDisableClearable,
-  TFreeSolo,
-  TQueryParams
->) {
+}: RHFAutocompleteWithQueryProps<TForm, TQueryData, TOption, TMultiple, TDisableClearable, TFreeSolo, TQueryParams>) {
   const { control, watch, resetField } = useFormContext<TForm>();
   const [debouncedSearch, setDebouncedSearch] = useState<string>('');
   const [open, setOpen] = useState<boolean>(false);

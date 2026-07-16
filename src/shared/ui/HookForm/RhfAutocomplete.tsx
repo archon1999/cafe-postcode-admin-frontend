@@ -15,7 +15,10 @@ export type AutocompleteBaseProps<TOption = unknown> = Omit<
   ExcludedProps
 >;
 
-export type RHFAutocompleteProps<T extends FieldValues = FieldValues, TOption = unknown> = AutocompleteBaseProps<TOption> & {
+export type RHFAutocompleteProps<
+  T extends FieldValues = FieldValues,
+  TOption = unknown,
+> = AutocompleteBaseProps<TOption> & {
   name: FieldPath<T>;
   label?: string;
   placeholder?: string;
