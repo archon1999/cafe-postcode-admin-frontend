@@ -15,6 +15,7 @@ import { Iconify } from 'shared/ui/Iconify';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 
 import { useDeletePrepStationMutation, useGetPrepStationsListQuery } from '../../application';
+import { ORGANIZATION_PREP_STATION_KIND_VALUES } from '../../domain';
 
 import { OrganizationsGridToolbar } from './OrganizationsGridToolbar';
 import { RestaurantManagementAccordion } from './RestaurantManagementAccordion';
