@@ -85,8 +85,8 @@
     "defaults": { "cashDesk": "Касса {{number}}", "kitchen": "Кухня", "prepStation": "Станция {{number}}" },
     "fields": {
       "printerNameOrIp": "Имя принтера / IP-адрес",
-      "martaAddressHint": "Оставьте пустым для автоматического обнаружения MARTA.",
-      "martaAddress": "Адрес MARTA"
+      "martaTaxNumber": "ИНН MARTA",
+      "fiscalTaxNumber": "Фискальный ИНН"
     },
     "steps": {
       "title": "Этапы готовности",

@@ -41,13 +41,13 @@ type Props = {
   cashDesks: CashDeskDraft[];
   prepStations: PrepStationDraft[];
   fiscalTaxNumber: string;
-  martaAddress: string;
+  martaTaxNumber: string;
   checkingIntegration: string | null;
   saving: boolean;
   setCashDesks: Dispatch<SetStateAction<CashDeskDraft[]>>;
   setPrepStations: Dispatch<SetStateAction<PrepStationDraft[]>>;
   onFiscalTaxNumberChange: (value: string) => void;
-  onMartaAddressChange: (value: string) => void;
+  onMartaTaxNumberChange: (value: string) => void;
   onCheckFiscal: () => void;
   onCheckMarta: () => void;
   onCheckPrinter: (key: string, target: string) => void;
@@ -70,13 +70,13 @@ export function RestaurantQuickSetupCard({
   cashDesks,
   prepStations,
   fiscalTaxNumber,
-  martaAddress,
+  martaTaxNumber,
   checkingIntegration,
   saving,
   setCashDesks,
   setPrepStations,
   onFiscalTaxNumberChange,
-  onMartaAddressChange,
+  onMartaTaxNumberChange,
   onCheckFiscal,
   onCheckMarta,
   onCheckPrinter,
@@ -93,7 +93,7 @@ export function RestaurantQuickSetupCard({
           <Stack direction="row" spacing={0.5} alignItems="flex-start" sx={{ flex: 1 }}>
             <TextField
               fullWidth
-              label={t('fields.taxNumber')}
+              label={t('setup.fields.fiscalTaxNumber')}
               value={fiscalTaxNumber}
               onChange={(event) => onFiscalTaxNumberChange(event.target.value)}
             />
@@ -106,10 +106,9 @@ export function RestaurantQuickSetupCard({
           <Stack direction="row" spacing={0.5} alignItems="flex-start" sx={{ flex: 1 }}>
             <TextField
               fullWidth
-              label={t('setup.fields.martaAddress')}
-              helperText={t('setup.fields.martaAddressHint')}
-              value={martaAddress}
-              onChange={(event) => onMartaAddressChange(event.target.value)}
+              label={t('setup.fields.martaTaxNumber')}
+              value={martaTaxNumber}
+              onChange={(event) => onMartaTaxNumberChange(event.target.value)}
             />
             <IntegrationCheckButton
               label={t('setup.actions.testIntegration', { name: 'MARTA' })}

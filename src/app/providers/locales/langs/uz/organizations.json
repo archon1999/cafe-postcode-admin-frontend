@@ -85,8 +85,8 @@
     "defaults": { "cashDesk": "Kassa {{number}}", "kitchen": "Oshxona", "prepStation": "Stansiya {{number}}" },
     "fields": {
       "printerNameOrIp": "Printer nomi / IP manzili",
-      "martaAddressHint": "Bo'sh qoldirilsa, MARTA avtomatik aniqlanadi.",
-      "martaAddress": "MARTA manzili"
+      "martaTaxNumber": "MARTA STIR",
+      "fiscalTaxNumber": "Fiscal STIR"
     },
     "steps": {
       "title": "Tayyorlik qadamlari",

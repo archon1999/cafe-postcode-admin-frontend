@@ -29,8 +29,8 @@ export type RestaurantSetupReadiness = {
   blockingIssueCount: number;
   steps: RestaurantSetupStep[];
   quickSetup: {
-    taxNumber: string;
-    martaAddress: string;
+    fiscalTaxNumber: string;
+    martaTaxNumber: string;
     cashDesks: Array<{
       id: string;
       name: string;

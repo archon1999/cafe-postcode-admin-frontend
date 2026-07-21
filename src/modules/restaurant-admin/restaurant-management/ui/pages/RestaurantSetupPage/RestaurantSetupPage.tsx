@@ -55,7 +55,7 @@ const RestaurantSetupPage = () => {
     newPrepStation(t('setup.defaults.kitchen'), 0),
   ]);
   const [fiscalTaxNumber, setFiscalTaxNumber] = useState('');
-  const [martaAddress, setMartaAddress] = useState('');
+  const [martaTaxNumber, setMartaTaxNumber] = useState('');
   const [checkingIntegration, setCheckingIntegration] = useState<string | null>(null);
   const hydratedRestaurantId = useRef<string | null>(null);
 
@@ -64,8 +64,8 @@ const RestaurantSetupPage = () => {
     if (!readiness || hydratedRestaurantId.current === readiness.installerManifest.restaurantId) return;
     hydratedRestaurantId.current = readiness.installerManifest.restaurantId;
     const quickSetup = readiness.quickSetup;
-    setFiscalTaxNumber(quickSetup.taxNumber);
-    setMartaAddress(quickSetup.martaAddress);
+    setFiscalTaxNumber(quickSetup.fiscalTaxNumber);
+    setMartaTaxNumber(quickSetup.martaTaxNumber);
     setCashDesks(
       quickSetup.cashDesks.length
         ? quickSetup.cashDesks.map((desk) => ({
@@ -111,7 +111,7 @@ const RestaurantSetupPage = () => {
             id: desk.paymentIntegrationId,
             name: `${name} MARTA`,
             provider: 'marta-softpos',
-            settings: { endpointUrl: martaAddress.trim() },
+            settings: { taxNumber: martaTaxNumber.trim() },
           },
           fiscal: {
             id: desk.fiscalIntegrationId,
@@ -137,7 +137,7 @@ const RestaurantSetupPage = () => {
       }),
       createTakeaway: true,
     }),
-    [cashDesks, fiscalTaxNumber, martaAddress, prepStations, t],
+    [cashDesks, fiscalTaxNumber, martaTaxNumber, prepStations, t],
   );
 
   if (readinessQuery.isLoading || !readinessQuery.data) return <LoadingScreen />;
@@ -169,8 +169,7 @@ const RestaurantSetupPage = () => {
     return runIntegrationCheck(key, t('setup.integrations.printer'), () => apiClient.checkLocalAgentPrinter(settings));
   };
 
-  const checkMarta = () =>
-    runIntegrationCheck('marta', 'MARTA', () => apiClient.checkAdminMartaConnection(martaAddress.trim()));
+  const checkMarta = () => runIntegrationCheck('marta', 'MARTA', () => apiClient.checkAdminMartaConnection());
 
   const checkFiscal = () =>
     runIntegrationCheck('fiscal', 'Fiscal Drive', async () => {
@@ -223,13 +222,13 @@ const RestaurantSetupPage = () => {
           cashDesks={cashDesks}
           prepStations={prepStations}
           fiscalTaxNumber={fiscalTaxNumber}
-          martaAddress={martaAddress}
+          martaTaxNumber={martaTaxNumber}
           checkingIntegration={checkingIntegration}
           saving={applyMutation.isPending}
           setCashDesks={setCashDesks}
           setPrepStations={setPrepStations}
           onFiscalTaxNumberChange={setFiscalTaxNumber}
-          onMartaAddressChange={setMartaAddress}
+          onMartaTaxNumberChange={setMartaTaxNumber}
           onCheckFiscal={() => void checkFiscal()}
           onCheckMarta={() => void checkMarta()}
           onCheckPrinter={(key, target) => void checkPrinter(key, target)}

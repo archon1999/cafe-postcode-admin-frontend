@@ -85,8 +85,8 @@
     "defaults": { "cashDesk": "Касса {{number}}", "kitchen": "Ошхона", "prepStation": "Станция {{number}}" },
     "fields": {
       "printerNameOrIp": "Принтер номи / IP манзили",
-      "martaAddressHint": "Бўш қолдирилса, MARTA автоматик аниқланади.",
-      "martaAddress": "MARTA манзили"
+      "martaTaxNumber": "MARTA STIR",
+      "fiscalTaxNumber": "Fiscal STIR"
     },
     "steps": {
       "title": "Тайёрлик қадамлари",
