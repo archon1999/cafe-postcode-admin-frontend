@@ -1,7 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
+
 import type { AdminCashExpensesQueryParams } from 'shared/api/admin-types';
 
 import { expensesRepository } from '../data-access';
+
 import { expensesKeys } from './keys';
 
 export function useExpenseCategoriesQuery() {

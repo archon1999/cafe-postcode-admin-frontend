@@ -45,9 +45,9 @@ export const catalogRepository: CatalogRepository = {
   },
 
   getModifierGroups() {
-    return apiClient.getAdminCatalogModifierGroups().then((response) =>
-      Array.isArray(response) ? response : response.data,
-    );
+    return apiClient
+      .getAdminCatalogModifierGroups()
+      .then((response) => (Array.isArray(response) ? response : response.data));
   },
 
   getModifierGroupById(id: string) {
