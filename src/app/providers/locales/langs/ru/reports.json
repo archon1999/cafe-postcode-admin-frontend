@@ -180,6 +180,7 @@
         "cashTotal": "Наличные",
         "cardTotal": "Карта",
         "refundTotal": "Сумма возвратов",
+        "expenseTotal": "Расходы",
         "precheckCount": "Количество пречеков",
         "receiptCount": "Количество чеков"
       }

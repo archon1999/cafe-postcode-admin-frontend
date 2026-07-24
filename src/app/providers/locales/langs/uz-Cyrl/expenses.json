@@ -1,0 +1,21 @@
+{
+  "title": "Харажатлар",
+  "tabs": { "operations": "Амалиётлар", "categories": "Категориялар" },
+  "summary": { "postedTotal": "Фаол харажатлар", "records": "Ёзувлар сони" },
+  "filters": { "search": "Излаш", "searchPlaceholder": "Изоҳ, категория ёки ходим бўйича", "all": "Барчаси", "dateRange": "Сана оралиғи", "allDates": "Барча саналар" },
+  "fields": { "date": "Сана ва вақт", "amount": "Сумма", "category": "Категория", "comment": "Изоҳ", "recipient": "Олувчи", "createdBy": "Ким берди", "cashDesk": "Касса", "status": "Ҳолат", "sortOrder": "Тартиб", "name": "Номи", "voidReason": "Бекор қилиш сабаби" },
+  "statuses": { "posted": "Фаол", "voided": "Бекор қилинган", "active": "Фаол", "inactive": "Нофаол" },
+  "actions": { "addCategory": "Категория қўшиш", "edit": "Таҳрирлаш", "deactivate": "Ўчириш", "activate": "Фаоллаштириш", "cancel": "Бекор қилиш", "save": "Сақлаш", "clear": "Тозалаш", "void": "Харажатни бекор қилиш" },
+  "dialogs": { "addCategory": "Янги харажат категорияси", "editCategory": "Категорияни таҳрирлаш", "voidExpense": "Харажатни бекор қилиш" },
+  "messages": { "categorySaved": "Категория сақланди", "orderSaved": "Категориялар тартиби сақланди", "expenseVoided": "Харажат бекор қилинди", "saveFailed": "Сақлашда хатолик юз берди", "voidFailed": "Харажатни бекор қилиб бўлмади", "loadFailed": "Харажатларни юклаб бўлмади" },
+  "pagination": { "rowsPerPage": "Саҳифадаги қаторлар:", "displayed": "{{from}}–{{to}} / {{count}}" },
+  "categories": { "dragHandle": "Категорияни кўчириш" },
+  "empty": {
+    "operationsTitle": "Ҳозирча харажатлар йўқ",
+    "operationsDescription": "POS орқали киритилган харажатлар шу ерда кўринади.",
+    "operationsFilteredTitle": "Мос харажат топилмади",
+    "operationsFilteredDescription": "Қидирув ёки фильтрларни ўзгартириб кўринг.",
+    "categoriesTitle": "Ҳозирча категориялар йўқ",
+    "categoriesDescription": "POS'да харажат киритиш учун биринчи категорияни яратинг."
+  }
+}

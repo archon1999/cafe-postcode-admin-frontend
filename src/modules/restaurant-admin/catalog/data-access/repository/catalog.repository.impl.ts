@@ -44,6 +44,28 @@ export const catalogRepository: CatalogRepository = {
     return apiClient.deleteAdminCatalogItem(id);
   },
 
+  getModifierGroups() {
+    return apiClient.getAdminCatalogModifierGroups().then((response) =>
+      Array.isArray(response) ? response : response.data,
+    );
+  },
+
+  getModifierGroupById(id: string) {
+    return apiClient.getAdminCatalogModifierGroupById(id);
+  },
+
+  createModifierGroup(payload) {
+    return apiClient.createAdminCatalogModifierGroup(payload);
+  },
+
+  updateModifierGroup(id, payload) {
+    return apiClient.updateAdminCatalogModifierGroup(id, payload);
+  },
+
+  deleteModifierGroup(id: string) {
+    return apiClient.deleteAdminCatalogModifierGroup(id);
+  },
+
   getPrepStations() {
     return apiClient.getAdminPrepStations({ page: 1, pageSize: 500 }).then((response) => response.data);
   },

@@ -9,6 +9,7 @@ import type {
   AdminPrepStation,
   CatalogCategory,
   CatalogItem,
+  CatalogModifierGroup,
 } from 'shared/api/admin-types';
 import { apiClient } from 'shared/api/http/apiClient';
 
@@ -119,6 +120,28 @@ export function useGetPrepStationsQuery(options?: Omit<UseQueryOptions<AdminPrep
   return useQuery({
     queryKey: catalogKeys.prepStations(),
     queryFn: () => catalogRepository.getPrepStations(),
+    ...options,
+  });
+}
+
+export function useGetCatalogModifierGroupsQuery(
+  options?: Omit<UseQueryOptions<CatalogModifierGroup[]>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: catalogKeys.modifierGroups(),
+    queryFn: () => catalogRepository.getModifierGroups(),
+    ...options,
+  });
+}
+
+export function useGetCatalogModifierGroupByIdQuery(
+  id: string,
+  options?: Omit<UseQueryOptions<CatalogModifierGroup>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: catalogKeys.modifierGroupDetail(id),
+    queryFn: () => catalogRepository.getModifierGroupById(id),
+    enabled: Boolean(id),
     ...options,
   });
 }

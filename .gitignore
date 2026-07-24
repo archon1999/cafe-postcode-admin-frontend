@@ -29,6 +29,7 @@ dist-ssr
 
 *storybook.log
 storybook-static
+.playwright-cli/
 
 # env
 .env

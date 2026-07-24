@@ -27,6 +27,13 @@ const RESTAURANT_PERMISSION_CODES: PermissionCode[] = [
   'restaurants.rotate_auth_code',
 ];
 const REPORT_PERMISSION_CODES: PermissionCode[] = ['reports.view'];
+const EXPENSE_PERMISSION_CODES: PermissionCode[] = [
+  'expenses.view',
+  'expenses.update',
+  'expense_categories.view',
+  'expense_categories.create',
+  'expense_categories.update',
+];
 const ORDER_PERMISSION_CODES: PermissionCode[] = ['orders.view'];
 const PAYMENT_PERMISSION_CODES: PermissionCode[] = ['payments.view', 'receipts.view'];
 const KITCHEN_PERMISSION_CODES: PermissionCode[] = ['kitchen_tickets.view'];
@@ -37,6 +44,9 @@ const CATALOG_PERMISSION_CODES: PermissionCode[] = [
   'catalog_items.view',
   'catalog_items.create',
   'catalog_items.update',
+  'catalog_modifier_groups.view',
+  'catalog_modifier_groups.create',
+  'catalog_modifier_groups.update',
 ];
 const FLOOR_LAYOUT_PERMISSION_CODES: PermissionCode[] = [
   'halls.view',
@@ -83,6 +93,7 @@ const ADMIN_LANDING_CANDIDATES = [
   RoutePath.organizationRestaurantList,
   RoutePath.organizationMyRestaurant,
   RoutePath.reports,
+  RoutePath.expenses,
   RoutePath.orderList,
   RoutePath.paymentList,
   RoutePath.kitchenTicketList,
@@ -133,6 +144,10 @@ export function canAccessRestaurants(snapshot?: AdminAccessSnapshot | null) {
 
 export function canAccessReports(snapshot?: AdminAccessSnapshot | null) {
   return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, REPORT_PERMISSION_CODES);
+}
+
+export function canAccessExpenses(snapshot?: AdminAccessSnapshot | null) {
+  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, EXPENSE_PERMISSION_CODES);
 }
 
 export function canAccessOrders(snapshot?: AdminAccessSnapshot | null) {
@@ -297,6 +312,10 @@ export function canAccessAdminPath(pathname: string, snapshot?: AdminAccessSnaps
     return canAccessReports(snapshot);
   }
 
+  if (matchesPrefix(pathname, RoutePath.expenses)) {
+    return canAccessExpenses(snapshot);
+  }
+
   if (matchesPrefix(pathname, RoutePath.paymentList) || matchesPrefix(pathname, RoutePath.receiptList)) {
     return canAccessPayments(snapshot);
   }
@@ -317,7 +336,8 @@ export function canAccessAdminPath(pathname: string, snapshot?: AdminAccessSnaps
   if (
     matchesPrefix(pathname, RoutePath.catalogBrowser) ||
     matchesPrefix(pathname, RoutePath.catalogCategoryList) ||
-    matchesPrefix(pathname, RoutePath.catalogItemList)
+    matchesPrefix(pathname, RoutePath.catalogItemList) ||
+    matchesPrefix(pathname, RoutePath.catalogModifierGroupList)
   ) {
     return canAccessCatalog(snapshot);
   }

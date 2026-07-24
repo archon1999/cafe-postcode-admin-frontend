@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import { useTranslate } from 'app/providers/locales';
-import type { AdminMxikDetails, CatalogCategory } from 'shared/api/admin-types';
+import type { AdminMxikDetails, CatalogCategory, CatalogModifierGroup } from 'shared/api/admin-types';
 import { RHFSelect, RHFSumCurrencyField, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
 import { LabelRow } from 'shared/ui/LabelRow/LabelRow';
 
@@ -19,11 +19,14 @@ import {
   getMxikCashSaleStatus,
   getMxikLabelStatus,
 } from './catalogItemMxik';
+import { CatalogModifierGroupsField } from './CatalogModifierGroupsField';
 import { MxikAutocompleteField } from './MxikAutocompleteField';
 
 type Props = {
   categories: CatalogCategory[];
   categoriesLoading: boolean;
+  modifierGroups: CatalogModifierGroup[];
+  modifierGroupsLoading: boolean;
   disabled: boolean;
   isDialog: boolean;
   mxikDetails?: AdminMxikDetails | null;
@@ -38,6 +41,8 @@ type Props = {
 export function CatalogItemFormFields({
   categories,
   categoriesLoading,
+  modifierGroups,
+  modifierGroupsLoading,
   disabled,
   isDialog,
   mxikDetails,
@@ -139,6 +144,7 @@ export function CatalogItemFormFields({
           </Box>
         ) : null}
         <RHFSumCurrencyField<CatalogItemFormInput> name="price" label={t('fields.price')} />
+        <CatalogModifierGroupsField groups={modifierGroups} loading={modifierGroupsLoading} disabled={disabled} />
         <RHFTextField<CatalogItemFormInput>
           name="description"
           label={t('fields.description')}

@@ -38,6 +38,53 @@ export type AdminPaymentStatus = 'pending' | 'succeeded' | 'failed';
 export type AdminReceiptKind = 'prebill' | 'fiscal' | 'refund';
 export type AdminReceiptStatus = 'created' | 'sent' | 'failed';
 export type AdminCashShiftStatus = 'open' | 'closed';
+export type AdminCashExpenseStatus = 'posted' | 'voided';
+
+export type AdminExpenseCategory = {
+  id: string;
+  name: string;
+  isActive: boolean;
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type AdminCashExpense = {
+  id: string;
+  cashShiftId: string;
+  cashDesk: string;
+  cashDeskName: string;
+  category: string;
+  categoryName: string;
+  amount: number;
+  comment: string;
+  recipient?: string | null;
+  recipientName: string;
+  createdBy: string;
+  createdByName: string;
+  status: AdminCashExpenseStatus;
+  occurredAt: string;
+  voidedAt?: string | null;
+  voidedBy?: string | null;
+  voidedByName?: string | null;
+  voidReason: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type AdminCashExpensesQueryParams = AdminListQueryParams & {
+  statusIn?: string;
+  categoryIdIn?: string;
+  cashDeskId?: string;
+  recipientId?: string;
+  createdById?: string;
+  dateFrom?: string;
+  dateTo?: string;
+};
+
+export type AdminCashExpensesResponse = AdminPaginatedResponse<AdminCashExpense> & {
+  postedTotal: number;
+};
 export type AdminReportKey = 'summary' | 'sales' | 'receipts' | 'topItems' | 'topStaff' | 'paymentBreakdown' | 'shifts';
 export type AdminReportPeriodType = 'day' | 'month' | 'year';
 export type AdminBusinessPartnerStatus = 'draft' | 'active' | 'inactive';
@@ -666,6 +713,7 @@ export type AdminCashShiftReportRow = {
   cardTotal: number;
   qrTotal: number;
   refundTotal: number;
+  expenseTotal: number;
   precheckCount: number;
   receiptCount: number;
   reprintCount: number;
@@ -800,6 +848,7 @@ export type CatalogItem = {
   markingGtin?: string | null;
   description: string;
   price: number;
+  modifierGroups?: string[];
   isActive: boolean;
   isStoplisted: boolean;
 };
@@ -818,8 +867,51 @@ export type CatalogItemPayload = {
   restoreMxikImage?: boolean;
   description: string;
   price: number;
+  modifierGroups?: string[];
   isActive: boolean;
   isStoplisted: boolean;
+};
+
+export type CatalogModifierOption = {
+  id: string;
+  name: string;
+  priceDelta: number;
+  isDefault: boolean;
+  sortOrder: number;
+  isActive: boolean;
+};
+
+export type CatalogModifierGroup = {
+  id: string;
+  name: string;
+  selectionType: 'single' | 'multiple';
+  minSelections: number;
+  maxSelections: number;
+  sortOrder: number;
+  isActive: boolean;
+  productCount?: number;
+  options: CatalogModifierOption[];
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type CatalogModifierOptionPayload = {
+  id?: string;
+  name: string;
+  priceDelta: number;
+  isDefault: boolean;
+  sortOrder: number;
+  isActive: boolean;
+};
+
+export type CatalogModifierGroupPayload = {
+  name: string;
+  selectionType: 'single' | 'multiple';
+  minSelections: number;
+  maxSelections: number;
+  sortOrder: number;
+  isActive: boolean;
+  options: CatalogModifierOptionPayload[];
 };
 
 export type AdminUser = {

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import type { CatalogCategoryPayload, CatalogItemPayload } from 'shared/api/admin-types';
+import type { CatalogCategoryPayload, CatalogItemPayload, CatalogModifierGroupPayload } from 'shared/api/admin-types';
 
 import { catalogRepository } from '../data-access';
 
@@ -71,5 +71,32 @@ export function useDeleteCatalogItemMutation() {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: catalogKeys.items() });
     },
+  });
+}
+
+export function useCreateCatalogModifierGroupMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: CatalogModifierGroupPayload) => catalogRepository.createModifierGroup(payload),
+    onSuccess: async () => queryClient.invalidateQueries({ queryKey: catalogKeys.modifierGroups() }),
+  });
+}
+
+export function useUpdateCatalogModifierGroupMutation(id: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: CatalogModifierGroupPayload) => catalogRepository.updateModifierGroup(id, payload),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: catalogKeys.modifierGroups() });
+      await queryClient.invalidateQueries({ queryKey: catalogKeys.modifierGroupDetail(id) });
+    },
+  });
+}
+
+export function useDeleteCatalogModifierGroupMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => catalogRepository.deleteModifierGroup(id),
+    onSuccess: async () => queryClient.invalidateQueries({ queryKey: catalogKeys.modifierGroups() }),
   });
 }

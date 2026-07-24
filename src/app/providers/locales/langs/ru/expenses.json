@@ -1,0 +1,21 @@
+{
+  "title": "Расходы",
+  "tabs": { "operations": "Операции", "categories": "Категории" },
+  "summary": { "postedTotal": "Активные расходы", "records": "Количество записей" },
+  "filters": { "search": "Поиск", "searchPlaceholder": "По комментарию, категории или сотруднику", "all": "Все", "dateRange": "Период", "allDates": "Все даты" },
+  "fields": { "date": "Дата и время", "amount": "Сумма", "category": "Категория", "comment": "Комментарий", "recipient": "Получатель", "createdBy": "Кто выдал", "cashDesk": "Касса", "status": "Статус", "sortOrder": "Порядок", "name": "Название", "voidReason": "Причина отмены" },
+  "statuses": { "posted": "Активен", "voided": "Отменён", "active": "Активна", "inactive": "Неактивна" },
+  "actions": { "addCategory": "Добавить категорию", "edit": "Редактировать", "deactivate": "Отключить", "activate": "Включить", "cancel": "Отмена", "save": "Сохранить", "clear": "Очистить", "void": "Отменить расход" },
+  "dialogs": { "addCategory": "Новая категория расходов", "editCategory": "Редактировать категорию", "voidExpense": "Отменить расход" },
+  "messages": { "categorySaved": "Категория сохранена", "orderSaved": "Порядок категорий сохранён", "expenseVoided": "Расход отменён", "saveFailed": "Не удалось сохранить", "voidFailed": "Не удалось отменить расход", "loadFailed": "Не удалось загрузить расходы" },
+  "pagination": { "rowsPerPage": "Строк на странице:", "displayed": "{{from}}–{{to}} из {{count}}" },
+  "categories": { "dragHandle": "Переместить категорию" },
+  "empty": {
+    "operationsTitle": "Расходов пока нет",
+    "operationsDescription": "Расходы, внесённые через POS, появятся здесь.",
+    "operationsFilteredTitle": "Подходящие расходы не найдены",
+    "operationsFilteredDescription": "Попробуйте изменить поиск или фильтры.",
+    "categoriesTitle": "Категорий пока нет",
+    "categoriesDescription": "Создайте первую категорию, чтобы добавлять расходы в POS."
+  }
+}

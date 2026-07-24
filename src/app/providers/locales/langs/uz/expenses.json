@@ -1,0 +1,21 @@
+{
+  "title": "Xarajatlar",
+  "tabs": { "operations": "Amaliyotlar", "categories": "Kategoriyalar" },
+  "summary": { "postedTotal": "Faol xarajatlar", "records": "Yozuvlar soni" },
+  "filters": { "search": "Izlash", "searchPlaceholder": "Izoh, kategoriya yoki xodim bo'yicha", "all": "Barchasi", "dateRange": "Sana oralig'i", "allDates": "Barcha sanalar" },
+  "fields": { "date": "Sana va vaqt", "amount": "Summa", "category": "Kategoriya", "comment": "Izoh", "recipient": "Oluvchi", "createdBy": "Kim berdi", "cashDesk": "Kassa", "status": "Holat", "sortOrder": "Tartib", "name": "Nomi", "voidReason": "Bekor qilish sababi" },
+  "statuses": { "posted": "Faol", "voided": "Bekor qilingan", "active": "Faol", "inactive": "Nofaol" },
+  "actions": { "addCategory": "Kategoriya qo'shish", "edit": "Tahrirlash", "deactivate": "O'chirish", "activate": "Faollashtirish", "cancel": "Bekor qilish", "save": "Saqlash", "clear": "Tozalash", "void": "Xarajatni bekor qilish" },
+  "dialogs": { "addCategory": "Yangi xarajat kategoriyasi", "editCategory": "Kategoriyani tahrirlash", "voidExpense": "Xarajatni bekor qilish" },
+  "messages": { "categorySaved": "Kategoriya saqlandi", "orderSaved": "Kategoriyalar tartibi saqlandi", "expenseVoided": "Xarajat bekor qilindi", "saveFailed": "Saqlashda xatolik yuz berdi", "voidFailed": "Xarajatni bekor qilib bo'lmadi", "loadFailed": "Xarajatlarni yuklab bo'lmadi" },
+  "pagination": { "rowsPerPage": "Sahifadagi qatorlar:", "displayed": "{{from}}–{{to}} / {{count}}" },
+  "categories": { "dragHandle": "Kategoriyani ko'chirish" },
+  "empty": {
+    "operationsTitle": "Hozircha xarajatlar yo'q",
+    "operationsDescription": "POS orqali kiritilgan xarajatlar shu yerda ko'rinadi.",
+    "operationsFilteredTitle": "Mos xarajat topilmadi",
+    "operationsFilteredDescription": "Qidiruv yoki filterlarni o'zgartirib ko'ring.",
+    "categoriesTitle": "Hozircha kategoriyalar yo'q",
+    "categoriesDescription": "POS'da xarajat kiritish uchun birinchi kategoriyani yarating."
+  }
+}

@@ -1,5 +1,9 @@
 import type {
   AdminKitchenTicket,
+  AdminCashExpense,
+  AdminCashExpensesQueryParams,
+  AdminCashExpensesResponse,
+  AdminExpenseCategory,
   AdminKitchenTicketsQueryParams,
   AdminOrder,
   AdminOrderItem,
@@ -17,6 +21,36 @@ import type {
 import { instance } from './axiosInstance.ts';
 
 export const adminOperationsGateway = {
+  getAdminExpenseCategories(params?: { isActive?: boolean }) {
+    return instance
+      .get<AdminExpenseCategory[]>('/api/v1/admin/billing/expense-categories/', { params })
+      .then((response) => response.data);
+  },
+
+  createAdminExpenseCategory(payload: { name: string; sortOrder: number; isActive?: boolean }) {
+    return instance
+      .post<AdminExpenseCategory>('/api/v1/admin/billing/expense-categories/', payload)
+      .then((response) => response.data);
+  },
+
+  updateAdminExpenseCategory(id: string, payload: { name: string; sortOrder: number; isActive: boolean }) {
+    return instance
+      .patch<AdminExpenseCategory>(`/api/v1/admin/billing/expense-categories/${id}/`, payload)
+      .then((response) => response.data);
+  },
+
+  getAdminCashExpenses(params: AdminCashExpensesQueryParams) {
+    return instance
+      .get<AdminCashExpensesResponse>('/api/v1/admin/billing/expenses/', { params })
+      .then((response) => response.data);
+  },
+
+  voidAdminCashExpense(id: string, reason: string) {
+    return instance
+      .post<AdminCashExpense>(`/api/v1/admin/billing/expenses/${id}/void/`, { reason })
+      .then((response) => response.data);
+  },
+
   getAdminKitchenTickets(params: AdminKitchenTicketsQueryParams) {
     return instance
       .get<AdminPaginatedResponse<AdminKitchenTicket>>('/api/v1/admin/kitchen/tickets/', {

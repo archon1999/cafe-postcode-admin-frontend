@@ -16,6 +16,7 @@ import {
   useCreateCatalogItemMutation,
   useGetCatalogCategoriesQuery,
   useGetMxikDetailsQuery,
+  useGetCatalogModifierGroupsQuery,
   useUpdateCatalogItemMutation,
 } from '../../application';
 import { getMxikPrimaryPictureUrl } from '../../data-access';
@@ -46,6 +47,7 @@ const defaultValues: CatalogItemFormInput = {
   clearImage: false,
   restoreMxikImage: false,
   price: 0,
+  modifierGroups: [],
   isActive: true,
   isStoplisted: false,
 };
@@ -62,6 +64,7 @@ function CatalogItemFormInner({
   const isEditMode = Boolean(item?.id);
   const [mxikImageUrl, setMxikImageUrl] = useState<string | null>(null);
   const categoriesQuery = useGetCatalogCategoriesQuery();
+  const modifierGroupsQuery = useGetCatalogModifierGroupsQuery();
   const createMutation = useCreateCatalogItemMutation();
   const updateMutation = useUpdateCatalogItemMutation(item?.id ?? '');
   const methods = useForm<CatalogItemFormInput, unknown, CatalogItemFormValues>({
@@ -88,6 +91,7 @@ function CatalogItemFormInner({
       clearImage: false,
       restoreMxikImage: false,
       price: item?.price ?? 0,
+      modifierGroups: item?.modifierGroups ?? [],
       isActive: item?.isActive ?? true,
       isStoplisted: item?.isStoplisted ?? false,
     });
@@ -172,6 +176,7 @@ function CatalogItemFormInner({
       clearImage: values.clearImage,
       restoreMxikImage: values.restoreMxikImage,
       price: values.price,
+      modifierGroups: values.modifierGroups,
       isActive: values.isActive,
       isStoplisted: values.isStoplisted,
     };
@@ -185,6 +190,8 @@ function CatalogItemFormInner({
     <CatalogItemFormFields
       categories={categoriesQuery.data ?? []}
       categoriesLoading={categoriesQuery.isLoading}
+      modifierGroups={modifierGroupsQuery.data ?? []}
+      modifierGroupsLoading={modifierGroupsQuery.isLoading}
       disabled={isSubmitting}
       isDialog={isDialog}
       mxikDetails={mxikDetailsQuery.data}

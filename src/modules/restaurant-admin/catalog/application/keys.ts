@@ -5,6 +5,7 @@ const categoryKeys = createKeyFactory('catalog', 'categories');
 const itemKeys = createKeyFactory('catalog', 'items');
 const mxikKeys = createKeyFactory('catalog', 'mxik');
 const prepStationKeys = createKeyFactory('catalog', 'prepStations');
+const modifierGroupKeys = createKeyFactory('catalog', 'modifierGroups');
 
 export const catalogKeys = {
   all: catalogBaseKeys.all,
@@ -18,4 +19,6 @@ export const catalogKeys = {
   mxikSearch: mxikKeys.search,
   mxikDetail: (code: string, lang?: string) => [...mxikKeys.detail(code), lang ?? 'uz'] as const,
   prepStations: () => prepStationKeys.all,
+  modifierGroups: () => modifierGroupKeys.all,
+  modifierGroupDetail: modifierGroupKeys.detail,
 } as const;

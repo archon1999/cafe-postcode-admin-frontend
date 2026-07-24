@@ -180,6 +180,7 @@
         "cashTotal": "Naqd",
         "cardTotal": "Karta",
         "refundTotal": "Qaytarilgan summa",
+        "expenseTotal": "Xarajatlar",
         "precheckCount": "Precheklar soni",
         "receiptCount": "Cheklar soni"
       }

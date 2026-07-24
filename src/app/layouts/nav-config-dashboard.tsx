@@ -14,12 +14,14 @@ const ICONS = {
   payments: <Iconify icon="solar:card-bold-duotone" width={20} />,
   receipts: <Iconify icon="solar:document-text-bold-duotone" width={20} />,
   reports: <Iconify icon="solar:chart-square-bold-duotone" width={24} />,
+  expenses: <Iconify icon="solar:wallet-money-bold-duotone" width={24} />,
   kitchen: <Iconify icon="solar:chef-hat-bold-duotone" width={24} />,
   kitchenTickets: <Iconify icon="solar:ticket-bold-duotone" width={20} />,
   catalog: <Iconify icon="solar:widget-4-bold-duotone" width={24} />,
   browser: <Iconify icon="solar:widget-2-bold-duotone" width={20} />,
   categories: <Iconify icon="solar:tag-horizontal-bold-duotone" width={20} />,
   items: <Iconify icon="solar:archive-bold-duotone" width={20} />,
+  modifiers: <Iconify icon="solar:tuning-square-2-bold-duotone" width={20} />,
   floor: <Iconify icon="solar:map-point-rotate-bold-duotone" width={24} />,
   halls: <Iconify icon="solar:home-angle-bold-duotone" width={20} />,
   zones: <Iconify icon="solar:box-bold-duotone" width={20} />,
@@ -150,6 +152,13 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
           icon: ICONS.categories,
         }
       : null,
+    canAccess(RoutePath.catalogModifierGroupList)
+      ? {
+          title: t('modifiers'),
+          path: RoutePath.catalogModifierGroupList,
+          icon: ICONS.modifiers,
+        }
+      : null,
   ].filter(Boolean) as NavSectionProps['data'][number]['items'];
 
   const floorChildren = [
@@ -225,6 +234,13 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
           title: t('reports'),
           path: RoutePath.reports,
           icon: ICONS.reports,
+        }
+      : null,
+    canAccess(RoutePath.expenses)
+      ? {
+          title: t('expenses'),
+          path: RoutePath.expenses,
+          icon: ICONS.expenses,
         }
       : null,
     canAccess(RoutePath.employeeList)

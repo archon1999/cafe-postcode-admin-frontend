@@ -134,5 +134,28 @@
                                   "noCategoryDescription":  "Mahsulotlarni ko\u0027rish uchun chap tomondan kategoriya tanlang.",
                                   "noCategoryTitle":  "Kategoriya tanlanmagan"
                               }
-              }
+              },
+    "modifiers": {
+        "formSubtitle": "Tanlov qoidalari va narx qo‘shimchalarini bir joyda boshqaring",
+        "single": "Bitta tanlov",
+        "multiple": "Bir nechta tanlov",
+        "options": "Variantlar",
+        "freeHint": "Bepul variant uchun narxni 0 qoldiring",
+        "quickAdd": "Variant qo‘shish",
+        "currency": "so‘m",
+        "cancel": "Bekor qilish",
+        "productFieldTitle": "Mahsulot xususiyatlari",
+        "productFieldDescription": "POS’da mahsulot tanlanganda ko‘rsatiladigan xususiyatlar",
+        "quickAddGroup": "Yangi guruh",
+        "newGroup": "Yangi guruh",
+        "selectGroup": "Xususiyat guruhini tanlang",
+        "requiredSingle": "Majburiy · 1 ta",
+        "optionalSingle": "Ixtiyoriy · 1 ta",
+        "variant": "variant",
+        "free": "bepul",
+        "noVariants": "Variantlar kiritilmagan",
+        "emptyTitle": "Hali xususiyat guruhi yo‘q",
+        "emptyDescription": "Xamir, o‘lcham yoki qo‘shimchalar uchun birinchi guruhni yarating.",
+        "emptyAction": "Birinchi guruhni yaratish"
+    }
 }

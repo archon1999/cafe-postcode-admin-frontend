@@ -314,6 +314,13 @@ export function getReportTableColumns(reportKey: TableReportKey, t: ReportsTrans
           valueGetter: (_value, row: AdminShiftReportRow) => formatMoney(row.refundTotal),
         },
         {
+          field: 'expenseTotal',
+          headerName: t('reports.shifts.fields.expenseTotal'),
+          minWidth: 150,
+          flex: 0.55,
+          valueGetter: (_value, row: AdminShiftReportRow) => formatMoney(row.expenseTotal),
+        },
+        {
           field: 'precheckCount',
           headerName: t('reports.shifts.fields.precheckCount'),
           minWidth: 130,

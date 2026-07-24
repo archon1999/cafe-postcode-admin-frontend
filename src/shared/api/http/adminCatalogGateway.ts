@@ -6,6 +6,8 @@ import type {
   CatalogCategoryPayload,
   CatalogItem,
   CatalogItemPayload,
+  CatalogModifierGroup,
+  CatalogModifierGroupPayload,
 } from '../admin-types';
 
 import { instance } from './axiosInstance.ts';
@@ -75,5 +77,35 @@ export const adminCatalogGateway = {
 
   deleteAdminCatalogItem(id: string) {
     return instance.delete<void>(`/api/v1/admin/catalog/items/${id}/`).then((response) => response.data);
+  },
+
+  getAdminCatalogModifierGroups() {
+    return instance
+      .get<
+        AdminPaginatedResponse<CatalogModifierGroup> | CatalogModifierGroup[]
+      >('/api/v1/admin/catalog/modifier-groups/', { params: { page: 1, pageSize: 500 } })
+      .then((response) => response.data);
+  },
+
+  getAdminCatalogModifierGroupById(id: string) {
+    return instance
+      .get<CatalogModifierGroup>(`/api/v1/admin/catalog/modifier-groups/${id}/`)
+      .then((response) => response.data);
+  },
+
+  createAdminCatalogModifierGroup(payload: CatalogModifierGroupPayload) {
+    return instance
+      .post<CatalogModifierGroup>('/api/v1/admin/catalog/modifier-groups/', payload)
+      .then((response) => response.data);
+  },
+
+  updateAdminCatalogModifierGroup(id: string, payload: CatalogModifierGroupPayload) {
+    return instance
+      .put<CatalogModifierGroup>(`/api/v1/admin/catalog/modifier-groups/${id}/`, payload)
+      .then((response) => response.data);
+  },
+
+  deleteAdminCatalogModifierGroup(id: string) {
+    return instance.delete<void>(`/api/v1/admin/catalog/modifier-groups/${id}/`).then((response) => response.data);
   },
 };

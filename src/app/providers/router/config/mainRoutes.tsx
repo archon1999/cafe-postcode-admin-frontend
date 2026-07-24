@@ -65,6 +65,7 @@ const ReceiptDetailPage = lazy(
   () => import('modules/restaurant-admin/orders/ui/pages/ReceiptDetailPage/ReceiptDetailPage'),
 );
 const ReportsPage = lazy(() => import('modules/restaurant-admin/reports/ui/pages/ReportsPage/ReportsPage'));
+const ExpensesPage = lazy(() => import('modules/restaurant-admin/expenses/ui/pages/ExpensesPage'));
 const KitchenTicketsListPage = lazy(
   () => import('modules/restaurant-admin/kitchen/ui/pages/KitchenTicketsListPage/KitchenTicketsListPage'),
 );
@@ -84,6 +85,9 @@ const ProductsListPage = lazy(
   () => import('modules/restaurant-admin/catalog/ui/pages/ProductsListPage/ProductsListPage'),
 );
 const ProductFormPage = lazy(() => import('modules/restaurant-admin/catalog/ui/pages/ProductFormPage/ProductFormPage'));
+const ModifierGroupsPage = lazy(
+  () => import('modules/restaurant-admin/catalog/ui/pages/ModifierGroupsPage/ModifierGroupsPage'),
+);
 const RestaurantsListPage = lazy(
   () => import('modules/business-partner/restaurants/ui/pages/RestaurantsListPage/RestaurantsListPage'),
 );
@@ -259,6 +263,10 @@ const mainChildren: RouteObject[] = [
     element: <ReportsPage />,
   },
   {
+    path: RoutePath.expenses,
+    element: <ExpensesPage />,
+  },
+  {
     path: RoutePath.reportDetail,
     element: <ReportsPage />,
   },
@@ -301,6 +309,10 @@ const mainChildren: RouteObject[] = [
   {
     path: RoutePath.catalogItemEdit,
     element: <ProductFormPage />,
+  },
+  {
+    path: RoutePath.catalogModifierGroupList,
+    element: <ModifierGroupsPage />,
   },
   {
     path: RoutePath.organizationRestaurantList,

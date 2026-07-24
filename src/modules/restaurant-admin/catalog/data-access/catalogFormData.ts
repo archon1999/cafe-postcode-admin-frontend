@@ -62,6 +62,13 @@ function buildCatalogFormData(payload: CatalogMutationPayload): FormData {
     appendNumber(formData, 'price', payload.price);
   }
 
+  if ('modifierGroups' in payload) {
+    for (const groupId of payload.modifierGroups ?? []) {
+      appendText(formData, 'modifierGroups', groupId);
+    }
+    appendBoolean(formData, 'clearModifierGroups', (payload.modifierGroups ?? []).length === 0);
+  }
+
   appendBoolean(formData, 'isActive', payload.isActive);
 
   if ('isStoplisted' in payload) {
