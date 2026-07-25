@@ -18,10 +18,9 @@ import { useTranslate } from 'app/providers/locales';
 import { PrintTemplatePreview, type PrintTemplateLayout } from 'modules/restaurant-admin/printing';
 import type { AdminOrder, AdminReceipt } from 'shared/api/admin-types';
 import { Iconify } from 'shared/ui/Iconify';
-import { Label } from 'shared/ui/Label';
 import { formatDateTime } from 'shared/utils/format-time';
 
-import { getReceiptKindTranslationKey, getReceiptStatusColor } from '../../lib/presenters';
+import { getReceiptKindTranslationKey } from '../../lib/presenters';
 
 type OrderReceiptPreviewDialogProps = {
   open: boolean;
@@ -98,17 +97,7 @@ export function OrderReceiptPreviewDialog({ open, order, onClose }: OrderReceipt
                   ))}
                 </Select>
               </FormControl>
-            ) : (
-              <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" alignItems="center">
-                <Typography variant="subtitle2">{t(getReceiptKindTranslationKey(receipt.kind))}</Typography>
-                <Label color={getReceiptStatusColor(receipt.status)} variant="soft">
-                  {t(`receiptStatuses.${receipt.status}`)}
-                </Label>
-                <Typography variant="caption" color="text.secondary">
-                  {formatDateTime(receipt.createdAt)}
-                </Typography>
-              </Stack>
-            )}
+            ) : null}
 
             <PrintTemplatePreview layout={layout} sampleData={data} showTitle={false} />
           </Stack>
