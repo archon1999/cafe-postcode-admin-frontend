@@ -32,6 +32,11 @@ vi.mock('shared/api', () => ({
   apiClient: { checkLocalAgentPrinter: vi.fn() },
 }));
 
+vi.mock('modules/auth', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('modules/auth')>()),
+  useAdminRestaurantScopeId: () => 'restaurant-1',
+}));
+
 vi.mock('shared/ui/CustomDialog', () => ({
   ConfirmDialog: () => null,
 }));
