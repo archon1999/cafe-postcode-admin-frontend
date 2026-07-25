@@ -11,9 +11,9 @@ import { BackToListButton } from 'shared/ui/BackToListButton';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { LabelRowWithIcon } from 'shared/ui/LabelRowWithIcon/LabelRowWithIcon';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
+import { formatDateTime } from 'shared/utils/format-time';
 
 import { useGetOrderItemNoteByIdQuery } from '../../../application';
-import { formatDateTime } from '../../lib/presenters';
 
 const OrderItemNoteDetailPage = () => {
   const { t } = useTranslate('orders');

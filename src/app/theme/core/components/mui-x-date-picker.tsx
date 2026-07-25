@@ -11,6 +11,8 @@ import {
   pickersOutlinedInputClasses,
 } from '@mui/x-date-pickers/PickersTextField';
 
+import { FORMAT_PATTERNS } from 'shared/utils/format-time';
+
 import {
   filledInputStyles,
   filledInputVariants,
@@ -235,27 +237,43 @@ const toolbarComponents: Components<Theme> = {
 };
 
 const datePickerComponents: Components<Theme> = {
-  MuiDateField: { defaultProps: { ...defaultProps.baseField } },
-  MuiDatePicker: { defaultProps: { slots: { ...defaultProps.dateSlots } } },
-  MuiDesktopDatePicker: { defaultProps: { slots: { ...defaultProps.dateSlots } } },
-  MuiMobileDatePicker: { defaultProps: { slots: { ...defaultProps.dateSlots } } },
-  MuiStaticDatePicker: { defaultProps: { slots: { ...defaultProps.dateSlots } } },
+  MuiDateField: { defaultProps: { ...defaultProps.baseField, format: FORMAT_PATTERNS.date } },
+  MuiDatePicker: { defaultProps: { format: FORMAT_PATTERNS.date, slots: { ...defaultProps.dateSlots } } },
+  MuiDesktopDatePicker: { defaultProps: { format: FORMAT_PATTERNS.date, slots: { ...defaultProps.dateSlots } } },
+  MuiMobileDatePicker: { defaultProps: { format: FORMAT_PATTERNS.date, slots: { ...defaultProps.dateSlots } } },
+  MuiStaticDatePicker: { defaultProps: { format: FORMAT_PATTERNS.date, slots: { ...defaultProps.dateSlots } } },
 };
 
 const timePickerComponents: Components<Theme> = {
-  MuiTimeField: { defaultProps: { ...defaultProps.baseField } },
-  MuiTimePicker: { defaultProps: { slots: { ...defaultProps.timeSlots } } },
-  MuiDesktopTimePicker: { defaultProps: { slots: { ...defaultProps.timeSlots } } },
-  MuiMobileTimePicker: { defaultProps: { slots: { ...defaultProps.timeSlots } } },
-  MuiStaticTimePicker: { defaultProps: { slots: { ...defaultProps.timeSlots } } },
+  MuiTimeField: { defaultProps: { ...defaultProps.baseField, ampm: false, format: FORMAT_PATTERNS.time } },
+  MuiTimePicker: { defaultProps: { ampm: false, format: FORMAT_PATTERNS.time, slots: { ...defaultProps.timeSlots } } },
+  MuiDesktopTimePicker: {
+    defaultProps: { ampm: false, format: FORMAT_PATTERNS.time, slots: { ...defaultProps.timeSlots } },
+  },
+  MuiMobileTimePicker: {
+    defaultProps: { ampm: false, format: FORMAT_PATTERNS.time, slots: { ...defaultProps.timeSlots } },
+  },
+  MuiStaticTimePicker: {
+    defaultProps: { ampm: false, format: FORMAT_PATTERNS.time, slots: { ...defaultProps.timeSlots } },
+  },
 };
 
 const dateTimePickerComponents: Components<Theme> = {
-  MuiDateTimeField: { defaultProps: { ...defaultProps.baseField } },
-  MuiDateTimePicker: { defaultProps: { slots: { ...defaultProps.dateSlots } } },
-  MuiDesktopDateTimePicker: { defaultProps: { slots: { ...defaultProps.dateSlots } } },
-  MuiMobileDateTimePicker: { defaultProps: { slots: { ...defaultProps.dateSlots } } },
-  MuiStaticDateTimePicker: { defaultProps: { slots: { ...defaultProps.dateSlots } } },
+  MuiDateTimeField: {
+    defaultProps: { ...defaultProps.baseField, ampm: false, format: FORMAT_PATTERNS.dateTime },
+  },
+  MuiDateTimePicker: {
+    defaultProps: { ampm: false, format: FORMAT_PATTERNS.dateTime, slots: { ...defaultProps.dateSlots } },
+  },
+  MuiDesktopDateTimePicker: {
+    defaultProps: { ampm: false, format: FORMAT_PATTERNS.dateTime, slots: { ...defaultProps.dateSlots } },
+  },
+  MuiMobileDateTimePicker: {
+    defaultProps: { ampm: false, format: FORMAT_PATTERNS.dateTime, slots: { ...defaultProps.dateSlots } },
+  },
+  MuiStaticDateTimePicker: {
+    defaultProps: { ampm: false, format: FORMAT_PATTERNS.dateTime, slots: { ...defaultProps.dateSlots } },
+  },
 };
 
 export const datePicker: Components<Theme> = {

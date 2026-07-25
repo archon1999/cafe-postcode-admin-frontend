@@ -42,6 +42,12 @@ export const adminHallGateway = {
     return instance.put<AdminHall>(`/api/v1/admin/floor/halls/${id}/`, payload).then((response) => response.data);
   },
 
+  updateAdminHallSortOrder(id: string, sortOrder: number) {
+    return instance
+      .patch<AdminHall>(`/api/v1/admin/floor/halls/${id}/`, { sortOrder })
+      .then((response) => response.data);
+  },
+
   updateAdminHallConstructor(id: string, payload: AdminHallConstructorPayload) {
     return instance
       .put<AdminHallConstructor>(`/api/v1/admin/floor/halls/${id}/constructor/`, payload)

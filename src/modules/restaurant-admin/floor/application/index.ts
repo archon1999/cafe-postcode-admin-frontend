@@ -7,6 +7,8 @@ export {
   useDeleteHallMutation,
   useDeleteTableSessionMutation,
   useDeleteZoneMutation,
+  useReorderHallsMutation,
+  useReorderZonesMutation,
   useUpdateDiningTableMutation,
   useUpdateHallMutation,
   useUpdateHallConstructorMutation,

@@ -33,6 +33,7 @@ const ProductFormPage = () => {
       <CatalogItemFormCard
         item={itemQuery.data}
         onCancel={() => push(RoutePath.catalogItemList)}
+        onDeleted={() => push(RoutePath.catalogItemList)}
         onSuccess={() => push(RoutePath.catalogItemList)}
       />
     </Content>

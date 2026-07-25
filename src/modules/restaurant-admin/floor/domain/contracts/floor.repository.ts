@@ -21,10 +21,12 @@ export interface FloorRepository {
   getZoneById(id: string): Promise<AdminZoneOrCabin>;
   createHall(payload: AdminHallPayload): Promise<AdminHall>;
   updateHall(id: string, payload: AdminHallPayload): Promise<AdminHall>;
+  updateHallSortOrder(id: string, sortOrder: number): Promise<AdminHall>;
   updateHallConstructor(id: string, payload: AdminHallConstructorPayload): Promise<AdminHallConstructor>;
   deleteHall(id: string): Promise<void>;
   createZone(payload: AdminZoneOrCabinPayload): Promise<AdminZoneOrCabin>;
   updateZone(id: string, payload: AdminZoneOrCabinPayload): Promise<AdminZoneOrCabin>;
+  updateZoneSortOrder(id: string, sortOrder: number): Promise<AdminZoneOrCabin>;
   deleteZone(id: string): Promise<void>;
   getDiningTables(): Promise<AdminDiningTable[]>;
   getDiningTableById(id: string): Promise<AdminDiningTable>;

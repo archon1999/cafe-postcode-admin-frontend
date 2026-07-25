@@ -116,7 +116,7 @@ export type AdminHallPayload = {
   name: string;
   description: string;
   gridColumns?: number;
-  sortOrder: number;
+  sortOrder?: number;
   isActive: boolean;
   zoneOrCabinId: string;
 };
@@ -130,7 +130,7 @@ export type AdminZoneOrCabin = {
 
 export type AdminZoneOrCabinPayload = {
   name: string;
-  sortOrder: number;
+  sortOrder?: number;
   isActive: boolean;
 };
 
@@ -797,7 +797,7 @@ export type CatalogCategoryPayload = {
   imageFile?: File | null;
   clearImage?: boolean;
   restoreMxikImage?: boolean;
-  sortOrder: number;
+  sortOrder?: number;
   isActive: boolean;
 };
 
@@ -848,6 +848,7 @@ export type CatalogItem = {
   markingGtin?: string | null;
   description: string;
   price: number;
+  sortOrder: number;
   modifierGroups?: string[];
   isActive: boolean;
   isStoplisted: boolean;
@@ -867,6 +868,7 @@ export type CatalogItemPayload = {
   restoreMxikImage?: boolean;
   description: string;
   price: number;
+  sortOrder?: number;
   modifierGroups?: string[];
   isActive: boolean;
   isStoplisted: boolean;

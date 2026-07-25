@@ -1,8 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
@@ -13,9 +11,15 @@ import { useTranslate } from 'app/providers/locales';
 import type { AdminZoneOrCabin } from 'shared/api/admin-types';
 import { useRedirectOnNotFound } from 'shared/hooks/router';
 import { usePageTitle } from 'shared/hooks/use-page-title';
+import { EntityFormActions } from 'shared/ui/EntityFormActions';
 import { Form, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
 
-import { useCreateZoneMutation, useGetZoneByIdQuery, useUpdateZoneMutation } from '../../../application';
+import {
+  useCreateZoneMutation,
+  useDeleteZoneMutation,
+  useGetZoneByIdQuery,
+  useUpdateZoneMutation,
+} from '../../../application';
 
 import {
   toZonePayload,
@@ -30,14 +34,16 @@ type ZoneDialogProps = {
   zoneId?: string | null;
   onClose: () => void;
   onSaved?: (zone: AdminZoneOrCabin) => void;
+  onDeleted?: () => void;
 };
 
-export function ZoneDialog({ open, zoneId, onClose, onSaved }: ZoneDialogProps) {
+export function ZoneDialog({ open, zoneId, onClose, onSaved, onDeleted }: ZoneDialogProps) {
   const { t } = useTranslate('floor');
   const isEditMode = Boolean(zoneId);
   const zoneQuery = useGetZoneByIdQuery(zoneId ?? '', { enabled: open && isEditMode });
   const createMutation = useCreateZoneMutation();
   const updateMutation = useUpdateZoneMutation(zoneId ?? '');
+  const deleteMutation = useDeleteZoneMutation();
   const listTitle = t('pages.zones.title');
   const editTitle = t('pages.zoneEdit.title');
   const createTitle = t('pages.zoneCreate.title');
@@ -77,7 +83,6 @@ export function ZoneDialog({ open, zoneId, onClose, onSaved }: ZoneDialogProps) 
 
     methods.reset({
       name: zoneQuery.data.name,
-      sortOrder: zoneQuery.data.sortOrder,
       isActive: zoneQuery.data.isActive,
     });
   }, [isEditMode, methods, open, zoneQuery.data]);
@@ -104,19 +109,25 @@ export function ZoneDialog({ open, zoneId, onClose, onSaved }: ZoneDialogProps) 
           ) : (
             <Stack spacing={3} sx={{ pt: 1 }}>
               <RHFTextField<ZoneDialogFormInput> name="name" label={t('fields.name')} />
-              <RHFTextField<ZoneDialogFormInput> name="sortOrder" label={t('fields.sortOrder')} type="number" />
               <RHFSwitch<ZoneDialogFormInput> name="isActive" label={t('fields.status')} />
             </Stack>
           )}
         </DialogContent>
-        <DialogActions sx={{ px: 3, pb: 3 }}>
-          <Button color="inherit" variant="outlined" onClick={onClose} disabled={methods.formState.isSubmitting}>
-            {t('actions.cancel')}
-          </Button>
-          <Button type="submit" variant="contained" color="black" loading={methods.formState.isSubmitting}>
-            {isEditMode ? t('actions.save') : t('actions.create')}
-          </Button>
-        </DialogActions>
+        <EntityFormActions
+          isDialog
+          isEditMode={isEditMode}
+          isSubmitting={methods.formState.isSubmitting}
+          isDeleting={deleteMutation.isPending}
+          submitLabel={isEditMode ? t('actions.save') : t('actions.create')}
+          deleteTitle={t('dialogs.deleteZone.title')}
+          deleteContent={t('dialogs.deleteZone.description', { name: zoneQuery.data?.name ?? '' })}
+          onCancel={onClose}
+          onDelete={async () => {
+            if (!zoneId) return;
+            await deleteMutation.mutateAsync(zoneId);
+            (onDeleted ?? onClose)();
+          }}
+        />
       </Form>
     </Dialog>
   );

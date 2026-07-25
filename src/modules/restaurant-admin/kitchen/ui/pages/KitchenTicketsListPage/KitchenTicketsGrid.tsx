@@ -21,7 +21,7 @@ import { Iconify } from 'shared/ui/Iconify';
 import { formatOrderNumberCellValue, OrderNumberCell } from 'shared/ui/OrderNumberCell';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 import { formatHallDisplayName } from 'shared/utils/format-hall-display';
-import { formatDateTime as formatTashkentDateTime } from 'shared/utils/format-time';
+import { formatDateTime } from 'shared/utils/format-time';
 
 import { useGetKitchenPrepStationsQuery, useGetKitchenTicketsQuery } from '../../../application';
 
@@ -30,14 +30,6 @@ import {
   type KitchenTicketsGridFilters,
   KitchenTicketsGridToolbar,
 } from './KitchenTicketsGridToolbar';
-
-function formatDateTime(value?: string | null) {
-  if (!value) {
-    return '-';
-  }
-
-  return formatTashkentDateTime(value, 'DD.MM.YYYY HH:mm');
-}
 
 function getStatusColor(status: KitchenTicketStatus) {
   switch (status) {

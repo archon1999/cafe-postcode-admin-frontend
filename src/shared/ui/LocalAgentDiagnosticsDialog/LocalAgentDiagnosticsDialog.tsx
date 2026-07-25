@@ -12,6 +12,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import { useTranslate } from 'app/providers/locales';
+import { formatDateTime } from 'shared/utils/format-time';
 
 type ChipColor = 'default' | 'success' | 'warning' | 'error' | 'secondary';
 
@@ -91,13 +92,6 @@ function Detail({ label, value }: { label: string; value: string }) {
       </Typography>
     </Stack>
   );
-}
-
-function formatDate(value: string | undefined, fallback: string) {
-  if (!value) return fallback;
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
-  return new Intl.DateTimeFormat(undefined, { dateStyle: 'short', timeStyle: 'medium' }).format(date);
 }
 
 function componentStatus(
@@ -196,11 +190,15 @@ export function LocalAgentDiagnosticsDialog({
               />
               <Detail
                 label={t('setup.agentMonitoring.lastSuccess')}
-                value={formatDate(diagnostics.sync.lastSuccessAt, t('setup.agentMonitoring.noData'))}
+                value={formatDateTime(diagnostics.sync.lastSuccessAt, {
+                  emptyResult: t('setup.agentMonitoring.noData'),
+                })}
               />
               <Detail
                 label={t('setup.agentMonitoring.lastAttempt')}
-                value={formatDate(diagnostics.sync.lastAttemptAt, t('setup.agentMonitoring.noData'))}
+                value={formatDateTime(diagnostics.sync.lastAttemptAt, {
+                  emptyResult: t('setup.agentMonitoring.noData'),
+                })}
               />
               <Detail label={t('setup.agentMonitoring.pending')} value={String(diagnostics.sync.pendingOutbox ?? 0)} />
               <Detail label={t('setup.agentMonitoring.failed')} value={String(diagnostics.sync.failedOutbox ?? 0)} />

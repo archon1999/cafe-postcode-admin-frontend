@@ -5,17 +5,19 @@ import Popover from '@mui/material/Popover';
 import { alpha, useTheme } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { DateField } from '@mui/x-date-pickers/DateField';
 import { enUS } from 'date-fns/locale/en-US';
 import { ru } from 'date-fns/locale/ru';
 import { uz } from 'date-fns/locale/uz';
 import { uzCyrl } from 'date-fns/locale/uz-Cyrl';
-import { useEffect, useMemo, useState, type ChangeEvent, type MouseEvent } from 'react';
+import { useEffect, useMemo, useState, type MouseEvent } from 'react';
 import { DayPicker, TZDate, type DateRange } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 
 import { useTranslate } from 'app/providers/locales';
 import { Iconify } from 'shared/ui/Iconify';
 import { TASHKENT_TIMEZONE, toTashkentCalendarDayjs } from 'shared/utils/dayjs';
+import { FORMAT_PATTERNS, formatDate } from 'shared/utils/format-time';
 
 import {
   createCustomRangeState,
@@ -41,9 +43,11 @@ const MIN_MONTH = new TZDate(2020, 0, 1, TASHKENT_TIMEZONE);
 const MAX_MONTH = new TZDate(2100, 11, 31, TASHKENT_TIMEZONE);
 const MIN_DATE_VALUE = '2020-01-01';
 const MAX_DATE_VALUE = '2100-12-31';
+const MIN_DATE = toTashkentCalendarDayjs(MIN_DATE_VALUE, 'YYYY-MM-DD');
+const MAX_DATE = toTashkentCalendarDayjs(MAX_DATE_VALUE, 'YYYY-MM-DD');
 
 function formatDisplayDate(value: string) {
-  return toTashkentCalendarDayjs(value, 'YYYY-MM-DD').format('DD.MM.YYYY');
+  return formatDate(value);
 }
 
 function toRangePickerDate(value: string) {
@@ -150,8 +154,7 @@ export function ReportsDateRangePicker({
     if (nextRange.to) commitCustomRange(nextRange.from, nextRange.to);
   };
 
-  const handleStartDateChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const nextStartDate = event.target.value;
+  const handleStartDateChange = (nextStartDate: string) => {
     if (!isValidReportsDate(nextStartDate)) return;
     const currentRangeState = createCustomRangeState(draftStartDate || startDate, draftEndDate || endDate);
     const nextRangeState = updateRangeStart(currentRangeState, nextStartDate);
@@ -159,8 +162,7 @@ export function ReportsDateRangePicker({
     onRangeChange(nextRangeState.startDate, nextRangeState.endDate);
   };
 
-  const handleEndDateChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const nextEndDate = event.target.value;
+  const handleEndDateChange = (nextEndDate: string) => {
     if (!isValidReportsDate(nextEndDate)) return;
     const currentRangeState = createCustomRangeState(draftStartDate || startDate, draftEndDate || endDate);
     const nextRangeState = updateRangeEnd(currentRangeState, nextEndDate);
@@ -283,23 +285,29 @@ export function ReportsDateRangePicker({
                 gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
                 gap: 2,
               }}>
-              <TextField
+              <DateField
                 size="small"
-                type="date"
                 label={t('dateRangePicker.from')}
-                value={draftStartDate}
-                onChange={handleStartDateChange}
-                InputLabelProps={{ shrink: true }}
-                inputProps={{ min: MIN_DATE_VALUE, max: MAX_DATE_VALUE }}
+                value={draftStartDate ? toTashkentCalendarDayjs(draftStartDate, 'YYYY-MM-DD') : null}
+                onChange={(value) => {
+                  if (value?.isValid()) handleStartDateChange(value.format('YYYY-MM-DD'));
+                }}
+                format={FORMAT_PATTERNS.date}
+                minDate={MIN_DATE}
+                maxDate={MAX_DATE}
+                timezone={TASHKENT_TIMEZONE}
               />
-              <TextField
+              <DateField
                 size="small"
-                type="date"
                 label={t('dateRangePicker.to')}
-                value={draftEndDate}
-                onChange={handleEndDateChange}
-                InputLabelProps={{ shrink: true }}
-                inputProps={{ min: MIN_DATE_VALUE, max: MAX_DATE_VALUE }}
+                value={draftEndDate ? toTashkentCalendarDayjs(draftEndDate, 'YYYY-MM-DD') : null}
+                onChange={(value) => {
+                  if (value?.isValid()) handleEndDateChange(value.format('YYYY-MM-DD'));
+                }}
+                format={FORMAT_PATTERNS.date}
+                minDate={MIN_DATE}
+                maxDate={MAX_DATE}
+                timezone={TASHKENT_TIMEZONE}
               />
             </Box>
           </Box>

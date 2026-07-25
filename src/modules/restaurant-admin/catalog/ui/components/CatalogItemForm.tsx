@@ -1,7 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useEffect, useState } from 'react';
@@ -9,11 +7,12 @@ import { useForm } from 'react-hook-form';
 
 import { useTranslate } from 'app/providers/locales';
 import type { CatalogImageSource, CatalogItem, CatalogItemPayload } from 'shared/api/admin-types';
-import { FormActions } from 'shared/ui/FormActions';
+import { EntityFormActions } from 'shared/ui/EntityFormActions';
 import { Form } from 'shared/ui/HookForm';
 
 import {
   useCreateCatalogItemMutation,
+  useDeleteCatalogItemMutation,
   useGetCatalogCategoriesQuery,
   useGetMxikDetailsQuery,
   useGetCatalogModifierGroupsQuery,
@@ -34,6 +33,7 @@ type CatalogItemFormProps = {
   item?: CatalogItem | null;
   defaultCategoryId?: string | null;
   onCancel?: () => void;
+  onDeleted?: () => void;
   onSuccess?: (item: CatalogItem) => void;
 };
 
@@ -56,17 +56,18 @@ function CatalogItemFormInner({
   item,
   defaultCategoryId,
   onCancel,
+  onDeleted,
   onSuccess,
   isDialog,
 }: CatalogItemFormProps & { isDialog: boolean }) {
   const { t, currentLang } = useTranslate('catalog');
-  const { t: tCommon } = useTranslate('common');
   const isEditMode = Boolean(item?.id);
   const [mxikImageUrl, setMxikImageUrl] = useState<string | null>(null);
   const categoriesQuery = useGetCatalogCategoriesQuery();
   const modifierGroupsQuery = useGetCatalogModifierGroupsQuery();
   const createMutation = useCreateCatalogItemMutation();
   const updateMutation = useUpdateCatalogItemMutation(item?.id ?? '');
+  const deleteMutation = useDeleteCatalogItemMutation();
   const methods = useForm<CatalogItemFormInput, unknown, CatalogItemFormValues>({
     resolver: zodResolver(catalogItemFormSchema),
     defaultValues,
@@ -209,14 +210,21 @@ function CatalogItemFormInner({
       <Form methods={methods} onSubmit={onSubmit}>
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>{fields}</DialogContent>
-        <DialogActions sx={{ px: 3, pb: 3 }}>
-          <Button color="inherit" variant="outlined" onClick={onCancel} disabled={isSubmitting}>
-            {tCommon('actions.cancel')}
-          </Button>
-          <Button type="submit" variant="contained" color="black" loading={isSubmitting}>
-            {isEditMode ? t('actions.save') : t('actions.create')}
-          </Button>
-        </DialogActions>
+        <EntityFormActions
+          isDialog
+          isEditMode={isEditMode}
+          isSubmitting={isSubmitting}
+          isDeleting={deleteMutation.isPending}
+          submitLabel={isEditMode ? t('actions.save') : t('actions.create')}
+          deleteTitle={t('dialogs.deleteItem.title')}
+          deleteContent={t('dialogs.deleteItem.description', { name: item?.name ?? '' })}
+          onCancel={onCancel}
+          onDelete={async () => {
+            if (!item) return;
+            await deleteMutation.mutateAsync(item.id);
+            (onDeleted ?? onCancel)?.();
+          }}
+        />
       </Form>
     );
   }
@@ -225,10 +233,20 @@ function CatalogItemFormInner({
     <Card sx={{ p: 3 }}>
       <Form methods={methods} onSubmit={onSubmit}>
         {fields}
-        <FormActions
+        <EntityFormActions
+          isDialog={false}
+          isEditMode={isEditMode}
           isSubmitting={isSubmitting}
+          isDeleting={deleteMutation.isPending}
           submitLabel={isEditMode ? t('actions.save') : t('actions.create')}
+          deleteTitle={t('dialogs.deleteItem.title')}
+          deleteContent={t('dialogs.deleteItem.description', { name: item?.name ?? '' })}
           onCancel={onCancel}
+          onDelete={async () => {
+            if (!item) return;
+            await deleteMutation.mutateAsync(item.id);
+            (onDeleted ?? onCancel)?.();
+          }}
         />
       </Form>
     </Card>

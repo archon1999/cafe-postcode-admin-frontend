@@ -13,13 +13,11 @@ import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { RouterPathHelper } from 'app/routes';
 import type { AdminOrderItemNote } from 'shared/api/admin-types';
 import { DEFAULT_PAGINATION_MODEL, DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
-import { useRouter } from 'shared/hooks/router';
-import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState, withDetailLink } from 'shared/ui/CustomDataGrid';
-import { Iconify } from 'shared/ui/Iconify';
+import { DataGrid, DataGridEmptyState, withDetailLink } from 'shared/ui/CustomDataGrid';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
+import { formatDateTime } from 'shared/utils/format-time';
 
 import { useGetOrderItemNotesQuery } from '../../../application';
-import { formatDateTime } from '../../lib/presenters';
 
 import {
   DEFAULT_ORDER_ITEM_NOTES_GRID_FILTERS,
@@ -29,8 +27,6 @@ import {
 
 export function OrderItemNotesGrid() {
   const { t, currentLang } = useTranslate('orders');
-  const { t: tCommon } = useTranslate('common');
-  const router = useRouter();
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_PAGINATION_MODEL);
   const [filters, setFilters] = useState<OrderItemNotesGridFilters>(DEFAULT_ORDER_ITEM_NOTES_GRID_FILTERS);
@@ -78,23 +74,8 @@ export function OrderItemNotesGrid() {
         flex: 0.7,
         valueGetter: (_v, row) => formatDateTime(row.createdAt),
       },
-      {
-        type: 'actions',
-        field: 'actions',
-        headerName: tCommon('actions.title'),
-        minWidth: 90,
-        getActions: (params) => [
-          <CustomGridActionsCellItem
-            actionKind="view"
-            key="view"
-            label={tCommon('labels.details')}
-            icon={<Iconify icon="solar:eye-bold" />}
-            href={RouterPathHelper.orderItemNoteView(params.row.id)}
-          />,
-        ],
-      },
     ],
-    [t, tCommon],
+    [t],
   );
 
   return (
@@ -119,7 +100,6 @@ export function OrderItemNotesGrid() {
         columnVisibilityModel={columnVisibilityModel}
         onColumnVisibilityModelChange={setColumnVisibilityModel}
         disableColumnMenu
-        onRowClick={(params) => router.push(RouterPathHelper.orderItemNoteView(params.row.id))}
         slots={{
           noRowsOverlay: () => (
             <DataGridEmptyState

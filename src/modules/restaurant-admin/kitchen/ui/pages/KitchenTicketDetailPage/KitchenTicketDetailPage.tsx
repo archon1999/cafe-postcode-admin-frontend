@@ -16,17 +16,9 @@ import { LabelRowWithIcon } from 'shared/ui/LabelRowWithIcon/LabelRowWithIcon';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 import { formatHallDisplayName } from 'shared/utils/format-hall-display';
 import { formatMoney } from 'shared/utils/format-money';
-import { formatDateTime as formatTashkentDateTime } from 'shared/utils/format-time';
+import { formatDateTime } from 'shared/utils/format-time';
 
 import { useGetKitchenTicketByIdQuery } from '../../../application';
-
-function formatDateTime(value?: string | null) {
-  if (!value) {
-    return '-';
-  }
-
-  return formatTashkentDateTime(value, 'DD.MM.YYYY HH:mm');
-}
 
 const KitchenTicketDetailPage = () => {
   const { t } = useTranslate('kitchen');

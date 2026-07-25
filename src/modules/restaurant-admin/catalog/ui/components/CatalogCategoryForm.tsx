@@ -1,8 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import MenuItem from '@mui/material/MenuItem';
@@ -13,11 +11,12 @@ import { z } from 'zod';
 
 import { useTranslate } from 'app/providers/locales';
 import type { CatalogCategory, CatalogCategoryPayload, CatalogImageSource } from 'shared/api/admin-types';
-import { FormActions } from 'shared/ui/FormActions';
+import { EntityFormActions } from 'shared/ui/EntityFormActions';
 import { Form, RHFSelect, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
 
 import {
   useCreateCatalogCategoryMutation,
+  useDeleteCatalogCategoryMutation,
   useGetPrepStationsQuery,
   useUpdateCatalogCategoryMutation,
 } from '../../application';
@@ -49,7 +48,6 @@ const categoryFormSchema = z.object({
   prepStation: z.string().optional(),
   clearImage: z.boolean(),
   restoreMxikImage: z.boolean(),
-  sortOrder: z.coerce.number().int().min(0),
   isActive: z.boolean(),
 });
 
@@ -58,6 +56,7 @@ export type CategoryFormValues = z.infer<typeof categoryFormSchema>;
 type CatalogCategoryFormProps = {
   category?: CatalogCategory | null;
   onCancel?: () => void;
+  onDeleted?: () => void;
   onSuccess?: (category: CatalogCategory) => void;
 };
 
@@ -69,7 +68,6 @@ const defaultValues: CategoryFormValues = {
   prepStation: '',
   clearImage: false,
   restoreMxikImage: false,
-  sortOrder: 0,
   isActive: true,
 };
 
@@ -80,6 +78,7 @@ function getMxikImageLang(lang: string) {
 function CatalogCategoryFormInner({
   category,
   onCancel,
+  onDeleted,
   onSuccess,
   isDialog,
 }: CatalogCategoryFormProps & { isDialog: boolean }) {
@@ -90,6 +89,7 @@ function CatalogCategoryFormInner({
 
   const createMutation = useCreateCatalogCategoryMutation();
   const updateMutation = useUpdateCatalogCategoryMutation(category?.id ?? '');
+  const deleteMutation = useDeleteCatalogCategoryMutation();
   const prepStationsQuery = useGetPrepStationsQuery();
 
   const methods = useForm<CategoryFormValues>({
@@ -111,7 +111,6 @@ function CatalogCategoryFormInner({
       prepStation: category?.prepStation ?? '',
       clearImage: false,
       restoreMxikImage: false,
-      sortOrder: category?.sortOrder ?? 0,
       isActive: category?.isActive ?? true,
     });
     setMxikImageUrl(category?.imageSource === 'mxik-cache' ? (category.imageUrl ?? null) : null);
@@ -210,7 +209,6 @@ function CatalogCategoryFormInner({
       prepStation: values.prepStation || null,
       clearImage: values.clearImage,
       restoreMxikImage: values.restoreMxikImage,
-      sortOrder: values.sortOrder,
       isActive: values.isActive,
     };
 
@@ -258,7 +256,6 @@ function CatalogCategoryFormInner({
           placeholder={t('actions.searchMxik')}
           required
         />
-        <RHFTextField<CategoryFormValues> name="sortOrder" label={t('fields.sortOrder')} type="number" />
       </Box>
 
       <RHFSwitch<CategoryFormValues> name="isActive" label={t('fields.status')} />
@@ -270,14 +267,21 @@ function CatalogCategoryFormInner({
       <Form methods={methods} onSubmit={onSubmit}>
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>{fields}</DialogContent>
-        <DialogActions sx={{ px: 3, pb: 3 }}>
-          <Button color="inherit" variant="outlined" onClick={onCancel} disabled={isSubmitting}>
-            {tCommon('actions.cancel')}
-          </Button>
-          <Button type="submit" variant="contained" color="black" loading={isSubmitting}>
-            {isEditMode ? t('actions.save') : t('actions.create')}
-          </Button>
-        </DialogActions>
+        <EntityFormActions
+          isDialog
+          isEditMode={isEditMode}
+          isSubmitting={isSubmitting}
+          isDeleting={deleteMutation.isPending}
+          submitLabel={isEditMode ? t('actions.save') : t('actions.create')}
+          deleteTitle={t('dialogs.deleteCategory.title')}
+          deleteContent={t('dialogs.deleteCategory.description', { name: category?.name ?? '' })}
+          onCancel={onCancel}
+          onDelete={async () => {
+            if (!category) return;
+            await deleteMutation.mutateAsync(category.id);
+            (onDeleted ?? onCancel)?.();
+          }}
+        />
       </Form>
     );
   }
@@ -286,10 +290,20 @@ function CatalogCategoryFormInner({
     <Card sx={{ p: 3 }}>
       <Form methods={methods} onSubmit={onSubmit}>
         {fields}
-        <FormActions
+        <EntityFormActions
+          isDialog={false}
+          isEditMode={isEditMode}
           isSubmitting={isSubmitting}
+          isDeleting={deleteMutation.isPending}
           submitLabel={isEditMode ? t('actions.save') : t('actions.create')}
+          deleteTitle={t('dialogs.deleteCategory.title')}
+          deleteContent={t('dialogs.deleteCategory.description', { name: category?.name ?? '' })}
           onCancel={onCancel}
+          onDelete={async () => {
+            if (!category) return;
+            await deleteMutation.mutateAsync(category.id);
+            (onDeleted ?? onCancel)?.();
+          }}
         />
       </Form>
     </Card>

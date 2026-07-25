@@ -33,6 +33,7 @@ const CategoryFormPage = () => {
       <CatalogCategoryFormCard
         category={categoryQuery.data}
         onCancel={() => push(RoutePath.catalogCategoryList)}
+        onDeleted={() => push(RoutePath.catalogCategoryList)}
         onSuccess={() => push(RoutePath.catalogCategoryList)}
       />
     </Content>

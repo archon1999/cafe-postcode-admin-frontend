@@ -16,23 +16,21 @@ import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { RouterPathHelper } from 'app/routes';
 import type { AdminOrder } from 'shared/api/admin-types';
 import { DEFAULT_PAGINATION_MODEL, DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
-import { useRouter } from 'shared/hooks/router';
-import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState, withDetailLink } from 'shared/ui/CustomDataGrid';
-import { Iconify } from 'shared/ui/Iconify';
+import { DataGrid, DataGridEmptyState, withDetailLink } from 'shared/ui/CustomDataGrid';
 import { formatOrderNumberCellValue, OrderNumberCell } from 'shared/ui/OrderNumberCell';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 import { formatHallDisplayName } from 'shared/utils/format-hall-display';
 import { formatMoney } from 'shared/utils/format-money';
+import { formatDateTime } from 'shared/utils/format-time';
 
 import { useGetOrdersQuery } from '../../../application';
-import { formatDateTime, getOrderChannelTranslationKey, getOrderStatusColor } from '../../lib/presenters';
+import { getOrderChannelTranslationKey, getOrderStatusColor } from '../../lib/presenters';
 
 import { DEFAULT_ORDERS_GRID_FILTERS, type OrdersGridFilters, OrdersGridToolbar } from './OrdersGridToolbar';
 
 export const OrdersGrid = () => {
   const { t, currentLang } = useTranslate('orders');
   const { t: tCommon } = useTranslate('common');
-  const router = useRouter();
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_PAGINATION_MODEL);
@@ -131,18 +129,16 @@ export const OrdersGrid = () => {
         valueGetter: (_v, row) => row.cashierName || '-',
       },
       {
-        field: 'hallName',
-        headerName: t('fields.hall'),
-        minWidth: 160,
-        flex: 0.6,
-        valueGetter: (_v, row) => formatHallDisplayName(row.hallName, undefined, tCommon),
-      },
-      {
-        field: 'tableName',
-        headerName: t('fields.table'),
-        minWidth: 140,
-        flex: 0.5,
-        valueGetter: (_v, row) => row.tableName || '-',
+        field: 'hallAndTable',
+        headerName: `${t('fields.hall')} / ${t('fields.table')}`,
+        minWidth: 220,
+        flex: 0.8,
+        sortable: false,
+        valueGetter: (_v, row) => {
+          const hallName = formatHallDisplayName(row.hallName, undefined, tCommon);
+          if (hallName === '-') return row.tableName || '-';
+          return row.tableName ? `${hallName} / ${row.tableName}` : hallName;
+        },
       },
       {
         field: 'closedAt',
@@ -150,21 +146,6 @@ export const OrdersGrid = () => {
         minWidth: 170,
         flex: 0.7,
         valueGetter: (_v, row) => formatDateTime(row.closedAt),
-      },
-      {
-        type: 'actions',
-        field: 'actions',
-        headerName: tCommon('actions.title'),
-        minWidth: 90,
-        getActions: (params) => [
-          <CustomGridActionsCellItem
-            actionKind="view"
-            key="view"
-            label={tCommon('labels.details')}
-            icon={<Iconify icon="solar:eye-bold" />}
-            href={RouterPathHelper.orderView(params.row.id)}
-          />,
-        ],
       },
     ],
     [t, tCommon],
@@ -192,7 +173,6 @@ export const OrdersGrid = () => {
         columnVisibilityModel={columnVisibilityModel}
         onColumnVisibilityModelChange={setColumnVisibilityModel}
         disableColumnMenu
-        onRowClick={(params) => router.push(RouterPathHelper.orderView(params.row.id))}
         slots={{
           noRowsOverlay: () => (
             <DataGridEmptyState

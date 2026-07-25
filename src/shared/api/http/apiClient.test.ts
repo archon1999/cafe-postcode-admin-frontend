@@ -21,6 +21,9 @@ const { postMock } = vi.hoisted(() => ({
 const { putMock } = vi.hoisted(() => ({
   putMock: vi.fn(),
 }));
+const { patchMock } = vi.hoisted(() => ({
+  patchMock: vi.fn(),
+}));
 const { deleteMock } = vi.hoisted(() => ({
   deleteMock: vi.fn(),
 }));
@@ -30,6 +33,7 @@ vi.mock('./axiosInstance.ts', () => ({
     get: getMock,
     post: postMock,
     put: putMock,
+    patch: patchMock,
     delete: deleteMock,
   },
 }));
@@ -56,6 +60,7 @@ afterEach(() => {
   getMock.mockReset();
   postMock.mockReset();
   putMock.mockReset();
+  patchMock.mockReset();
   deleteMock.mockReset();
 });
 
@@ -835,6 +840,7 @@ describe('apiClient hall gateway contract', () => {
     expect(apiClient.getAdminHallConstructor).toBe(adminHallGateway.getAdminHallConstructor);
     expect(apiClient.createAdminHall).toBe(adminHallGateway.createAdminHall);
     expect(apiClient.updateAdminHall).toBe(adminHallGateway.updateAdminHall);
+    expect(apiClient.updateAdminHallSortOrder).toBe(adminHallGateway.updateAdminHallSortOrder);
     expect(apiClient.updateAdminHallConstructor).toBe(adminHallGateway.updateAdminHallConstructor);
     expect(apiClient.deleteAdminHall).toBe(adminHallGateway.deleteAdminHall);
   });
@@ -933,6 +939,7 @@ describe('apiClient zone gateway contract', () => {
     expect(apiClient.getAdminZoneById).toBe(adminZoneGateway.getAdminZoneById);
     expect(apiClient.createAdminZone).toBe(adminZoneGateway.createAdminZone);
     expect(apiClient.updateAdminZone).toBe(adminZoneGateway.updateAdminZone);
+    expect(apiClient.updateAdminZoneSortOrder).toBe(adminZoneGateway.updateAdminZoneSortOrder);
     expect(apiClient.deleteAdminZone).toBe(adminZoneGateway.deleteAdminZone);
   });
 
@@ -1137,11 +1144,13 @@ describe('apiClient tariff and catalog gateway contracts', () => {
       'getAdminCatalogCategoryById',
       'createAdminCatalogCategory',
       'updateAdminCatalogCategory',
+      'updateAdminCatalogCategorySortOrder',
       'deleteAdminCatalogCategory',
       'getAdminCatalogItems',
       'getAdminCatalogItemById',
       'createAdminCatalogItem',
       'updateAdminCatalogItem',
+      'updateAdminCatalogItemSortOrder',
       'deleteAdminCatalogItem',
     ] as const;
 

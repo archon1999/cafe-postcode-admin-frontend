@@ -54,6 +54,15 @@ export function useDeleteHallMutation() {
   });
 }
 
+export function useReorderHallsMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (halls: Array<{ id: string; sortOrder: number }>) =>
+      Promise.all(halls.map(({ id, sortOrder }) => floorRepository.updateHallSortOrder(id, sortOrder))),
+    onSettled: async () => invalidateQueryKeys(queryClient, [floorKeys.halls()]),
+  });
+}
+
 export function useCreateZoneMutation() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -76,6 +85,15 @@ export function useDeleteZoneMutation() {
   return useMutation({
     mutationFn: (id: string) => floorRepository.deleteZone(id),
     onSuccess: async () => invalidateQueryKeys(queryClient, [floorKeys.zones(), floorKeys.halls()]),
+  });
+}
+
+export function useReorderZonesMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (zones: Array<{ id: string; sortOrder: number }>) =>
+      Promise.all(zones.map(({ id, sortOrder }) => floorRepository.updateZoneSortOrder(id, sortOrder))),
+    onSettled: async () => invalidateQueryKeys(queryClient, [floorKeys.zones()]),
   });
 }
 

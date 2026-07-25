@@ -40,6 +40,18 @@ export function useDeleteCatalogCategoryMutation() {
   });
 }
 
+export function useReorderCatalogCategoriesMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (categories: Array<{ id: string; sortOrder: number }>) =>
+      Promise.all(categories.map(({ id, sortOrder }) => catalogRepository.updateCategorySortOrder(id, sortOrder))),
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: catalogKeys.categories() });
+    },
+  });
+}
+
 export function useCreateCatalogItemMutation() {
   const queryClient = useQueryClient();
 
@@ -69,6 +81,18 @@ export function useDeleteCatalogItemMutation() {
   return useMutation({
     mutationFn: (id: string) => catalogRepository.deleteItem(id),
     onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: catalogKeys.items() });
+    },
+  });
+}
+
+export function useReorderCatalogItemsMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (items: Array<{ id: string; sortOrder: number }>) =>
+      Promise.all(items.map(({ id, sortOrder }) => catalogRepository.updateItemSortOrder(id, sortOrder))),
+    onSettled: async () => {
       await queryClient.invalidateQueries({ queryKey: catalogKeys.items() });
     },
   });

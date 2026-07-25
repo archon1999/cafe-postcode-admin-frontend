@@ -22,7 +22,7 @@
       "title": "To'lov #{{orderNumber}}"
     },
     "receipts": {
-      "title": "Fiscal Cheklar"
+      "title": "Cheklar"
     },
     "receiptDetail": {
       "title": "Chek #{{orderNumber}}"

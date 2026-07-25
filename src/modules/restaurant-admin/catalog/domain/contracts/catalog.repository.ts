@@ -13,11 +13,13 @@ export interface CatalogRepository {
   getCategoryById(id: string): Promise<CatalogCategory>;
   createCategory(payload: CatalogCategoryPayload): Promise<CatalogCategory>;
   updateCategory(id: string, payload: CatalogCategoryPayload): Promise<CatalogCategory>;
+  updateCategorySortOrder(id: string, sortOrder: number): Promise<CatalogCategory>;
   deleteCategory(id: string): Promise<void>;
   getItems(): Promise<CatalogItem[]>;
   getItemById(id: string): Promise<CatalogItem>;
   createItem(payload: CatalogItemPayload): Promise<CatalogItem>;
   updateItem(id: string, payload: CatalogItemPayload): Promise<CatalogItem>;
+  updateItemSortOrder(id: string, sortOrder: number): Promise<CatalogItem>;
   deleteItem(id: string): Promise<void>;
   getModifierGroups(): Promise<CatalogModifierGroup[]>;
   getModifierGroupById(id: string): Promise<CatalogModifierGroup>;

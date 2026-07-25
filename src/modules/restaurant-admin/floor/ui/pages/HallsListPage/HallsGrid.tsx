@@ -62,13 +62,6 @@ export function HallsGrid() {
         ),
       },
       {
-        field: 'sortOrder',
-        headerName: t('fields.sortOrder'),
-        minWidth: 120,
-        flex: 0.4,
-        valueGetter: (_v, row) => row.sortOrder ?? 0,
-      },
-      {
         field: 'isActive',
         headerName: t('fields.status'),
         minWidth: 120,

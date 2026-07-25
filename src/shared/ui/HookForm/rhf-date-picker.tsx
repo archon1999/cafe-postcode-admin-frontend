@@ -9,6 +9,7 @@ import type { Dayjs } from 'dayjs';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import dayjs, { TASHKENT_TIMEZONE, toTashkentCalendarDayjs } from 'shared/utils/dayjs';
+import { FORMAT_PATTERNS } from 'shared/utils/format-time';
 
 type DateInput = Dayjs | Date | string | number | null | undefined;
 
@@ -60,6 +61,7 @@ export function RHFDatePicker({ name, slotProps, ...other }: PickerProps<DatePic
           }}
           timezone={TASHKENT_TIMEZONE}
           {...other}
+          format={FORMAT_PATTERNS.date}
         />
       )}
     />
@@ -100,6 +102,8 @@ export function RHFTimePicker({ name, slotProps, ...other }: PickerProps<TimePic
           }}
           timezone={TASHKENT_TIMEZONE}
           {...other}
+          ampm={false}
+          format={FORMAT_PATTERNS.time}
         />
       )}
     />
@@ -140,6 +144,8 @@ export function RHFDateTimePicker({ name, slotProps, ...other }: PickerProps<Dat
           }}
           timezone={TASHKENT_TIMEZONE}
           {...other}
+          ampm={false}
+          format={FORMAT_PATTERNS.dateTime}
         />
       )}
     />

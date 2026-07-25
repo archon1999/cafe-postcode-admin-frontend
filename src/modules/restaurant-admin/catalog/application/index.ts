@@ -5,6 +5,8 @@ export {
   useDeleteCatalogCategoryMutation,
   useDeleteCatalogItemMutation,
   useDeleteCatalogModifierGroupMutation,
+  useReorderCatalogCategoriesMutation,
+  useReorderCatalogItemsMutation,
   useUpdateCatalogCategoryMutation,
   useUpdateCatalogItemMutation,
   useUpdateCatalogModifierGroupMutation,

@@ -1,1 +1,1 @@
-export { default } from '../ZonesListPage/ZonesListPage';
+export { default } from '../HallsListPage/HallsListPage';

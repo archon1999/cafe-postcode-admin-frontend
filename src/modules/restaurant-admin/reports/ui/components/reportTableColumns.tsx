@@ -16,7 +16,7 @@ import type {
 } from 'shared/api/admin-types';
 import { Iconify } from 'shared/ui/Iconify';
 import { formatMoney } from 'shared/utils/format-money';
-import { formatDateTime as formatTashkentDateTime } from 'shared/utils/format-time';
+import { formatDateTime } from 'shared/utils/format-time';
 
 export type ReportTableRow =
   | AdminSalesReportRow
@@ -39,14 +39,6 @@ export function parseReceiptStatus(value: string | undefined): AdminReceiptStatu
     default:
       throw new Error(`Unsupported receipt status: ${value}`);
   }
-}
-
-function formatDateTime(value?: string | null) {
-  if (!value) {
-    return '-';
-  }
-
-  return formatTashkentDateTime(value, 'DD.MM.YYYY HH:mm');
 }
 
 function castColumns<Row extends ReportTableRow>(columns: GridColDef<Row>[]) {

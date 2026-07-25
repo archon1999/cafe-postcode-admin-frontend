@@ -12,6 +12,7 @@ import { RoutePath } from 'app/routes';
 import type { CatalogCategory, CatalogItem } from 'shared/api/admin-types';
 import { EmptyContent } from 'shared/ui/EmptyContent';
 import { Iconify } from 'shared/ui/Iconify';
+import { SortableGrid } from 'shared/ui/SortableGrid';
 
 import { CatalogBrowserProductCard } from './CatalogBrowserProductCard';
 
@@ -23,6 +24,8 @@ type CatalogBrowserProductsPanelProps = {
   isRefreshing: boolean;
   onCreateProduct: () => void;
   onEditProduct: (product: CatalogItem) => void;
+  isReordering: boolean;
+  onReorder: (products: CatalogItem[]) => Promise<unknown>;
 };
 
 export function CatalogBrowserProductsPanel({
@@ -33,6 +36,8 @@ export function CatalogBrowserProductsPanel({
   isRefreshing,
   onCreateProduct,
   onEditProduct,
+  isReordering,
+  onReorder,
 }: CatalogBrowserProductsPanelProps) {
   const { t } = useTranslate('catalog');
   const { disabled: isCreateProductDisabled } = useAdminCreateAccess(RoutePath.catalogItemCreate);
@@ -83,20 +88,19 @@ export function CatalogBrowserProductsPanel({
             ))}
           </Box>
         ) : products.length ? (
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: {
-                xs: '1fr',
-                sm: 'repeat(2, minmax(0, 1fr))',
-                xl: 'repeat(4, minmax(0, 1fr))',
-              },
-              gap: 2,
-            }}>
-            {products.map((product) => (
-              <CatalogBrowserProductCard key={product.id} product={product} onEdit={onEditProduct} />
-            ))}
-          </Box>
+          <SortableGrid
+            items={products}
+            gridTemplateColumns={{
+              xs: '1fr',
+              sm: 'repeat(2, minmax(0, 1fr))',
+              xl: 'repeat(4, minmax(0, 1fr))',
+            }}
+            gap={2}
+            dragLabel={t('labels.dragToReorder')}
+            disabled={isReordering}
+            onReorder={onReorder}
+            renderItem={(product) => <CatalogBrowserProductCard product={product} onEdit={onEditProduct} />}
+          />
         ) : (
           <EmptyContent
             filled

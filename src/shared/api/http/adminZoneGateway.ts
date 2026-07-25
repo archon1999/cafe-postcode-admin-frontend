@@ -36,6 +36,12 @@ export const adminZoneGateway = {
       .then((response) => response.data);
   },
 
+  updateAdminZoneSortOrder(id: string, sortOrder: number) {
+    return instance
+      .patch<AdminZoneOrCabin>(`/api/v1/admin/floor/zones/${id}/`, { sortOrder })
+      .then((response) => response.data);
+  },
+
   deleteAdminZone(id: string) {
     return instance.delete<void>(`/api/v1/admin/floor/zones/${id}/`).then((response) => response.data);
   },

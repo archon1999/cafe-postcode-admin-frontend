@@ -67,7 +67,6 @@ export function CategoriesGrid() {
         flex: 1,
         valueGetter: (_value, row) => row.mxikName || '-',
       },
-      { field: 'sortOrder', headerName: t('fields.sortOrder'), minWidth: 120, flex: 0.4 },
       {
         field: 'isActive',
         headerName: t('fields.status'),

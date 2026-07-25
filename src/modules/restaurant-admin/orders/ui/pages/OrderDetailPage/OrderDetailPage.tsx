@@ -16,10 +16,10 @@ import { LabelRowWithIcon } from 'shared/ui/LabelRowWithIcon/LabelRowWithIcon';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 import { formatHallDisplayName } from 'shared/utils/format-hall-display';
 import { formatMoney } from 'shared/utils/format-money';
+import { formatDateTime } from 'shared/utils/format-time';
 
 import { useGetOrderByIdQuery } from '../../../application';
 import {
-  formatDateTime,
   getOrderChannelTranslationKey,
   getOrderStatusColor,
   getPaymentMethodTranslationKey,

@@ -43,6 +43,12 @@ export const adminCatalogGateway = {
       .then((response) => response.data);
   },
 
+  updateAdminCatalogCategorySortOrder(id: string, sortOrder: number) {
+    return instance
+      .patch<CatalogCategory>(`/api/v1/admin/catalog/categories/${id}/`, { sortOrder })
+      .then((response) => response.data);
+  },
+
   deleteAdminCatalogCategory(id: string) {
     return instance.delete<void>(`/api/v1/admin/catalog/categories/${id}/`).then((response) => response.data);
   },
@@ -73,6 +79,12 @@ export const adminCatalogGateway = {
 
   updateAdminCatalogItem(id: string, payload: CatalogItemPayload | FormData) {
     return instance.put<CatalogItem>(`/api/v1/admin/catalog/items/${id}/`, payload).then((response) => response.data);
+  },
+
+  updateAdminCatalogItemSortOrder(id: string, sortOrder: number) {
+    return instance
+      .patch<CatalogItem>(`/api/v1/admin/catalog/items/${id}/`, { sortOrder })
+      .then((response) => response.data);
   },
 
   deleteAdminCatalogItem(id: string) {

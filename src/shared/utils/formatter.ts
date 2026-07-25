@@ -1,3 +1,5 @@
+import { formatDate } from './format-time';
+
 type UnknownRecord = Record<string, unknown>;
 
 const isRecord = (value: unknown): value is UnknownRecord => typeof value === 'object' && value !== null;
@@ -60,12 +62,8 @@ export const formatValue = (field: string, value: unknown): string => {
   }
 
   if (field.includes('_date') || field === 'birth_date' || field === 'hired_date') {
-    try {
-      if (typeof value !== 'string' && typeof value !== 'number') return String(value);
-      return new Date(value).toLocaleDateString('en-GB');
-    } catch {
-      return String(value);
-    }
+    if (typeof value !== 'string' && typeof value !== 'number') return String(value);
+    return formatDate(value, { invalidResult: String(value) });
   }
 
   if (

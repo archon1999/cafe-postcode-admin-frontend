@@ -86,7 +86,7 @@ const MyRestaurantGeneralPage = () => {
         : null;
   const durationText = billingPeriodLabel
     ? restaurant.expiresOn
-      ? `${billingPeriodLabel} · ${formatDate(restaurant.expiresOn, 'DD.MM.YYYY')}`
+      ? `${billingPeriodLabel} · ${formatDate(restaurant.expiresOn)}`
       : billingPeriodLabel
     : t('labels.notSelected');
 
@@ -113,7 +113,7 @@ const MyRestaurantGeneralPage = () => {
     [t('fields.social'), restaurant.social || t('labels.notSelected')],
     [
       tPlatform('fields.activatedAt'),
-      restaurant.activatedAt ? formatDateTime(restaurant.activatedAt, 'DD.MM.YYYY HH:mm') : t('labels.notSelected'),
+      restaurant.activatedAt ? formatDateTime(restaurant.activatedAt) : t('labels.notSelected'),
     ],
     [t('fields.tariff'), tariffName],
     [tPlatform('fields.billingPeriod'), durationText],

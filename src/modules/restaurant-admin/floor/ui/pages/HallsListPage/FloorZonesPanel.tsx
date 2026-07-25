@@ -10,57 +10,55 @@ import Typography from '@mui/material/Typography';
 import { useAdminCreateAccess } from 'app/layouts/components/admin-scope-access';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath } from 'app/routes';
-import type { CatalogCategory } from 'shared/api/admin-types';
+import type { AdminZoneOrCabin } from 'shared/api/admin-types';
 import { EmptyContent } from 'shared/ui/EmptyContent';
 import { Iconify } from 'shared/ui/Iconify';
 import { SortableGrid } from 'shared/ui/SortableGrid';
 
-import { CatalogBrowserCategoryCard } from './CatalogBrowserCategoryCard';
+import { FloorZoneCard } from './FloorZoneCard';
 
-type CatalogBrowserCategoriesPanelProps = {
-  categories: CatalogCategory[];
-  selectedCategoryId: string | null;
+type FloorZonesPanelProps = {
+  zones: AdminZoneOrCabin[];
+  hallCounts: Map<string, number>;
+  selectedZoneId: string | null;
   isLoading: boolean;
-  onSelectCategory: (categoryId: string) => void;
-  onCreateCategory: () => void;
-  onEditCategory: () => void;
-  canEditCategory: boolean;
   isReordering: boolean;
-  onReorder: (categories: CatalogCategory[]) => Promise<unknown>;
+  onSelectZone: (zoneId: string) => void;
+  onCreateZone: () => void;
+  onEditZone: () => void;
+  onReorder: (zones: AdminZoneOrCabin[]) => Promise<unknown>;
 };
 
-export function CatalogBrowserCategoriesPanel({
-  categories,
-  selectedCategoryId,
+export function FloorZonesPanel({
+  zones,
+  hallCounts,
+  selectedZoneId,
   isLoading,
-  onSelectCategory,
-  onCreateCategory,
-  onEditCategory,
-  canEditCategory,
   isReordering,
+  onSelectZone,
+  onCreateZone,
+  onEditZone,
   onReorder,
-}: CatalogBrowserCategoriesPanelProps) {
-  const { t } = useTranslate('catalog');
-  const { disabled: isCreateCategoryDisabled } = useAdminCreateAccess(RoutePath.catalogCategoryCreate);
+}: FloorZonesPanelProps) {
+  const { t } = useTranslate('floor');
+  const { disabled: isCreateDisabled } = useAdminCreateAccess(RoutePath.floorZoneCreate);
 
   return (
     <Card sx={{ display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden', borderRadius: 0 }}>
       <Box sx={{ px: 2.5, py: 2.25, borderBottom: '1px solid', borderColor: 'divider' }}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1.5}>
-          <Typography variant="h6">{t('pages.categories.title')}</Typography>
-
+          <Typography variant="h6">{t('pages.zones.title')}</Typography>
           <Stack direction="row" spacing={0.5}>
-            <Tooltip title={t('actions.createCategory')}>
+            <Tooltip title={t('actions.createZone')}>
               <span>
-                <IconButton onClick={onCreateCategory} disabled={isCreateCategoryDisabled}>
+                <IconButton onClick={onCreateZone} disabled={isCreateDisabled}>
                   <Iconify icon="mingcute:add-line" width={20} />
                 </IconButton>
               </span>
             </Tooltip>
-
             <Tooltip title={t('actions.edit')}>
               <span>
-                <IconButton onClick={onEditCategory} disabled={!canEditCategory}>
+                <IconButton onClick={onEditZone} disabled={!selectedZoneId}>
                   <Iconify icon="solar:pen-bold" width={18} />
                 </IconButton>
               </span>
@@ -71,41 +69,42 @@ export function CatalogBrowserCategoriesPanel({
 
       <Box sx={{ p: 2.5, flex: 1, minHeight: 0, overflowY: 'auto' }}>
         {isLoading ? (
-          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 1.5 }}>
-            {Array.from({ length: 9 }).map((_, index) => (
-              <Skeleton key={index} variant="rounded" height={208} />
+          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 1.5 }}>
+            {Array.from({ length: 6 }).map((_, index) => (
+              <Skeleton key={index} variant="rounded" height={152} />
             ))}
           </Box>
-        ) : categories.length ? (
+        ) : zones.length ? (
           <SortableGrid
-            items={categories}
-            gridTemplateColumns={{ xs: 'repeat(2, minmax(0, 1fr))', sm: 'repeat(3, minmax(0, 1fr))' }}
+            items={zones}
+            gridTemplateColumns="repeat(2, minmax(0, 1fr))"
             gap={1.5}
             dragLabel={t('labels.dragToReorder')}
             disabled={isReordering}
             onReorder={onReorder}
-            renderItem={(category) => (
-              <CatalogBrowserCategoryCard
-                category={category}
-                isSelected={category.id === selectedCategoryId}
-                onSelect={onSelectCategory}
+            renderItem={(zone) => (
+              <FloorZoneCard
+                zone={zone}
+                hallCount={hallCounts.get(zone.id) ?? 0}
+                isSelected={zone.id === selectedZoneId}
+                onSelect={onSelectZone}
               />
             )}
           />
         ) : (
           <EmptyContent
             filled
-            title={t('empty.categories.noData.title')}
-            description={t('empty.categories.noData.description')}
+            title={t('empty.zones.noData.title')}
+            description={t('empty.zones.noData.description')}
             action={
               <Button
                 variant="contained"
                 color="black"
                 startIcon={<Iconify icon="mingcute:add-line" />}
-                disabled={isCreateCategoryDisabled}
-                onClick={onCreateCategory}
+                disabled={isCreateDisabled}
+                onClick={onCreateZone}
                 sx={{ mt: 3 }}>
-                {t('actions.createCategory')}
+                {t('actions.createZone')}
               </Button>
             }
           />

@@ -94,7 +94,7 @@ function CustomerOverviewSection({ restaurant }: { restaurant: AdminRestaurantDe
           <SummaryField label={t('fields.tariff')}>{tariffName}</SummaryField>
           <SummaryField label={tPlatform('fields.billingPeriod')}>{billingPeriodLabel}</SummaryField>
           <SummaryField label={tPlatform('fields.expiresOn')}>
-            {restaurant.expiresOn ? formatDate(restaurant.expiresOn, 'DD.MM.YYYY') : t('labels.notSelected')}
+            {restaurant.expiresOn ? formatDate(restaurant.expiresOn) : t('labels.notSelected')}
           </SummaryField>
           <SummaryField label={t('fields.address')} fullWidth>
             {restaurant.address || t('labels.notSelected')}
@@ -237,9 +237,7 @@ function BalanceSection({ restaurant, onTopUp }: { restaurant: AdminRestaurantDe
               : t('labels.notSelected')}
           </SummaryField>
           <SummaryField label={t('fields.nextChargeOn')}>
-            {restaurant.balance.nextChargeOn
-              ? formatDate(restaurant.balance.nextChargeOn, 'DD.MM.YYYY')
-              : t('labels.notSelected')}
+            {restaurant.balance.nextChargeOn ? formatDate(restaurant.balance.nextChargeOn) : t('labels.notSelected')}
           </SummaryField>
           <SummaryField label={t('fields.nextPeriodStatus')}>
             <Chip
@@ -251,9 +249,7 @@ function BalanceSection({ restaurant, onTopUp }: { restaurant: AdminRestaurantDe
             />
           </SummaryField>
           <SummaryField label={t('fields.lastTopUpAt')}>
-            {restaurant.balance.lastTopUpAt
-              ? formatDateTime(restaurant.balance.lastTopUpAt, 'DD.MM.YYYY HH:mm')
-              : t('labels.notSelected')}
+            {restaurant.balance.lastTopUpAt ? formatDateTime(restaurant.balance.lastTopUpAt) : t('labels.notSelected')}
           </SummaryField>
         </Box>
       </Stack>
@@ -297,7 +293,7 @@ function BalanceHistorySection({
             <TableBody>
               {transactions.map((transaction) => (
                 <TableRow key={transaction.id}>
-                  <TableCell>{formatDateTime(transaction.createdAt, 'DD.MM.YYYY HH:mm')}</TableCell>
+                  <TableCell>{formatDateTime(transaction.createdAt)}</TableCell>
                   <TableCell>
                     {transaction.kind === 'renewal_charge'
                       ? t('labels.balanceTransactionKinds.renewalCharge')

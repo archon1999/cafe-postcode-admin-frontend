@@ -34,6 +34,7 @@ import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { FilterSelect } from 'shared/ui/Filters';
 import { TableSearchInput } from 'shared/ui/TableSearchInput';
 import { formatMoney } from 'shared/utils/format-money';
+import { formatDateTime } from 'shared/utils/format-time';
 
 import {
   createCustomRangeState,
@@ -54,10 +55,6 @@ import {
 type CategoryFormState = { id?: string; name: string };
 const EMPTY_EXPENSE_CATEGORIES: AdminExpenseCategory[] = [];
 const EMPTY_CASH_EXPENSES: AdminCashExpense[] = [];
-
-function formatDateTime(value: string, locale: string) {
-  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value));
-}
 
 function ExpenseEmptyState({ icon, title, description }: { icon: string; title: string; description: string }) {
   return (
@@ -84,7 +81,7 @@ function ExpenseEmptyState({ icon, title, description }: { icon: string; title: 
 }
 
 const ExpensesPage = () => {
-  const { t, currentLang } = useTranslate('expenses');
+  const { t } = useTranslate('expenses');
   const { profile } = useCurrentUser();
   const [tab, setTab] = useState<'operations' | 'categories'>('operations');
   const [search, setSearch] = useState('');
@@ -347,7 +344,7 @@ const ExpensesPage = () => {
                     <TableBody>
                       {expenses.map((expense) => (
                         <TableRow key={expense.id} hover>
-                          <TableCell>{formatDateTime(expense.occurredAt, currentLang.numberFormat.code)}</TableCell>
+                          <TableCell>{formatDateTime(expense.occurredAt)}</TableCell>
                           <TableCell>
                             <Typography variant="subtitle2">{formatMoney(expense.amount)}</Typography>
                           </TableCell>

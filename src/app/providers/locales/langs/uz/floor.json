@@ -83,7 +83,8 @@
                    "constructorHint":  "Stollarni grid bo\u0027yicha joylashtiring, cho\u0027zing va variantini tanlang.",
                    "inspector":  "Stol inspektori",
                    "inspectorHint":  "Tanlangan stol parametrlarini shu yerda o\u0027zgartiring.",
-                   "noTableSelected":  "Parametrlarni ko\u0027rish uchun stol tanlang."
+                   "noTableSelected":  "Parametrlarni ko\u0027rish uchun stol tanlang.",
+                   "dragToReorder":  "Tartibni o'zgartirish uchun sudrang"
                },
     "tableShapes":  {
                         "square":  "Kvadrat",

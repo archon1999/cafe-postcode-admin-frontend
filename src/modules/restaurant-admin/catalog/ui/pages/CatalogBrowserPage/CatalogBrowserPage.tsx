@@ -3,9 +3,14 @@ import Dialog from '@mui/material/Dialog';
 import { useEffect, useMemo, useState } from 'react';
 
 import { ListPageBody, ListPageContent } from 'app/layouts/Dashboard';
-import type { CatalogItem } from 'shared/api/admin-types';
+import type { CatalogCategory, CatalogItem } from 'shared/api/admin-types';
 
-import { useGetCatalogCategoriesListQuery, useGetCatalogItemsListQuery } from '../../../application';
+import {
+  useGetCatalogCategoriesListQuery,
+  useGetCatalogItemsListQuery,
+  useReorderCatalogCategoriesMutation,
+  useReorderCatalogItemsMutation,
+} from '../../../application';
 import { CatalogCategoryFormDialog } from '../../components/CatalogCategoryForm';
 import { CatalogItemFormDialog } from '../../components/CatalogItemForm';
 
@@ -21,6 +26,8 @@ const CatalogBrowserPage = () => {
   const [isCategoryEditOpen, setCategoryEditOpen] = useState(false);
   const [isProductCreateOpen, setProductCreateOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<CatalogItem | null>(null);
+  const reorderCategoriesMutation = useReorderCatalogCategoriesMutation();
+  const reorderItemsMutation = useReorderCatalogItemsMutation();
 
   const categoriesQuery = useGetCatalogCategoriesListQuery({
     page: 1,
@@ -53,13 +60,21 @@ const CatalogBrowserPage = () => {
       page: 1,
       pageSize: PRODUCT_PAGE_SIZE,
       categoryIdIn: selectedCategoryId ?? undefined,
-      ordering: 'name',
+      ordering: 'sortOrder,name',
     },
     { enabled: Boolean(selectedCategoryId) },
   );
   const products = useMemo(() => productsQuery.data?.data ?? [], [productsQuery.data]);
   const isProductsLoading = productsQuery.isLoading && !products.length;
   const isRefreshingProducts = productsQuery.isFetching && !isProductsLoading;
+
+  const reorderCategories = (nextCategories: CatalogCategory[]) =>
+    reorderCategoriesMutation.mutateAsync(
+      nextCategories.map((category, sortOrder) => ({ id: category.id, sortOrder })),
+    );
+
+  const reorderProducts = (nextProducts: CatalogItem[]) =>
+    reorderItemsMutation.mutateAsync(nextProducts.map((product, sortOrder) => ({ id: product.id, sortOrder })));
 
   return (
     <ListPageContent>
@@ -80,6 +95,8 @@ const CatalogBrowserPage = () => {
             onCreateCategory={() => setCategoryCreateOpen(true)}
             onEditCategory={() => setCategoryEditOpen(true)}
             canEditCategory={Boolean(selectedCategory)}
+            isReordering={reorderCategoriesMutation.isPending}
+            onReorder={reorderCategories}
           />
 
           <CatalogBrowserProductsPanel
@@ -90,6 +107,8 @@ const CatalogBrowserPage = () => {
             isRefreshing={isRefreshingProducts}
             onCreateProduct={() => setProductCreateOpen(true)}
             onEditProduct={setEditingProduct}
+            isReordering={reorderItemsMutation.isPending}
+            onReorder={reorderProducts}
           />
         </Box>
       </ListPageBody>
@@ -109,6 +128,10 @@ const CatalogBrowserPage = () => {
           category={selectedCategory}
           onCancel={() => setCategoryEditOpen(false)}
           onSuccess={() => setCategoryEditOpen(false)}
+          onDeleted={() => {
+            setCategoryEditOpen(false);
+            setSelectedCategoryId(null);
+          }}
         />
       </Dialog>
 
@@ -125,6 +148,7 @@ const CatalogBrowserPage = () => {
           item={editingProduct}
           onCancel={() => setEditingProduct(null)}
           onSuccess={() => setEditingProduct(null)}
+          onDeleted={() => setEditingProduct(null)}
         />
       </Dialog>
     </ListPageContent>

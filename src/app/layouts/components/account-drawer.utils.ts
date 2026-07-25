@@ -3,6 +3,7 @@ import type { TFunction } from 'i18next';
 import type { CurrentUser } from 'modules/auth/domain/services/current-user';
 import type { AdminSessionUser } from 'shared/api/admin-types';
 import type { IconifyName } from 'shared/ui/Iconify';
+import { formatDate } from 'shared/utils/format-time';
 
 export type AccountDrawerResolvedRole = 'superadmin' | 'productOwner' | 'businessPartner' | 'restaurantAdmin';
 
@@ -36,20 +37,6 @@ function resolveValue(value?: string | null) {
 
 function formatCount(value?: number | null) {
   return typeof value === 'number' ? String(value) : '-';
-}
-
-function formatDate(value?: string | null) {
-  if (!value) {
-    return '-';
-  }
-
-  const parsedDate = new Date(value);
-
-  if (Number.isNaN(parsedDate.getTime())) {
-    return value;
-  }
-
-  return new Intl.DateTimeFormat('uz-UZ').format(parsedDate);
 }
 
 export function resolveAccountDrawerRole(profile?: PartialSessionProfile | null): AccountDrawerResolvedRole {

@@ -66,14 +66,14 @@ export function useRestaurantsGridColumns(actions: RestaurantsGridColumnActions)
         headerName: tPlatform('fields.activatedAt'),
         minWidth: 180,
         flex: 0.8,
-        renderCell: ({ row }) => (row.activatedAt ? formatDateTime(row.activatedAt, 'DD.MM.YYYY HH:mm') : '-'),
+        renderCell: ({ row }) => (row.activatedAt ? formatDateTime(row.activatedAt) : '-'),
       },
       {
         field: 'expiresOn',
         headerName: tPlatform('fields.expiresOn'),
         minWidth: 160,
         flex: 0.7,
-        renderCell: ({ row }) => (row.expiresOn ? formatDate(row.expiresOn, 'DD.MM.YYYY') : '-'),
+        renderCell: ({ row }) => (row.expiresOn ? formatDate(row.expiresOn) : '-'),
       },
       {
         field: 'isActive',

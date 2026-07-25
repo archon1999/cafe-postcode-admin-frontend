@@ -162,16 +162,9 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
   ].filter(Boolean) as NavSectionProps['data'][number]['items'];
 
   const floorChildren = [
-    canAccess(RoutePath.floorZoneList)
+    canAccess(RoutePath.floorZoneList) || canAccess(RoutePath.floorHallList)
       ? {
-          title: t('zones'),
-          path: RoutePath.floorZoneList,
-          icon: ICONS.zones,
-        }
-      : null,
-    canAccess(RoutePath.floorHallList)
-      ? {
-          title: t('halls'),
+          title: t('hallsAndZones'),
           path: RoutePath.floorHallList,
           icon: ICONS.halls,
         }

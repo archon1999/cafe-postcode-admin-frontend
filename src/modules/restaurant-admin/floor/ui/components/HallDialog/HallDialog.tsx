@@ -2,7 +2,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import ListSubheader from '@mui/material/ListSubheader';
@@ -13,12 +12,15 @@ import { useForm } from 'react-hook-form';
 
 import { useTranslate } from 'app/providers/locales';
 import { useCurrentUser } from 'modules/auth';
+import type { AdminHall } from 'shared/api/admin-types';
 import { useRedirectOnNotFound } from 'shared/hooks/router';
+import { EntityFormActions } from 'shared/ui/EntityFormActions';
 import { Form, RHFSelect, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
 import { Iconify } from 'shared/ui/Iconify';
 
 import {
   useCreateHallMutation,
+  useDeleteHallMutation,
   useGetHallByIdQuery,
   useGetZonesQuery,
   useUpdateHallMutation,
@@ -33,7 +35,16 @@ import {
   toHallPayload,
 } from './hallDialog.form';
 
-export function HallDialog({ open, hallId, onClose }: { open: boolean; hallId?: string | null; onClose: () => void }) {
+type HallDialogProps = {
+  open: boolean;
+  hallId?: string | null;
+  defaultZoneId?: string | null;
+  onClose: () => void;
+  onSaved?: (hall: AdminHall) => void;
+  onDeleted?: () => void;
+};
+
+export function HallDialog({ open, hallId, defaultZoneId, onClose, onSaved, onDeleted }: HallDialogProps) {
   const { t } = useTranslate('floor');
   const { profile } = useCurrentUser();
   const isEditMode = Boolean(hallId);
@@ -43,6 +54,7 @@ export function HallDialog({ open, hallId, onClose }: { open: boolean; hallId?: 
   const zonesQuery = useGetZonesQuery({ enabled: open });
   const createMutation = useCreateHallMutation();
   const updateMutation = useUpdateHallMutation(hallId ?? '');
+  const deleteMutation = useDeleteHallMutation();
   const canCreateZone = Boolean(profile?.isSuperuser || profile?.permissionCodes?.includes('zones.create'));
 
   useRedirectOnNotFound(hallQuery.error, open && isEditMode);
@@ -65,12 +77,12 @@ export function HallDialog({ open, hallId, onClose }: { open: boolean; hallId?: 
 
   useEffect(() => {
     if (!open) {
-      methods.reset(hallDialogDefaultValues);
+      methods.reset({ ...hallDialogDefaultValues, zoneOrCabinId: defaultZoneId ?? '' });
       return;
     }
 
     if (!isEditMode) {
-      methods.reset(hallDialogDefaultValues);
+      methods.reset({ ...hallDialogDefaultValues, zoneOrCabinId: defaultZoneId ?? '' });
       return;
     }
 
@@ -81,21 +93,18 @@ export function HallDialog({ open, hallId, onClose }: { open: boolean; hallId?: 
     methods.reset({
       name: hallQuery.data.name,
       description: hallQuery.data.description ?? '',
-      sortOrder: hallQuery.data.sortOrder ?? 0,
       isActive: hallQuery.data.isActive,
       zoneOrCabinId: hallQuery.data.zoneOrCabinId ?? '',
     });
-  }, [hallQuery.data, isEditMode, methods, open]);
+  }, [defaultZoneId, hallQuery.data, isEditMode, methods, open]);
 
   const onSubmit = methods.handleSubmit(async (values) => {
     const payload = toHallPayload(values);
 
-    if (isEditMode && hallId) {
-      await updateMutation.mutateAsync(payload);
-    } else {
-      await createMutation.mutateAsync(payload);
-    }
+    const savedHall =
+      isEditMode && hallId ? await updateMutation.mutateAsync(payload) : await createMutation.mutateAsync(payload);
 
+    onSaved?.(savedHall);
     onClose();
   });
 
@@ -112,7 +121,6 @@ export function HallDialog({ open, hallId, onClose }: { open: boolean; hallId?: 
             ) : (
               <Stack spacing={3} sx={{ pt: 1 }}>
                 <RHFTextField<HallDialogFormInput> name="name" label={t('fields.name')} />
-                <RHFTextField<HallDialogFormInput> name="sortOrder" label={t('fields.sortOrder')} type="number" />
                 <RHFTextField<HallDialogFormInput>
                   name="description"
                   label={t('fields.description')}
@@ -161,14 +169,21 @@ export function HallDialog({ open, hallId, onClose }: { open: boolean; hallId?: 
               </Stack>
             )}
           </DialogContent>
-          <DialogActions sx={{ px: 3, pb: 3 }}>
-            <Button color="inherit" variant="outlined" onClick={onClose} disabled={methods.formState.isSubmitting}>
-              {t('actions.cancel')}
-            </Button>
-            <Button type="submit" variant="contained" color="black" loading={methods.formState.isSubmitting}>
-              {isEditMode ? t('actions.save') : t('actions.create')}
-            </Button>
-          </DialogActions>
+          <EntityFormActions
+            isDialog
+            isEditMode={isEditMode}
+            isSubmitting={methods.formState.isSubmitting}
+            isDeleting={deleteMutation.isPending}
+            submitLabel={isEditMode ? t('actions.save') : t('actions.create')}
+            deleteTitle={t('dialogs.deleteHall.title')}
+            deleteContent={t('dialogs.deleteHall.description', { name: hallQuery.data?.name ?? '' })}
+            onCancel={onClose}
+            onDelete={async () => {
+              if (!hallId) return;
+              await deleteMutation.mutateAsync(hallId);
+              (onDeleted ?? onClose)();
+            }}
+          />
         </Form>
       </Dialog>
 

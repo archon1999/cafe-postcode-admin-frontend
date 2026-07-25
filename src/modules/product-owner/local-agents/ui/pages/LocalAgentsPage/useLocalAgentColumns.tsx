@@ -13,13 +13,7 @@ import { useAdminScopeStore } from 'modules/auth';
 import type { AdminLocalAgent } from 'shared/api/admin-types';
 import { DetailPageLink } from 'shared/ui/DetailPageLink/DetailPageLink';
 import { Iconify } from 'shared/ui/Iconify';
-
-function formatDate(value?: string | null) {
-  if (!value) return '—';
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
-  return new Intl.DateTimeFormat(undefined, { dateStyle: 'short', timeStyle: 'medium' }).format(date);
-}
+import { formatDateTime } from 'shared/utils/format-time';
 
 export function useLocalAgentColumns(onDiagnostics: (agent: AdminLocalAgent) => void) {
   const { t } = useTranslate('platform');
@@ -76,7 +70,7 @@ export function useLocalAgentColumns(onDiagnostics: (agent: AdminLocalAgent) => 
         headerName: t('localAgents.fields.lastSeen'),
         minWidth: 210,
         flex: 0.65,
-        valueFormatter: (value) => formatDate(value),
+        valueFormatter: (value) => formatDateTime(value),
       },
       {
         field: 'actions',

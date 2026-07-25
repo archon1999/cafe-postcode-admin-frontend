@@ -7,7 +7,7 @@
     "orderItemNotes": { "title": "Заметки к товарам" },
     "payments": { "title": "Платежи" },
     "paymentDetail": { "title": "Платёж #{{orderNumber}}" },
-    "receipts": { "title": "Фискальные чеки" },
+    "receipts": { "title": "Чеки" },
     "receiptDetail": { "title": "Чек #{{orderNumber}}" }
   },
   "sections": {

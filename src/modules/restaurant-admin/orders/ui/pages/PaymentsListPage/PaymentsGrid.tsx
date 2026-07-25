@@ -14,22 +14,19 @@ import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { RouterPathHelper } from 'app/routes';
 import type { AdminPayment } from 'shared/api/admin-types';
 import { DEFAULT_PAGINATION_MODEL, DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
-import { useRouter } from 'shared/hooks/router';
-import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState, withDetailLink } from 'shared/ui/CustomDataGrid';
-import { Iconify } from 'shared/ui/Iconify';
+import { DataGrid, DataGridEmptyState, withDetailLink } from 'shared/ui/CustomDataGrid';
 import { formatOrderNumberCellValue, OrderNumberCell } from 'shared/ui/OrderNumberCell';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 import { formatMoney } from 'shared/utils/format-money';
+import { formatDateTime } from 'shared/utils/format-time';
 
 import { useGetPaymentsQuery } from '../../../application';
-import { formatDateTime, getPaymentMethodTranslationKey, getPaymentStatusColor } from '../../lib/presenters';
+import { getPaymentMethodTranslationKey, getPaymentStatusColor } from '../../lib/presenters';
 
 import { DEFAULT_PAYMENTS_GRID_FILTERS, type PaymentsGridFilters, PaymentsGridToolbar } from './PaymentsGridToolbar';
 
 export const PaymentsGrid = () => {
   const { t, currentLang } = useTranslate('orders');
-  const { t: tCommon } = useTranslate('common');
-  const router = useRouter();
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_PAGINATION_MODEL);
@@ -158,23 +155,8 @@ export const PaymentsGrid = () => {
         flex: 0.7,
         valueGetter: (_v, row) => formatDateTime(row.createdAt),
       },
-      {
-        type: 'actions',
-        field: 'actions',
-        headerName: tCommon('actions.title'),
-        minWidth: 90,
-        getActions: (params) => [
-          <CustomGridActionsCellItem
-            actionKind="view"
-            key="view"
-            label={tCommon('labels.details')}
-            icon={<Iconify icon="solar:eye-bold" />}
-            href={RouterPathHelper.paymentView(params.row.id)}
-          />,
-        ],
-      },
     ],
-    [t, tCommon],
+    [t],
   );
 
   return (
@@ -199,7 +181,6 @@ export const PaymentsGrid = () => {
         columnVisibilityModel={columnVisibilityModel}
         onColumnVisibilityModelChange={setColumnVisibilityModel}
         disableColumnMenu
-        onRowClick={(params) => router.push(RouterPathHelper.paymentView(params.row.id))}
         slots={{
           noRowsOverlay: () => (
             <DataGridEmptyState

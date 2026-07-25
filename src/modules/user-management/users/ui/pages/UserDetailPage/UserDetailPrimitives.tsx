@@ -9,6 +9,7 @@ import type { ReactNode } from 'react';
 import { EmptyValueChip, renderEmptyValue } from 'shared/ui/EmptyValue';
 import { Iconify, type IconifyName } from 'shared/ui/Iconify';
 import { Label } from 'shared/ui/Label';
+import { formatDate } from 'shared/utils/format-time';
 
 export type UserEntry = {
   label: string;
@@ -30,8 +31,7 @@ export function formatBirthDate(value?: string | null) {
     return null;
   }
 
-  const parsedDate = new Date(value);
-  return Number.isNaN(parsedDate.getTime()) ? value : new Intl.DateTimeFormat('uz-UZ').format(parsedDate);
+  return formatDate(value, { invalidResult: value });
 }
 
 export function resolveStatusColor(status: 'active' | 'inactive' | 'archived') {

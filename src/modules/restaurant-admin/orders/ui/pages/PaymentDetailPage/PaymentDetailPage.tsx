@@ -16,9 +16,10 @@ import { Label } from 'shared/ui/Label';
 import { LabelRowWithIcon } from 'shared/ui/LabelRowWithIcon/LabelRowWithIcon';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 import { formatMoney } from 'shared/utils/format-money';
+import { formatDateTime } from 'shared/utils/format-time';
 
 import { useGetPaymentByIdQuery, useRetryPaymentFiscalMutation } from '../../../application';
-import { formatDateTime, getPaymentMethodTranslationKey, getPaymentStatusColor } from '../../lib/presenters';
+import { getPaymentMethodTranslationKey, getPaymentStatusColor } from '../../lib/presenters';
 
 const PaymentDetailPage = () => {
   const { t } = useTranslate('orders');

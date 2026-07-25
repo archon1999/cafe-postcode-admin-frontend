@@ -133,7 +133,6 @@ const HallFormPage = lazy(() => import('modules/restaurant-admin/floor/ui/pages/
 const HallConstructorPage = lazy(
   () => import('modules/restaurant-admin/floor/ui/pages/HallConstructorPage/HallConstructorPage'),
 );
-const ZonesListPage = lazy(() => import('modules/restaurant-admin/floor/ui/pages/ZonesListPage/ZonesListPage'));
 const ZoneFormPage = lazy(() => import('modules/restaurant-admin/floor/ui/pages/ZoneFormPage/ZoneFormPage'));
 const TableSessionsListPage = lazy(
   () => import('modules/restaurant-admin/floor/ui/pages/TableSessionsListPage/TableSessionsListPage'),
@@ -376,7 +375,7 @@ const mainChildren: RouteObject[] = [
   },
   {
     path: RoutePath.floorZoneList,
-    element: <ZonesListPage />,
+    element: <Navigate replace to={RoutePath.floorHallList} />,
   },
   {
     path: RoutePath.floorZoneCreate,

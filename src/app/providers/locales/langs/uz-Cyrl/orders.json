@@ -7,7 +7,7 @@
     "orderItemNotes": { "title": "Маҳсулот изоҳлари" },
     "payments": { "title": "Тўловлар" },
     "paymentDetail": { "title": "Тўлов #{{orderNumber}}" },
-    "receipts": { "title": "Фискал чеклар" },
+    "receipts": { "title": "Чеклар" },
     "receiptDetail": { "title": "Чек #{{orderNumber}}" }
   },
   "sections": {

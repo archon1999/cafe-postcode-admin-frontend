@@ -64,6 +64,7 @@
     "labels":  {
                    "stoplisted":  "Stop-listda",
                    "available":  "Mavjud",
+                   "dragToReorder":  "Tartibni o'zgartirish uchun sudrang",
                    "mxikImagePreview":  "MXIK rasmi",
                    "mxikImagePreviewDescription":  "Kategoriya rasmi MXIK kodi bo\u0027yicha avtomatik sinxronlangan.",
                    "mxikImageSource":  "MXIK orqali yangilangan",

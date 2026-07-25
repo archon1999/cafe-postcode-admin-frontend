@@ -3,6 +3,7 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { Controller, useFormContext, type FieldValues } from 'react-hook-form';
 
 import { TASHKENT_TIMEZONE, toTashkentCalendarDayjs } from 'shared/utils/dayjs';
+import { FORMAT_PATTERNS } from 'shared/utils/format-time';
 
 import type { PickerProps } from './types';
 import { normalizeDateValue } from './utils';
@@ -45,6 +46,8 @@ export function RHFTimePicker<T extends FieldValues = FieldValues>({
           }}
           timezone={TASHKENT_TIMEZONE}
           {...other}
+          ampm={false}
+          format={FORMAT_PATTERNS.time}
         />
       )}
     />

@@ -20,6 +20,10 @@ export const catalogRepository: CatalogRepository = {
     return apiClient.updateAdminCatalogCategory(id, buildCatalogCategoryFormData(payload));
   },
 
+  updateCategorySortOrder(id, sortOrder) {
+    return apiClient.updateAdminCatalogCategorySortOrder(id, sortOrder);
+  },
+
   deleteCategory(id: string) {
     return apiClient.deleteAdminCatalogCategory(id);
   },
@@ -38,6 +42,10 @@ export const catalogRepository: CatalogRepository = {
 
   updateItem(id, payload) {
     return apiClient.updateAdminCatalogItem(id, buildCatalogItemFormData(payload));
+  },
+
+  updateItemSortOrder(id, sortOrder) {
+    return apiClient.updateAdminCatalogItemSortOrder(id, sortOrder);
   },
 
   deleteItem(id: string) {

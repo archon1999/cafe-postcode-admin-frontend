@@ -27,6 +27,9 @@ export const floorRepository: FloorRepository = {
   updateHall(id, payload) {
     return apiClient.updateAdminHall(id, payload);
   },
+  updateHallSortOrder(id, sortOrder) {
+    return apiClient.updateAdminHallSortOrder(id, sortOrder);
+  },
   updateHallConstructor(id, payload) {
     return apiClient.updateAdminHallConstructor(id, payload);
   },
@@ -38,6 +41,9 @@ export const floorRepository: FloorRepository = {
   },
   updateZone(id, payload) {
     return apiClient.updateAdminZone(id, payload);
+  },
+  updateZoneSortOrder(id, sortOrder) {
+    return apiClient.updateAdminZoneSortOrder(id, sortOrder);
   },
   deleteZone(id) {
     return apiClient.deleteAdminZone(id);

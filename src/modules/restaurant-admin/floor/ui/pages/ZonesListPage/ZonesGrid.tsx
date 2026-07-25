@@ -49,7 +49,6 @@ export const ZonesGrid = () => {
   const columns = useMemo<GridColDef<AdminZoneOrCabin>[]>(
     () => [
       { field: 'name', headerName: t('fields.name'), minWidth: 220, flex: 1 },
-      { field: 'sortOrder', headerName: t('fields.sortOrder'), minWidth: 120, flex: 0.4 },
       {
         field: 'isActive',
         headerName: t('fields.status'),
