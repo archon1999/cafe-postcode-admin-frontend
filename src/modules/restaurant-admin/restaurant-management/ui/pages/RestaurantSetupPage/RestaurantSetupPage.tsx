@@ -1,13 +1,12 @@
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import LinearProgress from '@mui/material/LinearProgress';
 import Stack from '@mui/material/Stack';
-import Step from '@mui/material/Step';
-import StepContent from '@mui/material/StepContent';
-import StepLabel from '@mui/material/StepLabel';
-import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
@@ -57,6 +56,7 @@ const RestaurantSetupPage = () => {
   const [fiscalTaxNumber, setFiscalTaxNumber] = useState('');
   const [martaTaxNumber, setMartaTaxNumber] = useState('');
   const [checkingIntegration, setCheckingIntegration] = useState<string | null>(null);
+  const [expandedStepId, setExpandedStepId] = useState<RestaurantSetupStep['id'] | null>(null);
   const hydratedRestaurantId = useRef<string | null>(null);
 
   useEffect(() => {
@@ -90,6 +90,11 @@ const RestaurantSetupPage = () => {
         : [newPrepStation(t('setup.defaults.kitchen'), 0)],
     );
   }, [readinessQuery.data, t]);
+
+  useEffect(() => {
+    if (expandedStepId || !readinessQuery.data) return;
+    setExpandedStepId(readinessQuery.data.steps.find((step) => step.status !== 'ready')?.id ?? null);
+  }, [expandedStepId, readinessQuery.data]);
 
   const payload = useMemo<RestaurantSetupApplyPayload>(
     () => ({
@@ -193,12 +198,12 @@ const RestaurantSetupPage = () => {
       heading={t('pages.setup.title')}
       action={
         <Button startIcon={<Iconify icon="solar:refresh-linear" />} onClick={() => void readinessQuery.refetch()}>
-          {t('setup.actions.check')}
+          {t('setup.actions.checkReadiness', { defaultValue: 'Tayyorlikni tekshirish' })}
         </Button>
       }>
       <MyRestaurantSettingsTabs />
       <Stack spacing={3}>
-        <Card sx={{ p: 3 }}>
+        <Card sx={{ p: { xs: 2, sm: 3 } }}>
           <Stack spacing={1.5}>
             <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" spacing={1}>
               <Typography variant="h5">
@@ -215,6 +220,82 @@ const RestaurantSetupPage = () => {
               />
             </Stack>
             <LinearProgress variant="determinate" value={readiness.progressPercent} />
+            <Typography variant="body2" color="text.secondary">
+              {readiness.ready
+                ? t('setup.readiness.readyHint', { defaultValue: 'Restoran ishga tushirishga tayyor.' })
+                : t('setup.readiness.priorityHint', {
+                    defaultValue: "Avval quyidagi muhim vazifalarni yakunlang. Tayyor bo'limlar yopiq holda turadi.",
+                  })}
+            </Typography>
+          </Stack>
+        </Card>
+
+        <Card sx={{ p: 3 }}>
+          <Typography variant="h5" sx={{ mb: 2 }}>
+            {t('setup.steps.title')}
+          </Typography>
+          <Stack spacing={0}>
+            {readiness.steps.map((step) => (
+              <Accordion
+                key={step.id}
+                disableGutters
+                elevation={0}
+                expanded={expandedStepId === step.id}
+                onChange={(_, expanded) => setExpandedStepId(expanded ? step.id : null)}
+                sx={{
+                  bgcolor: 'transparent',
+                  borderRadius: '0 !important',
+                  borderBottom: 1,
+                  borderColor: 'divider',
+                  '&:before': { display: 'none' },
+                  '&.Mui-expanded': { m: 0 },
+                  '&:last-of-type': { borderBottom: 0 },
+                }}>
+                <AccordionSummary
+                  expandIcon={<Iconify icon="solar:alt-arrow-down-linear" />}
+                  sx={{
+                    px: 0,
+                    minHeight: 64,
+                    '&.Mui-expanded': { minHeight: 64 },
+                    '&:hover': { bgcolor: 'action.hover' },
+                  }}>
+                  <Stack direction="row" alignItems="center" spacing={1.25} sx={{ width: 1, pr: 1 }}>
+                    <Iconify
+                      icon={step.status === 'ready' ? 'solar:check-circle-bold' : 'solar:danger-triangle-bold'}
+                      sx={{ color: step.status === 'ready' ? 'success.main' : 'warning.main' }}
+                    />
+                    <Typography variant="subtitle1" sx={{ flex: 1 }}>
+                      {t(`setup.steps.${step.id}`)}
+                    </Typography>
+                    <Chip
+                      size="small"
+                      color={step.status === 'ready' ? 'success' : step.status === 'blocked' ? 'error' : 'warning'}
+                      label={t(`setup.status.${step.status}`)}
+                    />
+                    {step.id === 'coordinator' ? <LocalAgentDiagnostics /> : null}
+                  </Stack>
+                </AccordionSummary>
+                <AccordionDetails sx={{ pl: { xs: 4.5, sm: 5 }, pr: 0, pt: 0, pb: 2.5 }}>
+                  <Stack spacing={1.25}>
+                    {step.issues.map((issue) => (
+                      <Alert key={`${step.id}-${issue.code}`} severity={issue.blocking ? 'error' : 'warning'}>
+                        {issueLabel(issue.code)}
+                      </Alert>
+                    ))}
+                    {stepRoutes[step.id] ? (
+                      <Button
+                        size="small"
+                        variant="text"
+                        endIcon={<Iconify icon="solar:arrow-right-linear" />}
+                        onClick={() => push(stepRoutes[step.id] as string)}
+                        sx={{ alignSelf: 'flex-start', px: 0.25 }}>
+                        {t('setup.actions.openSection')}
+                      </Button>
+                    ) : null}
+                  </Stack>
+                </AccordionDetails>
+              </Accordion>
+            ))}
           </Stack>
         </Card>
 
@@ -234,50 +315,6 @@ const RestaurantSetupPage = () => {
           onCheckPrinter={(key, target) => void checkPrinter(key, target)}
           onApply={() => void applySetup()}
         />
-
-        <Card sx={{ p: 3 }}>
-          <Typography variant="h5" sx={{ mb: 2 }}>
-            {t('setup.steps.title')}
-          </Typography>
-          <Stepper orientation="vertical" nonLinear>
-            {readiness.steps.map((step) => (
-              <Step key={step.id} active completed={step.status === 'ready'}>
-                <StepLabel
-                  error={step.status === 'blocked'}
-                  optional={
-                    <Chip
-                      size="small"
-                      color={step.status === 'ready' ? 'success' : step.status === 'blocked' ? 'error' : 'warning'}
-                      label={t(`setup.status.${step.status}`)}
-                    />
-                  }>
-                  <Stack component="span" direction="row" alignItems="center" spacing={0.5}>
-                    <span>{t(`setup.steps.${step.id}`)}</span>
-                    {step.id === 'coordinator' ? <LocalAgentDiagnostics /> : null}
-                  </Stack>
-                </StepLabel>
-                <StepContent>
-                  <Stack spacing={1.25} sx={{ pb: 2 }}>
-                    {step.issues.length ? (
-                      step.issues.map((issue) => (
-                        <Alert key={`${step.id}-${issue.code}`} severity={issue.blocking ? 'error' : 'warning'}>
-                          {issueLabel(issue.code)}
-                        </Alert>
-                      ))
-                    ) : (
-                      <Alert severity="success">{t('setup.status.ready')}</Alert>
-                    )}
-                    {stepRoutes[step.id] ? (
-                      <Button size="small" variant="outlined" onClick={() => push(stepRoutes[step.id] as string)}>
-                        {t('setup.actions.openSection')}
-                      </Button>
-                    ) : null}
-                  </Stack>
-                </StepContent>
-              </Step>
-            ))}
-          </Stepper>
-        </Card>
 
         <Card sx={{ p: 3 }}>
           <Stack spacing={2}>

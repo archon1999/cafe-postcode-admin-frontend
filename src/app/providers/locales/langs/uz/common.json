@@ -117,12 +117,13 @@
   "integrations": "Integratsiyalar",
   "productOwnerSection": "Mahsulot egasi",
   "restaurantAdminSection": "Restoran admini",
-  "restaurantManagement": "Restoran boshqaruvi",
+  "restaurantManagement": "Shahobcha boshqaruvi",
   "scope": {
-    "allRestaurants": "Barcha restoranlar",
-    "restaurant": "Restoran",
-    "selectRestaurantDescription": "Davom etish uchun yuqoridagi restoranni tanlang.",
-    "selectRestaurantTitle": "Restoranni tanlang"
+    "allRestaurants": "Barcha shahobchalar",
+    "restaurant": "Shahobcha",
+    "branch": "Shahobcha",
+    "selectRestaurantDescription": "Davom etish uchun yuqoridagi shahobchani tanlang.",
+    "selectRestaurantTitle": "Shahobchani tanlang"
   },
   "workspace": {
     "create": "Ish maydoni yaratish"

@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import { useAdminCreateAccess } from 'app/layouts/components/admin-scope-access';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath } from 'app/routes';
+import { useAdminRestaurantScopeId } from 'modules/auth';
 import type { AdminHall, AdminZoneOrCabin } from 'shared/api/admin-types';
 import { EmptyContent } from 'shared/ui/EmptyContent';
 import { Iconify } from 'shared/ui/Iconify';
@@ -38,6 +39,7 @@ export function FloorHallsPanel({
   onReorder,
 }: FloorHallsPanelProps) {
   const { t } = useTranslate('floor');
+  const restaurantId = useAdminRestaurantScopeId();
   const { disabled: isCreateDisabled } = useAdminCreateAccess(RoutePath.floorHallCreate);
 
   return (
@@ -92,7 +94,7 @@ export function FloorHallsPanel({
             }}
             gap={2}
             dragLabel={t('labels.dragToReorder')}
-            disabled={isReordering}
+            disabled={isReordering || !restaurantId}
             onReorder={onReorder}
             renderItem={(hall) => <FloorHallCard hall={hall} onEdit={onEditHall} />}
           />

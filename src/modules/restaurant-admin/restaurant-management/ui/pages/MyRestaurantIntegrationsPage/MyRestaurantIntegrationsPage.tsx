@@ -1,12 +1,10 @@
 import Button from '@mui/material/Button';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { useTranslate } from 'app/providers/locales';
-import { RoutePath, canAccessMyRestaurantIntegrations } from 'app/routes';
+import { canAccessMyRestaurantIntegrations } from 'app/routes';
 import { useAdminRestaurantScopeId, useCurrentUser } from 'modules/auth';
-import { useRouter } from 'shared/hooks/router';
 import { Iconify } from 'shared/ui/Iconify';
-import { LoadingScreen } from 'shared/ui/LoadingScreen';
 
 import { MyRestaurantSectionLayout } from '../../components/MyRestaurantSectionLayout';
 import { RestaurantIntegrationsSection } from '../../components/RestaurantIntegrationsSection';
@@ -14,23 +12,12 @@ import { RestaurantIntegrationsSection } from '../../components/RestaurantIntegr
 const MyRestaurantIntegrationsPage = () => {
   const { t } = useTranslate('organizations');
   const { profile } = useCurrentUser();
-  const { replace } = useRouter();
   const restaurantId = useAdminRestaurantScopeId();
   const canManageIntegrations = canAccessMyRestaurantIntegrations(profile);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
 
-  useEffect(() => {
-    if (profile && (!canManageIntegrations || !restaurantId)) {
-      replace(RoutePath.main);
-    }
-  }, [canManageIntegrations, profile, replace, restaurantId]);
-
-  if (profile && (!canManageIntegrations || !restaurantId)) {
+  if (profile && !canManageIntegrations) {
     return null;
-  }
-
-  if (!restaurantId) {
-    return <LoadingScreen />;
   }
 
   return (
@@ -41,6 +28,7 @@ const MyRestaurantIntegrationsPage = () => {
         <Button
           variant="contained"
           color="black"
+          disabled={!restaurantId}
           startIcon={<Iconify icon="mingcute:add-line" />}
           onClick={() => setCreateDialogOpen(true)}>
           {t('actions.createIntegration')}

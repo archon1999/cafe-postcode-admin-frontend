@@ -1,5 +1,5 @@
 import { Box, Stack, Typography } from '@mui/material';
-import type { FC } from 'react';
+import type { FC, ReactNode } from 'react';
 
 import { EmptyValueChip, isEmptyValue } from 'shared/ui/EmptyValue';
 
@@ -7,7 +7,7 @@ import { Iconify, type IconifyName } from '../Iconify';
 
 interface LabelRowWithIconProps {
   label: string;
-  value?: string | number;
+  value?: ReactNode;
   icon: IconifyName;
   maxLines?: number;
 }

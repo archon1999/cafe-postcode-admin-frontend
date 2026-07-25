@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import { useAdminCreateAccess } from 'app/layouts/components/admin-scope-access';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath } from 'app/routes';
+import { useAdminRestaurantScopeId } from 'modules/auth';
 import type { CatalogCategory, CatalogItem } from 'shared/api/admin-types';
 import { EmptyContent } from 'shared/ui/EmptyContent';
 import { Iconify } from 'shared/ui/Iconify';
@@ -40,6 +41,7 @@ export function CatalogBrowserProductsPanel({
   onReorder,
 }: CatalogBrowserProductsPanelProps) {
   const { t } = useTranslate('catalog');
+  const restaurantId = useAdminRestaurantScopeId();
   const { disabled: isCreateProductDisabled } = useAdminCreateAccess(RoutePath.catalogItemCreate);
 
   return (
@@ -97,7 +99,7 @@ export function CatalogBrowserProductsPanel({
             }}
             gap={2}
             dragLabel={t('labels.dragToReorder')}
-            disabled={isReordering}
+            disabled={isReordering || !restaurantId}
             onReorder={onReorder}
             renderItem={(product) => <CatalogBrowserProductCard product={product} onEdit={onEditProduct} />}
           />

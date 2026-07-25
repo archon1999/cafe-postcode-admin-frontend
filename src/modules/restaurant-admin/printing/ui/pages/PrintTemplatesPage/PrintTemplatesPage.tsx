@@ -15,7 +15,7 @@ import {
   Tabs,
   Typography,
 } from '@mui/material';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 import { Content } from 'app/layouts/Dashboard';
@@ -55,6 +55,37 @@ function newBlock(type: 'text' | 'divider' | 'spacer'): PrintTemplateBlock {
   return { id, type };
 }
 
+function testPrintPreview(element: HTMLElement, title: string) {
+  const frame = document.createElement('iframe');
+  frame.setAttribute('title', title);
+  frame.style.position = 'fixed';
+  frame.style.width = '0';
+  frame.style.height = '0';
+  frame.style.border = '0';
+  document.body.appendChild(frame);
+  const printDocument = frame.contentDocument;
+
+  if (!printDocument) {
+    frame.remove();
+    return;
+  }
+
+  printDocument.open();
+  printDocument.write(`<!doctype html><html><head><title>${title}</title>${document.head.innerHTML}<style>
+    @page { margin: 8mm; }
+    body { margin: 0; display: grid; place-items: start center; background: #fff !important; }
+    [data-print-preview] { width: 80mm; padding: 0 !important; box-shadow: none !important; border: 0 !important; }
+    button { display: none !important; }
+  </style></head><body><div data-print-preview>${element.innerHTML}</div></body></html>`);
+  printDocument.close();
+
+  window.setTimeout(() => {
+    frame.contentWindow?.focus();
+    frame.contentWindow?.print();
+    window.setTimeout(() => frame.remove(), 1000);
+  }, 250);
+}
+
 export default function PrintTemplatesPage() {
   const { t } = useTranslate('printing');
   const { profile } = useCurrentUser();
@@ -67,6 +98,7 @@ export default function PrintTemplatesPage() {
   const [selectedPresetKey, setSelectedPresetKey] = useState('legacy_80');
   const [layout, setLayout] = useState<PrintTemplateLayout | null>(null);
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
+  const previewRef = useRef<HTMLDivElement | null>(null);
 
   const canManage = canAccessMyRestaurantPrintTemplates(profile);
   const template = useMemo(
@@ -170,9 +202,21 @@ export default function PrintTemplatesPage() {
       <CustomBreadcrumbs
         heading={t('title')}
         action={
-          <Button variant="contained" disabled={saving} onClick={() => void saveAndPublish()}>
-            {saving ? t('actions.saving') : t('actions.saveAndPublish')}
-          </Button>
+          <Stack direction="row" spacing={1}>
+            <Button
+              variant="outlined"
+              color="inherit"
+              startIcon={<Iconify icon="solar:printer-bold-duotone" />}
+              onClick={() =>
+                previewRef.current &&
+                testPrintPreview(previewRef.current, t('actions.testPrint', { defaultValue: 'Test chop etish' }))
+              }>
+              {t('actions.testPrint', { defaultValue: 'Test chop etish' })}
+            </Button>
+            <Button variant="contained" disabled={saving} onClick={() => void saveAndPublish()}>
+              {saving ? t('actions.saving') : t('actions.saveAndPublish')}
+            </Button>
+          </Stack>
         }
       />
 
@@ -293,7 +337,7 @@ export default function PrintTemplatesPage() {
           </Card>
 
           <Card>
-            <CardContent>
+            <CardContent ref={previewRef}>
               <PrintTemplatePreview layout={layout} sampleData={catalogQuery.data.sampleData} />
             </CardContent>
           </Card>

@@ -5,10 +5,12 @@ import Typography from '@mui/material/Typography';
 
 import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
-import { RoutePath } from 'app/routes';
+import { RoutePath, RouterPathHelper } from 'app/routes';
 import { useParams, useRedirectOnNotFound } from 'shared/hooks/router';
+import { usePageTitle } from 'shared/hooks/use-page-title';
 import { BackToListButton } from 'shared/ui/BackToListButton';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
+import { DetailPageLink } from 'shared/ui/DetailPageLink';
 import { LabelRowWithIcon } from 'shared/ui/LabelRowWithIcon/LabelRowWithIcon';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 import { formatDateTime } from 'shared/utils/format-time';
@@ -19,6 +21,7 @@ const OrderItemNoteDetailPage = () => {
   const { t } = useTranslate('orders');
   const { id } = useParams<{ id: string }>();
   const query = useGetOrderItemNoteByIdQuery(id ?? '');
+  usePageTitle([t('pages.orderItemNotes.title'), t('pages.orderItemNoteDetail.title')]);
   useRedirectOnNotFound(query.error, !query.isLoading);
   if (query.isLoading) return <LoadingScreen />;
   const note = query.data;
@@ -34,10 +37,18 @@ const OrderItemNoteDetailPage = () => {
         <Stack spacing={2.5}>
           <LabelRowWithIcon
             label={t('fields.orderNumber')}
-            value={`#${note.orderNumber}`}
+            value={<DetailPageLink href={RouterPathHelper.orderView(note.orderId)}>#{note.orderNumber}</DetailPageLink>}
             icon="solar:bill-list-bold-duotone"
           />
-          <LabelRowWithIcon label={t('fields.item')} value={note.catalogItemName} icon="solar:plate-bold-duotone" />
+          <LabelRowWithIcon
+            label={t('fields.item')}
+            value={
+              <DetailPageLink href={RouterPathHelper.orderItemView(note.orderItemId)}>
+                {note.catalogItemName}
+              </DetailPageLink>
+            }
+            icon="solar:plate-bold-duotone"
+          />
           <LabelRowWithIcon label={t('fields.table')} value={note.tableName || '-'} icon="solar:home-bold-duotone" />
           <LabelRowWithIcon
             label={t('fields.createdAt')}

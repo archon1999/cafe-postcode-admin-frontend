@@ -95,6 +95,65 @@ export function DenseRow({ label, value, icon }: UserEntry) {
   );
 }
 
+export function DetailField({ label, value, icon }: UserEntry) {
+  return (
+    <Stack
+      direction="row"
+      spacing={1.5}
+      alignItems="center"
+      sx={{
+        minHeight: 76,
+        p: 1.5,
+        border: 1,
+        borderColor: 'divider',
+        borderRadius: 1.5,
+        bgcolor: 'background.paper',
+      }}>
+      <Box
+        sx={(theme) => ({
+          width: 38,
+          height: 38,
+          borderRadius: 1.5,
+          display: 'grid',
+          placeItems: 'center',
+          color: 'text.secondary',
+          bgcolor: varAlpha(theme.vars.palette.grey['500Channel'], 0.08),
+          flexShrink: 0,
+        })}>
+        <Iconify icon={icon} width={18} />
+      </Box>
+      <Box sx={{ minWidth: 0 }}>
+        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 0.25 }}>
+          {label}
+        </Typography>
+        <Box sx={{ typography: 'subtitle2', overflowWrap: 'anywhere' }}>{renderEmptyValue(value)}</Box>
+      </Box>
+    </Stack>
+  );
+}
+
+export function ProfileMetric({ label, value, icon }: UserEntry) {
+  return (
+    <Stack
+      spacing={1.25}
+      sx={(theme) => ({
+        minWidth: 0,
+        p: 2,
+        borderRadius: 2,
+        bgcolor: varAlpha(theme.vars.palette.grey['500Channel'], 0.06),
+        border: `1px solid ${varAlpha(theme.vars.palette.grey['500Channel'], 0.12)}`,
+      })}>
+      <Stack direction="row" spacing={1} alignItems="center">
+        <Iconify icon={icon} width={18} sx={{ color: 'text.secondary' }} />
+        <Typography variant="caption" color="text.secondary" noWrap>
+          {label}
+        </Typography>
+      </Stack>
+      <Box sx={{ typography: 'subtitle1', overflowWrap: 'anywhere' }}>{renderEmptyValue(value)}</Box>
+    </Stack>
+  );
+}
+
 export function HallChips({ halls }: { halls: string[] }) {
   if (!halls.length) {
     return <EmptyValueChip />;

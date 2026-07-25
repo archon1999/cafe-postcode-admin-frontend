@@ -7,10 +7,12 @@ import Typography from '@mui/material/Typography';
 
 import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
-import { RoutePath } from 'app/routes';
+import { RoutePath, RouterPathHelper } from 'app/routes';
 import { useParams, useRedirectOnNotFound } from 'shared/hooks/router';
+import { usePageTitle } from 'shared/hooks/use-page-title';
 import { BackToListButton } from 'shared/ui/BackToListButton';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
+import { DetailPageLink } from 'shared/ui/DetailPageLink';
 import { Label } from 'shared/ui/Label';
 import { LabelRowWithIcon } from 'shared/ui/LabelRowWithIcon/LabelRowWithIcon';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
@@ -25,6 +27,7 @@ const OrderItemDetailPage = () => {
   const { t: tCommon } = useTranslate('common');
   const { id } = useParams<{ id: string }>();
   const query = useGetOrderItemByIdQuery(id ?? '');
+  usePageTitle(query.data ? [t('pages.orderItems.title'), query.data.catalogItemName] : [t('pages.orderItems.title')]);
   useRedirectOnNotFound(query.error, !query.isLoading);
   if (query.isLoading) return <LoadingScreen />;
   const item = query.data;
@@ -39,7 +42,9 @@ const OrderItemDetailPage = () => {
             <Stack spacing={2.5}>
               <LabelRowWithIcon
                 label={t('fields.orderNumber')}
-                value={`#${item.orderNumber}`}
+                value={
+                  <DetailPageLink href={RouterPathHelper.orderView(item.order)}>#{item.orderNumber}</DetailPageLink>
+                }
                 icon="solar:bill-list-bold-duotone"
               />
               <LabelRowWithIcon label={t('fields.item')} value={item.catalogItemName} icon="solar:plate-bold-duotone" />

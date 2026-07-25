@@ -116,12 +116,13 @@
   "integrations": "Интеграции",
   "productOwnerSection": "Владелец продукта",
   "restaurantAdminSection": "Администратор ресторана",
-  "restaurantManagement": "Управление рестораном",
+  "restaurantManagement": "Управление филиалом",
   "scope": {
-    "allRestaurants": "Все рестораны",
-    "restaurant": "Ресторан",
-    "selectRestaurantDescription": "Чтобы продолжить, выберите ресторан в верхней панели.",
-    "selectRestaurantTitle": "Выберите ресторан"
+    "allRestaurants": "Все филиалы",
+    "restaurant": "Филиал",
+    "branch": "Филиал",
+    "selectRestaurantDescription": "Чтобы продолжить, выберите филиал в верхней панели.",
+    "selectRestaurantTitle": "Выберите филиал"
   },
   "workspace": {
     "create": "Создать рабочее пространство"

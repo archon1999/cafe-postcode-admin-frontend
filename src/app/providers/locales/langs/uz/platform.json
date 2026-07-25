@@ -13,7 +13,7 @@
     "legalName": "Yuridik nom",
     "directorName": "Direktor",
     "phone": "Telefon",
-    "clients": "Mijozlari",
+    "clients": "Shahobchalari",
     "email": "Email",
     "address": "Manzil",
     "customTariffAllowed": "Maxsus tarif ruxsati",
@@ -115,7 +115,7 @@
   "localAgents": {
     "title": "Local Agentlar",
     "fields": {
-      "restaurant": "Restoran",
+      "restaurant": "Shahobcha",
       "agent": "Agent",
       "status": "Status",
       "version": "Versiya",

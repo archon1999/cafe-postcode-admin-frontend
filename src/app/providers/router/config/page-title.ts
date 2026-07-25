@@ -23,6 +23,7 @@ const getReportTitle = (t: TFunction, reportKey?: string): string => {
     topItems: t('reports:reports.topItems.title'),
     topStaff: t('reports:reports.topStaff.title'),
     paymentBreakdown: t('reports:reports.paymentBreakdown.title'),
+    shifts: t('reports:reports.shifts.title'),
   };
 
   return reportTitles[reportKey ?? 'summary'] ?? t('reports:workspace.title');
@@ -126,6 +127,103 @@ const TITLE_RULES: TitleRule[] = [
     namespaces: ['reports'],
     resolve: ({ reportKey }, t) => [t('reports:workspace.title'), getReportTitle(t, reportKey)],
   },
+  { route: AppRoutes.EXPENSES, namespaces: ['expenses'], resolve: (_params, t) => [t('expenses:title')] },
+  {
+    route: AppRoutes.ORDER_ITEM_NOTE_VIEW,
+    namespaces: ['orders'],
+    resolve: (_params, t) => [t('orders:pages.orderItemNotes.title'), t('orders:pages.orderItemNoteDetail.title')],
+  },
+  {
+    route: AppRoutes.ORDER_ITEM_NOTE_LIST,
+    namespaces: ['orders'],
+    resolve: (_params, t) => [t('orders:pages.orderItemNotes.title')],
+  },
+  {
+    route: AppRoutes.ORDER_ITEM_VIEW,
+    namespaces: ['orders', 'common'],
+    resolve: (_params, t) => [t('orders:pages.orderItems.title'), getEntityDetailsTitle(t)],
+  },
+  {
+    route: AppRoutes.ORDER_ITEM_LIST,
+    namespaces: ['orders'],
+    resolve: (_params, t) => [t('orders:pages.orderItems.title')],
+  },
+  { route: AppRoutes.ORDER_LIST, namespaces: ['orders'], resolve: (_params, t) => [t('orders:pages.orders.title')] },
+  {
+    route: AppRoutes.ORDER_VIEW,
+    namespaces: ['orders', 'common'],
+    resolve: (_params, t) => [t('orders:pages.orders.title'), getEntityDetailsTitle(t)],
+  },
+  {
+    route: AppRoutes.PAYMENT_LIST,
+    namespaces: ['orders'],
+    resolve: (_params, t) => [t('orders:pages.payments.title')],
+  },
+  {
+    route: AppRoutes.PAYMENT_VIEW,
+    namespaces: ['orders', 'common'],
+    resolve: (_params, t) => [t('orders:pages.payments.title'), getEntityDetailsTitle(t)],
+  },
+  {
+    route: AppRoutes.RECEIPT_LIST,
+    namespaces: ['orders'],
+    resolve: (_params, t) => [t('orders:pages.receipts.title')],
+  },
+  {
+    route: AppRoutes.RECEIPT_VIEW,
+    namespaces: ['orders', 'common'],
+    resolve: (_params, t) => [t('orders:pages.receipts.title'), getEntityDetailsTitle(t)],
+  },
+  {
+    route: AppRoutes.KITCHEN_TICKET_LIST,
+    namespaces: ['kitchen'],
+    resolve: (_params, t) => [t('kitchen:pages.list.title')],
+  },
+  {
+    route: AppRoutes.KITCHEN_TICKET_VIEW,
+    namespaces: ['kitchen', 'common'],
+    resolve: (_params, t) => [t('kitchen:pages.list.title'), getEntityDetailsTitle(t)],
+  },
+  {
+    route: AppRoutes.CATALOG_BROWSER,
+    namespaces: ['catalog'],
+    resolve: (_params, t) => [t('catalog:pages.browser.title')],
+  },
+  {
+    route: AppRoutes.CATALOG_CATEGORY_LIST,
+    namespaces: ['catalog'],
+    resolve: (_params, t) => [t('catalog:pages.categories.title')],
+  },
+  {
+    route: AppRoutes.CATALOG_CATEGORY_CREATE,
+    namespaces: ['catalog'],
+    resolve: (_params, t) => [t('catalog:pages.categories.title'), t('catalog:pages.categoryCreate.title')],
+  },
+  {
+    route: AppRoutes.CATALOG_CATEGORY_EDIT,
+    namespaces: ['catalog'],
+    resolve: (_params, t) => [t('catalog:pages.categories.title'), t('catalog:pages.categoryEdit.title')],
+  },
+  {
+    route: AppRoutes.CATALOG_ITEM_LIST,
+    namespaces: ['catalog'],
+    resolve: (_params, t) => [t('catalog:pages.items.title')],
+  },
+  {
+    route: AppRoutes.CATALOG_ITEM_CREATE,
+    namespaces: ['catalog'],
+    resolve: (_params, t) => [t('catalog:pages.items.title'), t('catalog:pages.itemCreate.title')],
+  },
+  {
+    route: AppRoutes.CATALOG_ITEM_EDIT,
+    namespaces: ['catalog'],
+    resolve: (_params, t) => [t('catalog:pages.items.title'), t('catalog:pages.itemEdit.title')],
+  },
+  {
+    route: AppRoutes.CATALOG_MODIFIER_GROUP_LIST,
+    namespaces: ['catalog'],
+    resolve: (_params, t) => [t('catalog:modifiers.title', { defaultValue: 'Xususiyat guruhlari' })],
+  },
   {
     route: AppRoutes.USER_CREATE,
     namespaces: ['users'],
@@ -157,6 +255,22 @@ const TITLE_RULES: TitleRule[] = [
     resolve: (_params, t) => [t('users:pages.employeeList.title'), getEntityDetailsTitle(t)],
   },
   { route: AppRoutes.FLOOR_ZONE_LIST, namespaces: ['floor'], resolve: (_params, t) => [t('floor:pages.zones.title')] },
+  { route: AppRoutes.FLOOR_HALL_LIST, namespaces: ['floor'], resolve: (_params, t) => [t('floor:pages.halls.title')] },
+  {
+    route: AppRoutes.FLOOR_HALL_CONSTRUCTOR,
+    namespaces: ['floor'],
+    resolve: (_params, t) => [t('floor:pages.halls.title'), t('floor:pages.hallConstructor.title')],
+  },
+  {
+    route: AppRoutes.FLOOR_HALL_CREATE,
+    namespaces: ['floor'],
+    resolve: (_params, t) => [t('floor:pages.halls.title'), t('floor:pages.hallCreate.title')],
+  },
+  {
+    route: AppRoutes.FLOOR_HALL_EDIT,
+    namespaces: ['floor'],
+    resolve: (_params, t) => [t('floor:pages.halls.title'), t('floor:pages.hallEdit.title')],
+  },
   {
     route: AppRoutes.FLOOR_ZONE_CREATE,
     namespaces: ['floor'],
@@ -166,6 +280,21 @@ const TITLE_RULES: TitleRule[] = [
     route: AppRoutes.FLOOR_ZONE_EDIT,
     namespaces: ['floor', 'common'],
     resolve: (_params, t) => [t('floor:pages.zones.title'), getEntityDetailsTitle(t), t('floor:pages.zoneEdit.title')],
+  },
+  {
+    route: AppRoutes.FLOOR_TABLE_SESSION_LIST,
+    namespaces: ['floor'],
+    resolve: (_params, t) => [t('floor:pages.tableSessions.title')],
+  },
+  {
+    route: AppRoutes.FLOOR_TABLE_SESSION_CREATE,
+    namespaces: ['floor'],
+    resolve: (_params, t) => [t('floor:pages.tableSessions.title'), t('floor:pages.tableSessionCreate.title')],
+  },
+  {
+    route: AppRoutes.FLOOR_TABLE_SESSION_EDIT,
+    namespaces: ['floor'],
+    resolve: (_params, t) => [t('floor:pages.tableSessions.title'), t('floor:pages.tableSessionEdit.title')],
   },
   { route: AppRoutes.NOTFOUND, namespaces: ['common'], resolve: (_params, t) => [t('common:labels.notFound')] },
 ];

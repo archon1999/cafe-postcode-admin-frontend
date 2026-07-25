@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import { useAdminCreateAccess } from 'app/layouts/components/admin-scope-access';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath } from 'app/routes';
+import { useAdminRestaurantScopeId } from 'modules/auth';
 import type { AdminZoneOrCabin } from 'shared/api/admin-types';
 import { EmptyContent } from 'shared/ui/EmptyContent';
 import { Iconify } from 'shared/ui/Iconify';
@@ -41,6 +42,7 @@ export function FloorZonesPanel({
   onReorder,
 }: FloorZonesPanelProps) {
   const { t } = useTranslate('floor');
+  const restaurantId = useAdminRestaurantScopeId();
   const { disabled: isCreateDisabled } = useAdminCreateAccess(RoutePath.floorZoneCreate);
 
   return (
@@ -58,7 +60,7 @@ export function FloorZonesPanel({
             </Tooltip>
             <Tooltip title={t('actions.edit')}>
               <span>
-                <IconButton onClick={onEditZone} disabled={!selectedZoneId}>
+                <IconButton onClick={onEditZone} disabled={!selectedZoneId || !restaurantId}>
                   <Iconify icon="solar:pen-bold" width={18} />
                 </IconButton>
               </span>
@@ -80,7 +82,7 @@ export function FloorZonesPanel({
             gridTemplateColumns="repeat(2, minmax(0, 1fr))"
             gap={1.5}
             dragLabel={t('labels.dragToReorder')}
-            disabled={isReordering}
+            disabled={isReordering || !restaurantId}
             onReorder={onReorder}
             renderItem={(zone) => (
               <FloorZoneCard

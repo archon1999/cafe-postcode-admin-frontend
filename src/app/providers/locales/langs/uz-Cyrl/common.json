@@ -116,12 +116,13 @@
   "integrations": "Интегратсиялар",
   "productOwnerSection": "Маҳсулот егаси",
   "restaurantAdminSection": "Ресторан админи",
-  "restaurantManagement": "Ресторан бошқаруви",
+  "restaurantManagement": "Шахобча бошқаруви",
   "scope": {
-    "allRestaurants": "Барча ресторанлар",
-    "restaurant": "Ресторан",
-    "selectRestaurantDescription": "Давом етиш учун юқоридаги ресторанни танланг.",
-    "selectRestaurantTitle": "Ресторанни танланг"
+    "allRestaurants": "Барча шахобчалар",
+    "restaurant": "Шахобча",
+    "branch": "Шахобча",
+    "selectRestaurantDescription": "Давом етиш учун юқоридаги шахобчани танланг.",
+    "selectRestaurantTitle": "Шахобчани танланг"
   },
   "workspace": {
     "create": "Иш майдони яратиш"

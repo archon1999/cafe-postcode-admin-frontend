@@ -37,7 +37,7 @@
       "title": "Редактирование станции приготовления"
     },
     "restaurants": {
-      "title": "Рестораны"
+      "title": "Филиалы"
     },
     "restaurantCreate": {
       "title": "Новый ресторан"
@@ -46,7 +46,7 @@
       "title": "Редактирование ресторана"
     },
     "myRestaurant": {
-      "title": "Мой ресторан"
+      "title": "Мой филиал"
     },
     "myRestaurantGeneral": {
       "title": "Информация"

@@ -1,20 +1,16 @@
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
-import type {
-  GridColDef,
-  GridColumnVisibilityModel,
-  GridPaginationModel,
-  GridRowSelectionModel,
-  GridSortModel,
-} from '@mui/x-data-grid';
+import type { GridColDef, GridSortModel } from '@mui/x-data-grid';
 import { gridClasses } from '@mui/x-data-grid';
 import { useCallback, useMemo, useState } from 'react';
 
+import { useBranchScopeColumns } from 'app/layouts/components/branch-scope-columns';
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { RouterPathHelper } from 'app/routes';
 import type { CatalogItem } from 'shared/api/admin-types';
-import { DEFAULT_PAGINATION_MODEL, DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
+import { DEFAULT_PAGINATION_MODEL, DEFAULT_COLUMN_VISIBILITY_MODEL } from 'shared/constants';
+import { useDataGridPreferences } from 'shared/hooks/use-data-grid-preferences';
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState } from 'shared/ui/CustomDataGrid';
 import { ConfirmDialog } from 'shared/ui/CustomDialog';
 import { Iconify } from 'shared/ui/Iconify';
@@ -35,12 +31,12 @@ export const ProductsGrid = () => {
   const deleteItemMutation = useDeleteCatalogItemMutation();
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
 
-  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_PAGINATION_MODEL);
-  const [filters, setFilters] = useState<ProductsGridFilters>(DEFAULT_PRODUCTS_GRID_FILTERS);
-  const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(
-    DEFAULT_COLUMN_VISIBILITY_MODEL,
-  );
-  const [selectedRows, setSelectedRows] = useState<GridRowSelectionModel>(DEFAULT_SELECTION_MODEL);
+  const { filters, setFilters, paginationModel, setPaginationModel, columnVisibilityModel, setColumnVisibilityModel } =
+    useDataGridPreferences<ProductsGridFilters>('catalog-products', {
+      filters: DEFAULT_PRODUCTS_GRID_FILTERS,
+      paginationModel: DEFAULT_PAGINATION_MODEL,
+      columnVisibilityModel: DEFAULT_COLUMN_VISIBILITY_MODEL,
+    });
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
   const [itemToDelete, setItemToDelete] = useState<CatalogItem | null>(null);
   const itemsQuery = useGetCatalogItemsListQuery({
@@ -53,12 +49,15 @@ export const ProductsGrid = () => {
   });
   const categoriesQuery = useGetCatalogCategoriesQuery();
   const hasActiveFilters = Boolean(filters.search || filters.categories.length || filters.stoplistStatuses.length);
-  const handleFiltersChange = useCallback((next: ProductsGridFilters) => {
-    setFilters(next);
-    setPaginationModel((prev) => ({ ...prev, page: 0 }));
-  }, []);
+  const handleFiltersChange = useCallback(
+    (next: ProductsGridFilters) => {
+      setFilters(next);
+      setPaginationModel((prev) => ({ ...prev, page: 0 }));
+    },
+    [setFilters, setPaginationModel],
+  );
 
-  const columns = useMemo<GridColDef<CatalogItem>[]>(
+  const baseColumns = useMemo<GridColDef<CatalogItem>[]>(
     () => [
       { field: 'name', headerName: t('fields.name'), minWidth: 220, flex: 1 },
       {
@@ -164,11 +163,12 @@ export const ProductsGrid = () => {
     [t],
   );
 
+  const columns = useBranchScopeColumns(baseColumns);
+
   return (
     <>
       <Card sx={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'hidden' }}>
         <DataGrid
-          checkboxSelection
           rows={itemsQuery.data?.data ?? []}
           columns={columns}
           rowCount={itemsQuery.data?.total ?? 0}
@@ -182,8 +182,6 @@ export const ProductsGrid = () => {
           onPaginationModelChange={setPaginationModel}
           sortModel={sortModel}
           onSortModelChange={setSortModel}
-          rowSelectionModel={selectedRows}
-          onRowSelectionModelChange={setSelectedRows}
           columnVisibilityModel={columnVisibilityModel}
           onColumnVisibilityModelChange={setColumnVisibilityModel}
           disableColumnMenu

@@ -13,7 +13,7 @@
     "legalName": "Юридическое название",
     "directorName": "Директор",
     "phone": "Телефон",
-    "clients": "Клиенты",
+    "clients": "Филиалы",
     "email": "Email",
     "address": "Адрес",
     "customTariffAllowed": "Разрешение на кастомный тариф",
@@ -115,7 +115,7 @@
   "localAgents": {
     "title": "Локальные агенты",
     "fields": {
-      "restaurant": "Ресторан",
+      "restaurant": "Филиал",
       "agent": "Агент",
       "status": "Статус",
       "version": "Версия",

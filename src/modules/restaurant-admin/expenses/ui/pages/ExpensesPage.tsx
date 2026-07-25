@@ -23,13 +23,15 @@ import Tabs from '@mui/material/Tabs';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import { useEffect, useState, type DragEvent } from 'react';
+import { useCallback, useEffect, useState, type DragEvent } from 'react';
 import { toast } from 'sonner';
 
+import { useShowAllBranches } from 'app/layouts/components/branch-scope-columns';
 import { ListPageBody, ListPageContent } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
 import { useCurrentUser } from 'modules/auth';
 import type { AdminCashExpense, AdminExpenseCategory } from 'shared/api/admin-types';
+import { useDataGridPreferences } from 'shared/hooks/use-data-grid-preferences';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { FilterSelect } from 'shared/ui/Filters';
 import { TableSearchInput } from 'shared/ui/TableSearchInput';
@@ -82,14 +84,41 @@ function ExpenseEmptyState({ icon, title, description }: { icon: string; title: 
 
 const ExpensesPage = () => {
   const { t } = useTranslate('expenses');
+  const { t: tCommon } = useTranslate('common');
   const { profile } = useCurrentUser();
-  const [tab, setTab] = useState<'operations' | 'categories'>('operations');
-  const [search, setSearch] = useState('');
-  const [statuses, setStatuses] = useState<string[]>(['posted']);
-  const [categoryIds, setCategoryIds] = useState<string[]>([]);
-  const [dateRange, setDateRange] = useState<ReportsDateRangeState>(() => createPresetRangeState('monthToDate'));
-  const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
+  const showBranchColumn = useShowAllBranches();
+  const { filters, setFilterField, paginationModel, setPaginationModel } = useDataGridPreferences<{
+    tab: 'operations' | 'categories';
+    search: string;
+    statuses: string[];
+    categoryIds: string[];
+    dateRange: ReportsDateRangeState;
+  }>('expenses', {
+    filters: {
+      tab: 'operations',
+      search: '',
+      statuses: ['posted'],
+      categoryIds: [],
+      dateRange: createPresetRangeState('monthToDate'),
+    },
+    paginationModel: { page: 0, pageSize: 10 },
+    columnVisibilityModel: {},
+  });
+  const { tab, search, statuses, categoryIds, dateRange } = filters;
+  const { page, pageSize } = paginationModel;
+  const setTab = (value: 'operations' | 'categories') => setFilterField('tab', value);
+  const setSearch = (value: string) => setFilterField('search', value);
+  const setStatuses = (value: string[]) => setFilterField('statuses', value);
+  const setCategoryIds = (value: string[]) => setFilterField('categoryIds', value);
+  const setDateRange = (value: ReportsDateRangeState) => setFilterField('dateRange', value);
+  const setPage = useCallback(
+    (value: number) => setPaginationModel((previous) => ({ ...previous, page: value })),
+    [setPaginationModel],
+  );
+  const setPageSize = useCallback(
+    (value: number) => setPaginationModel((previous) => ({ ...previous, pageSize: value })),
+    [setPaginationModel],
+  );
   const [categoryForm, setCategoryForm] = useState<CategoryFormState | null>(null);
   const [orderedCategories, setOrderedCategories] = useState<AdminExpenseCategory[]>([]);
   const [draggedCategoryId, setDraggedCategoryId] = useState<string | null>(null);
@@ -129,7 +158,7 @@ const ExpensesPage = () => {
 
   useEffect(() => {
     setPage(0);
-  }, [categoryIds, dateRange.endDate, dateRange.startDate, search, statuses]);
+  }, [categoryIds, dateRange.endDate, dateRange.startDate, search, setPage, statuses]);
 
   const applyDatePreset = (preset: ReportsFixedDatePreset) => {
     setDateRange(createPresetRangeState(preset));
@@ -331,6 +360,7 @@ const ExpensesPage = () => {
                     <TableHead>
                       <TableRow>
                         <TableCell>{t('fields.date')}</TableCell>
+                        {showBranchColumn ? <TableCell>{tCommon('scope.branch')}</TableCell> : null}
                         <TableCell>{t('fields.amount')}</TableCell>
                         <TableCell>{t('fields.category')}</TableCell>
                         <TableCell>{t('fields.comment')}</TableCell>
@@ -345,6 +375,7 @@ const ExpensesPage = () => {
                       {expenses.map((expense) => (
                         <TableRow key={expense.id} hover>
                           <TableCell>{formatDateTime(expense.occurredAt)}</TableCell>
+                          {showBranchColumn ? <TableCell>{expense.restaurantName || '-'}</TableCell> : null}
                           <TableCell>
                             <Typography variant="subtitle2">{formatMoney(expense.amount)}</Typography>
                           </TableCell>
@@ -379,7 +410,7 @@ const ExpensesPage = () => {
                       ))}
                       {!expensesQuery.isLoading && expenses.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={9} sx={{ p: 0 }}>
+                          <TableCell colSpan={showBranchColumn ? 10 : 9} sx={{ p: 0 }}>
                             <ExpenseEmptyState
                               icon="solar:wallet-money-bold-duotone"
                               title={hasActiveFilters ? t('empty.operationsFilteredTitle') : t('empty.operationsTitle')}

@@ -6,8 +6,10 @@ import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
+import { useShowAllBranches } from 'app/layouts/components/branch-scope-columns';
 import { useTranslate } from 'app/providers/locales';
 import { RouterPathHelper } from 'app/routes';
+import { useAdminRestaurantScopeId } from 'modules/auth';
 import type { AdminHall } from 'shared/api/admin-types';
 import { Iconify } from 'shared/ui/Iconify';
 import { RouterLink } from 'shared/ui/RouterLink';
@@ -20,6 +22,8 @@ type FloorHallCardProps = {
 export function FloorHallCard({ hall, onEdit }: FloorHallCardProps) {
   const { t } = useTranslate('floor');
   const { t: tCommon } = useTranslate('common');
+  const showBranchName = useShowAllBranches();
+  const restaurantId = useAdminRestaurantScopeId();
 
   return (
     <Card
@@ -38,11 +42,17 @@ export function FloorHallCard({ hall, onEdit }: FloorHallCardProps) {
           {hall.name}
         </Typography>
         <Tooltip title={t('actions.edit')}>
-          <IconButton size="small" onClick={() => onEdit(hall)} sx={{ flexShrink: 0 }}>
+          <IconButton size="small" disabled={!restaurantId} onClick={() => onEdit(hall)} sx={{ flexShrink: 0 }}>
             <Iconify icon="solar:pen-bold" width={18} />
           </IconButton>
         </Tooltip>
       </Stack>
+
+      {showBranchName ? (
+        <Typography variant="caption" color="text.secondary">
+          {hall.restaurantName || '-'}
+        </Typography>
+      ) : null}
 
       <Typography
         variant="body2"
@@ -70,6 +80,7 @@ export function FloorHallCard({ hall, onEdit }: FloorHallCardProps) {
         href={RouterPathHelper.floorHallConstructor(hall.id)}
         color="inherit"
         variant="outlined"
+        disabled={!restaurantId}
         startIcon={<Iconify icon="solar:ruler-pen-bold" />}
         sx={{ mt: 'auto' }}>
         {t('actions.constructor')}

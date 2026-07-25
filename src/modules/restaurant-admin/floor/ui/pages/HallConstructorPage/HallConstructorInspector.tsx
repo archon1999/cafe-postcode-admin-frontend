@@ -1,4 +1,16 @@
-import { Box, Button, Card, Divider, MenuItem, Stack, TextField, Typography } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  Button,
+  Card,
+  Divider,
+  MenuItem,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
 
 import { useTranslate } from 'app/providers/locales';
 import type { AdminTableShapeVariant } from 'shared/api/admin-types';
@@ -95,59 +107,73 @@ export function HallConstructorInspector({
               ))}
             </TextField>
 
-            <Stack direction="row" spacing={1.5}>
-              <TextField
-                label={t('fields.positionX')}
-                type="number"
-                value={selectedTable.positionX}
-                onChange={(event) =>
-                  updateSelectedTable((table) => ({
-                    ...table,
-                    positionX: Math.max(0, Number(event.target.value) || 0),
-                  }))
-                }
-                fullWidth
-              />
-              <TextField
-                label={t('fields.positionY')}
-                type="number"
-                value={selectedTable.positionY}
-                onChange={(event) =>
-                  updateSelectedTable((table) => ({
-                    ...table,
-                    positionY: Math.max(0, Number(event.target.value) || 0),
-                  }))
-                }
-                fullWidth
-              />
-            </Stack>
+            <Accordion
+              disableGutters
+              elevation={0}
+              sx={{ border: 1, borderColor: 'divider', '&:before': { display: 'none' } }}>
+              <AccordionSummary expandIcon={<Iconify icon="solar:alt-arrow-down-linear" />}>
+                <Typography variant="subtitle2">
+                  {t('labels.advancedSettings', { defaultValue: 'Kengaytirilgan sozlamalar' })}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Stack spacing={1.5}>
+                  <Stack direction="row" spacing={1.5}>
+                    <TextField
+                      label={t('fields.positionX')}
+                      type="number"
+                      value={selectedTable.positionX}
+                      onChange={(event) =>
+                        updateSelectedTable((table) => ({
+                          ...table,
+                          positionX: Math.max(0, Number(event.target.value) || 0),
+                        }))
+                      }
+                      fullWidth
+                    />
+                    <TextField
+                      label={t('fields.positionY')}
+                      type="number"
+                      value={selectedTable.positionY}
+                      onChange={(event) =>
+                        updateSelectedTable((table) => ({
+                          ...table,
+                          positionY: Math.max(0, Number(event.target.value) || 0),
+                        }))
+                      }
+                      fullWidth
+                    />
+                  </Stack>
 
-            <Stack direction="row" spacing={1.5}>
-              <TextField
-                label={t('fields.width')}
-                type="number"
-                value={selectedTable.width}
-                onChange={(event) =>
-                  updateSelectedTable((table) => ({
-                    ...table,
-                    width: Math.max(1, Number(event.target.value) || 1),
-                  }))
-                }
-                fullWidth
-              />
-              <TextField
-                label={t('fields.height')}
-                type="number"
-                value={selectedTable.height}
-                onChange={(event) =>
-                  updateSelectedTable((table) => ({
-                    ...table,
-                    height: Math.max(1, Number(event.target.value) || 1),
-                  }))
-                }
-                fullWidth
-              />
-            </Stack>
+                  <Stack direction="row" spacing={1.5}>
+                    <TextField
+                      label={t('fields.width')}
+                      type="number"
+                      value={selectedTable.width}
+                      onChange={(event) =>
+                        updateSelectedTable((table) => ({
+                          ...table,
+                          width: Math.max(1, Number(event.target.value) || 1),
+                        }))
+                      }
+                      fullWidth
+                    />
+                    <TextField
+                      label={t('fields.height')}
+                      type="number"
+                      value={selectedTable.height}
+                      onChange={(event) =>
+                        updateSelectedTable((table) => ({
+                          ...table,
+                          height: Math.max(1, Number(event.target.value) || 1),
+                        }))
+                      }
+                      fullWidth
+                    />
+                  </Stack>
+                </Stack>
+              </AccordionDetails>
+            </Accordion>
 
             <Button
               color="error"

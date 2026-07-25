@@ -1,12 +1,10 @@
 import Button from '@mui/material/Button';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { useTranslate } from 'app/providers/locales';
-import { RoutePath, canAccessMyRestaurant } from 'app/routes';
+import { canAccessMyRestaurant } from 'app/routes';
 import { useAdminRestaurantScopeId, useCurrentUser } from 'modules/auth';
-import { useRouter } from 'shared/hooks/router';
 import { Iconify } from 'shared/ui/Iconify';
-import { LoadingScreen } from 'shared/ui/LoadingScreen';
 
 import { MyRestaurantSectionLayout } from '../../components/MyRestaurantSectionLayout';
 import { RestaurantPrepStationsSection } from '../../components/RestaurantPrepStationsSection';
@@ -14,23 +12,12 @@ import { RestaurantPrepStationsSection } from '../../components/RestaurantPrepSt
 const MyRestaurantPrepStationsPage = () => {
   const { t } = useTranslate('organizations');
   const { profile } = useCurrentUser();
-  const { replace } = useRouter();
   const restaurantId = useAdminRestaurantScopeId();
   const canManageMyRestaurant = canAccessMyRestaurant(profile);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
 
-  useEffect(() => {
-    if (profile && (!canManageMyRestaurant || !restaurantId)) {
-      replace(RoutePath.main);
-    }
-  }, [canManageMyRestaurant, profile, replace, restaurantId]);
-
-  if (profile && (!canManageMyRestaurant || !restaurantId)) {
+  if (profile && !canManageMyRestaurant) {
     return null;
-  }
-
-  if (!restaurantId) {
-    return <LoadingScreen />;
   }
 
   return (
@@ -41,6 +28,7 @@ const MyRestaurantPrepStationsPage = () => {
         <Button
           variant="contained"
           color="black"
+          disabled={!restaurantId}
           startIcon={<Iconify icon="mingcute:add-line" />}
           onClick={() => setCreateDialogOpen(true)}>
           {t('actions.createPrepStation')}

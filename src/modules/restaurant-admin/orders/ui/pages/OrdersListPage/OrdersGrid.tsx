@@ -2,20 +2,16 @@ import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import type {
-  GridColDef,
-  GridColumnVisibilityModel,
-  GridPaginationModel,
-  GridRowSelectionModel,
-  GridSortModel,
-} from '@mui/x-data-grid';
+import type { GridColDef, GridSortModel } from '@mui/x-data-grid';
 import { gridClasses } from '@mui/x-data-grid';
 import { useCallback, useMemo, useState } from 'react';
 
+import { useBranchScopeColumns } from 'app/layouts/components/branch-scope-columns';
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { RouterPathHelper } from 'app/routes';
 import type { AdminOrder } from 'shared/api/admin-types';
-import { DEFAULT_PAGINATION_MODEL, DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
+import { DEFAULT_PAGINATION_MODEL, DEFAULT_COLUMN_VISIBILITY_MODEL } from 'shared/constants';
+import { useDataGridPreferences } from 'shared/hooks/use-data-grid-preferences';
 import { DataGrid, DataGridEmptyState, withDetailLink } from 'shared/ui/CustomDataGrid';
 import { formatOrderNumberCellValue, OrderNumberCell } from 'shared/ui/OrderNumberCell';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
@@ -33,12 +29,12 @@ export const OrdersGrid = () => {
   const { t: tCommon } = useTranslate('common');
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
 
-  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_PAGINATION_MODEL);
-  const [filters, setFilters] = useState<OrdersGridFilters>(DEFAULT_ORDERS_GRID_FILTERS);
-  const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(
-    DEFAULT_COLUMN_VISIBILITY_MODEL,
-  );
-  const [selectedRows, setSelectedRows] = useState<GridRowSelectionModel>(DEFAULT_SELECTION_MODEL);
+  const { filters, setFilters, paginationModel, setPaginationModel, columnVisibilityModel, setColumnVisibilityModel } =
+    useDataGridPreferences<OrdersGridFilters>('restaurant-orders', {
+      filters: DEFAULT_ORDERS_GRID_FILTERS,
+      paginationModel: DEFAULT_PAGINATION_MODEL,
+      columnVisibilityModel: DEFAULT_COLUMN_VISIBILITY_MODEL,
+    });
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
 
   const ordersQuery = useGetOrdersQuery({
@@ -50,12 +46,15 @@ export const OrdersGrid = () => {
     ordering: getOrderingFromSortModel(sortModel),
   });
   const hasActiveFilters = Boolean(filters.search || filters.statuses.length || filters.channels.length);
-  const handleFiltersChange = useCallback((next: OrdersGridFilters) => {
-    setFilters(next);
-    setPaginationModel((prev) => ({ ...prev, page: 0 }));
-  }, []);
+  const handleFiltersChange = useCallback(
+    (next: OrdersGridFilters) => {
+      setFilters(next);
+      setPaginationModel((prev) => ({ ...prev, page: 0 }));
+    },
+    [setFilters, setPaginationModel],
+  );
 
-  const columns = useMemo<GridColDef<AdminOrder>[]>(
+  const baseColumns = useMemo<GridColDef<AdminOrder>[]>(
     () => [
       withDetailLink(
         {
@@ -115,18 +114,17 @@ export const OrdersGrid = () => {
         ),
       },
       {
-        field: 'openedByName',
-        headerName: t('fields.openedBy'),
-        minWidth: 180,
-        flex: 0.8,
-        valueGetter: (_v, row) => row.openedByName || '-',
-      },
-      {
-        field: 'cashierName',
-        headerName: t('fields.cashier'),
-        minWidth: 180,
-        flex: 0.8,
-        valueGetter: (_v, row) => row.cashierName || '-',
+        field: 'cashierAndOpenedBy',
+        headerName: t('fields.cashierAndOpenedBy'),
+        minWidth: 220,
+        flex: 0.9,
+        sortable: false,
+        valueGetter: (_v, row) => {
+          const names = [row.cashierName, row.openedByName].filter(
+            (name, index, values): name is string => Boolean(name) && values.indexOf(name) === index,
+          );
+          return names.length ? names.join(' / ') : '-';
+        },
       },
       {
         field: 'hallAndTable',
@@ -150,11 +148,11 @@ export const OrdersGrid = () => {
     ],
     [t, tCommon],
   );
+  const columns = useBranchScopeColumns(baseColumns);
 
   return (
     <Card sx={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'hidden' }}>
       <DataGrid
-        checkboxSelection
         rows={ordersQuery.data?.data ?? []}
         columns={columns}
         rowCount={ordersQuery.data?.total ?? 0}
@@ -168,8 +166,6 @@ export const OrdersGrid = () => {
         onPaginationModelChange={setPaginationModel}
         sortModel={sortModel}
         onSortModelChange={setSortModel}
-        rowSelectionModel={selectedRows}
-        onRowSelectionModelChange={setSelectedRows}
         columnVisibilityModel={columnVisibilityModel}
         onColumnVisibilityModelChange={setColumnVisibilityModel}
         disableColumnMenu

@@ -1,10 +1,12 @@
-import { Box, Button, Card, Stack, TextField, Typography, alpha } from '@mui/material';
+import { Box, Button, Card, Chip, IconButton, Stack, TextField, Tooltip, Typography, alpha } from '@mui/material';
+import { useState } from 'react';
 
 import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath } from 'app/routes';
 import { BackToListButton } from 'shared/ui/BackToListButton';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
+import { ConfirmDialog } from 'shared/ui/CustomDialog';
 import { Iconify } from 'shared/ui/Iconify';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 import { useSettingsContext } from 'shared/ui/Settings';
@@ -33,21 +35,30 @@ export const HallConstructorPageContent = ({ id }: HallConstructorPageContentPro
   const settings = useSettingsContext();
   const previewMode = settings.state.mode === 'dark' ? 'dark' : 'light';
   const constructor = useHallConstructorState(id);
+  const [zoom, setZoom] = useState(1);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const {
     addTable,
     beginDrag,
+    canRedo,
+    canUndo,
     changeGridColumns,
     deleteSelectedTable,
+    duplicateSelectedTable,
     draft,
     gridRows,
     hallName,
     isLoading,
+    isDirty,
     isSaving,
+    nudgeSelectedTable,
+    redo,
     save,
     selectedTable,
     selectedTableId,
     setSelectedTableId,
     updateSelectedTable,
+    undo,
   } = constructor;
 
   if (isLoading || !draft) return <LoadingScreen />;
@@ -59,7 +70,14 @@ export const HallConstructorPageContent = ({ id }: HallConstructorPageContentPro
         action={
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5}>
             <BackToListButton href={RoutePath.floorHallList} />
-            <Button variant="contained" onClick={() => void save()} disabled={isSaving}>
+            {isDirty ? (
+              <Chip
+                color="warning"
+                variant="soft"
+                label={t('labels.unsavedChanges', { defaultValue: "Saqlanmagan o'zgarishlar" })}
+              />
+            ) : null}
+            <Button variant="contained" onClick={() => void save()} disabled={isSaving || !isDirty}>
               {t('actions.save')}
             </Button>
           </Stack>
@@ -96,6 +114,63 @@ export const HallConstructorPageContent = ({ id }: HallConstructorPageContentPro
             </Stack>
           </Stack>
 
+          <Stack
+            direction="row"
+            spacing={0.5}
+            alignItems="center"
+            flexWrap="wrap"
+            useFlexGap
+            sx={{ mb: 2, p: 1, borderRadius: 1.5, bgcolor: 'background.neutral' }}>
+            <Tooltip title={t('actions.undo', { defaultValue: 'Bekor qilish' })}>
+              <span>
+                <IconButton
+                  aria-label={t('actions.undo', { defaultValue: 'Bekor qilish' })}
+                  disabled={!canUndo}
+                  onClick={undo}>
+                  <Iconify icon="solar:undo-left-round-bold-duotone" />
+                </IconButton>
+              </span>
+            </Tooltip>
+            <Tooltip title={t('actions.redo', { defaultValue: 'Qaytarish' })}>
+              <span>
+                <IconButton
+                  aria-label={t('actions.redo', { defaultValue: 'Qaytarish' })}
+                  disabled={!canRedo}
+                  onClick={redo}>
+                  <Iconify icon="solar:undo-right-round-bold-duotone" />
+                </IconButton>
+              </span>
+            </Tooltip>
+            <Button
+              size="small"
+              color="inherit"
+              startIcon={<Iconify icon="solar:copy-bold-duotone" />}
+              disabled={!selectedTable}
+              onClick={duplicateSelectedTable}>
+              {t('actions.duplicate', { defaultValue: 'Nusxalash' })}
+            </Button>
+            <Box sx={{ flex: 1 }} />
+            <Tooltip title={t('actions.zoomOut', { defaultValue: 'Kichraytirish' })}>
+              <span>
+                <IconButton disabled={zoom <= 0.6} onClick={() => setZoom((value) => Math.max(0.6, value - 0.1))}>
+                  <Iconify icon="solar:magnifer-zoom-out-linear" />
+                </IconButton>
+              </span>
+            </Tooltip>
+            <Typography
+              variant="caption"
+              sx={{ minWidth: 44, textAlign: 'center', fontVariantNumeric: 'tabular-nums' }}>
+              {Math.round(zoom * 100)}%
+            </Typography>
+            <Tooltip title={t('actions.zoomIn', { defaultValue: 'Kattalashtirish' })}>
+              <span>
+                <IconButton disabled={zoom >= 1.5} onClick={() => setZoom((value) => Math.min(1.5, value + 0.1))}>
+                  <Iconify icon="solar:magnifer-zoom-in-linear" />
+                </IconButton>
+              </span>
+            </Tooltip>
+          </Stack>
+
           <Box sx={{ overflowX: 'auto', overflowY: 'hidden', pb: 1 }}>
             <Box
               sx={(theme) => ({
@@ -117,6 +192,7 @@ export const HallConstructorPageContent = ({ id }: HallConstructorPageContentPro
                   previewMode === 'dark'
                     ? 'inset 0 1px 0 rgba(255,255,255,0.02)'
                     : 'inset 0 1px 0 rgba(255,255,255,0.52)',
+                zoom,
               })}>
               {draft.tables.map((table) => (
                 <Box
@@ -142,6 +218,7 @@ export const HallConstructorPageContent = ({ id }: HallConstructorPageContentPro
                       beginDrag('resize', table, event.clientX, event.clientY);
                       setSelectedTableId(table.localId);
                     }}
+                    onNudge={nudgeSelectedTable}
                   />
                 </Box>
               ))}
@@ -150,11 +227,32 @@ export const HallConstructorPageContent = ({ id }: HallConstructorPageContentPro
         </Card>
 
         <HallConstructorInspector
-          onDelete={deleteSelectedTable}
+          onDelete={() => setDeleteConfirmOpen(true)}
           selectedTable={selectedTable}
           updateSelectedTable={updateSelectedTable}
         />
       </Stack>
+
+      <ConfirmDialog
+        open={deleteConfirmOpen}
+        onClose={() => setDeleteConfirmOpen(false)}
+        title={t('dialogs.deleteTable.title', { defaultValue: "Stolni o'chirish" })}
+        content={t('dialogs.deleteTable.description', {
+          defaultValue:
+            "Bu stol konstruktor loyihasidan o'chiriladi. O'zgarish Saqlash bosilgandan keyin kuchga kiradi.",
+        })}
+        action={
+          <Button
+            color="error"
+            variant="contained"
+            onClick={() => {
+              deleteSelectedTable();
+              setDeleteConfirmOpen(false);
+            }}>
+            {t('actions.delete')}
+          </Button>
+        }
+      />
     </Content>
   );
 };

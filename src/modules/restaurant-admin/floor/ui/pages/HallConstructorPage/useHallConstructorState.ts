@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 import { useTranslate } from 'app/providers/locales';
@@ -19,6 +19,8 @@ import type { DraftTable } from './ConstructorTableCard';
 import { serializeHallConstructorDraft, toDraftTable, type HallConstructorDraft } from './hallConstructorDraft';
 import { useHallConstructorDrag } from './useHallConstructorDrag';
 
+const cloneDraft = (value: HallConstructorDraft): HallConstructorDraft => structuredClone(value);
+
 export function useHallConstructorState(id?: string) {
   const { t } = useTranslate('floor');
   const query = useGetHallConstructorQuery(id ?? '', { enabled: Boolean(id) });
@@ -28,6 +30,10 @@ export function useHallConstructorState(id?: string) {
   const [draft, setDraft] = useState<HallConstructorDraft | null>(null);
   const [initialSnapshot, setInitialSnapshot] = useState('');
   const [selectedTableId, setSelectedTableId] = useState<string | null>(null);
+  const historyRef = useRef<HallConstructorDraft[]>([]);
+  const historyIndexRef = useRef(-1);
+  const historyTimerRef = useRef<number | null>(null);
+  const [, setHistoryVersion] = useState(0);
   const beginDrag = useHallConstructorDrag(setDraft);
 
   useEffect(() => {
@@ -38,9 +44,33 @@ export function useHallConstructorState(id?: string) {
       deletedTableIds: [],
     };
     setDraft(nextDraft);
+    historyRef.current = [cloneDraft(nextDraft)];
+    historyIndexRef.current = 0;
+    setHistoryVersion((value) => value + 1);
     setInitialSnapshot(serializeHallConstructorDraft(nextDraft));
     setSelectedTableId(nextDraft.tables[0]?.localId ?? null);
   }, [query.data]);
+
+  useEffect(() => {
+    if (!draft) return undefined;
+    if (historyTimerRef.current) window.clearTimeout(historyTimerRef.current);
+
+    historyTimerRef.current = window.setTimeout(() => {
+      const currentHistory = historyRef.current;
+      const currentEntry = currentHistory[historyIndexRef.current];
+      if (currentEntry && serializeHallConstructorDraft(currentEntry) === serializeHallConstructorDraft(draft)) return;
+
+      const nextHistory = currentHistory.slice(0, historyIndexRef.current + 1);
+      nextHistory.push(cloneDraft(draft));
+      historyRef.current = nextHistory.slice(-50);
+      historyIndexRef.current = historyRef.current.length - 1;
+      setHistoryVersion((value) => value + 1);
+    }, 240);
+
+    return () => {
+      if (historyTimerRef.current) window.clearTimeout(historyTimerRef.current);
+    };
+  }, [draft]);
 
   const isDirty = useMemo(() => serializeHallConstructorDraft(draft) !== initialSnapshot, [draft, initialSnapshot]);
   const selectedTable = useMemo(
@@ -114,6 +144,47 @@ export function useHallConstructorState(id?: string) {
     });
   };
 
+  const duplicateSelectedTable = () => {
+    setDraft((currentDraft) => {
+      if (!currentDraft || !selectedTableId) return currentDraft;
+      const source = currentDraft.tables.find((table) => table.localId === selectedTableId);
+      if (!source) return currentDraft;
+      const tableNumber = getNextTableNumber(currentDraft.tables);
+      const placement = findFirstAvailablePlacement(currentDraft.tables, currentDraft.gridColumns);
+      const duplicate: DraftTable = {
+        ...source,
+        id: '',
+        localId: `draft-${tableNumber}-${Date.now()}`,
+        name: `${tableNumber}-stol`,
+        tableNumber,
+        positionX: placement.positionX,
+        positionY: placement.positionY,
+      };
+      setSelectedTableId(duplicate.localId);
+      return { ...currentDraft, tables: [...currentDraft.tables, duplicate] };
+    });
+  };
+
+  const restoreHistory = (nextIndex: number) => {
+    const snapshot = historyRef.current[nextIndex];
+    if (!snapshot) return;
+    historyIndexRef.current = nextIndex;
+    setDraft(cloneDraft(snapshot));
+    setSelectedTableId((current) =>
+      snapshot.tables.some((table) => table.localId === current) ? current : (snapshot.tables[0]?.localId ?? null),
+    );
+    setHistoryVersion((value) => value + 1);
+  };
+
+  const undo = () => restoreHistory(historyIndexRef.current - 1);
+  const redo = () => restoreHistory(historyIndexRef.current + 1);
+  const nudgeSelectedTable = (deltaX: number, deltaY: number) =>
+    updateSelectedTable((table) => ({
+      ...table,
+      positionX: table.positionX + deltaX,
+      positionY: table.positionY + deltaY,
+    }));
+
   const deleteSelectedTable = () => {
     if (!selectedTableId) return;
     setDraft((currentDraft) => {
@@ -153,24 +224,34 @@ export function useHallConstructorState(id?: string) {
     };
     setDraft(nextDraft);
     setInitialSnapshot(serializeHallConstructorDraft(nextDraft));
+    historyRef.current = [cloneDraft(nextDraft)];
+    historyIndexRef.current = 0;
+    setHistoryVersion((value) => value + 1);
     setSelectedTableId(nextDraft.tables[0]?.localId ?? null);
     toast.success(t('messages.constructorSaved'));
   };
 
   return {
     addTable,
+    canRedo: historyIndexRef.current < historyRef.current.length - 1,
+    canUndo: historyIndexRef.current > 0,
     beginDrag,
     changeGridColumns,
     deleteSelectedTable,
+    duplicateSelectedTable,
     draft,
     gridRows,
     isLoading: query.isLoading,
+    isDirty,
     isSaving: updateMutation.isPending,
     hallName: query.data?.hallName,
     save,
+    nudgeSelectedTable,
+    redo,
     selectedTable,
     selectedTableId,
     setSelectedTableId,
     updateSelectedTable,
+    undo,
   };
 }

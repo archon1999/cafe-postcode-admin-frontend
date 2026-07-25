@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import { useAdminCreateAccess } from 'app/layouts/components/admin-scope-access';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath } from 'app/routes';
+import { useAdminRestaurantScopeId } from 'modules/auth';
 import type { CatalogCategory } from 'shared/api/admin-types';
 import { EmptyContent } from 'shared/ui/EmptyContent';
 import { Iconify } from 'shared/ui/Iconify';
@@ -41,6 +42,7 @@ export function CatalogBrowserCategoriesPanel({
   onReorder,
 }: CatalogBrowserCategoriesPanelProps) {
   const { t } = useTranslate('catalog');
+  const restaurantId = useAdminRestaurantScopeId();
   const { disabled: isCreateCategoryDisabled } = useAdminCreateAccess(RoutePath.catalogCategoryCreate);
 
   return (
@@ -60,7 +62,7 @@ export function CatalogBrowserCategoriesPanel({
 
             <Tooltip title={t('actions.edit')}>
               <span>
-                <IconButton onClick={onEditCategory} disabled={!canEditCategory}>
+                <IconButton onClick={onEditCategory} disabled={!canEditCategory || !restaurantId}>
                   <Iconify icon="solar:pen-bold" width={18} />
                 </IconButton>
               </span>
@@ -82,7 +84,7 @@ export function CatalogBrowserCategoriesPanel({
             gridTemplateColumns={{ xs: 'repeat(2, minmax(0, 1fr))', sm: 'repeat(3, minmax(0, 1fr))' }}
             gap={1.5}
             dragLabel={t('labels.dragToReorder')}
-            disabled={isReordering}
+            disabled={isReordering || !restaurantId}
             onReorder={onReorder}
             renderItem={(category) => (
               <CatalogBrowserCategoryCard

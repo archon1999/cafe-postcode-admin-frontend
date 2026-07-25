@@ -37,16 +37,16 @@
       "title": "Tayyorlash stansiyasini tahrirlash"
     },
     "restaurants": {
-      "title": "Mijozlar"
+      "title": "Shahobchalar"
     },
     "restaurantCreate": {
-      "title": "Yangi mijoz"
+      "title": "Yangi shahobcha"
     },
     "restaurantEdit": {
-      "title": "Mijozni tahrirlash"
+      "title": "Shahobchani tahrirlash"
     },
     "myRestaurant": {
-      "title": "Mening restoranim"
+      "title": "Mening shahobcham"
     },
     "myRestaurantGeneral": {
       "title": "Ma'lumot"
@@ -213,7 +213,7 @@
     "paymentIntegration": "MARTA payment integratsiya",
     "printerIntegration": "Printer integratsiya",
     "cooks": "Oshpazlar",
-    "restaurant": "Mijoz",
+    "restaurant": "Shahobcha",
     "legalName": "Yuridik nom",
     "taxNumber": "STIR",
     "authCode": "Aktivatsiya kodi",
@@ -299,12 +299,12 @@
     "fiscalProfileDescription": "Filialning xizmat haqi, STIR va QQS kabi kassaga ta'sir qiluvchi maydonlari shu bo'limda saqlanadi.",
     "branchFiscalProfile": "Filial fiskal profili",
     "customerOverview": {
-      "title": "Mijoz ma'lumotlari",
-      "description": "Mijozning asosiy ma'lumotlari va joriy aktivlik holati shu yerda ko'rinadi."
+      "title": "Shahobcha ma'lumotlari",
+      "description": "Shahobchaning asosiy ma'lumotlari va joriy aktivlik holati shu yerda ko'rinadi."
     },
     "activeUsers": {
       "title": "Aktiv foydalanuvchilar",
-      "description": "Mijozga biriktirilgan aktiv foydalanuvchilar va ularning rollari."
+      "description": "Shahobchaga biriktirilgan aktiv foydalanuvchilar va ularning rollari."
     },
     "soliqIntegration": {
       "title": "Soliq bilan integratsiya",
@@ -398,8 +398,8 @@
     "createCashDesk": "Yangi kassa",
     "createDistributionPoint": "Yangi nuqta",
     "createPrepStation": "Yangi stansiya",
-    "createRestaurant": "Yangi mijoz",
-    "editRestaurantProfile": "Mijoz profilini tahrirlash",
+    "createRestaurant": "Yangi shahobcha",
+    "editRestaurantProfile": "Shahobcha profilini tahrirlash",
     "showAuthCode": "Kodni ko'rsatish",
     "hideAuthCode": "Kodni yashirish",
     "uploadPosAuthBackgroundImage": "Rasm yuklash",
@@ -431,8 +431,8 @@
       "description": "\"{{name}}\" integratsiyasini o'chirmoqchimisiz?"
     },
     "deleteRestaurant": {
-      "title": "Mijozni o'chirish",
-      "description": "\"{{name}}\" mijozni o'chirmoqchimisiz?"
+      "title": "Shahobchani o'chirish",
+      "description": "\"{{name}}\" shahobchani o'chirmoqchimisiz?"
     },
     "balanceTopUp": {
       "title": "Balansni to'ldirish"
@@ -485,12 +485,12 @@
     },
     "restaurants": {
       "noData": {
-        "title": "Mijozlar hali yo'q",
-        "description": "Mijozlar yaratilgandan keyin ular shu yerda ko'rinadi."
+        "title": "Shahobchalar hali yo'q",
+        "description": "Shahobchalar yaratilgandan keyin ular shu yerda ko'rinadi."
       },
       "noResults": {
-        "title": "Mijoz topilmadi",
-        "description": "Qidiruv yoki filterlarga mos mijoz topilmadi."
+        "title": "Shahobcha topilmadi",
+        "description": "Qidiruv yoki filterlarga mos shahobcha topilmadi."
       }
     },
     "integrations": {

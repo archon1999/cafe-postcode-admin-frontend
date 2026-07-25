@@ -11,7 +11,7 @@ describe('getUsersGridActionKeys', () => {
         canChangePin: true,
         employmentStatus: 'active',
       }),
-    ).toEqual(['view', 'edit', 'change-pin', 'archive']);
+    ).toEqual(['view', 'edit', 'change-pin', 'deactivate', 'archive']);
   });
 
   it('omits employee edit affordances without employees.update', () => {
@@ -33,7 +33,7 @@ describe('getUsersGridActionKeys', () => {
         canChangePin: false,
         employmentStatus: 'active',
       }),
-    ).toEqual(['view', 'edit', 'archive']);
+    ).toEqual(['view', 'edit', 'deactivate', 'archive']);
   });
 
   it('never adds change pin for system users', () => {
@@ -44,6 +44,17 @@ describe('getUsersGridActionKeys', () => {
         canChangePin: false,
         employmentStatus: 'active',
       }),
-    ).toEqual(['view', 'edit', 'archive']);
+    ).toEqual(['view', 'edit', 'deactivate', 'archive']);
+  });
+
+  it('offers activation for an inactive editable employee', () => {
+    expect(
+      getUsersGridActionKeys({
+        surface: 'employee',
+        canEditEmployee: true,
+        employmentStatus: 'inactive',
+        isActive: false,
+      }),
+    ).toContain('activate');
   });
 });

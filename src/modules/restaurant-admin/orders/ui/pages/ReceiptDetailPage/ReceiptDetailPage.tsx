@@ -7,14 +7,17 @@ import Typography from '@mui/material/Typography';
 
 import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
-import { RoutePath } from 'app/routes';
+import { RoutePath, RouterPathHelper } from 'app/routes';
 import { useParams, useRedirectOnNotFound } from 'shared/hooks/router';
+import { usePageTitle } from 'shared/hooks/use-page-title';
 import { BackToListButton } from 'shared/ui/BackToListButton';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
+import { DetailPageLink } from 'shared/ui/DetailPageLink';
 import { Iconify } from 'shared/ui/Iconify';
 import { Label } from 'shared/ui/Label';
 import { LabelRowWithIcon } from 'shared/ui/LabelRowWithIcon/LabelRowWithIcon';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
+import { TechnicalDetailsAccordion } from 'shared/ui/TechnicalDetailsAccordion';
 import { formatMoney } from 'shared/utils/format-money';
 import { formatDateTime } from 'shared/utils/format-time';
 
@@ -31,6 +34,11 @@ const ReceiptDetailPage = () => {
   const { t: tCommon } = useTranslate('common');
   const { id } = useParams<{ id: string }>();
   const query = useGetReceiptByIdQuery(id ?? '');
+  usePageTitle(
+    query.data
+      ? [t('pages.receipts.title'), t('pages.receiptDetail.title', { orderNumber: query.data.orderNumber })]
+      : [t('pages.receipts.title')],
+  );
 
   useRedirectOnNotFound(query.error, !query.isLoading);
 
@@ -51,7 +59,11 @@ const ReceiptDetailPage = () => {
             <Stack spacing={2.5}>
               <LabelRowWithIcon
                 label={t('fields.orderNumber')}
-                value={`#${receipt.orderNumber}`}
+                value={
+                  <DetailPageLink href={RouterPathHelper.orderView(receipt.order)}>
+                    #{receipt.orderNumber}
+                  </DetailPageLink>
+                }
                 icon="solar:bill-list-bold-duotone"
               />
               <LabelRowWithIcon
@@ -130,14 +142,7 @@ const ReceiptDetailPage = () => {
           </Card>
         </Grid>
         <Grid size={{ xs: 12 }}>
-          <Card sx={{ p: 3 }}>
-            <Stack spacing={2}>
-              <Typography variant="h6">{t('sections.receiptPayload')}</Typography>
-              <Box component="pre" sx={{ m: 0, whiteSpace: 'pre-wrap', typography: 'body2' }}>
-                {JSON.stringify(receipt.payload ?? {}, null, 2)}
-              </Box>
-            </Stack>
-          </Card>
+          <TechnicalDetailsAccordion title={t('sections.receiptPayload')} value={receipt.payload} />
         </Grid>
       </Grid>
     </Content>

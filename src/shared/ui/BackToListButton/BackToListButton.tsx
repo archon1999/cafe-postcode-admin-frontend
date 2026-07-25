@@ -15,9 +15,13 @@ export function BackToListButton({ href }: BackToListButtonProps) {
     <Button
       component={RouterLink}
       href={href}
-      variant="outlined"
+      variant="soft"
       color="inherit"
-      startIcon={<Iconify icon="solar:arrow-left-linear" />}>
+      startIcon={<Iconify icon="solar:arrow-left-linear" />}
+      sx={{
+        bgcolor: 'action.selected',
+        '&:hover': { bgcolor: 'action.hover' },
+      }}>
       {t('actions.backToList')}
     </Button>
   );

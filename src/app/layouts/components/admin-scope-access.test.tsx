@@ -80,6 +80,23 @@ describe('getAdminScopeRequirement', () => {
   it('does not require a restaurant outside create pages', () => {
     expect(getAdminScopeRequirement(RoutePath.catalogItemList)).toBe('none');
   });
+
+  it.each([
+    RoutePath.organizationMyRestaurant,
+    RoutePath.organizationMyRestaurantSetup,
+    RoutePath.organizationMyRestaurantGeneral,
+    RoutePath.organizationMyRestaurantPrintTemplateList,
+  ])('requires a restaurant for branch-specific management path %s', (pathname) => {
+    expect(getAdminScopeRequirement(pathname)).toBe('restaurant');
+  });
+
+  it.each([
+    RoutePath.organizationMyRestaurantCashDeskList,
+    RoutePath.organizationMyRestaurantPrepStationList,
+    RoutePath.organizationMyRestaurantIntegrationConfigList,
+  ])('allows all branches for management list path %s', (pathname) => {
+    expect(getAdminScopeRequirement(pathname)).toBe('none');
+  });
 });
 
 describe('hasRequiredAdminScope', () => {

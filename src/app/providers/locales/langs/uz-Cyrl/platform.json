@@ -13,7 +13,7 @@
     "legalName": "Юридик ном",
     "directorName": "Директор",
     "phone": "Телефон",
-    "clients": "Мижозлари",
+    "clients": "Шахобчалари",
     "email": "Email",
     "address": "Манзил",
     "customTariffAllowed": "Махсус тариф рухсати",
@@ -115,7 +115,7 @@
   "localAgents": {
     "title": "Локал агентлар",
     "fields": {
-      "restaurant": "Ресторан",
+      "restaurant": "Шахобча",
       "agent": "Агент",
       "status": "Статус",
       "version": "Версия",

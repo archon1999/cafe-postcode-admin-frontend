@@ -29,7 +29,7 @@
       "description": "Foydalanuvchining holati va ma'lumotlarini yangilang."
     },
     "view": {
-      "title": "Foydalanuvchi tavsilotlari"
+      "title": "Foydalanuvchi tafsilotlari"
     },
     "employeeCreate": {
       "title": "Yangi xodim",
@@ -40,7 +40,7 @@
       "description": "Xodimning holati, kirish usuli va ma'lumotlarini yangilang."
     },
     "employeeView": {
-      "title": "Xodim tavsilotlari"
+      "title": "Xodim tafsilotlari"
     }
   },
   "fields": {
@@ -59,6 +59,7 @@
     "action": "Amal",
     "description": "Tavsif",
     "permissionsCount": "Ruxsatlar soni",
+    "restaurantAccess": "Shahobcha ruxsati",
     "hallSwitchPermission": "Zal almashtirish ruxsati",
     "primaryHall": "Asosiy zal",
     "primaryHallHint": "Ixtiyoriy. Xodim uchun asosiy zalni tanlang.",
@@ -117,6 +118,7 @@
   },
   "sections": {
     "account": "Kirish va asosiy ma'lumotlar",
+    "access": "Tizimga kirish va ruxsatlar",
     "assignment": "Zalga biriktirish",
     "payroll": "Mehnat va maosh"
   },

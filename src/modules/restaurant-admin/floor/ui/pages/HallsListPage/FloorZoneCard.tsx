@@ -2,6 +2,7 @@ import Box from '@mui/material/Box';
 import ButtonBase from '@mui/material/ButtonBase';
 import Typography from '@mui/material/Typography';
 
+import { useShowAllBranches } from 'app/layouts/components/branch-scope-columns';
 import type { AdminZoneOrCabin } from 'shared/api/admin-types';
 import { Iconify } from 'shared/ui/Iconify';
 
@@ -13,6 +14,8 @@ type FloorZoneCardProps = {
 };
 
 export function FloorZoneCard({ zone, hallCount, isSelected, onSelect }: FloorZoneCardProps) {
+  const showBranchName = useShowAllBranches();
+
   return (
     <ButtonBase
       onClick={() => onSelect(zone.id)}
@@ -58,6 +61,11 @@ export function FloorZoneCard({ zone, hallCount, isSelected, onSelect }: FloorZo
       <Typography variant="subtitle2" sx={{ overflowWrap: 'anywhere' }}>
         {zone.name}
       </Typography>
+      {showBranchName ? (
+        <Typography variant="caption" color="text.secondary">
+          {zone.restaurantName || '-'}
+        </Typography>
+      ) : null}
       <Typography variant="caption" color="text.secondary">
         {hallCount}
       </Typography>

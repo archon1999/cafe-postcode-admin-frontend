@@ -2,15 +2,19 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import type { GridColumnVisibilityModel, GridPaginationModel, GridSortModel } from '@mui/x-data-grid';
+import type { GridSortModel } from '@mui/x-data-grid';
 import { useEffect, useMemo, useState } from 'react';
 
 import { ListPageBody, ListPageContent } from 'app/layouts/Dashboard';
+import { useTranslate } from 'app/providers/locales';
 import { RoutePath, RouterPathHelper, canAccessReports } from 'app/routes';
 import { useCurrentUser } from 'modules/auth';
 import type { AdminReportKey } from 'shared/api/admin-types';
 import { DEFAULT_PAGINATION_MODEL, DEFAULT_COLUMN_VISIBILITY_MODEL } from 'shared/constants';
 import { useParams, useRouter } from 'shared/hooks/router';
+import { useDataGridPreferences } from 'shared/hooks/use-data-grid-preferences';
+import { usePageTitle } from 'shared/hooks/use-page-title';
+import { StorageService } from 'shared/lib/storage';
 
 import { DEFAULT_REPORT_KEY, getReportDefinition, REPORTS_REGISTRY } from '../../../domain';
 import {
@@ -27,6 +31,7 @@ import { ReportsSummarySection } from '../../components/ReportsSummarySection';
 import { ReportsTableSection } from '../../components/ReportsTableSection';
 
 const REPORTS_DATE_RANGE_STORAGE_KEY = 'restaurant-admin-reports-date-range';
+const REPORTS_LAST_REPORT_STORAGE_KEY = 'restaurant-admin-reports-last-report';
 
 function getInitialReportsDateRangeState(): ReportsDateRangeState {
   const fallbackState = createPresetRangeState('today');
@@ -36,13 +41,9 @@ function getInitialReportsDateRangeState(): ReportsDateRangeState {
   }
 
   try {
-    const rawValue = window.sessionStorage.getItem(REPORTS_DATE_RANGE_STORAGE_KEY);
+    const parsed = StorageService.getItem<Partial<ReportsDateRangeState>>(REPORTS_DATE_RANGE_STORAGE_KEY);
 
-    if (!rawValue) {
-      return fallbackState;
-    }
-
-    const parsed = JSON.parse(rawValue) as Partial<ReportsDateRangeState>;
+    if (!parsed) return fallbackState;
 
     if (
       !isValidReportsDate(parsed.startDate) ||
@@ -72,6 +73,7 @@ const ReportsPage = () => {
   const router = useRouter();
   const theme = useTheme();
   const mdUp = useMediaQuery(theme.breakpoints.up('md'));
+  const { t } = useTranslate('reports');
 
   const reportParam = params.reportKey;
   const availableReports = useMemo(
@@ -85,7 +87,12 @@ const ReportsPage = () => {
     () => new Set<AdminReportKey>(availableReports.map((report) => report.key)),
     [availableReports],
   );
-  const fallbackReportKey = availableReports[0]?.key ?? DEFAULT_REPORT_KEY;
+  const [lastReportKey, setLastReportKey] = useState<AdminReportKey | null>(() =>
+    StorageService.getItem<AdminReportKey>(REPORTS_LAST_REPORT_STORAGE_KEY),
+  );
+  const fallbackReportKey =
+    (lastReportKey && availableReportKeys.has(lastReportKey) ? lastReportKey : availableReports[0]?.key) ??
+    DEFAULT_REPORT_KEY;
   const selectedReportKey = availableReportKeys.has(reportParam as AdminReportKey)
     ? (reportParam as AdminReportKey)
     : fallbackReportKey;
@@ -93,20 +100,50 @@ const ReportsPage = () => {
     availableReports.find((report) => report.key === selectedReportKey) ?? getReportDefinition(fallbackReportKey);
   const canViewReports = canAccessReports(profile);
 
+  usePageTitle([t('workspace.title'), t(selectedReport.titleKey)]);
+
   const [dateRangeState, setDateRangeState] = useState<ReportsDateRangeState>(getInitialReportsDateRangeState);
-  const [search, setSearch] = useState('');
-  const [paymentMethods, setPaymentMethods] = useState<string[]>([]);
-  const [receiptKinds, setReceiptKinds] = useState<string[]>([]);
-  const [statuses, setStatuses] = useState<string[]>([]);
-  const [categoryIds, setCategoryIds] = useState<string[]>([]);
-  const [cashDeskIds, setCashDeskIds] = useState<string[]>([]);
-  const [cashierIds, setCashierIds] = useState<string[]>([]);
-  const [differenceOnly, setDifferenceOnly] = useState<string[]>([]);
-  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_PAGINATION_MODEL);
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
-  const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(
-    DEFAULT_COLUMN_VISIBILITY_MODEL,
-  );
+  const {
+    filters: reportFilters,
+    setFilterField,
+    paginationModel,
+    setPaginationModel,
+    columnVisibilityModel,
+    setColumnVisibilityModel,
+  } = useDataGridPreferences<{
+    search: string;
+    paymentMethods: string[];
+    receiptKinds: string[];
+    statuses: string[];
+    categoryIds: string[];
+    cashDeskIds: string[];
+    cashierIds: string[];
+    differenceOnly: string[];
+  }>(`reports-${selectedReport.key}`, {
+    filters: {
+      search: '',
+      paymentMethods: [],
+      receiptKinds: [],
+      statuses: [],
+      categoryIds: [],
+      cashDeskIds: [],
+      cashierIds: [],
+      differenceOnly: [],
+    },
+    paginationModel: DEFAULT_PAGINATION_MODEL,
+    columnVisibilityModel: DEFAULT_COLUMN_VISIBILITY_MODEL,
+  });
+  const { search, paymentMethods, receiptKinds, statuses, categoryIds, cashDeskIds, cashierIds, differenceOnly } =
+    reportFilters;
+  const setSearch = (value: string) => setFilterField('search', value);
+  const setPaymentMethods = (value: string[]) => setFilterField('paymentMethods', value);
+  const setReceiptKinds = (value: string[]) => setFilterField('receiptKinds', value);
+  const setStatuses = (value: string[]) => setFilterField('statuses', value);
+  const setCategoryIds = (value: string[]) => setFilterField('categoryIds', value);
+  const setCashDeskIds = (value: string[]) => setFilterField('cashDeskIds', value);
+  const setCashierIds = (value: string[]) => setFilterField('cashierIds', value);
+  const setDifferenceOnly = (value: string[]) => setFilterField('differenceOnly', value);
   const { startDate, endDate, activePreset } = dateRangeState;
 
   useEffect(() => {
@@ -116,30 +153,30 @@ const ReportsPage = () => {
   }, [canViewReports, profile, router]);
 
   useEffect(() => {
-    if (reportParam && !availableReportKeys.has(reportParam as AdminReportKey)) {
+    if (!reportParam || !availableReportKeys.has(reportParam as AdminReportKey)) {
       router.replace(RouterPathHelper.reportDetail(fallbackReportKey));
     }
   }, [availableReportKeys, fallbackReportKey, reportParam, router]);
+
+  useEffect(() => {
+    if (!reportParam || !availableReportKeys.has(reportParam as AdminReportKey)) {
+      return;
+    }
+
+    const nextReportKey = reportParam as AdminReportKey;
+    setLastReportKey(nextReportKey);
+    StorageService.setItem(REPORTS_LAST_REPORT_STORAGE_KEY, nextReportKey);
+  }, [availableReportKeys, reportParam]);
 
   useEffect(() => {
     if (typeof window === 'undefined') {
       return;
     }
 
-    window.sessionStorage.setItem(REPORTS_DATE_RANGE_STORAGE_KEY, JSON.stringify(dateRangeState));
+    StorageService.setItem(REPORTS_DATE_RANGE_STORAGE_KEY, dateRangeState);
   }, [dateRangeState]);
 
   useEffect(() => {
-    setSearch('');
-    setPaymentMethods([]);
-    setReceiptKinds([]);
-    setStatuses([]);
-    setCategoryIds([]);
-    setCashDeskIds([]);
-    setCashierIds([]);
-    setDifferenceOnly([]);
-    setPaginationModel(DEFAULT_PAGINATION_MODEL);
-    setColumnVisibilityModel(DEFAULT_COLUMN_VISIBILITY_MODEL);
     setSortModel(
       selectedReport.defaultSort
         ? [{ field: selectedReport.defaultSort.field, sort: selectedReport.defaultSort.sort }]
@@ -152,6 +189,8 @@ const ReportsPage = () => {
   }
 
   const handleReportSelect = (reportKey: AdminReportKey) => {
+    setLastReportKey(reportKey);
+    StorageService.setItem(REPORTS_LAST_REPORT_STORAGE_KEY, reportKey);
     router.push(RouterPathHelper.reportDetail(reportKey));
   };
 

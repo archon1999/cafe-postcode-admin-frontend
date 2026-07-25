@@ -43,6 +43,7 @@ export function ConstructorTableCard({
   onSelect,
   onMoveStart,
   onResizeStart,
+  onNudge,
   mode,
 }: {
   table: DraftTable;
@@ -50,6 +51,7 @@ export function ConstructorTableCard({
   onSelect: () => void;
   onMoveStart: (event: React.PointerEvent<HTMLElement>) => void;
   onResizeStart: (event: React.PointerEvent<HTMLButtonElement>) => void;
+  onNudge: (deltaX: number, deltaY: number) => void;
   mode: 'light' | 'dark';
 }) {
   const markers = getVariantMarkers(table.shapeVariant);
@@ -66,11 +68,24 @@ export function ConstructorTableCard({
       component="div"
       role="button"
       tabIndex={0}
+      aria-label={table.name}
       onClick={onSelect}
       onKeyDown={(event) => {
         if (event.key === 'Enter' || event.key === ' ') {
           event.preventDefault();
           onSelect();
+        }
+        const directions: Partial<Record<string, [number, number]>> = {
+          ArrowLeft: [-1, 0],
+          ArrowRight: [1, 0],
+          ArrowUp: [0, -1],
+          ArrowDown: [0, 1],
+        };
+        const direction = directions[event.key];
+        if (direction) {
+          event.preventDefault();
+          onSelect();
+          onNudge(...direction);
         }
       }}
       onPointerDown={onMoveStart}

@@ -1,20 +1,24 @@
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
 import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
-import { RoutePath } from 'app/routes';
+import { RoutePath, RouterPathHelper } from 'app/routes';
 import { useParams, useRedirectOnNotFound } from 'shared/hooks/router';
+import { usePageTitle } from 'shared/hooks/use-page-title';
 import { BackToListButton } from 'shared/ui/BackToListButton';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
+import { ConfirmDialog } from 'shared/ui/CustomDialog';
+import { DetailPageLink } from 'shared/ui/DetailPageLink';
 import { Label } from 'shared/ui/Label';
 import { LabelRowWithIcon } from 'shared/ui/LabelRowWithIcon/LabelRowWithIcon';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
+import { TechnicalDetailsAccordion } from 'shared/ui/TechnicalDetailsAccordion';
 import { formatMoney } from 'shared/utils/format-money';
 import { formatDateTime } from 'shared/utils/format-time';
 
@@ -27,6 +31,12 @@ const PaymentDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const query = useGetPaymentByIdQuery(id ?? '');
   const retryFiscalMutation = useRetryPaymentFiscalMutation(id ?? '');
+  const [retryConfirmOpen, setRetryConfirmOpen] = useState(false);
+  usePageTitle(
+    query.data
+      ? [t('pages.payments.title'), t('pages.paymentDetail.title', { orderNumber: query.data.orderNumber })]
+      : [t('pages.payments.title')],
+  );
 
   useRedirectOnNotFound(query.error, !query.isLoading);
 
@@ -46,7 +56,11 @@ const PaymentDetailPage = () => {
             <Stack spacing={2.5}>
               <LabelRowWithIcon
                 label={t('fields.orderNumber')}
-                value={`#${payment.orderNumber}`}
+                value={
+                  <DetailPageLink href={RouterPathHelper.orderView(payment.order)}>
+                    #{payment.orderNumber}
+                  </DetailPageLink>
+                }
                 icon="solar:bill-list-bold-duotone"
               />
               <LabelRowWithIcon
@@ -117,22 +131,7 @@ const PaymentDetailPage = () => {
                     variant="contained"
                     color="black"
                     loading={retryFiscalMutation.isPending}
-                    onClick={() => {
-                      retryFiscalMutation
-                        .mutateAsync()
-                        .then((result) => {
-                          if (result.result?.ok) {
-                            toast.success(t('messages.fiscalRetrySent'));
-                          } else {
-                            toast.error(String(result.result?.detail ?? t('messages.fiscalRetryFailed')));
-                          }
-                        })
-                        .catch((error: unknown) => {
-                          const detail = (error as { response?: { data?: { detail?: string } } })?.response?.data
-                            ?.detail;
-                          toast.error(detail ?? t('messages.fiscalRetryFailed'));
-                        });
-                    }}>
+                    onClick={() => setRetryConfirmOpen(true)}>
                     {t('actions.retryFiscal')}
                   </Button>
                 ) : null}
@@ -149,16 +148,41 @@ const PaymentDetailPage = () => {
           </Stack>
         </Grid>
         <Grid size={{ xs: 12 }}>
-          <Card sx={{ p: 3 }}>
-            <Stack spacing={2}>
-              <Typography variant="h6">{t('sections.providerPayload')}</Typography>
-              <Box component="pre" sx={{ m: 0, whiteSpace: 'pre-wrap', typography: 'body2' }}>
-                {JSON.stringify(payment.providerPayload ?? {}, null, 2)}
-              </Box>
-            </Stack>
-          </Card>
+          <TechnicalDetailsAccordion title={t('sections.providerPayload')} value={payment.providerPayload} />
         </Grid>
       </Grid>
+
+      <ConfirmDialog
+        open={retryConfirmOpen}
+        onClose={() => setRetryConfirmOpen(false)}
+        title={t('dialogs.retryFiscal.title', { defaultValue: 'Fiscalga qayta yuborish' })}
+        content={t('dialogs.retryFiscal.description', {
+          defaultValue: "To'lov ma'lumotlari fiscal xizmatga yana yuboriladi. Davom etasizmi?",
+        })}
+        action={
+          <Button
+            variant="contained"
+            loading={retryFiscalMutation.isPending}
+            onClick={() => {
+              retryFiscalMutation
+                .mutateAsync()
+                .then((result) => {
+                  setRetryConfirmOpen(false);
+                  if (result.result?.ok) {
+                    toast.success(t('messages.fiscalRetrySent'));
+                  } else {
+                    toast.error(String(result.result?.detail ?? t('messages.fiscalRetryFailed')));
+                  }
+                })
+                .catch((error: unknown) => {
+                  const detail = (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
+                  toast.error(detail ?? t('messages.fiscalRetryFailed'));
+                });
+            }}>
+            {t('actions.retryFiscal')}
+          </Button>
+        }
+      />
     </Content>
   );
 };

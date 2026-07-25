@@ -35,7 +35,7 @@ export type AdminOrderChannel = 'hall' | 'takeaway' | 'online' | 'delivery';
 export type AdminOrderItemStatus = 'new' | 'cooking' | 'done' | 'served' | 'cancelled';
 export type AdminPaymentMethod = 'cash' | 'card' | 'qr' | 'mixed';
 export type AdminPaymentStatus = 'pending' | 'succeeded' | 'failed';
-export type AdminReceiptKind = 'prebill' | 'fiscal' | 'refund';
+export type AdminReceiptKind = 'plain' | 'prebill' | 'fiscal' | 'refund';
 export type AdminReceiptStatus = 'created' | 'sent' | 'failed';
 export type AdminCashShiftStatus = 'open' | 'closed';
 export type AdminCashExpenseStatus = 'posted' | 'voided';
@@ -51,6 +51,7 @@ export type AdminExpenseCategory = {
 
 export type AdminCashExpense = {
   id: string;
+  restaurantName?: string | null;
   cashShiftId: string;
   cashDesk: string;
   cashDeskName: string;
@@ -103,6 +104,7 @@ export type AdminZoneOrCabinSummary = {
 
 export type AdminHall = {
   id: string;
+  restaurantName?: string | null;
   name: string;
   description?: string;
   gridColumns?: number;
@@ -123,6 +125,7 @@ export type AdminHallPayload = {
 
 export type AdminZoneOrCabin = {
   id: string;
+  restaurantName?: string | null;
   name: string;
   sortOrder: number;
   isActive: boolean;
@@ -145,6 +148,7 @@ export type AdminActiveTableSessionSummary = {
 
 export type AdminDiningTable = {
   id: string;
+  restaurantName?: string | null;
   hall: string;
   hallName?: string | null;
   name: string;
@@ -217,6 +221,7 @@ export type AdminHallConstructorPayload = {
 
 export type AdminTableSession = {
   id: string;
+  restaurantName?: string | null;
   hall: string;
   hallName?: string | null;
   table: string;
@@ -272,6 +277,7 @@ export type AdminBranchPayload = {
 
 export type AdminCashDesk = {
   id: string;
+  restaurantName?: string | null;
   fiscalIntegration?: string | null;
   fiscalIntegrationName?: string;
   paymentIntegration?: string | null;
@@ -322,6 +328,7 @@ export type AdminDistributionPointPayload = {
 
 export type AdminPrepStation = {
   id: string;
+  restaurantName?: string | null;
   name: string;
   kind: 'kitchen' | 'bar' | 'other';
   printerIntegration?: string | null;
@@ -342,6 +349,7 @@ export type AdminIntegrationConfigKind = 'fiscal' | 'payment' | 'printer';
 
 export type AdminIntegrationConfig = {
   id: string;
+  restaurantName?: string | null;
   kind: AdminIntegrationConfigKind;
   provider: string;
   displayName?: string;
@@ -608,6 +616,7 @@ export type AdminKitchenTicketItem = {
 
 export type AdminKitchenTicket = {
   id: string;
+  restaurantName?: string | null;
   order: string;
   orderNumber: number;
   orderDisplayName?: string | null;
@@ -627,6 +636,7 @@ export type AdminKitchenTicket = {
 
 export type AdminOrderItemNote = {
   id: string;
+  restaurantName?: string | null;
   orderItemId: string;
   orderId: string;
   orderNumber: number;
@@ -639,6 +649,7 @@ export type AdminOrderItemNote = {
 
 export type AdminOrderItem = {
   id: string;
+  restaurantName?: string | null;
   order: string;
   orderNumber: number;
   catalogItem: string;
@@ -662,6 +673,7 @@ export type AdminOrderItem = {
 
 export type AdminPayment = {
   id: string;
+  restaurantName?: string | null;
   order: string;
   orderNumber: number;
   orderDisplayName?: string | null;
@@ -684,6 +696,7 @@ export type AdminPayment = {
 
 export type AdminReceipt = {
   id: string;
+  restaurantName?: string | null;
   order: string;
   orderNumber: number;
   orderDisplayName?: string | null;
@@ -725,6 +738,7 @@ export type AdminCashShiftReportRow = {
 
 export type AdminOrder = {
   id: string;
+  restaurantName?: string | null;
   tableSession?: string | null;
   tableId?: string | null;
   tableName?: string | null;
@@ -772,6 +786,7 @@ export type AdminRolePayload = {
 
 export type CatalogCategory = {
   id: string;
+  restaurantName?: string | null;
   name: string;
   mxikCode: string;
   mxikName?: string;
@@ -834,6 +849,7 @@ export type AdminMxikDetails = {
 
 export type CatalogItem = {
   id: string;
+  restaurantName?: string | null;
   category?: string | null;
   categoryName?: string | null;
   prepStation?: string | null;
@@ -885,6 +901,7 @@ export type CatalogModifierOption = {
 
 export type CatalogModifierGroup = {
   id: string;
+  restaurantName?: string | null;
   name: string;
   selectionType: 'single' | 'multiple';
   minSelections: number;

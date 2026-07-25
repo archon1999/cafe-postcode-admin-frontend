@@ -14,7 +14,6 @@ import { RoutePath, RouterPathHelper } from 'app/routes';
 import { usePageTitle } from 'shared/hooks/use-page-title';
 import { BackToListButton } from 'shared/ui/BackToListButton';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
-import { renderEmptyValue } from 'shared/ui/EmptyValue';
 import { Iconify } from 'shared/ui/Iconify';
 import { Label } from 'shared/ui/Label';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
@@ -32,9 +31,11 @@ import { roleRequiresEmployeeCredentials, type UserManagementSurface } from '../
 
 import {
   DenseRow,
+  DetailField,
   formatBirthDate,
   getUserInitials,
   HallChips,
+  ProfileMetric,
   resolveStatusColor,
   SectionCard,
   SummaryChip,
@@ -107,10 +108,8 @@ export const UserDetailPageContent = ({ id, surface = 'user' }: UserDetailPageCo
     user.restaurantAccessActive === undefined ? null : user.restaurantAccessActive ? yesLabel : noLabel;
 
   const accountEntries: UserEntry[] = [
-    { label: t('fields.fullName'), value: user.fullName, icon: 'solar:card-bold-duotone' },
     { label: t('fields.phone'), value: user.phone, icon: 'solar:phone-bold-duotone' },
     { label: t('fields.role'), value: roleLabel, icon: 'solar:shield-user-bold-duotone' },
-    { label: t('fields.employmentStatus'), value: t(`status.${currentStatus}`), icon: 'solar:user-check-bold-duotone' },
   ];
   if (!isEmployeeSurface || showEmployeeUsername) {
     accountEntries.unshift({ label: t('fields.username'), value: user.username, icon: 'solar:user-bold-duotone' });
@@ -134,164 +133,158 @@ export const UserDetailPageContent = ({ id, surface = 'user' }: UserDetailPageCo
     { label: t('fields.baseAmount'), value: baseAmountLabel, icon: 'solar:bill-list-bold-duotone' },
     { label: t('fields.kpiPercent'), value: kpiLabel, icon: 'solar:chart-square-bold-duotone' },
   ];
+  const filledPayrollEntries = payrollEntries.filter(
+    (entry) => entry.value !== null && entry.value !== undefined && entry.value !== '',
+  );
 
   const overviewEntries: UserEntry[] = [
-    {
-      label: t('fields.status'),
-      value: (
-        <Label color={resolveStatusColor(currentStatus)} variant="soft">
-          {t(`status.${currentStatus}`)}
-        </Label>
-      ),
-      icon: 'solar:verified-check-bold-duotone',
-    },
     { label: t('fields.permissionsCount'), value: permissionsCount, icon: 'solar:shield-keyhole-bold-duotone' },
     { label: t('labels.system'), value: user.isSuperuser ? yesLabel : noLabel, icon: 'solar:shield-star-bold-duotone' },
-    { label: 'Restoran accessi', value: restaurantAccessLabel, icon: 'solar:shop-2-bold-duotone' },
+    {
+      label: t('fields.restaurantAccess'),
+      value: restaurantAccessLabel,
+      icon: 'solar:shop-2-bold-duotone',
+    },
   ];
 
   return (
     <Content>
-      <CustomBreadcrumbs
-        heading={detailTitle}
-        action={
-          <Stack direction="row" spacing={1}>
-            <BackToListButton href={isEmployeeSurface ? RoutePath.employeeList : RoutePath.userList} />
-            {!isEmployeeSurface || canEditEmployee ? (
-              <Button
-                component={RouterLink}
-                href={isEmployeeSurface ? RouterPathHelper.employeeEdit(user.id) : RouterPathHelper.userEdit(user.id)}
-                variant="contained"
-                color="black"
-                startIcon={<Iconify icon="solar:pen-bold" />}
-                data-testid="user-view-edit">
-                {t('actions.edit')}
-              </Button>
-            ) : null}
-          </Stack>
-        }
-        sx={{ mb: 2.5 }}
-      />
+      <Box sx={{ width: 1, maxWidth: 1440, mx: 'auto' }}>
+        <CustomBreadcrumbs
+          heading={detailTitle}
+          action={
+            <Stack direction="row" spacing={1}>
+              <BackToListButton href={isEmployeeSurface ? RoutePath.employeeList : RoutePath.userList} />
+              {!isEmployeeSurface || canEditEmployee ? (
+                <Button
+                  component={RouterLink}
+                  href={isEmployeeSurface ? RouterPathHelper.employeeEdit(user.id) : RouterPathHelper.userEdit(user.id)}
+                  variant="contained"
+                  color="black"
+                  startIcon={<Iconify icon="solar:pen-bold" />}
+                  data-testid="user-view-edit">
+                  {t('actions.edit')}
+                </Button>
+              ) : null}
+            </Stack>
+          }
+          sx={{ mb: 2.5 }}
+        />
 
-      <Stack spacing={2.5}>
-        <Card sx={{ p: { xs: 2, md: 2.5 } }}>
-          <Stack spacing={2}>
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems={{ xs: 'flex-start', sm: 'center' }}>
-              <Avatar
-                sx={(theme) => ({
-                  width: 60,
-                  height: 60,
-                  fontWeight: 700,
-                  fontSize: 22,
-                  color: 'primary.main',
-                  bgcolor: varAlpha(theme.vars.palette.primary.mainChannel, 0.12),
-                })}>
-                {initials}
-              </Avatar>
+        <Stack spacing={2.5}>
+          <Card sx={{ p: { xs: 2, md: 3 } }}>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: {
+                  xs: '1fr',
+                  lg: 'minmax(320px, 1.5fr) repeat(3, minmax(150px, 0.55fr))',
+                },
+                gap: 2,
+                alignItems: 'stretch',
+              }}>
+              <Stack direction="row" spacing={2} alignItems="center" sx={{ minWidth: 0, py: { lg: 0.5 } }}>
+                <Avatar
+                  sx={(theme) => ({
+                    width: { xs: 64, md: 76 },
+                    height: { xs: 64, md: 76 },
+                    fontWeight: 700,
+                    fontSize: { xs: 22, md: 26 },
+                    color: 'primary.main',
+                    bgcolor: varAlpha(theme.vars.palette.primary.mainChannel, 0.12),
+                    flexShrink: 0,
+                  })}>
+                  {initials}
+                </Avatar>
 
-              <Stack spacing={0.75} sx={{ minWidth: 0 }}>
-                <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" alignItems="center">
-                  <Typography variant="h5">{user.fullName}</Typography>
-                  <Label color={resolveStatusColor(currentStatus)} variant="soft">
-                    {t(`status.${currentStatus}`)}
-                  </Label>
-                </Stack>
-
-                <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
-                  {!isEmployeeSurface || showEmployeeUsername ? (
-                    <SummaryChip title={t('fields.username')}>@{user.username}</SummaryChip>
-                  ) : null}
-                  <SummaryChip title={t('fields.role')}>{roleLabel}</SummaryChip>
-                  {hasHallAccessPermission ? (
-                    <SummaryChip title={t('fields.allowedHalls')} icon="solar:layers-bold-duotone">
-                      {allowedHalls.length ? `${allowedHalls.length} ta zal` : t('labels.notSelected')}
-                    </SummaryChip>
-                  ) : null}
-                  {user.isSuperuser ? <SummaryChip title={t('labels.system')}>{t('labels.system')}</SummaryChip> : null}
+                <Stack spacing={1} sx={{ minWidth: 0 }}>
+                  <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" alignItems="center">
+                    <Typography variant="h4" sx={{ overflowWrap: 'anywhere' }}>
+                      {user.fullName}
+                    </Typography>
+                    <Label color={resolveStatusColor(currentStatus)} variant="soft">
+                      {t(`status.${currentStatus}`)}
+                    </Label>
+                  </Stack>
+                  <Stack direction="row" spacing={0.75} useFlexGap flexWrap="wrap">
+                    {!isEmployeeSurface || showEmployeeUsername ? (
+                      <SummaryChip title={t('fields.username')}>@{user.username}</SummaryChip>
+                    ) : null}
+                    {hasHallAccessPermission ? (
+                      <SummaryChip title={t('fields.primaryHall')} icon="solar:home-2-bold-duotone">
+                        {primaryHallName}
+                      </SummaryChip>
+                    ) : null}
+                    {salaryTypeLabel ? (
+                      <SummaryChip title={t('fields.salaryType')} icon="solar:wallet-money-bold-duotone">
+                        {salaryTypeLabel}
+                      </SummaryChip>
+                    ) : null}
+                  </Stack>
                 </Stack>
               </Stack>
-            </Stack>
 
-            <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
-              <SummaryChip title={t('fields.phone')} icon="solar:phone-bold-duotone">
-                {renderEmptyValue(user.phone)}
-              </SummaryChip>
-              <SummaryChip title={t('fields.salaryType')} icon="solar:wallet-money-bold-duotone">
-                {renderEmptyValue(salaryTypeLabel)}
-              </SummaryChip>
-            </Stack>
-          </Stack>
-        </Card>
+              <ProfileMetric label={t('fields.phone')} value={user.phone} icon="solar:phone-bold-duotone" />
+              <ProfileMetric label={t('fields.role')} value={roleLabel} icon="solar:shield-user-bold-duotone" />
+              <ProfileMetric
+                label={t('fields.permissionsCount')}
+                value={permissionsCount}
+                icon="solar:shield-keyhole-bold-duotone"
+              />
+            </Box>
+          </Card>
 
-        <Grid container spacing={2}>
-          <Grid size={{ xs: 12, xl: 8 }}>
-            <Card sx={{ p: 0 }}>
-              <Grid container>
-                <Grid size={{ xs: 12, md: hasHallAccessPermission ? 6 : 12 }}>
-                  <Box sx={{ p: 2.5 }}>
-                    <Typography variant="subtitle1" sx={{ mb: 2 }}>
-                      {t('sections.account')}
-                    </Typography>
-                    <Stack spacing={1.5} divider={<Divider flexItem />}>
-                      {accountEntries.map((item) => (
-                        <DenseRow key={item.label} {...item} />
-                      ))}
-                    </Stack>
-                  </Box>
-                </Grid>
-
-                {hasHallAccessPermission ? (
-                  <Grid size={{ xs: 12, md: 6 }}>
-                    <Box sx={{ p: 2.5 }}>
-                      <Typography variant="subtitle1" sx={{ mb: 2 }}>
-                        {t('sections.assignment')}
-                      </Typography>
-                      <Stack spacing={1.5} divider={<Divider flexItem />}>
-                        {hallEntries.map((item) => (
-                          <DenseRow key={item.label} {...item} />
-                        ))}
-                      </Stack>
-                    </Box>
+          <Grid container spacing={2.5} alignItems="flex-start">
+            <Grid size={{ xs: 12, lg: 8 }}>
+              <Stack spacing={2.5}>
+                <SectionCard title={t('sections.account')} icon="solar:user-id-bold-duotone">
+                  <Grid container spacing={1.5}>
+                    {accountEntries.map((item) => (
+                      <Grid key={item.label} size={{ xs: 12, sm: 6 }}>
+                        <DetailField {...item} />
+                      </Grid>
+                    ))}
                   </Grid>
-                ) : null}
+                </SectionCard>
 
-                <Grid size={{ xs: 12 }}>
-                  <Box sx={{ p: 2.5, borderTop: 1, borderColor: 'divider' }}>
-                    <Typography variant="subtitle1" sx={{ mb: 2 }}>
-                      {t('sections.payroll')}
-                    </Typography>
+                {filledPayrollEntries.length ? (
+                  <SectionCard title={t('sections.payroll')} icon="solar:wallet-money-bold-duotone">
                     <Grid container spacing={1.5}>
-                      {payrollEntries.map((item) => (
+                      {filledPayrollEntries.map((item) => (
                         <Grid key={item.label} size={{ xs: 12, sm: 6 }}>
-                          <DenseRow {...item} />
+                          <DetailField {...item} />
                         </Grid>
                       ))}
                     </Grid>
-                  </Box>
-                </Grid>
-              </Grid>
-            </Card>
-          </Grid>
+                  </SectionCard>
+                ) : null}
+              </Stack>
+            </Grid>
 
-          <Grid size={{ xs: 12, xl: 4 }}>
-            <Stack spacing={2}>
-              <SectionCard title={t('fields.status')} icon="solar:verified-check-bold-duotone">
-                <Stack spacing={1.5} divider={<Divider flexItem sx={{ borderStyle: 'dashed' }} />}>
-                  {overviewEntries.map((item) => (
-                    <DenseRow key={item.label} {...item} />
-                  ))}
-                </Stack>
-              </SectionCard>
-
-              {hasHallAccessPermission ? (
-                <SectionCard title={t('fields.allowedHalls')} icon="solar:layers-bold-duotone">
-                  <HallChips halls={allowedHalls} />
+            <Grid size={{ xs: 12, lg: 4 }}>
+              <Stack spacing={2.5}>
+                <SectionCard title={t('sections.access')} icon="solar:shield-keyhole-bold-duotone">
+                  <Stack spacing={1.5} divider={<Divider flexItem sx={{ borderStyle: 'dashed' }} />}>
+                    {overviewEntries.map((item) => (
+                      <DenseRow key={item.label} {...item} />
+                    ))}
+                  </Stack>
                 </SectionCard>
-              ) : null}
-            </Stack>
+
+                {hasHallAccessPermission ? (
+                  <SectionCard title={t('sections.assignment')} icon="solar:layers-bold-duotone">
+                    <Stack spacing={1.5} divider={<Divider flexItem sx={{ borderStyle: 'dashed' }} />}>
+                      {hallEntries.map((item) => (
+                        <DenseRow key={item.label} {...item} />
+                      ))}
+                    </Stack>
+                  </SectionCard>
+                ) : null}
+              </Stack>
+            </Grid>
           </Grid>
-        </Grid>
-      </Stack>
+        </Stack>
+      </Box>
     </Content>
   );
 };

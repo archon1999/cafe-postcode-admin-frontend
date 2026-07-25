@@ -3,6 +3,7 @@ import ButtonBase from '@mui/material/ButtonBase';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 
+import { useShowAllBranches } from 'app/layouts/components/branch-scope-columns';
 import type { CatalogCategory } from 'shared/api/admin-types';
 import { Iconify } from 'shared/ui/Iconify';
 
@@ -14,6 +15,7 @@ type CatalogBrowserCategoryCardProps = {
 
 export function CatalogBrowserCategoryCard({ category, isSelected, onSelect }: CatalogBrowserCategoryCardProps) {
   const [isImageBroken, setIsImageBroken] = useState(false);
+  const showBranchName = useShowAllBranches();
   const hasImage = Boolean(category.imageUrl) && !isImageBroken;
 
   return (
@@ -95,6 +97,11 @@ export function CatalogBrowserCategoryCard({ category, isSelected, onSelect }: C
         }}>
         {category.name}
       </Typography>
+      {showBranchName ? (
+        <Typography variant="caption" color="text.secondary">
+          {category.restaurantName || '-'}
+        </Typography>
+      ) : null}
     </ButtonBase>
   );
 }

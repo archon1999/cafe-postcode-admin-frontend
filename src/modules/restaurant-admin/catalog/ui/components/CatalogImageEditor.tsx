@@ -2,11 +2,13 @@ import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { useFormContext, type FieldValues, type Path } from 'react-hook-form';
+import { useState } from 'react';
+import { useFormContext, type FieldValues, type Path, type PathValue } from 'react-hook-form';
 
 import { useTranslate } from 'app/providers/locales';
 import type { CatalogImageSource } from 'shared/api/admin-types';
 import { RHFUpload } from 'shared/ui/HookForm';
+import { ImageCropDialog } from 'shared/ui/ImageCropDialog';
 import type { FileUploadType } from 'shared/ui/Upload';
 
 type CatalogImageEditorProps<TForm extends FieldValues> = {
@@ -27,11 +29,13 @@ export function CatalogImageEditor<TForm extends FieldValues>({
   onRestoreMxikImage,
 }: CatalogImageEditorProps<TForm>) {
   const { t } = useTranslate('catalog');
-  const { watch } = useFormContext<TForm>();
+  const { watch, setValue } = useFormContext<TForm>();
+  const [cropOpen, setCropOpen] = useState(false);
 
   const imageValue = watch(imageName) as FileUploadType | undefined;
   const imageSource = (watch(imageSourceName) as CatalogImageSource | '' | null | undefined) ?? '';
   const hasImage = Boolean(imageValue);
+  const cropFile = imageValue instanceof File && imageValue.type.startsWith('image/') ? imageValue : null;
   const canRestoreMxikImage = Boolean(mxikImageUrl) && imageSource !== 'mxik-cache';
   const imageSourceLabel =
     imageSource === 'manual'
@@ -67,9 +71,16 @@ export function CatalogImageEditor<TForm extends FieldValues>({
 
       <Stack direction="row" spacing={1.5} flexWrap="wrap" useFlexGap>
         {hasImage ? (
-          <Button variant="outlined" color="inherit" onClick={onClearImage} disabled={disabled}>
-            {t('actions.removeImage')}
-          </Button>
+          <>
+            {cropFile ? (
+              <Button variant="outlined" onClick={() => setCropOpen(true)} disabled={disabled}>
+                {t('actions.cropImage', { defaultValue: 'Rasmni kesish' })}
+              </Button>
+            ) : null}
+            <Button variant="outlined" color="inherit" onClick={onClearImage} disabled={disabled}>
+              {t('actions.removeImage')}
+            </Button>
+          </>
         ) : null}
 
         {canRestoreMxikImage ? (
@@ -78,6 +89,15 @@ export function CatalogImageEditor<TForm extends FieldValues>({
           </Button>
         ) : null}
       </Stack>
+
+      <ImageCropDialog
+        open={cropOpen}
+        file={cropFile}
+        onClose={() => setCropOpen(false)}
+        onApply={(file) =>
+          setValue(imageName, file as PathValue<TForm, Path<TForm>>, { shouldDirty: true, shouldValidate: true })
+        }
+      />
     </Stack>
   );
 }

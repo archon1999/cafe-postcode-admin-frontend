@@ -1,19 +1,15 @@
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
-import type {
-  GridColDef,
-  GridColumnVisibilityModel,
-  GridPaginationModel,
-  GridRowSelectionModel,
-  GridSortModel,
-} from '@mui/x-data-grid';
+import type { GridColDef, GridSortModel } from '@mui/x-data-grid';
 import { gridClasses } from '@mui/x-data-grid';
 import { useCallback, useMemo, useState } from 'react';
 
+import { useBranchScopeColumns } from 'app/layouts/components/branch-scope-columns';
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { RouterPathHelper } from 'app/routes';
 import type { AdminOrderItem } from 'shared/api/admin-types';
-import { DEFAULT_PAGINATION_MODEL, DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
+import { DEFAULT_PAGINATION_MODEL, DEFAULT_COLUMN_VISIBILITY_MODEL } from 'shared/constants';
+import { useDataGridPreferences } from 'shared/hooks/use-data-grid-preferences';
 import { DataGrid, DataGridEmptyState, withDetailLink } from 'shared/ui/CustomDataGrid';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 import { formatMoney } from 'shared/utils/format-money';
@@ -31,12 +27,12 @@ import {
 export function OrderItemsGrid() {
   const { t, currentLang } = useTranslate('orders');
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
-  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_PAGINATION_MODEL);
-  const [filters, setFilters] = useState<OrderItemsGridFilters>(DEFAULT_ORDER_ITEMS_GRID_FILTERS);
-  const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(
-    DEFAULT_COLUMN_VISIBILITY_MODEL,
-  );
-  const [selectedRows, setSelectedRows] = useState<GridRowSelectionModel>(DEFAULT_SELECTION_MODEL);
+  const { filters, setFilters, paginationModel, setPaginationModel, columnVisibilityModel, setColumnVisibilityModel } =
+    useDataGridPreferences<OrderItemsGridFilters>('order-items', {
+      filters: DEFAULT_ORDER_ITEMS_GRID_FILTERS,
+      paginationModel: DEFAULT_PAGINATION_MODEL,
+      columnVisibilityModel: DEFAULT_COLUMN_VISIBILITY_MODEL,
+    });
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
 
   const query = useGetOrderItemsQuery({
@@ -46,12 +42,15 @@ export function OrderItemsGrid() {
     statusIn: filters.statuses.length ? filters.statuses.join(',') : undefined,
     ordering: getOrderingFromSortModel(sortModel),
   });
-  const handleFiltersChange = useCallback((next: OrderItemsGridFilters) => {
-    setFilters(next);
-    setPaginationModel((prev) => ({ ...prev, page: 0 }));
-  }, []);
+  const handleFiltersChange = useCallback(
+    (next: OrderItemsGridFilters) => {
+      setFilters(next);
+      setPaginationModel((prev) => ({ ...prev, page: 0 }));
+    },
+    [setFilters, setPaginationModel],
+  );
 
-  const columns = useMemo<GridColDef<AdminOrderItem>[]>(
+  const baseColumns = useMemo<GridColDef<AdminOrderItem>[]>(
     () => [
       withDetailLink(
         {
@@ -104,11 +103,11 @@ export function OrderItemsGrid() {
     ],
     [t],
   );
+  const columns = useBranchScopeColumns(baseColumns);
 
   return (
     <Card sx={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'hidden' }}>
       <DataGrid
-        checkboxSelection
         rows={query.data?.data ?? []}
         columns={columns}
         rowCount={query.data?.total ?? 0}
@@ -122,8 +121,6 @@ export function OrderItemsGrid() {
         onPaginationModelChange={setPaginationModel}
         sortModel={sortModel}
         onSortModelChange={setSortModel}
-        rowSelectionModel={selectedRows}
-        onRowSelectionModelChange={setSelectedRows}
         columnVisibilityModel={columnVisibilityModel}
         onColumnVisibilityModelChange={setColumnVisibilityModel}
         disableColumnMenu

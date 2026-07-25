@@ -1,6 +1,12 @@
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
+import Stack from '@mui/material/Stack';
+import { useTheme } from '@mui/material/styles';
 import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import type { GridColDef, GridColumnVisibilityModel } from '@mui/x-data-grid';
 import { Toolbar } from '@mui/x-data-grid';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
@@ -60,9 +66,13 @@ export function DataGridFiltersToolbar({
   rightActions,
 }: DataGridFiltersToolbarProps) {
   const { t } = useTranslate('common');
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { onRefresh, refreshing } = useDataGridRefresh();
   const normalizedFilters = useMemo(() => filters, [filters]);
   const [draftValues, setDraftValues] = useState<Record<string, string[]>>(() => buildDraftMap(normalizedFilters));
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const activeFilterCount = normalizedFilters.reduce((count, filter) => count + filter.value.length, 0);
 
   useEffect(() => {
     setDraftValues(buildDraftMap(normalizedFilters));
@@ -85,29 +95,43 @@ export function DataGridFiltersToolbar({
             inputProps={searchInputTestId ? { 'data-testid': searchInputTestId } : undefined}
           />
 
-          {normalizedFilters.map((filter) => (
-            <FilterSelect
-              key={filter.id}
-              label={filter.label}
-              value={draftValues[filter.id] ?? filter.value}
-              options={filter.options}
-              onChange={(values) => {
-                setDraftValues((prev) => ({
-                  ...prev,
-                  [filter.id]: values,
-                }));
-              }}
-              onApply={(values) => {
-                setDraftValues((prev) => ({
-                  ...prev,
-                  [filter.id]: values,
-                }));
-                filter.onApply(values);
-              }}
-              emptyLabel={filter.emptyLabel}
-              testId={filter.testId}
-            />
-          ))}
+          {!isMobile
+            ? normalizedFilters.map((filter) => (
+                <FilterSelect
+                  key={filter.id}
+                  label={filter.label}
+                  value={draftValues[filter.id] ?? filter.value}
+                  options={filter.options}
+                  onChange={(values) => {
+                    setDraftValues((prev) => ({
+                      ...prev,
+                      [filter.id]: values,
+                    }));
+                  }}
+                  onApply={(values) => {
+                    setDraftValues((prev) => ({
+                      ...prev,
+                      [filter.id]: values,
+                    }));
+                    filter.onApply(values);
+                  }}
+                  emptyLabel={filter.emptyLabel}
+                  testId={filter.testId}
+                />
+              ))
+            : null}
+
+          {isMobile && normalizedFilters.length ? (
+            <Button
+              variant="outlined"
+              color="inherit"
+              startIcon={<Iconify icon="solar:filter-bold-duotone" />}
+              onClick={() => setFiltersOpen(true)}
+              aria-label={t('actions.filters', { defaultValue: 'Filtrlar' })}>
+              {t('actions.filters', { defaultValue: 'Filtrlar' })}
+              {activeFilterCount ? ` (${activeFilterCount})` : ''}
+            </Button>
+          ) : null}
         </ToolbarLeftPanel>
 
         <ToolbarRightPanel>
@@ -127,11 +151,54 @@ export function DataGridFiltersToolbar({
               columnVisibilityModel={columnVisibilityModel}
               defaultColumnVisibilityModel={defaultColumnVisibilityModel}
               onSave={onSaveColumns}
-              showLabel
+              showLabel={!isMobile}
             />
           </Box>
         </ToolbarRightPanel>
       </ToolbarContainer>
+
+      <Drawer
+        anchor="bottom"
+        open={filtersOpen}
+        onClose={() => setFiltersOpen(false)}
+        slotProps={{
+          paper: {
+            sx: { borderRadius: '20px 20px 0 0', px: 2.5, pt: 2, pb: 3, maxHeight: '80dvh' },
+          },
+        }}>
+        <Stack spacing={2}>
+          <Stack direction="row" alignItems="center" justifyContent="space-between">
+            <Typography variant="h6">{t('actions.filters', { defaultValue: 'Filtrlar' })}</Typography>
+            <IconButton
+              aria-label={t('actions.close', { defaultValue: 'Yopish' })}
+              onClick={() => setFiltersOpen(false)}>
+              <Iconify icon="mingcute:close-line" />
+            </IconButton>
+          </Stack>
+
+          {normalizedFilters.map((filter) => (
+            <FilterSelect
+              key={filter.id}
+              label={filter.label}
+              value={draftValues[filter.id] ?? filter.value}
+              options={filter.options}
+              onChange={(values) => {
+                setDraftValues((prev) => ({ ...prev, [filter.id]: values }));
+              }}
+              onApply={(values) => {
+                setDraftValues((prev) => ({ ...prev, [filter.id]: values }));
+                filter.onApply(values);
+              }}
+              emptyLabel={filter.emptyLabel}
+              testId={`${filter.testId}-mobile`}
+            />
+          ))}
+
+          <Button variant="contained" onClick={() => setFiltersOpen(false)}>
+            {t('actions.showResults', { defaultValue: "Natijalarni ko'rish" })}
+          </Button>
+        </Stack>
+      </Drawer>
     </Toolbar>
   );
 }

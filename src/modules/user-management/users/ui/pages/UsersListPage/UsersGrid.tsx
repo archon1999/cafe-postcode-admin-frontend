@@ -1,15 +1,12 @@
 import Card from '@mui/material/Card';
-import type {
-  GridColumnVisibilityModel,
-  GridPaginationModel,
-  GridRowSelectionModel,
-  GridSortModel,
-} from '@mui/x-data-grid';
+import type { GridSortModel } from '@mui/x-data-grid';
 import { useCallback, useMemo, useState } from 'react';
 
+import { useBranchScopeColumns } from 'app/layouts/components/branch-scope-columns';
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
-import { DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_PAGINATION_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
+import { DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_PAGINATION_MODEL } from 'shared/constants';
 import { useRouter } from 'shared/hooks/router';
+import { useDataGridPreferences } from 'shared/hooks/use-data-grid-preferences';
 import { DataGrid, DataGridEmptyState } from 'shared/ui/CustomDataGrid';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 
@@ -30,12 +27,12 @@ type UsersGridProps = { surface?: UserManagementSurface };
 export function UsersGrid({ surface = 'user' }: UsersGridProps) {
   const { t, currentLang } = useTranslate('users');
   const router = useRouter();
-  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_PAGINATION_MODEL);
-  const [filters, setFilters] = useState<UsersGridFilters>(DEFAULT_USERS_GRID_FILTERS);
-  const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(
-    DEFAULT_COLUMN_VISIBILITY_MODEL,
-  );
-  const [selectedRows, setSelectedRows] = useState<GridRowSelectionModel>(DEFAULT_SELECTION_MODEL);
+  const { filters, setFilters, paginationModel, setPaginationModel, columnVisibilityModel, setColumnVisibilityModel } =
+    useDataGridPreferences<UsersGridFilters>(`users-${surface}`, {
+      filters: DEFAULT_USERS_GRID_FILTERS,
+      paginationModel: DEFAULT_PAGINATION_MODEL,
+      columnVisibilityModel: DEFAULT_COLUMN_VISIBILITY_MODEL,
+    });
   const [pinChangeEmployeeId, setPinChangeEmployeeId] = useState<string | null>(null);
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
   const canEditEmployee = useEmployeeUpdateAccess();
@@ -55,12 +52,16 @@ export function UsersGrid({ surface = 'user' }: UsersGridProps) {
   const hasActiveFilters = Boolean(filters.search || filters.roleIds.length || filters.statuses.length);
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
 
-  const handleFiltersChange = useCallback((next: UsersGridFilters) => {
-    setFilters(next);
-    setPaginationModel((previous) => ({ ...previous, page: 0 }));
-  }, []);
+  const handleFiltersChange = useCallback(
+    (next: UsersGridFilters) => {
+      setFilters(next);
+      setPaginationModel((previous) => ({ ...previous, page: 0 }));
+    },
+    [setFilters, setPaginationModel],
+  );
   const handleChangePin = useCallback((employeeId: string) => setPinChangeEmployeeId(employeeId), []);
-  const { columns, viewHref } = useUsersGridColumns(surface, canEditEmployee, handleChangePin);
+  const { columns: baseColumns, viewHref } = useUsersGridColumns(surface, canEditEmployee, handleChangePin);
+  const columns = useBranchScopeColumns(baseColumns);
 
   const emptyStateMessages = useMemo(
     () => ({
@@ -83,7 +84,6 @@ export function UsersGrid({ surface = 'user' }: UsersGridProps) {
   return (
     <Card sx={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'hidden' }}>
       <DataGrid
-        checkboxSelection
         rows={usersQuery.data?.data ?? []}
         columns={columns}
         rowCount={usersQuery.data?.total ?? 0}
@@ -97,8 +97,6 @@ export function UsersGrid({ surface = 'user' }: UsersGridProps) {
         onPaginationModelChange={setPaginationModel}
         sortModel={sortModel}
         onSortModelChange={setSortModel}
-        rowSelectionModel={selectedRows}
-        onRowSelectionModelChange={setSelectedRows}
         columnVisibilityModel={columnVisibilityModel}
         onColumnVisibilityModelChange={setColumnVisibilityModel}
         onRowClick={(params) => router.push(viewHref(params.row.id))}

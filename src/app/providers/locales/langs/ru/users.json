@@ -59,6 +59,7 @@
     "action": "Действие",
     "description": "Описание",
     "permissionsCount": "Количество прав",
+    "restaurantAccess": "Доступ к филиалу",
     "hallSwitchPermission": "Разрешение на смену зала",
     "primaryHall": "Основной зал",
     "primaryHallHint": "Необязательно. Выберите основной зал для сотрудника.",
@@ -118,6 +119,7 @@
   },
   "sections": {
     "account": "Доступ и основные данные",
+    "access": "Доступ к системе и права",
     "assignment": "Привязка к залу",
     "payroll": "Работа и зарплата"
   },

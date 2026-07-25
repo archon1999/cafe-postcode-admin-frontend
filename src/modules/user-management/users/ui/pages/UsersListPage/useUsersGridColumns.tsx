@@ -1,11 +1,11 @@
 import Chip from '@mui/material/Chip';
-import Switch from '@mui/material/Switch';
 import type { GridColDef } from '@mui/x-data-grid';
 import { useCallback, useMemo } from 'react';
 
 import { useTranslate } from 'app/providers/locales';
 import { RouterPathHelper } from 'app/routes';
 import type { AdminUser } from 'shared/api/admin-types';
+import { CopyableTextCell } from 'shared/ui/CopyableTextCell';
 import { CustomGridActionsCellItem, withDetailLink } from 'shared/ui/CustomDataGrid';
 import { Iconify } from 'shared/ui/Iconify';
 
@@ -61,7 +61,13 @@ export function useUsersGridColumns(
     if (surface === 'employee') {
       nextColumns.push(
         withDetailLink<AdminUser>(
-          { field: 'fullName', headerName: t('fields.fullName'), minWidth: 220, flex: 1.2 },
+          {
+            field: 'fullName',
+            headerName: t('fields.fullName'),
+            minWidth: 220,
+            flex: 1.2,
+            renderCell: ({ row }) => <CopyableTextCell value={row.fullName} />,
+          },
           (row) => viewHref(row.id),
         ),
         {
@@ -70,6 +76,9 @@ export function useUsersGridColumns(
           minWidth: 180,
           flex: 0.9,
           valueGetter: (_, row) => (roleRequiresEmployeeCredentials(row.role?.code) ? row.username : '-'),
+          renderCell: ({ row }) => (
+            <CopyableTextCell value={roleRequiresEmployeeCredentials(row.role?.code) ? row.username : null} />
+          ),
         },
       );
     } else {
@@ -102,20 +111,6 @@ export function useUsersGridColumns(
         },
       },
       {
-        field: 'isActive',
-        headerName: t('fields.statusToggle'),
-        minWidth: 136,
-        sortable: false,
-        renderCell: ({ row }) => (
-          <Switch
-            checked={row.isActive}
-            disabled={row.employmentStatus === 'archived'}
-            onClick={(event) => event.stopPropagation()}
-            onChange={(_, checked) => toggleStatusMutation.mutate({ user: row, isActive: checked })}
-          />
-        ),
-      },
-      {
         field: 'phone',
         headerName: t('fields.phone'),
         minWidth: 160,
@@ -134,6 +129,7 @@ export function useUsersGridColumns(
             canEditEmployee,
             canChangePin: !roleRequiresEmployeeCredentials(params.row.role?.code),
             employmentStatus: params.row.employmentStatus,
+            isActive: params.row.isActive,
           });
           return actionKeys.map((actionKey) => {
             if (actionKey === 'view') {
@@ -166,6 +162,18 @@ export function useUsersGridColumns(
                   label={t('actions.changePin')}
                   icon={<Iconify icon="solar:key-bold" />}
                   onClick={() => onChangePin(params.row.id)}
+                />
+              );
+            }
+            if (actionKey === 'activate' || actionKey === 'deactivate') {
+              const nextActive = actionKey === 'activate';
+              return (
+                <CustomGridActionsCellItem
+                  actionKind="edit"
+                  key={actionKey}
+                  label={t(`actions.${actionKey}`)}
+                  icon={<Iconify icon={nextActive ? 'solar:play-circle-bold' : 'solar:pause-circle-bold'} />}
+                  onClick={() => toggleStatusMutation.mutate({ user: params.row, isActive: nextActive })}
                 />
               );
             }

@@ -51,6 +51,7 @@
     "cashDesk": "Kassa",
     "cashShift": "Smena",
     "cashier": "Kassir",
+    "cashierAndOpenedBy": "Kassir / ochgan xodim",
     "channel": "Kanal",
     "closedAt": "Yopilgan vaqti",
     "createdAt": "Yaratilgan vaqti",
@@ -133,6 +134,7 @@
     "mixed": "Aralash"
   },
   "receiptKinds": {
+    "plain": "Oddiy chek",
     "fiscal": "Fiskal chek",
     "prebill": "Oldindan chek",
     "refund": "Qaytarish cheki"

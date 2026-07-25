@@ -9,8 +9,10 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 
+import { useShowAllBranches } from 'app/layouts/components/branch-scope-columns';
 import { ListPageBody, ListPageContent } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
+import { useAdminRestaurantScopeId } from 'modules/auth';
 import type { CatalogModifierGroup } from 'shared/api/admin-types';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { formatMoney } from 'shared/utils/format-money';
@@ -26,6 +28,8 @@ function ruleLabel(group: CatalogModifierGroup) {
 
 const ModifierGroupsPage = () => {
   const { t } = useTranslate('catalog');
+  const restaurantId = useAdminRestaurantScopeId();
+  const showBranchName = useShowAllBranches();
   const groupsQuery = useGetCatalogModifierGroupsQuery();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingGroup, setEditingGroup] = useState<CatalogModifierGroup | null>(null);
@@ -42,7 +46,12 @@ const ModifierGroupsPage = () => {
         heading="Xususiyatlar"
         links={[{ name: 'Menyu' }, { name: 'Xususiyatlar' }]}
         action={
-          <Button variant="contained" color="black" startIcon={<Icon icon="mingcute:add-line" />} onClick={openCreate}>
+          <Button
+            variant="contained"
+            color="black"
+            startIcon={<Icon icon="mingcute:add-line" />}
+            disabled={!restaurantId}
+            onClick={openCreate}>
             {t('modifiers.newGroup')}
           </Button>
         }
@@ -102,6 +111,7 @@ const ModifierGroupsPage = () => {
                           </Box>
                         </Stack>
                         <IconButton
+                          disabled={!restaurantId}
                           onClick={() => {
                             setEditingGroup(group);
                             setDialogOpen(true);
@@ -110,6 +120,12 @@ const ModifierGroupsPage = () => {
                           <Icon icon="solar:pen-new-square-bold-duotone" width={20} />
                         </IconButton>
                       </Stack>
+
+                      {showBranchName ? (
+                        <Typography variant="caption" color="text.secondary">
+                          {group.restaurantName || '-'}
+                        </Typography>
+                      ) : null}
 
                       <Stack direction="row" spacing={0.75}>
                         <Chip
@@ -174,7 +190,7 @@ const ModifierGroupsPage = () => {
             </Box>
             <Typography variant="h6">{t('modifiers.emptyTitle')}</Typography>
             <Typography color="text.secondary">{t('modifiers.emptyDescription')}</Typography>
-            <Button variant="soft" onClick={openCreate}>
+            <Button variant="soft" disabled={!restaurantId} onClick={openCreate}>
               {t('modifiers.emptyAction')}
             </Button>
           </Stack>

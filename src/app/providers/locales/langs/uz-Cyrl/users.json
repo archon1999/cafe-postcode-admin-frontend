@@ -59,6 +59,7 @@
     "action": "Амал",
     "description": "Тавсиф",
     "permissionsCount": "Рухсатлар сони",
+    "restaurantAccess": "Шахобча рухсати",
     "hallSwitchPermission": "Зал алмаштириш рухсати",
     "primaryHall": "Асосий зал",
     "primaryHallHint": "Ихтиёрий. Ходим учун асосий зални танланг.",
@@ -118,6 +119,7 @@
   },
   "sections": {
     "account": "Кириш ва асосий маълумотлар",
+    "access": "Тизимга кириш ва рухсатлар",
     "assignment": "Залга бириктириш",
     "payroll": "Меҳнат ва маош"
   },

@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
@@ -7,13 +6,16 @@ import Typography from '@mui/material/Typography';
 
 import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
-import { RoutePath } from 'app/routes';
+import { RoutePath, RouterPathHelper } from 'app/routes';
 import { useParams, useRedirectOnNotFound } from 'shared/hooks/router';
+import { usePageTitle } from 'shared/hooks/use-page-title';
 import { BackToListButton } from 'shared/ui/BackToListButton';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
+import { DetailPageLink } from 'shared/ui/DetailPageLink';
 import { Label } from 'shared/ui/Label';
 import { LabelRowWithIcon } from 'shared/ui/LabelRowWithIcon/LabelRowWithIcon';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
+import { TechnicalDetailsAccordion } from 'shared/ui/TechnicalDetailsAccordion';
 import { formatHallDisplayName } from 'shared/utils/format-hall-display';
 import { formatMoney } from 'shared/utils/format-money';
 import { formatDateTime } from 'shared/utils/format-time';
@@ -25,6 +27,11 @@ const KitchenTicketDetailPage = () => {
   const { t: tCommon } = useTranslate('common');
   const { id } = useParams<{ id: string }>();
   const ticketQuery = useGetKitchenTicketByIdQuery(id ?? '');
+  usePageTitle(
+    ticketQuery.data
+      ? [t('pages.list.title'), t('pages.view.title', { orderNumber: ticketQuery.data.orderNumber })]
+      : [t('pages.list.title')],
+  );
 
   useRedirectOnNotFound(ticketQuery.error, !ticketQuery.isLoading);
 
@@ -60,7 +67,9 @@ const KitchenTicketDetailPage = () => {
             <Stack spacing={2.5}>
               <LabelRowWithIcon
                 label={t('fields.orderNumber')}
-                value={`#${ticket.orderNumber}`}
+                value={
+                  <DetailPageLink href={RouterPathHelper.orderView(ticket.order)}>#{ticket.orderNumber}</DetailPageLink>
+                }
                 icon="solar:ticket-bold-duotone"
               />
               <LabelRowWithIcon
@@ -157,7 +166,7 @@ const KitchenTicketDetailPage = () => {
                         <Stack spacing={0.5}>
                           <Typography variant="subtitle1">{item.catalogItemName}</Typography>
                           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                            {t('fields.itemStatus')}: {item.status}
+                            {t('fields.itemStatus')}: {t(`status.${item.status}`, { defaultValue: item.status })}
                           </Typography>
                         </Stack>
 
@@ -191,23 +200,7 @@ const KitchenTicketDetailPage = () => {
 
         {printedPayload ? (
           <Grid size={{ xs: 12 }}>
-            <Card sx={{ p: 3 }}>
-              <Stack spacing={2}>
-                <Typography variant="h6">{t('sections.printedPayload')}</Typography>
-                <Box
-                  component="pre"
-                  sx={{
-                    m: 0,
-                    p: 2,
-                    borderRadius: 2,
-                    overflow: 'auto',
-                    typography: 'body2',
-                    bgcolor: 'background.neutral',
-                  }}>
-                  {printedPayload}
-                </Box>
-              </Stack>
-            </Card>
+            <TechnicalDetailsAccordion title={t('sections.printedPayload')} value={ticket.printedPayload} />
           </Grid>
         ) : null}
       </Grid>

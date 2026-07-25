@@ -1,19 +1,15 @@
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
-import type {
-  GridColDef,
-  GridColumnVisibilityModel,
-  GridPaginationModel,
-  GridRowSelectionModel,
-  GridSortModel,
-} from '@mui/x-data-grid';
+import type { GridColDef, GridSortModel } from '@mui/x-data-grid';
 import { gridClasses } from '@mui/x-data-grid';
 import { useCallback, useMemo, useState } from 'react';
 
+import { useBranchScopeColumns } from 'app/layouts/components/branch-scope-columns';
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { RouterPathHelper } from 'app/routes';
 import type { AdminPayment } from 'shared/api/admin-types';
-import { DEFAULT_PAGINATION_MODEL, DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
+import { DEFAULT_PAGINATION_MODEL, DEFAULT_COLUMN_VISIBILITY_MODEL } from 'shared/constants';
+import { useDataGridPreferences } from 'shared/hooks/use-data-grid-preferences';
 import { DataGrid, DataGridEmptyState, withDetailLink } from 'shared/ui/CustomDataGrid';
 import { formatOrderNumberCellValue, OrderNumberCell } from 'shared/ui/OrderNumberCell';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
@@ -29,12 +25,12 @@ export const PaymentsGrid = () => {
   const { t, currentLang } = useTranslate('orders');
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
 
-  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_PAGINATION_MODEL);
-  const [filters, setFilters] = useState<PaymentsGridFilters>(DEFAULT_PAYMENTS_GRID_FILTERS);
-  const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(
-    DEFAULT_COLUMN_VISIBILITY_MODEL,
-  );
-  const [selectedRows, setSelectedRows] = useState<GridRowSelectionModel>(DEFAULT_SELECTION_MODEL);
+  const { filters, setFilters, paginationModel, setPaginationModel, columnVisibilityModel, setColumnVisibilityModel } =
+    useDataGridPreferences<PaymentsGridFilters>('order-payments', {
+      filters: DEFAULT_PAYMENTS_GRID_FILTERS,
+      paginationModel: DEFAULT_PAGINATION_MODEL,
+      columnVisibilityModel: DEFAULT_COLUMN_VISIBILITY_MODEL,
+    });
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
 
   const query = useGetPaymentsQuery({
@@ -46,12 +42,15 @@ export const PaymentsGrid = () => {
     ordering: getOrderingFromSortModel(sortModel),
   });
   const hasActiveFilters = Boolean(filters.search || filters.statuses.length || filters.methods.length);
-  const handleFiltersChange = useCallback((next: PaymentsGridFilters) => {
-    setFilters(next);
-    setPaginationModel((prev) => ({ ...prev, page: 0 }));
-  }, []);
+  const handleFiltersChange = useCallback(
+    (next: PaymentsGridFilters) => {
+      setFilters(next);
+      setPaginationModel((prev) => ({ ...prev, page: 0 }));
+    },
+    [setFilters, setPaginationModel],
+  );
 
-  const columns = useMemo<GridColDef<AdminPayment>[]>(
+  const baseColumns = useMemo<GridColDef<AdminPayment>[]>(
     () => [
       withDetailLink(
         {
@@ -158,11 +157,11 @@ export const PaymentsGrid = () => {
     ],
     [t],
   );
+  const columns = useBranchScopeColumns(baseColumns);
 
   return (
     <Card sx={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'hidden' }}>
       <DataGrid
-        checkboxSelection
         rows={query.data?.data ?? []}
         columns={columns}
         rowCount={query.data?.total ?? 0}
@@ -176,8 +175,6 @@ export const PaymentsGrid = () => {
         onPaginationModelChange={setPaginationModel}
         sortModel={sortModel}
         onSortModelChange={setSortModel}
-        rowSelectionModel={selectedRows}
-        onRowSelectionModelChange={setSelectedRows}
         columnVisibilityModel={columnVisibilityModel}
         onColumnVisibilityModelChange={setColumnVisibilityModel}
         disableColumnMenu
