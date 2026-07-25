@@ -11,6 +11,7 @@
     "receiptDetail": { "title": "Чек #{{orderNumber}}" }
   },
   "sections": {
+    "receiptPreview": "Чек кўриниши",
     "items": "Буюртмадаги маҳсулотлар",
     "payments": "Тўловлар",
     "receipts": "Чеклар",
@@ -21,6 +22,8 @@
     "receiptPayload": "Чек маълумоти (JSON)"
   },
   "actions": {
+    "viewReceipt": "Чекни кўриш",
+    "closeReceiptPreview": "Чек кўринишини ёпиш",
     "openFiscalQr": "Fiscal QR",
     "retryFiscal": "Fiscalга қайта юбориш"
   },
@@ -29,6 +32,7 @@
     "fiscalRetryFailed": "Fiscal юборилмади"
   },
   "fields": {
+    "receipt": "Чек",
     "fiscalQrCode": "Fiscal QR",
     "amount": "Сумма",
     "cashDesk": "Касса",
@@ -121,6 +125,7 @@
     "sent": "Юборилган"
   },
   "labels": {
+    "receiptPreviewUnavailable": "Бу буюртма учун кўриш мумкин бўлган чек ҳали яратилмаган.",
     "noItems": "Бу буюртма учун маҳсулот топилмади.",
     "noOrderItemNotes": "Бу маҳсулот учун изоҳ топилмади.",
     "noPayments": "Бу буюртма учун тўлов топилмади.",

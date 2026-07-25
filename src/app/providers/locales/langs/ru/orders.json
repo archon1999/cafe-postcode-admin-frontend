@@ -11,6 +11,7 @@
     "receiptDetail": { "title": "Чек #{{orderNumber}}" }
   },
   "sections": {
+    "receiptPreview": "Просмотр чека",
     "items": "Товары в заказе",
     "payments": "Платежи",
     "receipts": "Чеки",
@@ -21,6 +22,8 @@
     "receiptPayload": "Данные чека (JSON)"
   },
   "actions": {
+    "viewReceipt": "Посмотреть чек",
+    "closeReceiptPreview": "Закрыть просмотр чека",
     "openFiscalQr": "Open fiscal QR",
     "retryFiscal": "Повторить fiscal"
   },
@@ -29,6 +32,7 @@
     "fiscalRetryFailed": "Не удалось отправить fiscal"
   },
   "fields": {
+    "receipt": "Чек",
     "fiscalQrCode": "Fiscal QR",
     "amount": "Сумма",
     "cashDesk": "Касса",
@@ -121,6 +125,7 @@
     "sent": "Отправлен"
   },
   "labels": {
+    "receiptPreviewUnavailable": "Для этого заказа ещё нет чека, доступного для просмотра.",
     "noItems": "Для заказа нет товаров.",
     "noOrderItemNotes": "Для этого товара нет заметок.",
     "noPayments": "Для заказа нет платежей.",

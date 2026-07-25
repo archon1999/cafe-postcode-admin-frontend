@@ -5,7 +5,7 @@ import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import type { PrintTemplateLayout } from '../../../../domain';
+import type { PrintTemplateLayout } from '../../domain';
 
 vi.mock('app/providers/locales', () => ({
   useTranslate: () => ({ t: (key: string) => key }),
@@ -65,8 +65,9 @@ describe('PrintTemplatePreview schema-1 semantics', () => {
       fiscal: { qrUrl: 'https://ofd.soliq.uz/check?q=704' },
     };
 
-    render(<PrintTemplatePreview layout={layout} sampleData={sampleData} />);
+    render(<PrintTemplatePreview layout={layout} sampleData={sampleData} showTitle={false} />);
 
+    expect(screen.queryByText('sections.preview')).not.toBeInTheDocument();
     expect(screen.getByText('Qamish Gamburg')).toBeInTheDocument();
     expect(screen.getByText('Kassir')).toBeInTheDocument();
     expect(screen.getByText('Aziza')).toBeInTheDocument();

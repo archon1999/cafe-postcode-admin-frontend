@@ -29,6 +29,7 @@
     }
   },
   "sections": {
+    "receiptPreview": "Chek ko'rinishi",
     "items": "Buyurtmadagi mahsulotlar",
     "payments": "To'lovlar",
     "receipts": "Cheklar",
@@ -39,6 +40,8 @@
     "receiptPayload": "Chek ma'lumoti (JSON)"
   },
   "actions": {
+    "viewReceipt": "Chekni ko'rish",
+    "closeReceiptPreview": "Chek ko'rinishini yopish",
     "openFiscalQr": "Fiscal QRni ochish",
     "retryFiscal": "Fiscalga qayta yuborish"
   },
@@ -47,6 +50,7 @@
     "fiscalRetryFailed": "Fiscal yuborilmadi"
   },
   "fields": {
+    "receipt": "Chek",
     "amount": "Summa",
     "cashDesk": "Kassa",
     "cashShift": "Smena",
@@ -145,6 +149,7 @@
     "sent": "Yuborilgan"
   },
   "labels": {
+    "receiptPreviewUnavailable": "Bu buyurtma uchun ko'rish mumkin bo'lgan chek hali yaratilmagan.",
     "noItems": "Bu buyurtma uchun mahsulot topilmadi.",
     "noOrderItemNotes": "Bu mahsulot uchun izoh topilmadi.",
     "noPayments": "Bu buyurtma uchun to'lov topilmadi.",

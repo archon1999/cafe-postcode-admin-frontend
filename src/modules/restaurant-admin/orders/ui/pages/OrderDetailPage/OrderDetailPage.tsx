@@ -1,11 +1,12 @@
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { varAlpha } from 'minimal-shared/utils';
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 
 import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
@@ -32,6 +33,8 @@ import {
   getReceiptKindTranslationKey,
   getReceiptStatusColor,
 } from '../../lib/presenters';
+
+import { hasReceiptPrintPreview, OrderReceiptPreviewDialog } from './OrderReceiptPreviewDialog';
 
 type InfoTileProps = {
   label: string;
@@ -103,6 +106,7 @@ const OrderDetailPage = () => {
   const { t: tCommon } = useTranslate('common');
   const { id } = useParams<{ id: string }>();
   const orderQuery = useGetOrderByIdQuery(id ?? '');
+  const [receiptPreviewOpen, setReceiptPreviewOpen] = useState(false);
   usePageTitle(
     orderQuery.data
       ? [t('pages.orders.title'), t('pages.orderDetail.title', { orderNumber: orderQuery.data.orderNumber })]
@@ -118,13 +122,26 @@ const OrderDetailPage = () => {
   const hallName = formatHallDisplayName(order.hallName, undefined, tCommon);
   const location = order.tableName ? `${hallName} · ${order.tableName}` : hallName;
   const staffNames = combineStaffNames(order.cashierName, order.openedByName);
+  const canPreviewReceipt = order.receipts.some(hasReceiptPrintPreview);
 
   return (
     <Content>
       <Box sx={{ width: 1, maxWidth: 1440, mx: 'auto' }}>
         <CustomBreadcrumbs
           heading={t('pages.orderDetail.title', { orderNumber: order.orderNumber })}
-          action={<BackToListButton href={RoutePath.orderList} />}
+          action={
+            <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+              <BackToListButton href={RoutePath.orderList} />
+              <Button
+                variant="contained"
+                color="inherit"
+                startIcon={<Iconify icon="solar:document-text-bold-duotone" />}
+                disabled={!canPreviewReceipt}
+                onClick={() => setReceiptPreviewOpen(true)}>
+                {t('actions.viewReceipt')}
+              </Button>
+            </Stack>
+          }
           sx={{ mb: 2.5 }}
         />
 
@@ -454,6 +471,7 @@ const OrderDetailPage = () => {
           </Grid>
         </Stack>
       </Box>
+      <OrderReceiptPreviewDialog open={receiptPreviewOpen} order={order} onClose={() => setReceiptPreviewOpen(false)} />
     </Content>
   );
 };

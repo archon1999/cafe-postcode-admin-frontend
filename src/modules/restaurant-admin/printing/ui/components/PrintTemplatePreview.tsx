@@ -2,11 +2,12 @@ import { Box, Stack, Typography } from '@mui/material';
 
 import { useTranslate } from 'app/providers/locales';
 
-import type { PrintTemplateBlock, PrintTemplateLayout } from '../../../../domain';
+import type { PrintTemplateBlock, PrintTemplateLayout } from '../../domain';
 
 type PrintTemplatePreviewProps = {
   layout: PrintTemplateLayout;
   sampleData: Record<string, unknown>;
+  showTitle?: boolean;
 };
 
 function readPath(data: Record<string, unknown>, path: string, item?: Record<string, unknown>) {
@@ -144,8 +145,8 @@ function PreviewBlock({ block, data }: { block: PrintTemplateBlock; data: Record
     );
   }
   if (block.type === 'text') {
-    const text = resolveText(block.text, data);
-    if (!text) return null;
+    const value = resolveText(block.text, data);
+    if (!value) return null;
     return (
       <Typography
         component="div"
@@ -156,18 +157,18 @@ function PreviewBlock({ block, data }: { block: PrintTemplateBlock; data: Record
           textAlign: block.align ?? 'left',
           whiteSpace: 'pre-wrap',
         }}>
-        {text}
+        {value}
       </Typography>
     );
   }
   return null;
 }
 
-export function PrintTemplatePreview({ layout, sampleData }: PrintTemplatePreviewProps) {
+export function PrintTemplatePreview({ layout, sampleData, showTitle = true }: PrintTemplatePreviewProps) {
   const { t } = useTranslate('printing');
   return (
     <Stack spacing={1}>
-      <Typography variant="subtitle1">{t('sections.preview')}</Typography>
+      {showTitle ? <Typography variant="subtitle1">{t('sections.preview')}</Typography> : null}
       <Box
         sx={{
           width: 410,

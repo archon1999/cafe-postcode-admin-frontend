@@ -707,6 +707,9 @@ export type AdminReceipt = {
   status: AdminReceiptStatus;
   provider: string;
   payload: Record<string, unknown>;
+  printDocument?: string | null;
+  printLayout?: Record<string, unknown> | null;
+  printDataSnapshot?: Record<string, unknown> | null;
   reprintCount?: number;
   lastReprintedAt?: string | null;
   createdAt: string;

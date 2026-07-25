@@ -33,13 +33,13 @@ import type {
   PrintTemplateKind,
   PrintTemplateLayout,
 } from 'modules/restaurant-admin/printing/domain';
+import { PrintTemplatePreview } from 'modules/restaurant-admin/printing/ui';
 import { useRouter } from 'shared/hooks/router';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { Iconify } from 'shared/ui/Iconify';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 
 import { PrintBlockEditor } from './components/PrintBlockEditor';
-import { PrintTemplatePreview } from './components/PrintTemplatePreview';
 
 const TEMPLATE_KINDS: PrintTemplateKind[] = ['kitchen_ticket', 'payment_receipt_plain', 'payment_receipt_fiscal'];
 
