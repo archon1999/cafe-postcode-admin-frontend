@@ -21,6 +21,7 @@ describe('buildAdminRestaurantRequestPayload', () => {
     vatEnabled: true,
     vatPercent: 12,
     markingCheckEnabled: true,
+    posMonitorVariant: 'light_compact' as const,
     isActive: true,
   };
 
@@ -49,6 +50,7 @@ describe('buildAdminRestaurantRequestPayload', () => {
       ['vatEnabled', 'true'],
       ['vatPercent', '12'],
       ['markingCheckEnabled', 'true'],
+      ['posMonitorVariant', 'light_compact'],
       ['isActive', 'true'],
       ['posAuthBackgroundImage', image],
     ]);
@@ -80,6 +82,7 @@ describe('buildRestaurantSelfServiceRequestPayload', () => {
       vatEnabled: true,
       vatPercent: 12,
       markingCheckEnabled: false,
+      posMonitorVariant: 'light_compact',
       isActive: true,
       tariffId: 'forbidden-tariff',
     });
@@ -94,6 +97,7 @@ describe('buildRestaurantSelfServiceRequestPayload', () => {
       vatEnabled: true,
       vatPercent: 12,
       markingCheckEnabled: false,
+      posMonitorVariant: 'light_compact',
     });
   });
 
@@ -113,6 +117,7 @@ describe('buildRestaurantSelfServiceRequestPayload', () => {
       vatEnabled: true,
       vatPercent: 12,
       markingCheckEnabled: false,
+      posMonitorVariant: 'light_compact',
       isActive: true,
       tariffId: 'forbidden-tariff',
     });
@@ -128,6 +133,7 @@ describe('buildRestaurantSelfServiceRequestPayload', () => {
       ['vatEnabled', 'true'],
       ['vatPercent', '12'],
       ['markingCheckEnabled', 'false'],
+      ['posMonitorVariant', 'light_compact'],
       ['posAuthBackgroundImage', image],
     ]);
   });

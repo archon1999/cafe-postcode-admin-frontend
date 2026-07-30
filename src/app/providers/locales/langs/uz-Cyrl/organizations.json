@@ -245,7 +245,10 @@
     "amount": "Сумма",
     "balanceAfter": "Балансдан кейин",
     "user": "Фойдаланувчи",
-    "posAuthBackgroundImage": "POS кириш фон расми"
+    "posAuthBackgroundImage": "POS кириш фон расми",
+    "posMonitorVariant": "POS монитор варианти",
+    "posMonitorVariantDefault": "Default",
+    "posMonitorVariantLightCompact": "Light Compact"
   },
   "filters": {
     "all": "Барчаси",

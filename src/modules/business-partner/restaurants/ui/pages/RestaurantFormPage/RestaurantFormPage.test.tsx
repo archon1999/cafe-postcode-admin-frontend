@@ -180,6 +180,7 @@ describe('RestaurantFormPage', () => {
         vatEnabled: false,
         vatPercent: 12,
         markingCheckEnabled: false,
+        posMonitorVariant: 'default',
         isActive: true,
         fakturaPayload: { CompanyName: 'Existing' },
       },
@@ -271,6 +272,7 @@ describe('RestaurantFormPage', () => {
         vatEnabled: false,
         vatPercent: 12,
         markingCheckEnabled: false,
+        posMonitorVariant: 'default',
         isActive: false,
       });
     });
@@ -291,6 +293,7 @@ describe('RestaurantFormPage', () => {
         vatEnabled: true,
         vatPercent: 12,
         markingCheckEnabled: true,
+        posMonitorVariant: 'light_compact',
         isActive: true,
         fakturaPayload: { CompanyName: 'BROCCOLI FOOD', CompanyInn: '304459113' },
       },
@@ -321,6 +324,7 @@ describe('RestaurantFormPage', () => {
         vatEnabled: true,
         vatPercent: 12,
         markingCheckEnabled: true,
+        posMonitorVariant: 'light_compact',
         isActive: true,
       });
     });

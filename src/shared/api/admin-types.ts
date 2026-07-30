@@ -426,6 +426,8 @@ export type AdminRestaurantBalanceTransaction = {
   createdAt: string;
 };
 
+export type AdminPosMonitorVariant = 'default' | 'light_compact';
+
 export type AdminRestaurant = {
   id: string;
   businessPartnerId?: string | null;
@@ -445,6 +447,7 @@ export type AdminRestaurant = {
   vatEnabled: boolean;
   vatPercent: number | string;
   markingCheckEnabled: boolean;
+  posMonitorVariant?: AdminPosMonitorVariant;
   isActive: boolean;
   activatedAt?: string | null;
   deactivatedAt?: string | null;
@@ -480,6 +483,7 @@ export type AdminRestaurantPayload = {
   vatEnabled: boolean;
   vatPercent: number | string;
   markingCheckEnabled: boolean;
+  posMonitorVariant?: AdminPosMonitorVariant;
   isActive: boolean;
   tariffId?: string | null;
 };

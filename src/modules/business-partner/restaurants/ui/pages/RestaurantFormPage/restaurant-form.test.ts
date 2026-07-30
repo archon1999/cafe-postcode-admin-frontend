@@ -21,6 +21,7 @@ describe('restaurant form contract', () => {
       vatEnabled: false,
       vatPercent: 12,
       markingCheckEnabled: false,
+      posMonitorVariant: 'default',
       isActive: false,
     });
   });
@@ -66,6 +67,7 @@ describe('restaurant form contract', () => {
         vatEnabled: true,
         vatPercent: 12,
         markingCheckEnabled: true,
+        posMonitorVariant: 'light_compact',
         isActive: true,
       },
       { isEditMode: false },
@@ -85,6 +87,7 @@ describe('restaurant form contract', () => {
       vatEnabled: true,
       vatPercent: 12,
       markingCheckEnabled: true,
+      posMonitorVariant: 'light_compact',
       isActive: false,
     });
   });

@@ -1,10 +1,11 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useFormContext } from 'react-hook-form';
 
-import { RHFPhoneInput, RHFSwitch, RHFTextField, RHFUpload } from 'shared/ui/HookForm';
+import { RHFPhoneInput, RHFSelect, RHFSwitch, RHFTextField, RHFUpload } from 'shared/ui/HookForm';
 
 import type { RestaurantFormValues } from './restaurant-form';
 
@@ -89,6 +90,10 @@ export const RestaurantFormFields = ({
         <RHFSwitch<RestaurantFormValues> name="vatEnabled" label={t('fields.vatEnabled')} />
         <RHFTextField<RestaurantFormValues> name="vatPercent" label={t('fields.vatPercent')} type="number" />
         <RHFSwitch<RestaurantFormValues> name="markingCheckEnabled" label={t('fields.markingCheckEnabled')} />
+        <RHFSelect<RestaurantFormValues> name="posMonitorVariant" label={t('fields.posMonitorVariant')}>
+          <MenuItem value="default">{t('fields.posMonitorVariantDefault')}</MenuItem>
+          <MenuItem value="light_compact">{t('fields.posMonitorVariantLightCompact')}</MenuItem>
+        </RHFSelect>
       </Box>
 
       <Stack spacing={1.5} sx={{ mt: 1 }}>

@@ -17,6 +17,7 @@ export const restaurantFormSchema = z.object({
   vatEnabled: z.boolean(),
   vatPercent: z.coerce.number().min(0).max(99),
   markingCheckEnabled: z.boolean(),
+  posMonitorVariant: z.enum(['default', 'light_compact']),
   isActive: z.boolean(),
 });
 
@@ -38,6 +39,7 @@ export const restaurantFormDefaultValues: RestaurantFormInput = {
   vatEnabled: false,
   vatPercent: 12,
   markingCheckEnabled: false,
+  posMonitorVariant: 'default',
   isActive: false,
 };
 
@@ -57,6 +59,7 @@ export function restaurantToFormValues(restaurant: AdminRestaurant): RestaurantF
     vatEnabled: restaurant.vatEnabled,
     vatPercent: Number(restaurant.vatPercent ?? 12),
     markingCheckEnabled: Boolean(restaurant.markingCheckEnabled),
+    posMonitorVariant: restaurant.posMonitorVariant ?? 'default',
     isActive: restaurant.isActive,
   };
 }
@@ -78,6 +81,7 @@ export function restaurantFormValuesToPayload(
     vatEnabled: values.vatEnabled,
     vatPercent: values.vatPercent,
     markingCheckEnabled: values.markingCheckEnabled,
+    posMonitorVariant: values.posMonitorVariant,
     isActive: isEditMode ? values.isActive : false,
   };
   if (values.posAuthBackgroundImage instanceof File) payload.posAuthBackgroundImage = values.posAuthBackgroundImage;
