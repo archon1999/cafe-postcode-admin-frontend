@@ -22,7 +22,7 @@ import {
 
 const schema = z.object({
   name: z.string().min(1),
-  fiscalIntegration: z.string().min(1),
+  fiscalIntegration: z.string(),
   paymentIntegration: z.string(),
   printerIntegration: z.string(),
 });
@@ -137,7 +137,7 @@ export function RestaurantCashDeskDialog({
   const onSubmit = methods.handleSubmit(async (values) => {
     const payload: AdminCashDeskPayload = {
       name: values.name.trim(),
-      fiscalIntegration: values.fiscalIntegration,
+      fiscalIntegration: values.fiscalIntegration || null,
       paymentIntegration: values.paymentIntegration || null,
       printerIntegration: values.printerIntegration || null,
     };
@@ -161,6 +161,7 @@ export function RestaurantCashDeskDialog({
               name="fiscalIntegration"
               label={t('fields.fiscalIntegration')}
               disabled={fiscalIntegrationsQuery.isLoading}>
+              <MenuItem value="">{t('labels.notSelected')}</MenuItem>
               {fiscalIntegrations.map((integration) => (
                 <MenuItem key={integration.id} value={integration.id}>
                   {getIntegrationLabel(integration)}
