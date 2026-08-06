@@ -430,6 +430,8 @@ export type AdminPosMonitorVariant = 'default' | 'light_compact';
 
 export type AdminRestaurant = {
   id: string;
+  parentId?: string | null;
+  parentName?: string | null;
   businessPartnerId?: string | null;
   businessPartnerName?: string | null;
   name: string;
@@ -486,6 +488,11 @@ export type AdminRestaurantPayload = {
   posMonitorVariant?: AdminPosMonitorVariant;
   isActive: boolean;
   tariffId?: string | null;
+};
+
+export type AdminRestaurantBranchCreatePayload = AdminRestaurantPayload & {
+  copyCatalog: boolean;
+  copySettings: boolean;
 };
 
 export type AdminRestaurantLookupResult = {

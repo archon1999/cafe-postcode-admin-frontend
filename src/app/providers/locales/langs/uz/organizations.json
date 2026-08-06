@@ -392,6 +392,8 @@
   },
   "actions": {
     "cancel": "Bekor qilish",
+    "back": "Orqaga",
+    "continue": "Davom etish",
     "title": "Amallar",
     "create": "Yaratish",
     "save": "Saqlash",
@@ -412,6 +414,12 @@
     "topUpBalance": "Balansni to'ldirish"
   },
   "dialogs": {
+    "branchCreate": {
+      "copyTitle": "Parent shahobchadan nimalar nusxalansin?",
+      "copyCatalog": "Menyu katalogini nusxalash",
+      "copySettings": "Xavfsiz shahobcha sozlamalarini nusxalash",
+      "copyHint": "Nusxalash bir martalik. Keyingi o'zgarishlar avtomatik sinxronlanmaydi; integratsiyalar, qurilmalar va operatsion ma'lumotlar ko'chirilmaydi."
+    },
     "profileEdit": { "title": "Restoran profilini tahrirlash" },
     "deleteBranch": {
       "title": "Filialni o'chirish",

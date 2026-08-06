@@ -12,6 +12,7 @@ import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 import { useGetRestaurantsListQuery } from '../../../application';
 import {
   RestaurantActivateDialog,
+  RestaurantBranchCreateDialog,
   RestaurantCredentialsDialog,
   type RestaurantCredentialsDialogState,
   RestaurantDeactivateDialog,
@@ -36,12 +37,14 @@ export function RestaurantsGrid() {
   const [selectedRows, setSelectedRows] = useState<GridRowSelectionModel>(DEFAULT_SELECTION_MODEL);
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
   const [rowToDelete, setRowToDelete] = useState<AdminRestaurant | null>(null);
+  const [branchParent, setBranchParent] = useState<AdminRestaurant | null>(null);
   const [rowToDeactivate, setRowToDeactivate] = useState<AdminRestaurant | null>(null);
   const [rowToActivate, setRowToActivate] = useState<AdminRestaurant | null>(null);
   const [rowToExtend, setRowToExtend] = useState<AdminRestaurant | null>(null);
   const [credentialsDialogOpen, setCredentialsDialogOpen] = useState<RestaurantCredentialsDialogState>(null);
   const columnActions = useMemo(
     () => ({
+      onCreateBranch: setBranchParent,
       onActivate: setRowToActivate,
       onCredentials: setCredentialsDialogOpen,
       onDeactivate: setRowToDeactivate,
@@ -137,6 +140,12 @@ export function RestaurantsGrid() {
         open={rowToDelete}
         onClose={() => setRowToDelete(null)}
         onSuccess={() => setRowToDelete(null)}
+      />
+
+      <RestaurantBranchCreateDialog
+        parentId={branchParent?.id ?? null}
+        parentName={branchParent?.name}
+        onClose={() => setBranchParent(null)}
       />
 
       <RestaurantDeactivateDialog

@@ -1,6 +1,7 @@
 import type {
   AdminPaginatedResponse,
   AdminRestaurant,
+  AdminRestaurantBranchCreatePayload,
   AdminRestaurantActivationOptions,
   AdminRestaurantActivationPayload,
   AdminRestaurantActivationResult,
@@ -48,6 +49,12 @@ export const adminRestaurantGateway = {
 
   createAdminRestaurant(payload: AdminRestaurantPayload | FormData) {
     return instance.post<AdminRestaurant>('/api/v1/admin/restaurants/', payload).then((response) => response.data);
+  },
+
+  createAdminRestaurantBranch(parentId: string, payload: AdminRestaurantBranchCreatePayload | FormData) {
+    return instance
+      .post<AdminRestaurant>(`/api/v1/admin/restaurants/${parentId}/branches/`, payload)
+      .then((response) => response.data);
   },
 
   updateAdminRestaurant(id: string, payload: AdminRestaurantPayload | FormData) {

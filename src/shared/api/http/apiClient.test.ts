@@ -1239,6 +1239,7 @@ describe('apiClient identity, restaurant and operations gateway contracts', () =
       'getAdminRestaurantDetail',
       'lookupAdminRestaurant',
       'createAdminRestaurant',
+      'createAdminRestaurantBranch',
       'updateAdminRestaurant',
       'updateAdminRestaurantSettings',
       'deleteAdminRestaurant',

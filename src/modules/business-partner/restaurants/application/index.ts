@@ -3,6 +3,7 @@ export {
   useCreateDistributionPointMutation,
   useCreatePrepStationMutation,
   useCreateRestaurantMutation,
+  useCreateRestaurantBranchMutation,
   useDeleteCashDeskMutation,
   useDeleteDistributionPointMutation,
   useDeletePrepStationMutation,

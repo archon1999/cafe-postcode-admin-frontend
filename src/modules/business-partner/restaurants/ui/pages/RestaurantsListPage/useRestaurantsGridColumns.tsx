@@ -17,6 +17,7 @@ import { formatDate, formatDateTime } from 'shared/utils/format-time';
 import { RestaurantDetailLinkCell, type RestaurantCredentialsDialogState } from '../../components';
 
 interface RestaurantsGridColumnActions {
+  onCreateBranch: (restaurant: AdminRestaurant) => void;
   onActivate: (restaurant: AdminRestaurant) => void;
   onCredentials: (state: RestaurantCredentialsDialogState) => void;
   onDeactivate: (restaurant: AdminRestaurant) => void;
@@ -103,6 +104,16 @@ export function useRestaurantsGridColumns(actions: RestaurantsGridColumnActions)
               icon={<Iconify icon="solar:pen-bold" />}
               href={RouterPathHelper.organizationRestaurantEdit(row.id)}
             />,
+            row.parentId ? null : (
+              <CustomGridActionsCellItem
+                actionKind="view"
+                key="create-branch"
+                label={t('actions.createBranch')}
+                icon={<Iconify icon="solar:buildings-2-bold" />}
+                showInMenu
+                onClick={() => actions.onCreateBranch(row)}
+              />
+            ),
             <CustomGridActionsCellItem
               actionKind="view"
               key="reset-password"

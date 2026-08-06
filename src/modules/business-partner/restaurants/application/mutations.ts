@@ -5,6 +5,7 @@ import type {
   AdminDistributionPointPayload,
   AdminPrepStationPayload,
   AdminRestaurantPayload,
+  AdminRestaurantBranchCreatePayload,
   AdminRestaurantTopUpPayload,
 } from 'shared/api/admin-types';
 import { apiClient } from 'shared/api/http/apiClient';
@@ -120,6 +121,20 @@ export function useCreateRestaurantMutation() {
     mutationFn: (payload: AdminRestaurantPayload) => organizationsRepository.createRestaurant(payload),
     onSuccess: async () => {
       await invalidateQueryKeys(queryClient, [organizationsKeys.restaurants()]);
+    },
+  });
+}
+
+export function useCreateRestaurantBranchMutation(parentId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: AdminRestaurantBranchCreatePayload) =>
+      organizationsRepository.createRestaurantBranch(parentId, payload),
+    onSuccess: async () => {
+      await invalidateQueryKeys(queryClient, [
+        organizationsKeys.restaurants(),
+        organizationsKeys.restaurantDetail(parentId),
+      ]);
     },
   });
 }

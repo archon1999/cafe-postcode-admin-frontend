@@ -3,6 +3,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  buildAdminRestaurantBranchRequestPayload,
   buildAdminRestaurantRequestPayload,
   buildRestaurantSelfServiceRequestPayload,
 } from './admin-restaurant-form-data';
@@ -64,6 +65,25 @@ describe('buildAdminRestaurantRequestPayload', () => {
 
     expect(result).toBeInstanceOf(FormData);
     expect((result as FormData).get('clearPosAuthBackgroundImage')).toBe('true');
+  });
+
+  it('keeps branch copy options in json and multipart requests', () => {
+    const jsonResult = buildAdminRestaurantBranchRequestPayload({
+      ...basePayload,
+      copyCatalog: true,
+      copySettings: false,
+    });
+    expect(jsonResult).toMatchObject({ copyCatalog: true, copySettings: false });
+
+    const multipartResult = buildAdminRestaurantBranchRequestPayload({
+      ...basePayload,
+      posAuthBackgroundImage: new File(['image'], 'branch.png', { type: 'image/png' }),
+      copyCatalog: true,
+      copySettings: true,
+    });
+    expect(multipartResult).toBeInstanceOf(FormData);
+    expect((multipartResult as FormData).get('copyCatalog')).toBe('true');
+    expect((multipartResult as FormData).get('copySettings')).toBe('true');
   });
 });
 

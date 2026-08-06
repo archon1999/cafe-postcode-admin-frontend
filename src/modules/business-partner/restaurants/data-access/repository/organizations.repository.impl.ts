@@ -1,4 +1,7 @@
-import { buildAdminRestaurantRequestPayload } from 'shared/api/admin-restaurant-form-data';
+import {
+  buildAdminRestaurantBranchRequestPayload,
+  buildAdminRestaurantRequestPayload,
+} from 'shared/api/admin-restaurant-form-data';
 import { apiClient } from 'shared/api/http/apiClient';
 
 import type { OrganizationsRepository } from '../../domain';
@@ -57,6 +60,9 @@ export const organizationsRepository: OrganizationsRepository = {
   },
   createRestaurant(payload) {
     return apiClient.createAdminRestaurant(buildAdminRestaurantRequestPayload(payload));
+  },
+  createRestaurantBranch(parentId, payload) {
+    return apiClient.createAdminRestaurantBranch(parentId, buildAdminRestaurantBranchRequestPayload(payload));
   },
   updateRestaurant(id, payload) {
     return apiClient.updateAdminRestaurant(id, buildAdminRestaurantRequestPayload(payload));

@@ -1,4 +1,4 @@
-import type { AdminRestaurantPayload } from './admin-types';
+import type { AdminRestaurantBranchCreatePayload, AdminRestaurantPayload } from './admin-types';
 
 type RestaurantSelfServicePayload = Pick<
   AdminRestaurantPayload,
@@ -69,6 +69,18 @@ export function buildAdminRestaurantRequestPayload(payload: AdminRestaurantPaylo
   }
 
   return formData;
+}
+
+export function buildAdminRestaurantBranchRequestPayload(
+  payload: AdminRestaurantBranchCreatePayload,
+): AdminRestaurantBranchCreatePayload | FormData {
+  const requestPayload = buildAdminRestaurantRequestPayload(payload);
+  if (requestPayload instanceof FormData) {
+    appendText(requestPayload, 'copyCatalog', payload.copyCatalog);
+    appendText(requestPayload, 'copySettings', payload.copySettings);
+    return requestPayload;
+  }
+  return payload;
 }
 
 export function buildRestaurantSelfServiceRequestPayload(
