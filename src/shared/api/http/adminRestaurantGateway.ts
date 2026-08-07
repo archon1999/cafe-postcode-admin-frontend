@@ -16,6 +16,8 @@ import type {
 
 import { instance } from './axiosInstance.ts';
 
+const RESTAURANT_BRANCH_CREATE_TIMEOUT_MS = 120_000;
+
 export const adminRestaurantGateway = {
   getAdminRestaurants(params?: AdminRestaurantsQueryParams) {
     return instance
@@ -53,7 +55,9 @@ export const adminRestaurantGateway = {
 
   createAdminRestaurantBranch(parentId: string, payload: AdminRestaurantBranchCreatePayload | FormData) {
     return instance
-      .post<AdminRestaurant>(`/api/v1/admin/restaurants/${parentId}/branches/`, payload)
+      .post<AdminRestaurant>(`/api/v1/admin/restaurants/${parentId}/branches/`, payload, {
+        timeout: RESTAURANT_BRANCH_CREATE_TIMEOUT_MS,
+      })
       .then((response) => response.data);
   },
 

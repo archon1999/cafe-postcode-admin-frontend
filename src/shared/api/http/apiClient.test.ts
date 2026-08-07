@@ -166,6 +166,32 @@ describe('apiClient query params', () => {
     });
   });
 
+  it('allows branch creation to finish beyond the default API timeout', async () => {
+    const payload = {
+      name: 'Chilonzor',
+      legalName: '',
+      taxNumber: '',
+      phone: '',
+      social: '',
+      address: '',
+      serviceFeeEnabled: false,
+      serviceFeePercent: 0,
+      vatEnabled: false,
+      vatPercent: 12,
+      markingCheckEnabled: false,
+      isActive: true,
+      copyCatalog: true,
+      copySettings: true,
+    };
+    postMock.mockResolvedValueOnce({ data: { id: 'branch-1', ...payload } });
+
+    await adminRestaurantGateway.createAdminRestaurantBranch('parent-1', payload);
+
+    expect(postMock).toHaveBeenCalledWith('/api/v1/admin/restaurants/parent-1/branches/', payload, {
+      timeout: 120_000,
+    });
+  });
+
   it('looks up business partners by inn through the backend proxy', async () => {
     getMock.mockResolvedValueOnce({
       data: {
