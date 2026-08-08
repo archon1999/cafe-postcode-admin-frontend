@@ -4,10 +4,11 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Dialog from '@mui/material/Dialog';
+import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
-import { alpha } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { varAlpha } from 'minimal-shared/utils';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -29,6 +30,7 @@ export function CatalogModifierGroupsField({ groups, loading, disabled }: Props)
   const { t } = useTranslate('catalog');
   const { control, getValues, setValue } = useFormContext<CatalogItemFormInput>();
   const [quickAddOpen, setQuickAddOpen] = useState(false);
+  const [editingGroup, setEditingGroup] = useState<CatalogModifierGroup | null>(null);
 
   return (
     <Box sx={{ gridColumn: { xs: 'auto', md: '1 / -1' } }}>
@@ -71,10 +73,10 @@ export function CatalogModifierGroupsField({ groups, loading, disabled }: Props)
                       sx={(theme) => ({
                         border: 0,
                         borderRadius: 1,
-                        bgcolor: alpha(theme.palette.text.primary, 0.07),
+                        bgcolor: varAlpha(theme.vars.palette.text.primaryChannel, 0.07),
                         '& .MuiChip-deleteIcon': {
-                          color: alpha(theme.palette.text.primary, 0.42),
-                          '&:hover': { color: theme.palette.text.secondary },
+                          color: varAlpha(theme.vars.palette.text.primaryChannel, 0.42),
+                          '&:hover': { color: theme.vars.palette.text.secondary },
                         },
                       })}
                     />
@@ -100,18 +102,22 @@ export function CatalogModifierGroupsField({ groups, loading, disabled }: Props)
                         py: '12px !important',
                         minHeight: 'unset !important',
                         border: '1px solid',
-                        borderColor: state.selected ? 'transparent' : alpha(theme.palette.text.primary, 0.1),
+                        color: theme.vars.palette.text.primary,
+                        borderColor: state.selected ? 'transparent' : theme.vars.palette.divider,
                         borderRadius: '12px',
-                        background: state.selected
-                          ? alpha(theme.palette.text.primary, 0.045)
-                          : theme.palette.background.paper,
+                        backgroundColor: state.selected
+                          ? varAlpha(theme.vars.palette.primary.mainChannel, 0.1)
+                          : theme.vars.palette.background.paper,
                         transition: 'background-color 160ms ease, border-color 160ms ease',
                         '&[aria-selected="true"]': {
-                          background: `${alpha(theme.palette.text.primary, 0.045)} !important`,
+                          color: `${theme.vars.palette.text.primary} !important`,
+                          backgroundColor: `${varAlpha(theme.vars.palette.primary.mainChannel, 0.1)} !important`,
                         },
                         '&.Mui-focused, &.Mui-focusVisible': {
-                          background: `${alpha(theme.palette.text.primary, 0.065)} !important`,
-                          borderColor: state.selected ? 'transparent' : alpha(theme.palette.primary.main, 0.28),
+                          backgroundColor: `${varAlpha(theme.vars.palette.primary.mainChannel, 0.14)} !important`,
+                          borderColor: state.selected
+                            ? 'transparent'
+                            : varAlpha(theme.vars.palette.primary.mainChannel, 0.28),
                         },
                       })}>
                       <Box
@@ -124,17 +130,27 @@ export function CatalogModifierGroupsField({ groups, loading, disabled }: Props)
                         <Icon icon={state.selected ? 'solar:check-circle-bold' : 'solar:circle-outline'} width={20} />
                       </Box>
                       <Box sx={{ minWidth: 0, flex: 1 }}>
-                        <Stack
-                          direction={{ xs: 'column', sm: 'row' }}
-                          alignItems={{ xs: 'flex-start', sm: 'baseline' }}
-                          justifyContent="space-between"
-                          spacing={{ xs: 0.25, sm: 1 }}>
-                          <Typography variant="subtitle2" sx={{ lineHeight: 1.35 }}>
-                            {group.name}
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary" sx={{ whiteSpace: 'nowrap' }}>
-                            {rule}
-                          </Typography>
+                        <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
+                          <Box sx={{ minWidth: 0 }}>
+                            <Typography variant="subtitle2" sx={{ lineHeight: 1.35 }}>
+                              {group.name}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary" sx={{ whiteSpace: 'nowrap' }}>
+                              {rule}
+                            </Typography>
+                          </Box>
+                          <IconButton
+                            size="small"
+                            aria-label={`${group.name} guruhini tahrirlash`}
+                            onMouseDown={(event) => event.preventDefault()}
+                            onClick={(event) => {
+                              event.preventDefault();
+                              event.stopPropagation();
+                              setEditingGroup(group);
+                            }}
+                            sx={{ flexShrink: 0 }}>
+                            <Icon icon="solar:pen-bold" width={17} />
+                          </IconButton>
                         </Stack>
                         {activeOptions.length ? (
                           <Stack spacing={0.5} sx={{ mt: 1 }}>
@@ -150,7 +166,8 @@ export function CatalogModifierGroupsField({ groups, loading, disabled }: Props)
                                   px: 1.2,
                                   py: 0.65,
                                   borderRadius: 1,
-                                  bgcolor: alpha(theme.palette.text.primary, 0.04),
+                                  color: theme.vars.palette.text.primary,
+                                  bgcolor: varAlpha(theme.vars.palette.text.primaryChannel, 0.045),
                                 })}>
                                 <Typography variant="body2" sx={{ minWidth: 0, fontWeight: 500 }}>
                                   {option.name}
@@ -189,6 +206,7 @@ export function CatalogModifierGroupsField({ groups, loading, disabled }: Props)
                       borderRadius: 2,
                       backgroundImage: 'none',
                       bgcolor: 'background.paper',
+                      border: (theme) => `1px solid ${theme.vars.palette.divider}`,
                       boxShadow: '0 12px 32px rgba(31, 36, 48, 0.14)',
                     },
                   },
@@ -218,6 +236,14 @@ export function CatalogModifierGroupsField({ groups, loading, disabled }: Props)
             });
             setQuickAddOpen(false);
           }}
+        />
+      </Dialog>
+
+      <Dialog open={Boolean(editingGroup)} onClose={() => setEditingGroup(null)} maxWidth="md" fullWidth>
+        <CatalogModifierGroupForm
+          group={editingGroup}
+          onCancel={() => setEditingGroup(null)}
+          onSuccess={() => setEditingGroup(null)}
         />
       </Dialog>
     </Box>

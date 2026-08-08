@@ -136,6 +136,28 @@
                                   "noCategoryTitle":  "Kategoriya tanlanmagan"
                               }
               },
+    "itemGroups": {
+        "selectionCount": "{{count}} ta mahsulot tanlandi",
+        "clearSelection": "Tozalash",
+        "groupAction": "Guruhlash",
+        "groupedTitle": "Guruhlangan mahsulotlar",
+        "groupCount": "{{count}} ta guruh",
+        "standaloneTitle": "Alohida mahsulotlar",
+        "allGrouped": "Barcha mahsulotlar guruhlangan.",
+        "dialogDescription": "Bu mahsulotlar POS’da bitta karta ostida chiqadi. Har bir razmer o‘z narxi va xususiyatlarini saqlab qoladi.",
+        "variants": "Variantlar",
+        "delete": "Guruhni o‘chirish",
+        "cancel": "Bekor qilish",
+        "memberCount": "{{count}} ta mahsulot",
+        "removeFromGroup": "Guruhdan chiqarish",
+        "nameRequired": "Guruh nomini kiriting.",
+        "minimumMembers": "Guruhda kamida 2 ta mahsulot bo‘lishi kerak.",
+        "saveFailed": "Guruhni saqlab bo‘lmadi. Nom takrorlanmaganini tekshiring.",
+        "editTitle": "Guruh nomini tahrirlash",
+        "createTitle": "Mahsulotlarni guruhlash",
+        "nameLabel": "Guruh nomi",
+        "save": "Saqlash"
+    },
     "modifiers": {
         "formSubtitle": "Tanlov qoidalari va narx qo‘shimchalarini bir joyda boshqaring",
         "single": "Bitta tanlov",

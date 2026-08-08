@@ -3,16 +3,20 @@ import Dialog from '@mui/material/Dialog';
 import { useEffect, useMemo, useState } from 'react';
 
 import { ListPageBody, ListPageContent } from 'app/layouts/Dashboard';
-import type { CatalogCategory, CatalogItem } from 'shared/api/admin-types';
+import type { CatalogCategory, CatalogItem, CatalogItemGroup } from 'shared/api/admin-types';
 
 import {
   useGetCatalogCategoriesListQuery,
   useGetCatalogItemsListQuery,
+  useGetCatalogItemGroupsQuery,
+  useDeleteCatalogItemGroupMutation,
   useReorderCatalogCategoriesMutation,
   useReorderCatalogItemsMutation,
+  useSaveCatalogItemGroupMutation,
 } from '../../../application';
 import { CatalogCategoryFormDialog } from '../../components/CatalogCategoryForm';
 import { CatalogItemFormDialog } from '../../components/CatalogItemForm';
+import { CatalogItemGroupDialog } from '../../components/CatalogItemGroupDialog';
 
 import { CatalogBrowserCategoriesPanel } from './CatalogBrowserCategoriesPanel';
 import { CatalogBrowserProductsPanel } from './CatalogBrowserProductsPanel';
@@ -26,8 +30,13 @@ const CatalogBrowserPage = () => {
   const [isCategoryEditOpen, setCategoryEditOpen] = useState(false);
   const [isProductCreateOpen, setProductCreateOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<CatalogItem | null>(null);
+  const [selectedProductIds, setSelectedProductIds] = useState<Set<string>>(new Set());
+  const [isGroupCreateOpen, setGroupCreateOpen] = useState(false);
+  const [editingGroup, setEditingGroup] = useState<CatalogItemGroup | null>(null);
   const reorderCategoriesMutation = useReorderCatalogCategoriesMutation();
   const reorderItemsMutation = useReorderCatalogItemsMutation();
+  const saveItemGroupMutation = useSaveCatalogItemGroupMutation();
+  const deleteItemGroupMutation = useDeleteCatalogItemGroupMutation();
 
   const categoriesQuery = useGetCatalogCategoriesListQuery({
     page: 1,
@@ -65,6 +74,8 @@ const CatalogBrowserPage = () => {
     { enabled: Boolean(selectedCategoryId) },
   );
   const products = useMemo(() => productsQuery.data?.data ?? [], [productsQuery.data]);
+  const itemGroupsQuery = useGetCatalogItemGroupsQuery(selectedCategoryId ?? undefined);
+  const itemGroups = useMemo(() => itemGroupsQuery.data ?? [], [itemGroupsQuery.data]);
   const isProductsLoading = productsQuery.isLoading && !products.length;
   const isRefreshingProducts = productsQuery.isFetching && !isProductsLoading;
 
@@ -75,6 +86,40 @@ const CatalogBrowserPage = () => {
 
   const reorderProducts = (nextProducts: CatalogItem[]) =>
     reorderItemsMutation.mutateAsync(nextProducts.map((product, sortOrder) => ({ id: product.id, sortOrder })));
+
+  useEffect(() => {
+    setSelectedProductIds(new Set());
+    setGroupCreateOpen(false);
+    setEditingGroup(null);
+  }, [selectedCategoryId]);
+
+  const selectedProducts = products.filter((product) => selectedProductIds.has(product.id));
+
+  const addProductToGroup = async (group: CatalogItemGroup, product: CatalogItem) => {
+    await saveItemGroupMutation.mutateAsync({
+      id: group.id,
+      payload: groupPayload(group, [
+        ...group.members.map((member) => ({
+          catalogItem: member.catalogItem,
+          variantName: member.variantName,
+        })),
+        { catalogItem: product.id, variantName: inferVariantName(product.name) },
+      ]),
+    });
+    setSelectedProductIds((current) => {
+      const next = new Set(current);
+      next.delete(product.id);
+      return next;
+    });
+  };
+
+  const removeProductFromGroup = async (group: CatalogItemGroup, product: CatalogItem) => {
+    const members = group.members
+      .filter((member) => member.catalogItem !== product.id)
+      .map((member) => ({ catalogItem: member.catalogItem, variantName: member.variantName }));
+    if (members.length < 2) await deleteItemGroupMutation.mutateAsync(group.id);
+    else await saveItemGroupMutation.mutateAsync({ id: group.id, payload: groupPayload(group, members) });
+  };
 
   return (
     <ListPageContent>
@@ -103,10 +148,26 @@ const CatalogBrowserPage = () => {
             selectedCategory={selectedCategory}
             selectedCategoryId={selectedCategoryId}
             products={products}
+            itemGroups={itemGroups}
+            selectedProductIds={selectedProductIds}
             isLoading={isProductsLoading}
             isRefreshing={isRefreshingProducts}
             onCreateProduct={() => setProductCreateOpen(true)}
             onEditProduct={setEditingProduct}
+            onToggleProduct={(product) =>
+              setSelectedProductIds((current) => {
+                const next = new Set(current);
+                if (next.has(product.id)) next.delete(product.id);
+                else next.add(product.id);
+                return next;
+              })
+            }
+            onClearSelection={() => setSelectedProductIds(new Set())}
+            onCreateGroup={() => setGroupCreateOpen(true)}
+            onEditGroup={setEditingGroup}
+            onAddProductToGroup={addProductToGroup}
+            onRemoveProductFromGroup={removeProductFromGroup}
+            isUpdatingGroup={saveItemGroupMutation.isPending || deleteItemGroupMutation.isPending}
             isReordering={reorderItemsMutation.isPending}
             onReorder={reorderProducts}
           />
@@ -151,8 +212,49 @@ const CatalogBrowserPage = () => {
           onDeleted={() => setEditingProduct(null)}
         />
       </Dialog>
+
+      <Dialog open={isGroupCreateOpen} onClose={() => setGroupCreateOpen(false)} maxWidth="sm" fullWidth>
+        {selectedCategoryId ? (
+          <CatalogItemGroupDialog
+            categoryId={selectedCategoryId}
+            products={selectedProducts}
+            onCancel={() => setGroupCreateOpen(false)}
+            onSuccess={() => {
+              setGroupCreateOpen(false);
+              setSelectedProductIds(new Set());
+            }}
+          />
+        ) : null}
+      </Dialog>
+
+      <Dialog open={Boolean(editingGroup)} onClose={() => setEditingGroup(null)} maxWidth="sm" fullWidth>
+        {selectedCategoryId && editingGroup ? (
+          <CatalogItemGroupDialog
+            categoryId={selectedCategoryId}
+            group={editingGroup}
+            products={products}
+            onCancel={() => setEditingGroup(null)}
+            onSuccess={() => setEditingGroup(null)}
+          />
+        ) : null}
+      </Dialog>
     </ListPageContent>
   );
 };
 
 export default CatalogBrowserPage;
+
+function groupPayload(group: CatalogItemGroup, members: Array<{ catalogItem: string; variantName: string }>) {
+  return {
+    category: group.category,
+    name: group.name,
+    description: group.description ?? '',
+    sortOrder: group.sortOrder,
+    isActive: group.isActive,
+    members: members.map((member, sortOrder) => ({ ...member, sortOrder })),
+  };
+}
+
+function inferVariantName(name: string) {
+  return name.match(/(?:^|\s)(S|M|L|XL|\d+\s*cm)\s*$/i)?.[1]?.toUpperCase() ?? '';
+}

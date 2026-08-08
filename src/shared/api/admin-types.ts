@@ -904,6 +904,41 @@ export type CatalogItemPayload = {
   isStoplisted: boolean;
 };
 
+export type CatalogItemGroupMember = {
+  id: string;
+  catalogItem: string;
+  catalogItemName: string;
+  variantName: string;
+  price: number;
+  isActive: boolean;
+  isStoplisted: boolean;
+  sortOrder: number;
+};
+
+export type CatalogItemGroup = {
+  id: string;
+  category: string;
+  categoryName: string;
+  name: string;
+  description: string;
+  sortOrder: number;
+  isActive: boolean;
+  members: CatalogItemGroupMember[];
+};
+
+export type CatalogItemGroupPayload = {
+  category: string;
+  name: string;
+  description: string;
+  sortOrder?: number;
+  isActive: boolean;
+  members: Array<{
+    catalogItem: string;
+    variantName: string;
+    sortOrder: number;
+  }>;
+};
+
 export type CatalogModifierOption = {
   id: string;
   name: string;

@@ -6,6 +6,8 @@ import type {
   CatalogCategoryPayload,
   CatalogItem,
   CatalogItemPayload,
+  CatalogItemGroup,
+  CatalogItemGroupPayload,
   CatalogModifierGroup,
   CatalogModifierGroupPayload,
 } from '../admin-types';
@@ -89,6 +91,30 @@ export const adminCatalogGateway = {
 
   deleteAdminCatalogItem(id: string) {
     return instance.delete<void>(`/api/v1/admin/catalog/items/${id}/`).then((response) => response.data);
+  },
+
+  getAdminCatalogItemGroups(categoryId?: string) {
+    return instance
+      .get<CatalogItemGroup[]>('/api/v1/admin/catalog/item-groups/', {
+        params: { category: categoryId },
+      })
+      .then((response) => response.data);
+  },
+
+  createAdminCatalogItemGroup(payload: CatalogItemGroupPayload) {
+    return instance
+      .post<CatalogItemGroup>('/api/v1/admin/catalog/item-groups/', payload)
+      .then((response) => response.data);
+  },
+
+  updateAdminCatalogItemGroup(id: string, payload: CatalogItemGroupPayload) {
+    return instance
+      .put<CatalogItemGroup>(`/api/v1/admin/catalog/item-groups/${id}/`, payload)
+      .then((response) => response.data);
+  },
+
+  deleteAdminCatalogItemGroup(id: string) {
+    return instance.delete<void>(`/api/v1/admin/catalog/item-groups/${id}/`).then((response) => response.data);
   },
 
   getAdminCatalogModifierGroups() {

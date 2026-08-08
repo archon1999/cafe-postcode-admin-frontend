@@ -52,6 +52,22 @@ export const catalogRepository: CatalogRepository = {
     return apiClient.deleteAdminCatalogItem(id);
   },
 
+  getItemGroups(categoryId?: string) {
+    return apiClient.getAdminCatalogItemGroups(categoryId);
+  },
+
+  createItemGroup(payload) {
+    return apiClient.createAdminCatalogItemGroup(payload);
+  },
+
+  updateItemGroup(id, payload) {
+    return apiClient.updateAdminCatalogItemGroup(id, payload);
+  },
+
+  deleteItemGroup(id) {
+    return apiClient.deleteAdminCatalogItemGroup(id);
+  },
+
   getModifierGroups() {
     return apiClient
       .getAdminCatalogModifierGroups()

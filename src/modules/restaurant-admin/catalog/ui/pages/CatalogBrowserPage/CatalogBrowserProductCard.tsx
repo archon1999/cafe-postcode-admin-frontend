@@ -17,9 +17,18 @@ import { formatMoney } from 'shared/utils/format-money';
 type CatalogBrowserProductCardProps = {
   product: CatalogItem;
   onEdit: (product: CatalogItem) => void;
+  selected?: boolean;
+  onToggleSelect?: (product: CatalogItem) => void;
+  onRemoveFromGroup?: (product: CatalogItem) => void;
 };
 
-export function CatalogBrowserProductCard({ product, onEdit }: CatalogBrowserProductCardProps) {
+export function CatalogBrowserProductCard({
+  product,
+  onEdit,
+  selected = false,
+  onToggleSelect,
+  onRemoveFromGroup,
+}: CatalogBrowserProductCardProps) {
   const { t } = useTranslate('catalog');
   const { t: tCommon } = useTranslate('common');
   const showBranchName = useShowAllBranches();
@@ -29,6 +38,7 @@ export function CatalogBrowserProductCard({ product, onEdit }: CatalogBrowserPro
 
   return (
     <Card
+      onClick={() => onToggleSelect?.(product)}
       sx={{
         p: 2,
         minHeight: 198,
@@ -36,7 +46,60 @@ export function CatalogBrowserProductCard({ product, onEdit }: CatalogBrowserPro
         display: 'flex',
         flexDirection: 'column',
         gap: 1.5,
+        cursor: onToggleSelect ? 'pointer' : 'default',
+        position: 'relative',
+        outline: selected ? '2px solid' : '1px solid transparent',
+        outlineColor: selected ? 'primary.main' : 'transparent',
+        bgcolor: selected ? 'action.selected' : 'background.paper',
+        transition: 'background-color 140ms ease, outline-color 140ms ease, transform 140ms ease',
+        '&:hover': { transform: onToggleSelect ? 'translateY(-2px)' : undefined },
       }}>
+      {onToggleSelect ? (
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 10,
+            left: 10,
+            zIndex: 2,
+            width: 28,
+            height: 28,
+            borderRadius: '50%',
+            display: 'grid',
+            placeItems: 'center',
+            bgcolor: selected ? 'primary.main' : 'background.paper',
+            color: selected ? 'primary.contrastText' : 'text.secondary',
+            boxShadow: 2,
+          }}>
+          <Iconify icon={selected ? 'solar:check-circle-bold' : 'solar:circle-linear'} width={21} />
+        </Box>
+      ) : null}
+      <Stack direction="row" spacing={0.5} sx={{ position: 'absolute', top: 8, right: 8, zIndex: 3 }}>
+        {onRemoveFromGroup ? (
+          <Tooltip title={t('itemGroups.removeFromGroup')}>
+            <IconButton
+              size="small"
+              onClick={(event) => {
+                event.stopPropagation();
+                onRemoveFromGroup(product);
+              }}
+              sx={{ bgcolor: 'background.paper', boxShadow: 1 }}>
+              <Iconify icon="solar:link-broken-minimalistic-bold-duotone" width={18} />
+            </IconButton>
+          </Tooltip>
+        ) : null}
+        <Tooltip title={t('actions.edit')}>
+          <IconButton
+            size="small"
+            disabled={!restaurantId}
+            onClick={(event) => {
+              event.stopPropagation();
+              onEdit(product);
+            }}
+            sx={{ bgcolor: 'background.paper', boxShadow: 1 }}>
+            <Iconify icon="solar:pen-bold" width={18} />
+          </IconButton>
+        </Tooltip>
+      </Stack>
       <Box
         sx={{
           width: 1,
@@ -71,12 +134,6 @@ export function CatalogBrowserProductCard({ product, onEdit }: CatalogBrowserPro
           }}>
           {product.name}
         </Typography>
-
-        <Tooltip title={t('actions.edit')}>
-          <IconButton size="small" disabled={!restaurantId} onClick={() => onEdit(product)} sx={{ flexShrink: 0 }}>
-            <Iconify icon="solar:pen-bold" width={18} />
-          </IconButton>
-        </Tooltip>
       </Stack>
 
       {showBranchName ? (

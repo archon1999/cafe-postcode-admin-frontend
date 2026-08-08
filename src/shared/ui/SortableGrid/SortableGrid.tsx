@@ -2,8 +2,6 @@ import Box from '@mui/material/Box';
 import type { SxProps, Theme } from '@mui/material/styles';
 import { useEffect, useState, type DragEvent, type ReactNode } from 'react';
 
-import { Iconify } from 'shared/ui/Iconify';
-
 type SortableEntry = {
   id: string;
 };
@@ -87,28 +85,6 @@ export function SortableGrid<T extends SortableEntry>({
             transition: (theme) => theme.transitions.create(['opacity', 'outline-color']),
             '&:active': { cursor: disabled ? 'default' : 'grabbing' },
           }}>
-          {!disabled ? (
-            <Box
-              aria-hidden
-              sx={{
-                position: 'absolute',
-                top: 8,
-                left: 8,
-                zIndex: 2,
-                width: 28,
-                height: 28,
-                display: 'grid',
-                placeItems: 'center',
-                bgcolor: 'background.paper',
-                color: 'text.secondary',
-                border: '1px solid',
-                borderColor: 'divider',
-                pointerEvents: 'none',
-              }}>
-              <Iconify icon="custom:drag-dots-fill" width={20} />
-            </Box>
-          ) : null}
-
           {renderItem(item)}
         </Box>
       ))}

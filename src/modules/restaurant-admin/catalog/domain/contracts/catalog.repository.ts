@@ -4,6 +4,8 @@ import type {
   CatalogCategoryPayload,
   CatalogItem,
   CatalogItemPayload,
+  CatalogItemGroup,
+  CatalogItemGroupPayload,
   CatalogModifierGroup,
   CatalogModifierGroupPayload,
 } from 'shared/api/admin-types';
@@ -21,6 +23,10 @@ export interface CatalogRepository {
   updateItem(id: string, payload: CatalogItemPayload): Promise<CatalogItem>;
   updateItemSortOrder(id: string, sortOrder: number): Promise<CatalogItem>;
   deleteItem(id: string): Promise<void>;
+  getItemGroups(categoryId?: string): Promise<CatalogItemGroup[]>;
+  createItemGroup(payload: CatalogItemGroupPayload): Promise<CatalogItemGroup>;
+  updateItemGroup(id: string, payload: CatalogItemGroupPayload): Promise<CatalogItemGroup>;
+  deleteItemGroup(id: string): Promise<void>;
   getModifierGroups(): Promise<CatalogModifierGroup[]>;
   getModifierGroupById(id: string): Promise<CatalogModifierGroup>;
   createModifierGroup(payload: CatalogModifierGroupPayload): Promise<CatalogModifierGroup>;

@@ -100,7 +100,9 @@ export function CatalogModifierGroupForm({ group, onCancel, onSuccess }: Props) 
   return (
     <Form methods={methods} onSubmit={submit}>
       <DialogTitle sx={{ pb: 0.5 }}>
-        <Typography variant="h6">{group ? 'Xususiyatni tahrirlash' : 'Yangi xususiyat guruhi'}</Typography>
+        <Typography component="span" variant="h6">
+          {group ? 'Xususiyatni tahrirlash' : 'Yangi xususiyat guruhi'}
+        </Typography>
       </DialogTitle>
 
       <DialogContent sx={{ pt: '16px !important' }}>
