@@ -800,6 +800,7 @@ export type AdminRolePayload = {
 
 export type CatalogCategory = {
   id: string;
+  restaurantId?: string | null;
   restaurantName?: string | null;
   name: string;
   mxikCode: string;
@@ -863,6 +864,7 @@ export type AdminMxikDetails = {
 
 export type CatalogItem = {
   id: string;
+  restaurantId?: string | null;
   restaurantName?: string | null;
   category?: string | null;
   categoryName?: string | null;

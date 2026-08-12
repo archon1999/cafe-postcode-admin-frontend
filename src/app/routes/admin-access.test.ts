@@ -86,6 +86,12 @@ describe('admin access', () => {
     expect(canAccessAdminPath(RoutePath.userList, snapshot)).toBe(false);
   });
 
+  it('opens local agents first for superusers', () => {
+    const snapshot = createSnapshot([], { isSuperuser: true });
+
+    expect(getDefaultAdminPath(snapshot)).toBe(RoutePath.platformLocalAgentList);
+  });
+
   it('keeps restaurant-admin scope away from roles and permissions pages', () => {
     const snapshot = createSnapshot(['reports.view', 'employees.view', 'orders.view']);
 

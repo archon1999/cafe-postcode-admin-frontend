@@ -15,7 +15,7 @@ import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { RoutePath, canAccessLocalAgents } from 'app/routes';
 import { useCurrentUser } from 'modules/auth';
 import type { AdminLocalAgent, AdminLocalAgentBulkAction, AdminLocalAgentStatus } from 'shared/api/admin-types';
-import { DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_PAGINATION_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
+import { DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
 import { useRouter } from 'shared/hooks/router';
 import { BulkActionsBar } from 'shared/ui/BulkActionsBar';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
@@ -31,12 +31,15 @@ import { useLocalAgentColumns } from './useLocalAgentColumns';
 
 type StatusFilter = 'all' | AdminLocalAgentStatus;
 
+const DEFAULT_LOCAL_AGENTS_PAGINATION_MODEL: GridPaginationModel = { page: 0, pageSize: 20 };
+const DEFAULT_LOCAL_AGENTS_SORT_MODEL: GridSortModel = [{ field: 'lastSeenAt', sort: 'desc' }];
+
 function LocalAgentsPage() {
   const { t, currentLang } = useTranslate('platform');
   const { profile } = useCurrentUser();
   const { replace } = useRouter();
-  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_PAGINATION_MODEL);
-  const [sortModel, setSortModel] = useState<GridSortModel>([]);
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_LOCAL_AGENTS_PAGINATION_MODEL);
+  const [sortModel, setSortModel] = useState<GridSortModel>(DEFAULT_LOCAL_AGENTS_SORT_MODEL);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(
     DEFAULT_COLUMN_VISIBILITY_MODEL,
   );

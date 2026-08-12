@@ -1,8 +1,10 @@
 import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
+import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 
 import { ListPageBody, ListPageContent } from 'app/layouts/Dashboard';
+import { useAdminRestaurantScopeId, useAdminScopeStore } from 'modules/auth';
 import type { CatalogCategory, CatalogItem, CatalogItemGroup } from 'shared/api/admin-types';
 
 import {
@@ -33,6 +35,9 @@ const CatalogBrowserPage = () => {
   const [selectedProductIds, setSelectedProductIds] = useState<Set<string>>(new Set());
   const [isGroupCreateOpen, setGroupCreateOpen] = useState(false);
   const [editingGroup, setEditingGroup] = useState<CatalogItemGroup | null>(null);
+  const queryClient = useQueryClient();
+  const restaurantScopeId = useAdminRestaurantScopeId();
+  const setSelectedRestaurantId = useAdminScopeStore((state) => state.setSelectedRestaurantId);
   const reorderCategoriesMutation = useReorderCatalogCategoriesMutation();
   const reorderItemsMutation = useReorderCatalogItemsMutation();
   const saveItemGroupMutation = useSaveCatalogItemGroupMutation();
@@ -74,7 +79,9 @@ const CatalogBrowserPage = () => {
     { enabled: Boolean(selectedCategoryId) },
   );
   const products = useMemo(() => productsQuery.data?.data ?? [], [productsQuery.data]);
-  const itemGroupsQuery = useGetCatalogItemGroupsQuery(selectedCategoryId ?? undefined);
+  const itemGroupsQuery = useGetCatalogItemGroupsQuery(selectedCategoryId ?? undefined, {
+    enabled: Boolean(selectedCategoryId),
+  });
   const itemGroups = useMemo(() => itemGroupsQuery.data ?? [], [itemGroupsQuery.data]);
   const isProductsLoading = productsQuery.isLoading && !products.length;
   const isRefreshingProducts = productsQuery.isFetching && !isProductsLoading;
@@ -86,6 +93,14 @@ const CatalogBrowserPage = () => {
 
   const reorderProducts = (nextProducts: CatalogItem[]) =>
     reorderItemsMutation.mutateAsync(nextProducts.map((product, sortOrder) => ({ id: product.id, sortOrder })));
+
+  const editProduct = (product: CatalogItem) => {
+    if (!restaurantScopeId && product.restaurantId) {
+      setSelectedRestaurantId(product.restaurantId);
+      void queryClient.invalidateQueries();
+    }
+    setEditingProduct(product);
+  };
 
   useEffect(() => {
     setSelectedProductIds(new Set());
@@ -153,7 +168,7 @@ const CatalogBrowserPage = () => {
             isLoading={isProductsLoading}
             isRefreshing={isRefreshingProducts}
             onCreateProduct={() => setProductCreateOpen(true)}
-            onEditProduct={setEditingProduct}
+            onEditProduct={editProduct}
             onToggleProduct={(product) =>
               setSelectedProductIds((current) => {
                 const next = new Set(current);

@@ -87,8 +87,8 @@ const MY_RESTAURANT_PRINT_TEMPLATE_PERMISSION_CODES: PermissionCode[] = [
 const EMPLOYEE_PERMISSION_CODES: PermissionCode[] = ['employees.view', 'employees.create', 'employees.update'];
 
 const ADMIN_LANDING_CANDIDATES = [
-  RoutePath.platformBusinessPartnerList,
   RoutePath.platformLocalAgentList,
+  RoutePath.platformBusinessPartnerList,
   RoutePath.platformTariffList,
   RoutePath.organizationRestaurantList,
   RoutePath.organizationMyRestaurant,

@@ -9,7 +9,6 @@ import { useState } from 'react';
 
 import { useShowAllBranches } from 'app/layouts/components/branch-scope-columns';
 import { useTranslate } from 'app/providers/locales';
-import { useAdminRestaurantScopeId } from 'modules/auth';
 import type { CatalogItem } from 'shared/api/admin-types';
 import { Iconify } from 'shared/ui/Iconify';
 import { formatMoney } from 'shared/utils/format-money';
@@ -32,7 +31,6 @@ export function CatalogBrowserProductCard({
   const { t } = useTranslate('catalog');
   const { t: tCommon } = useTranslate('common');
   const showBranchName = useShowAllBranches();
-  const restaurantId = useAdminRestaurantScopeId();
   const [isImageBroken, setIsImageBroken] = useState(false);
   const hasImage = Boolean(product.imageUrl) && !isImageBroken;
 
@@ -54,25 +52,6 @@ export function CatalogBrowserProductCard({
         transition: 'background-color 140ms ease, outline-color 140ms ease, transform 140ms ease',
         '&:hover': { transform: onToggleSelect ? 'translateY(-2px)' : undefined },
       }}>
-      {onToggleSelect ? (
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 10,
-            left: 10,
-            zIndex: 2,
-            width: 28,
-            height: 28,
-            borderRadius: '50%',
-            display: 'grid',
-            placeItems: 'center',
-            bgcolor: selected ? 'primary.main' : 'background.paper',
-            color: selected ? 'primary.contrastText' : 'text.secondary',
-            boxShadow: 2,
-          }}>
-          <Iconify icon={selected ? 'solar:check-circle-bold' : 'solar:circle-linear'} width={21} />
-        </Box>
-      ) : null}
       <Stack direction="row" spacing={0.5} sx={{ position: 'absolute', top: 8, right: 8, zIndex: 3 }}>
         {onRemoveFromGroup ? (
           <Tooltip title={t('itemGroups.removeFromGroup')}>
@@ -90,7 +69,6 @@ export function CatalogBrowserProductCard({
         <Tooltip title={t('actions.edit')}>
           <IconButton
             size="small"
-            disabled={!restaurantId}
             onClick={(event) => {
               event.stopPropagation();
               onEdit(product);
