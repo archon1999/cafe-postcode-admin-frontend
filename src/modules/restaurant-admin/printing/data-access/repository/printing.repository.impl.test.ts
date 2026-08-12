@@ -66,6 +66,7 @@ describe('printingRepository schema-1 compatibility', () => {
           paperWidthMm: 80,
           templates: {
             kitchenTicket: kitchenLayout,
+            orderPrecheck: plainLayout,
             paymentReceiptPlain: plainLayout,
             paymentReceiptFiscal: fiscalLayout,
           },
@@ -74,6 +75,7 @@ describe('printingRepository schema-1 compatibility', () => {
       variableGroups: [{ key: 'fiscal', label: 'Fiskal' }],
       variablesByKind: {
         kitchenTicket: ['item.name'],
+        orderPrecheck: ['precheck.printedAt'],
         paymentReceiptPlain: ['totals.total'],
         paymentReceiptFiscal: ['fiscal.qrUrl'],
       },
@@ -86,11 +88,13 @@ describe('printingRepository schema-1 compatibility', () => {
     expect(getMock).toHaveBeenCalledWith('/api/v1/admin/printing/presets/');
     expect(catalog.variablesByKind).toEqual({
       kitchen_ticket: ['item.name'],
+      order_precheck: ['precheck.printedAt'],
       payment_receipt_plain: ['totals.total'],
       payment_receipt_fiscal: ['fiscal.qrUrl'],
     });
     expect(catalog.presets[0].templates).toEqual({
       kitchen_ticket: kitchenLayout,
+      order_precheck: plainLayout,
       payment_receipt_plain: plainLayout,
       payment_receipt_fiscal: fiscalLayout,
     });

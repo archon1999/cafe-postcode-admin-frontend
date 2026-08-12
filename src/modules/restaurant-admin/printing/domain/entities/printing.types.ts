@@ -1,4 +1,8 @@
-export type PrintTemplateKind = 'kitchen_ticket' | 'payment_receipt_plain' | 'payment_receipt_fiscal';
+export type PrintTemplateKind =
+  | 'kitchen_ticket'
+  | 'order_precheck'
+  | 'payment_receipt_plain'
+  | 'payment_receipt_fiscal';
 
 export type PrintTemplateRow = {
   label: string;

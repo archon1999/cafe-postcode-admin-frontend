@@ -3,6 +3,7 @@
   "description": "Настройте кухонный, обычный платёжный и фискальный чек.",
   "kinds": {
     "kitchen_ticket": "Кухонный чек",
+    "order_precheck": "Пречек",
     "payment_receipt_plain": "Обычный платёжный чек",
     "payment_receipt_fiscal": "Фискальный чек"
   },

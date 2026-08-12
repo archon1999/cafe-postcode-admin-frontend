@@ -10,11 +10,12 @@ import type {
 } from '../../domain';
 
 type ApiKindMap<T> = Partial<
-  Record<PrintTemplateKind | 'kitchenTicket' | 'paymentReceiptPlain' | 'paymentReceiptFiscal', T>
+  Record<PrintTemplateKind | 'kitchenTicket' | 'orderPrecheck' | 'paymentReceiptPlain' | 'paymentReceiptFiscal', T>
 >;
 
 const API_KIND_KEYS: Record<PrintTemplateKind, keyof ApiKindMap<unknown>> = {
   kitchen_ticket: 'kitchenTicket',
+  order_precheck: 'orderPrecheck',
   payment_receipt_plain: 'paymentReceiptPlain',
   payment_receipt_fiscal: 'paymentReceiptFiscal',
 };
@@ -30,6 +31,7 @@ function normalizePresetCatalog(catalog: PrintPresetCatalog): PrintPresetCatalog
     ...catalog,
     variablesByKind: {
       kitchen_ticket: readKindValue(rawVariables, 'kitchen_ticket') ?? [],
+      order_precheck: readKindValue(rawVariables, 'order_precheck') ?? [],
       payment_receipt_plain: readKindValue(rawVariables, 'payment_receipt_plain') ?? [],
       payment_receipt_fiscal: readKindValue(rawVariables, 'payment_receipt_fiscal') ?? [],
     },
@@ -39,6 +41,7 @@ function normalizePresetCatalog(catalog: PrintPresetCatalog): PrintPresetCatalog
         ...preset,
         templates: {
           kitchen_ticket: readKindValue(rawTemplates, 'kitchen_ticket')!,
+          order_precheck: readKindValue(rawTemplates, 'order_precheck')!,
           payment_receipt_plain: readKindValue(rawTemplates, 'payment_receipt_plain')!,
           payment_receipt_fiscal: readKindValue(rawTemplates, 'payment_receipt_fiscal')!,
         },

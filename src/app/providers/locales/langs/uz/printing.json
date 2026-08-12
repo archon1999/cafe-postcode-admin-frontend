@@ -1,8 +1,9 @@
 {
   "title": "Chek shablonlari",
-  "description": "Oshxona, oddiy to'lov va fiskal chek ko'rinishini boshqaring.",
+  "description": "Oshxona, prechek, oddiy to'lov va fiskal chek ko'rinishini boshqaring.",
   "kinds": {
     "kitchen_ticket": "Oshxona cheki",
+    "order_precheck": "Prechek",
     "payment_receipt_plain": "Oddiy to'lov cheki",
     "payment_receipt_fiscal": "Fiskal chek"
   },
@@ -64,6 +65,9 @@
       "ticketNumber": "Oshxona cheki raqami",
       "prepStation": "Tayyorlash stansiyasi",
       "createdAt": "Oshxona cheki vaqti"
+    },
+    "precheck": {
+      "printedAt": "Prechek chiqarilgan vaqt"
     },
     "payment": {
       "method": "To'lov usuli",
