@@ -28,6 +28,7 @@ export const catalogItemFormSchema = z.object({
     (value) => (value === '' || value === null || value === undefined ? 0 : value),
     z.coerce.number().int().min(0),
   ),
+  saleUnit: z.enum(['piece', 'kg']).default('piece'),
   modifierGroups: z.array(z.string()).default([]),
   isActive: z.boolean(),
   isStoplisted: z.boolean(),

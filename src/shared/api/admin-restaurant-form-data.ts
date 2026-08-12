@@ -12,6 +12,7 @@ type RestaurantSelfServicePayload = Pick<
   | 'vatPercent'
   | 'markingCheckEnabled'
   | 'posMonitorVariant'
+  | 'paymentTotalMode'
 >;
 
 function appendText(formData: FormData, key: string, value: string | number | boolean | null | undefined) {
@@ -54,6 +55,7 @@ export function buildAdminRestaurantRequestPayload(payload: AdminRestaurantPaylo
   appendText(formData, 'vatPercent', payload.vatPercent);
   appendText(formData, 'markingCheckEnabled', payload.markingCheckEnabled);
   appendText(formData, 'posMonitorVariant', payload.posMonitorVariant);
+  appendText(formData, 'paymentTotalMode', payload.paymentTotalMode);
   appendText(formData, 'isActive', payload.isActive);
 
   if (payload.tariffId) {
@@ -97,6 +99,7 @@ export function buildRestaurantSelfServiceRequestPayload(
     vatPercent: payload.vatPercent,
     markingCheckEnabled: payload.markingCheckEnabled,
     posMonitorVariant: payload.posMonitorVariant,
+    ...(payload.paymentTotalMode ? { paymentTotalMode: payload.paymentTotalMode } : {}),
   };
   const imageFile = payload.posAuthBackgroundImage;
   const hasImageFile = imageFile instanceof File;

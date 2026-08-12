@@ -45,6 +45,7 @@ describe('catalogFormData', () => {
       clearImage: true,
       restoreMxikImage: false,
       price: 32000,
+      saleUnit: 'kg',
       isActive: false,
       isStoplisted: true,
     });
@@ -61,6 +62,7 @@ describe('catalogFormData', () => {
       category: '',
       description: 'Issiq',
       price: '32000',
+      saleUnit: 'kg',
       isActive: 'false',
       isStoplisted: 'true',
     });

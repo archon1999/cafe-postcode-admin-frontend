@@ -62,6 +62,10 @@ function buildCatalogFormData(payload: CatalogMutationPayload): FormData {
     appendNumber(formData, 'price', payload.price);
   }
 
+  if ('saleUnit' in payload) {
+    appendText(formData, 'saleUnit', payload.saleUnit);
+  }
+
   if ('modifierGroups' in payload) {
     for (const groupId of payload.modifierGroups ?? []) {
       appendText(formData, 'modifierGroups', groupId);

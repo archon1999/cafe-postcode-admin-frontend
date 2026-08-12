@@ -24,5 +24,12 @@ describe('CatalogItemForm price coercion', () => {
     const result = catalogItemFormSchema.parse({ ...validFormValues, price: input });
 
     expect(result.price).toBe(expected);
+    expect(result.saleUnit).toBe('piece');
+  });
+
+  it('keeps kilogram as an explicit sale unit', () => {
+    const result = catalogItemFormSchema.parse({ ...validFormValues, price: 100000, saleUnit: 'kg' });
+
+    expect(result.saleUnit).toBe('kg');
   });
 });

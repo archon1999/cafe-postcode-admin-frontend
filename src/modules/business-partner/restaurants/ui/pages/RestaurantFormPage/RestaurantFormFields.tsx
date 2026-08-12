@@ -94,6 +94,13 @@ export const RestaurantFormFields = ({
           <MenuItem value="default">{t('fields.posMonitorVariantDefault')}</MenuItem>
           <MenuItem value="light_compact">{t('fields.posMonitorVariantLightCompact')}</MenuItem>
         </RHFSelect>
+        <RHFSelect<RestaurantFormValues>
+          name="paymentTotalMode"
+          label={t('fields.paymentTotalMode')}
+          helperText={t('fields.paymentTotalModeHelp')}>
+          <MenuItem value="fixed">{t('fields.paymentTotalModeFixed')}</MenuItem>
+          <MenuItem value="cashier_editable">{t('fields.paymentTotalModeCashierEditable')}</MenuItem>
+        </RHFSelect>
       </Box>
 
       <Stack spacing={1.5} sx={{ mt: 1 }}>

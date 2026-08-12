@@ -247,7 +247,11 @@
     "posAuthBackgroundImage": "Фон POS входа",
     "posMonitorVariant": "Вариант POS-монитора",
     "posMonitorVariantDefault": "Default",
-    "posMonitorVariantLightCompact": "Light Compact"
+    "posMonitorVariantLightCompact": "Light Compact",
+    "paymentTotalMode": "Итоговая сумма при оплате",
+    "paymentTotalModeFixed": "Только рассчитанная сумма",
+    "paymentTotalModeCashierEditable": "Кассир может изменить",
+    "paymentTotalModeHelp": "Если включено, кассир может указать итоговую сумму оплаты и обязан указать причину."
   },
   "filters": {
     "all": "Все",

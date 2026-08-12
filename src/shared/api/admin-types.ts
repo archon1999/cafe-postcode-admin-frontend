@@ -427,6 +427,7 @@ export type AdminRestaurantBalanceTransaction = {
 };
 
 export type AdminPosMonitorVariant = 'default' | 'light_compact';
+export type AdminPaymentTotalMode = 'fixed' | 'cashier_editable';
 
 export type AdminRestaurant = {
   id: string;
@@ -450,6 +451,7 @@ export type AdminRestaurant = {
   vatPercent: number | string;
   markingCheckEnabled: boolean;
   posMonitorVariant?: AdminPosMonitorVariant;
+  paymentTotalMode?: AdminPaymentTotalMode;
   isActive: boolean;
   activatedAt?: string | null;
   deactivatedAt?: string | null;
@@ -486,6 +488,7 @@ export type AdminRestaurantPayload = {
   vatPercent: number | string;
   markingCheckEnabled: boolean;
   posMonitorVariant?: AdminPosMonitorVariant;
+  paymentTotalMode?: AdminPaymentTotalMode;
   isActive: boolean;
   tariffId?: string | null;
 };
@@ -618,6 +621,7 @@ export type AdminKitchenTicketItem = {
   prepStation: string;
   prepStationName: string;
   quantity: number;
+  saleUnit?: 'piece' | 'kg';
   unitPrice: number;
   lineTotal: number;
   status: string;
@@ -770,6 +774,12 @@ export type AdminOrder = {
   guestCount: number;
   note: string;
   subtotal: number;
+  calculatedTotal: number;
+  totalOverride?: number | null;
+  totalOverrideReason?: string;
+  totalOverriddenBy?: string | null;
+  totalOverriddenByName?: string | null;
+  totalOverriddenAt?: string | null;
   serviceFee: number;
   total: number;
   closedAt: string | null;
@@ -880,6 +890,7 @@ export type CatalogItem = {
   markingGtin?: string | null;
   description: string;
   price: number;
+  saleUnit?: 'piece' | 'kg';
   sortOrder: number;
   modifierGroups?: string[];
   isActive: boolean;
@@ -900,6 +911,7 @@ export type CatalogItemPayload = {
   restoreMxikImage?: boolean;
   description: string;
   price: number;
+  saleUnit?: 'piece' | 'kg';
   sortOrder?: number;
   modifierGroups?: string[];
   isActive: boolean;

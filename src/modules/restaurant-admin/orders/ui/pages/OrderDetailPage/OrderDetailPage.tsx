@@ -325,6 +325,29 @@ const OrderDetailPage = () => {
                           {formatMoney(order.serviceFee)}
                         </Typography>
                       </Stack>
+                      {order.totalOverride !== null && order.totalOverride !== undefined ? (
+                        <>
+                          <Stack direction="row" justifyContent="space-between" spacing={2}>
+                            <Typography variant="body2" color="text.secondary">
+                              {t('fields.calculatedTotal')}
+                            </Typography>
+                            <Typography variant="subtitle2" sx={{ fontVariantNumeric: 'tabular-nums' }}>
+                              {formatMoney(order.calculatedTotal)}
+                            </Typography>
+                          </Stack>
+                          <Stack direction="row" justifyContent="space-between" spacing={2}>
+                            <Typography variant="body2" color="text.secondary">
+                              {t('fields.totalAdjustment')}
+                            </Typography>
+                            <Typography
+                              variant="subtitle2"
+                              color={order.total - order.calculatedTotal < 0 ? 'warning.main' : 'success.main'}
+                              sx={{ fontVariantNumeric: 'tabular-nums' }}>
+                              {formatMoney(order.total - order.calculatedTotal)}
+                            </Typography>
+                          </Stack>
+                        </>
+                      ) : null}
                       <Divider sx={{ borderStyle: 'dashed' }} />
                       <Stack direction="row" justifyContent="space-between" alignItems="baseline" spacing={2}>
                         <Typography variant="subtitle1">{t('fields.total')}</Typography>
@@ -332,6 +355,20 @@ const OrderDetailPage = () => {
                           {formatMoney(order.total)}
                         </Typography>
                       </Stack>
+                      {order.totalOverride !== null && order.totalOverride !== undefined ? (
+                        <Stack spacing={0.4} sx={{ p: 1.5, bgcolor: 'background.neutral' }}>
+                          <Typography variant="caption" color="text.secondary">
+                            {t('fields.totalOverrideReason')}
+                          </Typography>
+                          <Typography variant="body2" fontWeight={700}>
+                            {order.totalOverrideReason || '-'}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {t('fields.totalOverriddenBy')}: {order.totalOverriddenByName || '-'} ·{' '}
+                            {formatDateTime(order.totalOverriddenAt)}
+                          </Typography>
+                        </Stack>
+                      ) : null}
                     </Stack>
                   </Stack>
                 </Card>

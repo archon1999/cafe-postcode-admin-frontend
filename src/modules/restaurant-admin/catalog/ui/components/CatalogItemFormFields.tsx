@@ -3,6 +3,7 @@ import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { useFormContext } from 'react-hook-form';
 
 import { useTranslate } from 'app/providers/locales';
 import type { AdminMxikDetails, CatalogCategory, CatalogModifierGroup } from 'shared/api/admin-types';
@@ -59,6 +60,8 @@ export function CatalogItemFormFields({
   const primaryPackage = mxikDetails?.primaryPackage ?? null;
   const cashSaleStatus = getMxikCashSaleStatus(mxikDetails, selectedMxik?.raw);
   const labelStatus = getMxikLabelStatus(mxikDetails, selectedMxik?.raw);
+  const { watch } = useFormContext<CatalogItemFormInput>();
+  const saleUnit = watch('saleUnit');
 
   return (
     <Stack spacing={3} sx={isDialog ? { pt: 1 } : undefined}>
@@ -143,7 +146,14 @@ export function CatalogItemFormFields({
             </Stack>
           </Box>
         ) : null}
-        <RHFSumCurrencyField<CatalogItemFormInput> name="price" label={t('fields.price')} />
+        <RHFSelect<CatalogItemFormInput> name="saleUnit" label={t('fields.saleUnit')}>
+          <MenuItem value="piece">{t('fields.saleUnitPiece')}</MenuItem>
+          <MenuItem value="kg">{t('fields.saleUnitKilogram')}</MenuItem>
+        </RHFSelect>
+        <RHFSumCurrencyField<CatalogItemFormInput>
+          name="price"
+          label={saleUnit === 'kg' ? t('fields.pricePerKilogram') : t('fields.pricePerPiece')}
+        />
         <CatalogModifierGroupsField groups={modifierGroups} loading={modifierGroupsLoading} disabled={disabled} />
         <RHFTextField<CatalogItemFormInput>
           name="description"

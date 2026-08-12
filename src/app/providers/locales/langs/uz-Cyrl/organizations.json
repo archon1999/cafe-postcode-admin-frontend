@@ -248,7 +248,11 @@
     "posAuthBackgroundImage": "POS кириш фон расми",
     "posMonitorVariant": "POS монитор варианти",
     "posMonitorVariantDefault": "Default",
-    "posMonitorVariantLightCompact": "Light Compact"
+    "posMonitorVariantLightCompact": "Light Compact",
+    "paymentTotalMode": "Тўловда якуний сумма",
+    "paymentTotalModeFixed": "Фақат ҳисобланган сумма",
+    "paymentTotalModeCashierEditable": "Кассир ўзгартира олади",
+    "paymentTotalModeHelp": "Ўзгартириш ёқилса, кассир сабабини кўрсатиб якуний тўлов суммасини белгилайди."
   },
   "filters": {
     "all": "Барчаси",
