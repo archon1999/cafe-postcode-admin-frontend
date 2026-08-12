@@ -7,5 +7,15 @@
   "errorBoundary": {
     "unexpected": "Произошла непредвиденная ошибка",
     "unknown": "Произошла неизвестная ошибка"
+  },
+  "notifications": {
+    "project": {
+      "feedback": "По проекту оставлен новый отзыв."
+    },
+    "tags": {
+      "design": "Дизайн",
+      "dashboard": "Панель управления",
+      "designSystem": "Дизайн-система"
+    }
   }
 }

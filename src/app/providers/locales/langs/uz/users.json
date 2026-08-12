@@ -148,6 +148,8 @@
     "createEmployee": "Yangi xodim",
     "edit": "Tahrirlash",
     "save": "Saqlash",
+    "activate": "Aktivlashtirish",
+    "deactivate": "Deaktivlashtirish",
     "archive": "Arxivlash",
     "delete": "O'chirish",
     "roleCreate": "Yangi rol",

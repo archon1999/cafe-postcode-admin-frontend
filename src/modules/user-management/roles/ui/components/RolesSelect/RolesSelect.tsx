@@ -64,7 +64,7 @@ export function RolesSelect<T extends FieldValues = FieldValues>({
             isOptionEqualToValue={(option, value) => option.id === value.id}
             onChange={(_event, newValue) => field.onChange(newValue.map((option) => option.id))}
             onBlur={field.onBlur}
-            noOptionsText={t('labels.noData')}
+            noOptionsText={t('empty.noData')}
             renderTags={(value, getTagProps) =>
               value.map((option, index) => (
                 <Chip {...getTagProps({ index })} key={option.id} size="small" variant="soft" label={option.name} />

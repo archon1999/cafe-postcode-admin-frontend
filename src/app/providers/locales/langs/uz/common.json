@@ -8,6 +8,11 @@
     "logout": "Chiqish",
     "refresh": "Yangilash",
     "clear": "Tozalash",
+    "accept": "Qabul qilish",
+    "decline": "Rad etish",
+    "reply": "Javob berish",
+    "download": "Yuklab olish",
+    "pay": "To'lash",
     "viewAll": "Barchasini ko'rish"
   },
   "settings": {

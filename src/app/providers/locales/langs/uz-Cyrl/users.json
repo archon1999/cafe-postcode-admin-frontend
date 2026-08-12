@@ -148,6 +148,8 @@
     "createEmployee": "Янги ходим",
     "edit": "Таҳрирлаш",
     "save": "Сақлаш",
+    "activate": "Активлаштириш",
+    "deactivate": "Деактивлаштириш",
     "archive": "Архивлаш",
     "delete": "Ўчириш",
     "roleCreate": "Янги роль",

@@ -88,7 +88,7 @@ export function PermissionsSelect<T extends FieldValues = FieldValues>({
             isOptionEqualToValue={(option, value) => option.id === value.id}
             onChange={(_event, newValue) => field.onChange(newValue.map((option) => option.id))}
             onBlur={field.onBlur}
-            noOptionsText={permissionsQuery.isLoading ? t('labels.loading') : t('labels.noData')}
+            noOptionsText={permissionsQuery.isLoading ? t('labels.loading') : t('empty.noData')}
             renderTags={(value, getTagProps) => {
               if (value.length >= 6) {
                 return [

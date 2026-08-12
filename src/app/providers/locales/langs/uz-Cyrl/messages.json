@@ -7,5 +7,15 @@
   "errorBoundary": {
     "unexpected": "Кутилмаган хатолик юз берди",
     "unknown": "Номаълум хатолик юз берди"
+  },
+  "notifications": {
+    "project": {
+      "feedback": "Лойиҳа бўйича янги фикр-мулоҳаза қолдирилди."
+    },
+    "tags": {
+      "design": "Дизайн",
+      "dashboard": "Бошқарув панели",
+      "designSystem": "Дизайн тизими"
+    }
   }
 }

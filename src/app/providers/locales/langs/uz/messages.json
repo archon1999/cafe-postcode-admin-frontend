@@ -7,5 +7,15 @@
   "errorBoundary": {
     "unexpected": "Kutilmagan xatolik yuz berdi",
     "unknown": "Noma'lum xatolik yuz berdi"
+  },
+  "notifications": {
+    "project": {
+      "feedback": "Loyiha bo'yicha yangi fikr-mulohaza qoldirildi."
+    },
+    "tags": {
+      "design": "Dizayn",
+      "dashboard": "Boshqaruv paneli",
+      "designSystem": "Dizayn tizimi"
+    }
   }
 }
