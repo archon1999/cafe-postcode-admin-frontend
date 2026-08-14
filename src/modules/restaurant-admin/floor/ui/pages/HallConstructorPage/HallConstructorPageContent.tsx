@@ -1,4 +1,17 @@
-import { Box, Button, Card, Chip, IconButton, Stack, TextField, Tooltip, Typography, alpha } from '@mui/material';
+import {
+  Box,
+  Button,
+  Card,
+  Chip,
+  FormControlLabel,
+  IconButton,
+  Stack,
+  Switch,
+  TextField,
+  Tooltip,
+  Typography,
+  alpha,
+} from '@mui/material';
 import { useState } from 'react';
 
 import { Content } from 'app/layouts/Dashboard';
@@ -58,6 +71,7 @@ export const HallConstructorPageContent = ({ id }: HallConstructorPageContentPro
     selectedTableId,
     setSelectedTableId,
     updateSelectedTable,
+    updateHallServiceFee,
     undo,
   } = constructor;
 
@@ -95,6 +109,29 @@ export const HallConstructorPageContent = ({ id }: HallConstructorPageContentPro
               </Typography>
             </Stack>
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={draft.serviceFeeEnabled}
+                    onChange={(event) => updateHallServiceFee({ serviceFeeEnabled: event.target.checked })}
+                  />
+                }
+                label={t('fields.hallServiceFeeEnabled', { defaultValue: 'Zal xizmat haqi' })}
+              />
+              <TextField
+                size="small"
+                label={t('fields.serviceFeePercent', { defaultValue: 'Xizmat haqi, %' })}
+                type="number"
+                disabled={!draft.serviceFeeEnabled}
+                value={draft.serviceFeePercent}
+                onChange={(event) =>
+                  updateHallServiceFee({
+                    serviceFeePercent: Math.min(99, Math.max(0, Number(event.target.value) || 0)),
+                  })
+                }
+                slotProps={{ htmlInput: { min: 0, max: 99, step: 0.01 } }}
+                sx={{ ...nativeNumberInputSx, width: { xs: '100%', sm: 148 } }}
+              />
               <TextField
                 size="small"
                 label={t('fields.gridColumns')}

@@ -318,14 +318,37 @@ const OrderDetailPage = () => {
                           {formatMoney(order.subtotal)}
                         </Typography>
                       </Stack>
-                      <Stack direction="row" justifyContent="space-between" spacing={2}>
-                        <Typography variant="body2" color="text.secondary">
-                          {t('fields.serviceFee')}
-                        </Typography>
-                        <Typography variant="subtitle2" sx={{ fontVariantNumeric: 'tabular-nums' }}>
-                          {formatMoney(order.serviceFee)}
-                        </Typography>
-                      </Stack>
+                      {order.serviceFeeComponents?.length ? (
+                        order.serviceFeeComponents.map((component) => {
+                          const fallbackLabels = {
+                            restaurant: 'Restoran xizmati',
+                            hall: 'Zal xizmati',
+                            table: 'Stol xizmati',
+                          };
+                          const scopeLabel = t(`serviceFeeScopes.${component.scope}`, {
+                            defaultValue: fallbackLabels[component.scope],
+                          });
+                          return (
+                            <Stack key={component.scope} direction="row" justifyContent="space-between" spacing={2}>
+                              <Typography variant="body2" color="text.secondary">
+                                {scopeLabel} ({Number(component.percent)}%)
+                              </Typography>
+                              <Typography variant="subtitle2" sx={{ fontVariantNumeric: 'tabular-nums' }}>
+                                {formatMoney(component.amount)}
+                              </Typography>
+                            </Stack>
+                          );
+                        })
+                      ) : (
+                        <Stack direction="row" justifyContent="space-between" spacing={2}>
+                          <Typography variant="body2" color="text.secondary">
+                            {t('fields.serviceFee')}
+                          </Typography>
+                          <Typography variant="subtitle2" sx={{ fontVariantNumeric: 'tabular-nums' }}>
+                            {formatMoney(order.serviceFee)}
+                          </Typography>
+                        </Stack>
+                      )}
                       {order.totalOverride !== null && order.totalOverride !== undefined ? (
                         <>
                           <Stack direction="row" justifyContent="space-between" spacing={2}>

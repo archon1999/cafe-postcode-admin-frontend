@@ -4,6 +4,8 @@ import type { DraftTable } from './ConstructorTableCard';
 
 export type HallConstructorDraft = {
   gridColumns: number;
+  serviceFeeEnabled: boolean;
+  serviceFeePercent: number | string;
   tables: DraftTable[];
   deletedTableIds: string[];
 };
@@ -17,7 +19,12 @@ export type HallConstructorDragState = {
 };
 
 export function toDraftTable(table: AdminHallConstructorTable): DraftTable {
-  return { ...table, localId: table.id };
+  return {
+    ...table,
+    serviceFeeEnabled: Boolean(table.serviceFeeEnabled),
+    serviceFeePercent: table.serviceFeePercent ?? 0,
+    localId: table.id,
+  };
 }
 
 export function serializeHallConstructorDraft(draft: HallConstructorDraft | null): string {
@@ -27,6 +34,8 @@ export function serializeHallConstructorDraft(draft: HallConstructorDraft | null
 
   return JSON.stringify({
     gridColumns: draft.gridColumns,
+    serviceFeeEnabled: draft.serviceFeeEnabled,
+    serviceFeePercent: draft.serviceFeePercent,
     deletedTableIds: [...draft.deletedTableIds].sort(),
     tables: [...draft.tables]
       .map((table) => ({
@@ -39,6 +48,8 @@ export function serializeHallConstructorDraft(draft: HallConstructorDraft | null
         positionY: table.positionY,
         width: table.width,
         height: table.height,
+        serviceFeeEnabled: table.serviceFeeEnabled,
+        serviceFeePercent: table.serviceFeePercent,
         isActive: table.isActive,
       }))
       .sort((left, right) => left.tableNumber - right.tableNumber),

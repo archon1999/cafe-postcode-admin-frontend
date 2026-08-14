@@ -32,6 +32,12 @@ export type AdminDiningTableStatus = 'available' | 'occupied' | 'reserved' | 'bl
 export type AdminTableSessionStatus = 'open' | 'pending_payment' | 'closed' | 'merged';
 export type AdminOrderStatus = 'open' | 'submitted' | 'ready' | 'closed' | 'cancelled';
 export type AdminOrderChannel = 'hall' | 'takeaway' | 'online' | 'delivery';
+export type AdminServiceFeeComponent = {
+  scope: 'restaurant' | 'hall' | 'table';
+  sourceName: string;
+  percent: number | string;
+  amount: number;
+};
 export type AdminOrderItemStatus = 'new' | 'cooking' | 'done' | 'served' | 'cancelled';
 export type AdminPaymentMethod = 'cash' | 'card' | 'qr' | 'mixed';
 export type AdminPaymentStatus = 'pending' | 'succeeded' | 'failed';
@@ -108,6 +114,8 @@ export type AdminHall = {
   name: string;
   description?: string;
   gridColumns?: number;
+  serviceFeeEnabled?: boolean;
+  serviceFeePercent?: number | string;
   sortOrder?: number;
   isActive: boolean;
   zoneOrCabinId: string;
@@ -118,6 +126,8 @@ export type AdminHallPayload = {
   name: string;
   description: string;
   gridColumns?: number;
+  serviceFeeEnabled?: boolean;
+  serviceFeePercent?: number | string;
   sortOrder?: number;
   isActive: boolean;
   zoneOrCabinId: string;
@@ -162,6 +172,8 @@ export type AdminDiningTable = {
   width: number;
   height: number;
   rotation: number;
+  serviceFeeEnabled: boolean;
+  serviceFeePercent: number | string;
   isActive: boolean;
   activeSession?: AdminActiveTableSessionSummary | null;
 };
@@ -179,6 +191,8 @@ export type AdminDiningTablePayload = {
   width: number;
   height: number;
   rotation: number;
+  serviceFeeEnabled?: boolean;
+  serviceFeePercent?: number | string;
   isActive: boolean;
 };
 
@@ -192,6 +206,8 @@ export type AdminHallConstructorTable = {
   positionY: number;
   width: number;
   height: number;
+  serviceFeeEnabled?: boolean;
+  serviceFeePercent?: number | string;
   isActive: boolean;
 };
 
@@ -199,11 +215,15 @@ export type AdminHallConstructor = {
   hallId: string;
   hallName: string;
   gridColumns: number;
+  serviceFeeEnabled?: boolean;
+  serviceFeePercent?: number | string;
   tables: AdminHallConstructorTable[];
 };
 
 export type AdminHallConstructorPayload = {
   gridColumns: number;
+  serviceFeeEnabled?: boolean;
+  serviceFeePercent?: number | string;
   tables: Array<{
     id?: string;
     name: string;
@@ -214,6 +234,8 @@ export type AdminHallConstructorPayload = {
     positionY: number;
     width: number;
     height: number;
+    serviceFeeEnabled?: boolean;
+    serviceFeePercent?: number | string;
     isActive?: boolean;
   }>;
   deletedTableIds?: string[];
@@ -782,6 +804,11 @@ export type AdminOrder = {
   totalOverriddenByName?: string | null;
   totalOverriddenAt?: string | null;
   serviceFee: number;
+  serviceFeePercent?: number | string;
+  serviceFeeComponents?: AdminServiceFeeComponent[];
+  restaurantServiceFeePercent?: number | string;
+  hallServiceFeePercent?: number | string;
+  tableServiceFeePercent?: number | string;
   total: number;
   closedAt: string | null;
   itemsCount: number;

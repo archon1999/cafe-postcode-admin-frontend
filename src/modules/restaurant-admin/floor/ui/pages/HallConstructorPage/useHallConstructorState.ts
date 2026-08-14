@@ -40,6 +40,8 @@ export function useHallConstructorState(id?: string) {
     if (!query.data) return;
     const nextDraft: HallConstructorDraft = {
       gridColumns: query.data.gridColumns,
+      serviceFeeEnabled: Boolean(query.data.serviceFeeEnabled),
+      serviceFeePercent: query.data.serviceFeePercent ?? 0,
       tables: query.data.tables.map(toDraftTable),
       deletedTableIds: [],
     };
@@ -102,6 +104,12 @@ export function useHallConstructorState(id?: string) {
     });
   };
 
+  const updateHallServiceFee = (
+    values: Partial<Pick<HallConstructorDraft, 'serviceFeeEnabled' | 'serviceFeePercent'>>,
+  ) => {
+    setDraft((currentDraft) => (currentDraft ? { ...currentDraft, ...values } : currentDraft));
+  };
+
   const updateSelectedTable = (updater: (table: DraftTable) => DraftTable) => {
     setDraft((currentDraft) => {
       if (!currentDraft || !selectedTableId) return currentDraft;
@@ -137,6 +145,8 @@ export function useHallConstructorState(id?: string) {
         positionY: placement.positionY,
         width: 1,
         height: 1,
+        serviceFeeEnabled: false,
+        serviceFeePercent: 0,
         isActive: true,
       };
       setSelectedTableId(nextTable.localId);
@@ -202,6 +212,8 @@ export function useHallConstructorState(id?: string) {
     if (!draft || !id) return;
     const payload: AdminHallConstructorPayload = {
       gridColumns: draft.gridColumns,
+      serviceFeeEnabled: draft.serviceFeeEnabled,
+      serviceFeePercent: draft.serviceFeePercent,
       tables: draft.tables.map((table) => ({
         ...(table.id ? { id: table.id } : {}),
         name: table.name.trim(),
@@ -212,6 +224,8 @@ export function useHallConstructorState(id?: string) {
         positionY: table.positionY,
         width: table.width,
         height: table.height,
+        serviceFeeEnabled: table.serviceFeeEnabled,
+        serviceFeePercent: table.serviceFeePercent,
         isActive: table.isActive,
       })),
       deletedTableIds: draft.deletedTableIds,
@@ -219,6 +233,8 @@ export function useHallConstructorState(id?: string) {
     const response = await updateMutation.mutateAsync(payload);
     const nextDraft: HallConstructorDraft = {
       gridColumns: response.gridColumns,
+      serviceFeeEnabled: Boolean(response.serviceFeeEnabled),
+      serviceFeePercent: response.serviceFeePercent ?? 0,
       tables: response.tables.map(toDraftTable),
       deletedTableIds: [],
     };
@@ -253,5 +269,6 @@ export function useHallConstructorState(id?: string) {
     setSelectedTableId,
     updateSelectedTable,
     undo,
+    updateHallServiceFee,
   };
 }

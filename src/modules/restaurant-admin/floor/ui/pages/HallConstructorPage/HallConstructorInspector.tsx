@@ -6,8 +6,10 @@ import {
   Button,
   Card,
   Divider,
+  FormControlLabel,
   MenuItem,
   Stack,
+  Switch,
   TextField,
   Typography,
 } from '@mui/material';
@@ -106,6 +108,31 @@ export function HallConstructorInspector({
                 </MenuItem>
               ))}
             </TextField>
+
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={selectedTable.serviceFeeEnabled}
+                  onChange={(event) =>
+                    updateSelectedTable((table) => ({ ...table, serviceFeeEnabled: event.target.checked }))
+                  }
+                />
+              }
+              label={t('fields.tableServiceFeeEnabled', { defaultValue: 'Stol xizmat haqi' })}
+            />
+            <TextField
+              label={t('fields.serviceFeePercent', { defaultValue: 'Xizmat haqi, %' })}
+              type="number"
+              disabled={!selectedTable.serviceFeeEnabled}
+              value={selectedTable.serviceFeePercent}
+              onChange={(event) =>
+                updateSelectedTable((table) => ({
+                  ...table,
+                  serviceFeePercent: Math.min(99, Math.max(0, Number(event.target.value) || 0)),
+                }))
+              }
+              slotProps={{ htmlInput: { min: 0, max: 99, step: 0.01 } }}
+            />
 
             <Accordion
               disableGutters

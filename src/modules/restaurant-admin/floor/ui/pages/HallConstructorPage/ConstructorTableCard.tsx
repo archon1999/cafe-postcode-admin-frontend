@@ -5,8 +5,10 @@ import { Iconify } from 'shared/ui/Iconify';
 
 import { getVariantMarkers } from '../../../domain';
 
-export type DraftTable = AdminHallConstructorTable & {
+export type DraftTable = Omit<AdminHallConstructorTable, 'serviceFeeEnabled' | 'serviceFeePercent'> & {
   localId: string;
+  serviceFeeEnabled: boolean;
+  serviceFeePercent: number | string;
 };
 
 export function getConstructorPreviewPalette(mode: 'light' | 'dark', selected: boolean) {
