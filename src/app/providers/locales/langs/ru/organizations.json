@@ -253,7 +253,7 @@
     "posMonitorVariantLightCompact": "Light Compact",
     "paymentTotalMode": "Итоговая сумма при оплате",
     "paymentTotalModeFixed": "Только рассчитанная сумма",
-    "paymentTotalModeCashierEditable": "Кассир может изменить",
+    "paymentTotalModeCashierEditable": "Кассир может изменить"
   },
   "filters": {
     "all": "Все",
