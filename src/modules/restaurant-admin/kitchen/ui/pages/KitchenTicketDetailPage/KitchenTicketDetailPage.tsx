@@ -18,6 +18,7 @@ import { LoadingScreen } from 'shared/ui/LoadingScreen';
 import { TechnicalDetailsAccordion } from 'shared/ui/TechnicalDetailsAccordion';
 import { formatHallDisplayName } from 'shared/utils/format-hall-display';
 import { formatMoney } from 'shared/utils/format-money';
+import { formatSaleQuantity } from 'shared/utils/format-quantity';
 import { formatDateTime } from 'shared/utils/format-time';
 
 import { useGetKitchenTicketByIdQuery } from '../../../application';
@@ -172,7 +173,7 @@ const KitchenTicketDetailPage = () => {
 
                         <Stack alignItems={{ xs: 'flex-start', md: 'flex-end' }} spacing={0.5}>
                           <Typography variant="subtitle2">
-                            {t('fields.quantity')}: {item.quantity}
+                            {t('fields.quantity')}: {formatSaleQuantity(item.quantity, item.saleUnit)}
                           </Typography>
                           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                             {t('fields.unitPrice')}: {formatMoney(item.unitPrice)}

@@ -676,6 +676,7 @@ export type AdminOrderItem = {
   tableName?: string | null;
   hallName?: string | null;
   quantity: number;
+  saleUnit?: 'piece' | 'kg';
   unitPrice: number;
   lineTotal: number;
   status: AdminOrderItemStatus;
@@ -1105,6 +1106,7 @@ export type AdminTopItemsReportRow = {
   categoryId?: string | null;
   categoryName?: string | null;
   quantity: number;
+  saleUnit?: 'piece' | 'kg';
   revenue: number;
 };
 

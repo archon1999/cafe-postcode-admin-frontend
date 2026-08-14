@@ -110,6 +110,10 @@
   "currency": {
     "som": "so'm"
   },
+  "quantityUnits": {
+    "piece": "ta",
+    "kilogram": "kg"
+  },
   "notFound": {
     "title": "Sahifa topilmadi",
     "description": "So'ralgan sahifa mavjud emas yoki ko'chirilgan.",

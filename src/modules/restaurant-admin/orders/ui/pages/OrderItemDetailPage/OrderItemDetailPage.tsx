@@ -17,6 +17,7 @@ import { Label } from 'shared/ui/Label';
 import { LabelRowWithIcon } from 'shared/ui/LabelRowWithIcon/LabelRowWithIcon';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 import { formatMoney } from 'shared/utils/format-money';
+import { formatSaleQuantity } from 'shared/utils/format-quantity';
 import { formatDateTime } from 'shared/utils/format-time';
 
 import { useGetOrderItemByIdQuery } from '../../../application';
@@ -81,7 +82,7 @@ const OrderItemDetailPage = () => {
             <Card sx={{ p: 3 }}>
               <Stack spacing={1}>
                 <Typography variant="body2" color="text.secondary">
-                  {t('fields.quantity')}: {item.quantity}
+                  {t('fields.quantity')}: {formatSaleQuantity(item.quantity, item.saleUnit)}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   {t('fields.unitPrice')}: {formatMoney(item.unitPrice)}

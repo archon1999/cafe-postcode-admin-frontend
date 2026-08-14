@@ -16,6 +16,7 @@ import type {
 } from 'shared/api/admin-types';
 import { Iconify } from 'shared/ui/Iconify';
 import { formatMoney } from 'shared/utils/format-money';
+import { formatSaleQuantity } from 'shared/utils/format-quantity';
 import { formatDateTime } from 'shared/utils/format-time';
 
 export type ReportTableRow =
@@ -154,7 +155,13 @@ export function getReportTableColumns(reportKey: TableReportKey, t: ReportsTrans
           flex: 0.7,
           valueGetter: (_value, row: AdminTopItemsReportRow) => row.categoryName || '-',
         },
-        { field: 'quantity', headerName: t('reports.topItems.fields.quantity'), minWidth: 140, flex: 0.5 },
+        {
+          field: 'quantity',
+          headerName: t('reports.topItems.fields.quantity'),
+          minWidth: 140,
+          flex: 0.5,
+          valueGetter: (_value, row: AdminTopItemsReportRow) => formatSaleQuantity(row.quantity, row.saleUnit),
+        },
         {
           field: 'revenue',
           headerName: t('reports.topItems.fields.revenue'),

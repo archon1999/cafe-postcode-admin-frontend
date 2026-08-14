@@ -109,6 +109,10 @@
   "currency": {
     "som": "сум"
   },
+  "quantityUnits": {
+    "piece": "шт.",
+    "kilogram": "кг"
+  },
   "notFound": {
     "title": "Страница не найдена",
     "description": "Запрошенная страница не существует или была перемещена.",

@@ -21,6 +21,7 @@ import { Label } from 'shared/ui/Label';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 import { formatHallDisplayName } from 'shared/utils/format-hall-display';
 import { formatMoney } from 'shared/utils/format-money';
+import { formatSaleQuantity } from 'shared/utils/format-quantity';
 import { formatDateTime } from 'shared/utils/format-time';
 
 import { useGetOrderByIdQuery } from '../../../application';
@@ -281,7 +282,7 @@ const OrderDetailPage = () => {
                                 {t('fields.quantity')}
                               </Typography>
                               <Typography variant="subtitle2" sx={{ fontVariantNumeric: 'tabular-nums' }}>
-                                {item.quantity} × {formatMoney(item.unitPrice)}
+                                {formatSaleQuantity(item.quantity, item.saleUnit)} × {formatMoney(item.unitPrice)}
                               </Typography>
                             </Box>
                             <Box sx={{ textAlign: 'right', minWidth: 120 }}>

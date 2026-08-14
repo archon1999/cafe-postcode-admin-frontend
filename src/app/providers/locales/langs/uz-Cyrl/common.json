@@ -109,6 +109,10 @@
   "currency": {
     "som": "сўм"
   },
+  "quantityUnits": {
+    "piece": "та",
+    "kilogram": "кг"
+  },
   "notFound": {
     "title": "Саҳифа топилмади",
     "description": "Сўралган саҳифа мавжуд эмас ёки кўчирилган.",

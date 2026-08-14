@@ -13,6 +13,7 @@ import { useDataGridPreferences } from 'shared/hooks/use-data-grid-preferences';
 import { DataGrid, DataGridEmptyState, withDetailLink } from 'shared/ui/CustomDataGrid';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 import { formatMoney } from 'shared/utils/format-money';
+import { formatSaleQuantity } from 'shared/utils/format-quantity';
 import { formatDateTime } from 'shared/utils/format-time';
 
 import { useGetOrderItemsQuery } from '../../../application';
@@ -70,7 +71,13 @@ export function OrderItemsGrid() {
         flex: 0.8,
         valueGetter: (_v, row) => row.prepStationName || '-',
       },
-      { field: 'quantity', headerName: t('fields.quantity'), minWidth: 100, flex: 0.3 },
+      {
+        field: 'quantity',
+        headerName: t('fields.quantity'),
+        minWidth: 110,
+        flex: 0.35,
+        valueGetter: (_v, row) => formatSaleQuantity(row.quantity, row.saleUnit),
+      },
       {
         field: 'lineTotal',
         headerName: t('fields.lineTotal'),
