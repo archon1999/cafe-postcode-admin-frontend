@@ -96,8 +96,7 @@ export const RestaurantFormFields = ({
         </RHFSelect>
         <RHFSelect<RestaurantFormValues>
           name="paymentTotalMode"
-          label={t('fields.paymentTotalMode')}
-          helperText={t('fields.paymentTotalModeHelp')}>
+          label={t('fields.paymentTotalMode')}>
           <MenuItem value="fixed">{t('fields.paymentTotalModeFixed')}</MenuItem>
           <MenuItem value="cashier_editable">{t('fields.paymentTotalModeCashierEditable')}</MenuItem>
         </RHFSelect>

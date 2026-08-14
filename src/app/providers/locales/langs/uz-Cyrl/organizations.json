@@ -255,7 +255,6 @@
     "paymentTotalMode": "Тўловда якуний сумма",
     "paymentTotalModeFixed": "Фақат ҳисобланган сумма",
     "paymentTotalModeCashierEditable": "Кассир ўзгартира олади",
-    "paymentTotalModeHelp": "Ўзгартириш ёқилса, кассир сабабини кўрсатиб якуний тўлов суммасини белгилайди."
   },
   "filters": {
     "all": "Барчаси",
