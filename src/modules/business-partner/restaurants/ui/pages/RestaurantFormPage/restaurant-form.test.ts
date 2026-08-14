@@ -18,7 +18,7 @@ describe('restaurant form contract', () => {
       clearPosAuthBackgroundImage: false,
       serviceFeeEnabled: false,
       serviceFeePercent: 0,
-      vatEnabled: false,
+      vatEnabled: true,
       vatPercent: 12,
       markingCheckEnabled: false,
       posMonitorVariant: 'default',

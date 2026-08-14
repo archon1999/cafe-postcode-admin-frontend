@@ -270,7 +270,7 @@ describe('RestaurantFormPage', () => {
         fakturaPayload: { CompanyName: 'GULISTON RESTAURANT', CompanyInn: '311926992' },
         serviceFeeEnabled: false,
         serviceFeePercent: 0,
-        vatEnabled: false,
+        vatEnabled: true,
         vatPercent: 12,
         markingCheckEnabled: false,
         paymentTotalMode: 'fixed',
