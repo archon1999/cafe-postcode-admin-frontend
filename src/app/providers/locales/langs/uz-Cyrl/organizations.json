@@ -74,7 +74,8 @@
       "openSection": "Бўлимни очиш",
       "downloadManifest": "Манифестни юклаш",
       "copyCommand": "Буйруқни нусхалаш",
-      "downloadInstaller": "Windows учун Local Agentни юклаб олиш"
+      "downloadInstaller": "Windows учун Local Agentни юклаб олиш",
+      "downloadFiscalDriveService": "Fiscal Drive Serviceни юклаб олиш"
     },
     "readiness": { "progress": "Тайёрлик: {{value}}%", "remaining": "{{count}} та муҳим иш қолган" },
     "status": { "ready": "Тайёр", "warning": "Эътибор талаб қилади", "blocked": "Бажарилиши шарт" },
@@ -179,7 +180,9 @@
       "commandCopied": "Ўрнатиш буйруғи нусхаланди.",
       "enrollmentFailed": "Бир марталик ўрнатиш токенини яратиб бўлмади.",
       "installerDownloaded": "Local Agent installer юкланди.",
-      "installerDownloadFailed": "Local Agent installerni юклаб бўлмади."
+      "installerDownloadFailed": "Local Agent installerni юклаб бўлмади.",
+      "fiscalDriveServiceDownloaded": "Fiscal Drive Service юкланди.",
+      "fiscalDriveServiceDownloadFailed": "Fiscal Drive Serviceни юклаб бўлмади."
     }
   },
   "fields": {

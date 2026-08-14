@@ -74,7 +74,8 @@
       "openSection": "Открыть раздел",
       "downloadManifest": "Скачать манифест",
       "copyCommand": "Копировать команду",
-      "downloadInstaller": "Скачать Local Agent для Windows"
+      "downloadInstaller": "Скачать Local Agent для Windows",
+      "downloadFiscalDriveService": "Скачать Fiscal Drive Service"
     },
     "readiness": { "progress": "Готовность: {{value}}%", "remaining": "Обязательных задач осталось: {{count}}" },
     "status": { "ready": "Готово", "warning": "Требует внимания", "blocked": "Обязательно" },
@@ -179,7 +180,9 @@
       "commandCopied": "Команда установки скопирована.",
       "enrollmentFailed": "Не удалось создать одноразовый токен установки.",
       "installerDownloaded": "Установщик Local Agent загружен.",
-      "installerDownloadFailed": "Не удалось скачать установщик Local Agent."
+      "installerDownloadFailed": "Не удалось скачать установщик Local Agent.",
+      "fiscalDriveServiceDownloaded": "Fiscal Drive Service скачан.",
+      "fiscalDriveServiceDownloadFailed": "Не удалось скачать Fiscal Drive Service."
     }
   },
   "fields": {

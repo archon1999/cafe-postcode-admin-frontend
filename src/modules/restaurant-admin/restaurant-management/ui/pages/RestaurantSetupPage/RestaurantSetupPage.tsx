@@ -23,7 +23,7 @@ import type { RestaurantSetupApplyPayload, RestaurantSetupStep } from '../../../
 import { MyRestaurantSectionLayout } from '../../components/MyRestaurantSectionLayout';
 import { MyRestaurantSettingsTabs } from '../../components/MyRestaurantSettingsTabs';
 
-import { downloadLocalAgentInstaller } from './installer-download';
+import { downloadFiscalDriveService, downloadLocalAgentInstaller } from './installer-download';
 import { LocalAgentDiagnostics } from './LocalAgentDiagnostics';
 import {
   newCashDesk,
@@ -191,6 +191,16 @@ const RestaurantSetupPage = () => {
       toast.error(t('setup.messages.installerDownloadFailed'));
     }
   };
+
+  const downloadFiscalService = async () => {
+    try {
+      await downloadFiscalDriveService();
+      toast.success(t('setup.messages.fiscalDriveServiceDownloaded'));
+    } catch {
+      toast.error(t('setup.messages.fiscalDriveServiceDownloadFailed'));
+    }
+  };
+
   const issueLabel = (code: string) => t(`setup.issues.${code}`, { defaultValue: t('setup.issues.generic') });
 
   return (
@@ -321,12 +331,20 @@ const RestaurantSetupPage = () => {
             <Typography variant="h5">{t('setup.installer.title')}</Typography>
             <Typography color="text.secondary">{t('setup.installer.description')}</Typography>
             <Alert severity="info">{t('setup.installer.hint')}</Alert>
-            <Button
-              variant="contained"
-              startIcon={<Iconify icon="solar:download-minimalistic-linear" />}
-              onClick={() => void downloadInstaller()}>
-              {t('setup.actions.downloadInstaller')}
-            </Button>
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5}>
+              <Button
+                variant="contained"
+                startIcon={<Iconify icon="solar:download-minimalistic-linear" />}
+                onClick={() => void downloadInstaller()}>
+                {t('setup.actions.downloadInstaller')}
+              </Button>
+              <Button
+                variant="outlined"
+                startIcon={<Iconify icon="solar:download-minimalistic-linear" />}
+                onClick={() => void downloadFiscalService()}>
+                {t('setup.actions.downloadFiscalDriveService')}
+              </Button>
+            </Stack>
           </Stack>
         </Card>
       </Stack>

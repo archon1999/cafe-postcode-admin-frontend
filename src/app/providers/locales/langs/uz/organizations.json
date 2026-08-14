@@ -74,7 +74,8 @@
       "openSection": "Bo'limni ochish",
       "downloadManifest": "Manifestni yuklash",
       "copyCommand": "Buyruqni nusxalash",
-      "downloadInstaller": "Windows uchun Local Agentni yuklab olish"
+      "downloadInstaller": "Windows uchun Local Agentni yuklab olish",
+      "downloadFiscalDriveService": "Fiscal Drive Service-ni yuklab olish"
     },
     "readiness": { "progress": "Tayyorlik: {{value}}%", "remaining": "{{count}} ta muhim ish qolgan" },
     "status": { "ready": "Tayyor", "warning": "E'tibor talab qiladi", "blocked": "Bajarilishi shart" },
@@ -179,7 +180,9 @@
       "commandCopied": "O'rnatish buyrug'i nusxalandi.",
       "enrollmentFailed": "Bir martalik o'rnatish tokenini yaratib bo'lmadi.",
       "installerDownloaded": "Local Agent installer yuklandi.",
-      "installerDownloadFailed": "Local Agent installerni yuklab bo'lmadi."
+      "installerDownloadFailed": "Local Agent installerni yuklab bo'lmadi.",
+      "fiscalDriveServiceDownloaded": "Fiscal Drive Service yuklandi.",
+      "fiscalDriveServiceDownloadFailed": "Fiscal Drive Service-ni yuklab bo'lmadi."
     }
   },
   "fields": {
