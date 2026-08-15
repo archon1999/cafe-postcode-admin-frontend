@@ -25,6 +25,7 @@ import { formatSaleQuantity } from 'shared/utils/format-quantity';
 import { formatDateTime } from 'shared/utils/format-time';
 
 import { useGetOrderByIdQuery } from '../../../application';
+import { aggregateAdminOrderItems } from '../../../domain';
 import {
   getOrderChannelTranslationKey,
   getOrderItemStatusColor,
@@ -124,6 +125,7 @@ const OrderDetailPage = () => {
   const location = order.tableName ? `${hallName} · ${order.tableName}` : hallName;
   const staffNames = combineStaffNames(order.cashierName, order.openedByName);
   const canPreviewReceipt = order.receipts.some(hasReceiptPrintPreview);
+  const groupedItems = aggregateAdminOrderItems(order.items);
 
   return (
     <Content>
@@ -184,7 +186,7 @@ const OrderDetailPage = () => {
                     {t('fields.itemsCount')}
                   </Typography>
                   <Typography variant="h5" sx={{ fontVariantNumeric: 'tabular-nums' }}>
-                    {order.items.length}
+                    {groupedItems.length}
                   </Typography>
                 </Box>
                 <Divider orientation="vertical" flexItem />
@@ -248,13 +250,13 @@ const OrderDetailPage = () => {
                     <SectionTitle
                       title={t('sections.items')}
                       icon="solar:bag-4-bold-duotone"
-                      count={order.items.length}
+                      count={groupedItems.length}
                     />
-                    {order.items.length ? (
+                    {groupedItems.length ? (
                       <Stack divider={<Divider flexItem />}>
-                        {order.items.map((item) => (
+                        {groupedItems.map((item) => (
                           <Box
-                            key={item.id}
+                            key={item.groupKey}
                             sx={{
                               display: 'grid',
                               gridTemplateColumns: { xs: '1fr auto', sm: 'minmax(0, 1fr) auto auto' },
@@ -276,6 +278,11 @@ const OrderDetailPage = () => {
                                   </Typography>
                                 ) : null}
                               </Stack>
+                              {item.note ? (
+                                <Typography variant="caption" color="text.secondary">
+                                  {item.note}
+                                </Typography>
+                              ) : null}
                             </Stack>
                             <Box sx={{ textAlign: { xs: 'left', sm: 'right' } }}>
                               <Typography variant="caption" color="text.secondary">
