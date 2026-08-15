@@ -21,6 +21,10 @@ const LoginPage = () => {
 
   const methods = useForm<LoginSchemaType>({
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      username: '',
+      password: '',
+    },
   });
 
   const {

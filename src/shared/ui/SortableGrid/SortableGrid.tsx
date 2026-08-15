@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box';
-import type { SxProps, Theme } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
+import type { SystemCssProperties } from '@mui/system';
 import { useEffect, useState, type DragEvent, type ReactNode } from 'react';
 
 type SortableEntry = {
@@ -8,7 +9,7 @@ type SortableEntry = {
 
 type SortableGridProps<T extends SortableEntry> = {
   items: T[];
-  gridTemplateColumns: SxProps<Theme>['gridTemplateColumns'];
+  gridTemplateColumns: SystemCssProperties<Theme>['gridTemplateColumns'];
   gap: number;
   dragLabel: string;
   disabled?: boolean;
