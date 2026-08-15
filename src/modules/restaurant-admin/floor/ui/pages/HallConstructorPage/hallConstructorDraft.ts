@@ -18,6 +18,16 @@ export type HallConstructorDragState = {
   origin: Pick<DraftTable, 'positionX' | 'positionY' | 'width' | 'height'>;
 };
 
+export function normalizeServiceFeePercent(value: number | string): number {
+  const numericValue = Number(value);
+
+  if (!Number.isFinite(numericValue)) {
+    return 0;
+  }
+
+  return Math.min(99, Math.max(0, Math.round(numericValue)));
+}
+
 export function toDraftTable(table: AdminHallConstructorTable): DraftTable {
   return {
     ...table,

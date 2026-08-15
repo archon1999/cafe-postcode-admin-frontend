@@ -21,6 +21,7 @@ import { Iconify } from 'shared/ui/Iconify';
 import { getDefaultShapeVariant, getShapeVariantsForSeatCount } from '../../../domain';
 
 import type { DraftTable } from './ConstructorTableCard';
+import { normalizeServiceFeePercent } from './hallConstructorDraft';
 
 type HallConstructorInspectorProps = {
   onDelete: () => void;
@@ -128,10 +129,10 @@ export function HallConstructorInspector({
               onChange={(event) =>
                 updateSelectedTable((table) => ({
                   ...table,
-                  serviceFeePercent: Math.min(99, Math.max(0, Number(event.target.value) || 0)),
+                  serviceFeePercent: normalizeServiceFeePercent(event.target.value),
                 }))
               }
-              slotProps={{ htmlInput: { min: 0, max: 99, step: 0.01 } }}
+              slotProps={{ htmlInput: { min: 0, max: 99, step: 1 } }}
             />
 
             <Accordion

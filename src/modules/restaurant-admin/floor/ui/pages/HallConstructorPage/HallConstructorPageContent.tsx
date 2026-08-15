@@ -28,6 +28,7 @@ import { formatHallDisplayName } from 'shared/utils/format-hall-display';
 import { GRID_CELL_SIZE, GRID_GAP_SIZE, GRID_PADDING_SIZE } from '../../../domain';
 
 import { ConstructorTableCard, getConstructorPreviewPalette } from './ConstructorTableCard';
+import { normalizeServiceFeePercent } from './hallConstructorDraft';
 import { HallConstructorInspector } from './HallConstructorInspector';
 import { useHallConstructorState } from './useHallConstructorState';
 
@@ -126,10 +127,10 @@ export const HallConstructorPageContent = ({ id }: HallConstructorPageContentPro
                 value={draft.serviceFeePercent}
                 onChange={(event) =>
                   updateHallServiceFee({
-                    serviceFeePercent: Math.min(99, Math.max(0, Number(event.target.value) || 0)),
+                    serviceFeePercent: normalizeServiceFeePercent(event.target.value),
                   })
                 }
-                slotProps={{ htmlInput: { min: 0, max: 99, step: 0.01 } }}
+                slotProps={{ htmlInput: { min: 0, max: 99, step: 1 } }}
                 sx={{ ...nativeNumberInputSx, width: { xs: '100%', sm: 148 } }}
               />
               <TextField
