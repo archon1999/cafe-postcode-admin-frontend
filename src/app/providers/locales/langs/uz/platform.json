@@ -145,6 +145,9 @@
     "messages": {
       "updateRequested": "Agentni yangilash buyrug'i yuborildi.",
       "updateFailed": "Agentni yangilash buyrug'ini yuborib bo'lmadi.",
+      "outboxRetryRequested": "Operatsiya qayta urinish navbatiga qaytarildi.",
+      "outboxResolved": "Operatsiya audit izohi bilan yopildi.",
+      "outboxActionFailed": "Outbox operatsiyasini boshqarib bo'lmadi.",
       "bulkSucceeded": "{{count}} ta agent uchun buyruq bajarildi.",
       "bulkPartial": "{{succeeded}} ta muvaffaqiyatli, {{failed}} ta xato.",
       "bulkFailed": "Ommaviy amalni bajarib bo'lmadi."

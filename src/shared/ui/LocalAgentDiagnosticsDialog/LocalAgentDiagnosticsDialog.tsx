@@ -9,7 +9,9 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { useState } from 'react';
 
 import { useTranslate } from 'app/providers/locales';
 import { formatDateTime } from 'shared/utils/format-time';
@@ -30,18 +32,31 @@ export type LocalAgentDiagnosticsData = {
     lastAttemptAt?: string;
     pendingOutbox?: number;
     failedOutbox?: number;
-    failedOperations?: Array<{
-      operationId: string;
-      path: string;
-      lastError: string;
-      responseStatus?: number;
-    }>;
+    actionRequiredOutbox?: number;
+    quarantinedOutbox?: number;
+    resolvedOutbox?: number;
+    actionRequiredOperations?: LocalAgentOutboxOperation[];
+    quarantinedOperations?: LocalAgentOutboxOperation[];
+    failedOperations?: LocalAgentOutboxOperation[];
   };
   fiscal: LocalAgentDiagnosticsHealth;
   marta: LocalAgentDiagnosticsHealth;
   printer: LocalAgentDiagnosticsHealth;
   alerts?: Array<{ code: string; severity: string; message: string }>;
 };
+
+export type LocalAgentOutboxOperation = {
+  operationId: string;
+  path: string;
+  status?: string;
+  failureClass?: string;
+  errorCode?: string;
+  resolutionHint?: string;
+  lastError: string;
+  responseStatus?: number;
+};
+
+export type LocalAgentOutboxAction = 'retry' | 'resolve';
 
 export type LocalAgentDiagnosticsUpdate = {
   status: 'up_to_date' | 'pending' | 'disabled' | 'unavailable';
@@ -62,6 +77,9 @@ type LocalAgentDiagnosticsDialogProps = {
   canUpdate?: boolean;
   updatePending?: boolean;
   onUpdate?: () => void;
+  canManageOutbox?: boolean;
+  outboxActionPending?: boolean;
+  onOutboxAction?: (operationId: string, action: LocalAgentOutboxAction, reason: string) => Promise<void>;
   logsSupported?: boolean;
   logs?: LocalAgentDiagnosticsLogs;
   logsLoading?: boolean;
@@ -115,6 +133,9 @@ export function LocalAgentDiagnosticsDialog({
   canUpdate = false,
   updatePending = false,
   onUpdate,
+  canManageOutbox = false,
+  outboxActionPending = false,
+  onOutboxAction,
   logsSupported = false,
   logs,
   logsLoading = false,
@@ -123,6 +144,11 @@ export function LocalAgentDiagnosticsDialog({
   onRefresh,
 }: LocalAgentDiagnosticsDialogProps) {
   const { t } = useTranslate('organizations');
+  const [selectedOutboxAction, setSelectedOutboxAction] = useState<{
+    operation: LocalAgentOutboxOperation;
+    action: LocalAgentOutboxAction;
+  } | null>(null);
+  const [outboxReason, setOutboxReason] = useState('');
   const labels = {
     online: t('setup.agentMonitoring.online'),
     offline: t('setup.agentMonitoring.offline'),
@@ -142,6 +168,30 @@ export function LocalAgentDiagnosticsDialog({
   const fiscal = componentStatus(diagnostics?.fiscal, labels);
   const marta = componentStatus(diagnostics?.marta, labels);
   const printer = componentStatus(diagnostics?.printer, labels);
+  const actionRequiredOperations = diagnostics?.sync.actionRequiredOperations ?? [];
+  const quarantinedOperations =
+    diagnostics?.sync.quarantinedOperations ??
+    (diagnostics?.sync.actionRequiredOperations === undefined ? (diagnostics?.sync.failedOperations ?? []) : []);
+
+  const closeOutboxAction = () => {
+    if (outboxActionPending) return;
+    setSelectedOutboxAction(null);
+    setOutboxReason('');
+  };
+
+  const submitOutboxAction = async () => {
+    if (!selectedOutboxAction || !onOutboxAction || !outboxReason.trim()) return;
+    try {
+      await onOutboxAction(
+        selectedOutboxAction.operation.operationId,
+        selectedOutboxAction.action,
+        outboxReason.trim(),
+      );
+      closeOutboxAction();
+    } catch {
+      // The owner reports the transport error; keep this dialog open for correction or retry.
+    }
+  };
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
@@ -201,7 +251,18 @@ export function LocalAgentDiagnosticsDialog({
                 })}
               />
               <Detail label={t('setup.agentMonitoring.pending')} value={String(diagnostics.sync.pendingOutbox ?? 0)} />
-              <Detail label={t('setup.agentMonitoring.failed')} value={String(diagnostics.sync.failedOutbox ?? 0)} />
+              <Detail
+                label={t('setup.agentMonitoring.actionRequired')}
+                value={String(diagnostics.sync.actionRequiredOutbox ?? 0)}
+              />
+              <Detail
+                label={t('setup.agentMonitoring.quarantined')}
+                value={String(diagnostics.sync.quarantinedOutbox ?? diagnostics.sync.failedOutbox ?? 0)}
+              />
+              <Detail
+                label={t('setup.agentMonitoring.resolved')}
+                value={String(diagnostics.sync.resolvedOutbox ?? 0)}
+              />
             </Stack>
 
             {[
@@ -223,16 +284,41 @@ export function LocalAgentDiagnosticsDialog({
               </Alert>
             ))}
 
-            {diagnostics.sync.failedOperations?.map((failure) => (
-              <Box key={failure.operationId} sx={{ p: 1.25, borderRadius: 1.5, bgcolor: 'error.lighter' }}>
-                <Typography variant="caption" sx={{ fontWeight: 800 }}>
-                  {failure.path} {failure.responseStatus ? `· HTTP ${failure.responseStatus}` : ''}
-                </Typography>
-                <Typography variant="body2" sx={{ mt: 0.4, overflowWrap: 'anywhere' }}>
-                  {failure.lastError}
-                </Typography>
-              </Box>
-            ))}
+            {actionRequiredOperations.length ? (
+              <Stack spacing={1}>
+                <Typography variant="subtitle2">{t('setup.agentMonitoring.actionItems')}</Typography>
+                {actionRequiredOperations.map((operation) => (
+                  <OutboxOperationCard
+                    key={operation.operationId}
+                    operation={operation}
+                    tone="warning"
+                    canManage={canManageOutbox && Boolean(onOutboxAction)}
+                    onAction={(action) => {
+                      setSelectedOutboxAction({ operation, action });
+                      setOutboxReason('');
+                    }}
+                  />
+                ))}
+              </Stack>
+            ) : null}
+
+            {quarantinedOperations.length ? (
+              <Stack spacing={1}>
+                <Typography variant="subtitle2">{t('setup.agentMonitoring.quarantinedItems')}</Typography>
+                {quarantinedOperations.map((operation) => (
+                  <OutboxOperationCard
+                    key={operation.operationId}
+                    operation={operation}
+                    tone="error"
+                    canManage={canManageOutbox && Boolean(onOutboxAction)}
+                    onAction={(action) => {
+                      setSelectedOutboxAction({ operation, action });
+                      setOutboxReason('');
+                    }}
+                  />
+                ))}
+              </Stack>
+            ) : null}
 
             <Divider />
 
@@ -286,6 +372,96 @@ export function LocalAgentDiagnosticsDialog({
           {t('setup.agentMonitoring.actions.close')}
         </Button>
       </DialogActions>
+      <Dialog open={Boolean(selectedOutboxAction)} onClose={closeOutboxAction} fullWidth maxWidth="xs">
+        <DialogTitle>
+          {t(
+            selectedOutboxAction?.action === 'retry'
+              ? 'setup.agentMonitoring.outbox.retryTitle'
+              : 'setup.agentMonitoring.outbox.resolveTitle',
+          )}
+        </DialogTitle>
+        <DialogContent dividers>
+          <Stack spacing={2}>
+            <Alert severity={selectedOutboxAction?.action === 'retry' ? 'warning' : 'info'}>
+              {t(
+                selectedOutboxAction?.action === 'retry'
+                  ? 'setup.agentMonitoring.outbox.retryHint'
+                  : 'setup.agentMonitoring.outbox.resolveHint',
+              )}
+            </Alert>
+            <Typography variant="caption" sx={{ overflowWrap: 'anywhere' }}>
+              {selectedOutboxAction?.operation.path}
+            </Typography>
+            <TextField
+              autoFocus
+              required
+              multiline
+              minRows={3}
+              label={t('setup.agentMonitoring.outbox.reason')}
+              value={outboxReason}
+              onChange={(event) => setOutboxReason(event.target.value.slice(0, 500))}
+              helperText={`${outboxReason.length}/500`}
+              disabled={outboxActionPending}
+            />
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeOutboxAction} disabled={outboxActionPending}>
+            {t('setup.agentMonitoring.outbox.cancel')}
+          </Button>
+          <Button
+            variant="contained"
+            color={selectedOutboxAction?.action === 'resolve' ? 'success' : 'warning'}
+            disabled={!outboxReason.trim() || outboxActionPending}
+            onClick={() => void submitOutboxAction()}>
+            {t(
+              selectedOutboxAction?.action === 'retry'
+                ? 'setup.agentMonitoring.outbox.retry'
+                : 'setup.agentMonitoring.outbox.resolve',
+            )}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Dialog>
+  );
+}
+
+function OutboxOperationCard({
+  operation,
+  tone,
+  canManage,
+  onAction,
+}: {
+  operation: LocalAgentOutboxOperation;
+  tone: 'warning' | 'error';
+  canManage: boolean;
+  onAction: (action: LocalAgentOutboxAction) => void;
+}) {
+  const { t } = useTranslate('organizations');
+  return (
+    <Box sx={{ p: 1.25, borderRadius: 1.5, bgcolor: tone === 'error' ? 'error.lighter' : 'warning.lighter' }}>
+      <Typography variant="caption" sx={{ fontWeight: 800, overflowWrap: 'anywhere' }}>
+        {operation.path} {operation.responseStatus ? `· HTTP ${operation.responseStatus}` : ''}
+      </Typography>
+      <Typography variant="body2" sx={{ mt: 0.4, overflowWrap: 'anywhere' }}>
+        {operation.lastError}
+      </Typography>
+      {operation.resolutionHint ? (
+        <Typography variant="caption" color="text.secondary" sx={{ mt: 0.4, display: 'block' }}>
+          {operation.errorCode ? `${operation.errorCode} · ` : ''}
+          {operation.resolutionHint}
+        </Typography>
+      ) : null}
+      {canManage ? (
+        <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
+          <Button size="small" color="warning" onClick={() => onAction('retry')}>
+            {t('setup.agentMonitoring.outbox.retry')}
+          </Button>
+          <Button size="small" color="success" onClick={() => onAction('resolve')}>
+            {t('setup.agentMonitoring.outbox.resolve')}
+          </Button>
+        </Stack>
+      ) : null}
+    </Box>
   );
 }

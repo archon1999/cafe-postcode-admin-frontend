@@ -4,4 +4,6 @@ export type {
   LocalAgentDiagnosticsHealth,
   LocalAgentDiagnosticsLogs,
   LocalAgentDiagnosticsUpdate,
+  LocalAgentOutboxAction,
+  LocalAgentOutboxOperation,
 } from './LocalAgentDiagnosticsDialog';

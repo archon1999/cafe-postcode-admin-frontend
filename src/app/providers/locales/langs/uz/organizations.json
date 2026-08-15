@@ -141,6 +141,11 @@
       "lastAttempt": "Oxirgi urinish",
       "pending": "Navbatdagi amallar",
       "failed": "Xato amallar",
+      "actionRequired": "Operator qarori",
+      "quarantined": "Karantinda",
+      "resolved": "Yopilgan tarix",
+      "actionItems": "Operator qarorini kutayotgan amallar",
+      "quarantinedItems": "Karantindagi sync xatolari",
       "online": "Online",
       "offline": "Offline",
       "offlineMode": "Offline rejim",
@@ -164,6 +169,16 @@
         "diagnosticsFailed": "Local agent diagnostikasini olib bo'lmadi.",
         "updateRequested": "Yangilanish tekshiruvi boshlandi.",
         "updateFailed": "Yangilanishni boshlatib bo'lmadi."
+      },
+      "outbox": {
+        "retry": "Qayta urinish",
+        "resolve": "Hal qilindi",
+        "cancel": "Bekor qilish",
+        "reason": "Operator izohi",
+        "retryTitle": "Operatsiyani qayta yuborish",
+        "resolveTitle": "Operatsiyani yopish",
+        "retryHint": "Sabab tuzatilganini tekshiring. Operatsiya yangi retry sikliga qaytariladi.",
+        "resolveHint": "Operatsiya qayta yuborilmaydi, lekin original xato va ushbu izoh audit tarixida saqlanadi."
       },
       "logs": {
         "title": "Oxirgi log va xatolar",

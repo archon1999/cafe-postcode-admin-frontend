@@ -145,6 +145,9 @@
     "messages": {
       "updateRequested": "Агентни янгилаш буйруғи юборилди.",
       "updateFailed": "Агентни янгилаш буйруғини юбориб бўлмади.",
+      "outboxRetryRequested": "Операция қайта уриниш навбатига қайтарилди.",
+      "outboxResolved": "Операция аудит изоҳи билан ёпилди.",
+      "outboxActionFailed": "Outbox операциясини бошқариб бўлмади.",
       "bulkSucceeded": "{{count}} та агент учун буйруқ бажарилди.",
       "bulkPartial": "{{succeeded}} та муваффақиятли, {{failed}} та хато.",
       "bulkFailed": "Оммавий амални бажариб бўлмади."

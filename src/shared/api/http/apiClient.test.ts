@@ -391,6 +391,24 @@ describe('apiClient local-agent gateway contract', () => {
     });
     expect(result).toBe(data);
   });
+
+  it('posts an encoded outbox operation action with an audit reason', async () => {
+    const data = { ok: true, action: 'retry', operationId: 'edge:payment:1', result: { retrying: true } };
+    postMock.mockResolvedValueOnce({ data });
+
+    const result = await apiClient.manageAdminLocalAgentOutbox(
+      'agent-1',
+      'edge:payment:1',
+      'retry',
+      'Amount was corrected.',
+    );
+
+    expect(postMock).toHaveBeenCalledWith('/api/v1/admin/local-agents/agent-1/outbox/edge%3Apayment%3A1/', {
+      action: 'retry',
+      reason: 'Amount was corrected.',
+    });
+    expect(result).toBe(data);
+  });
 });
 
 describe('apiClient integration gateway contract', () => {

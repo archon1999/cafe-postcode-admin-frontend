@@ -1,12 +1,13 @@
 import { toast } from 'sonner';
 
 import { useTranslate } from 'app/providers/locales';
-import type { AdminLocalAgent } from 'shared/api/admin-types';
+import type { AdminLocalAgent, AdminLocalAgentOutboxAction } from 'shared/api/admin-types';
 import { LocalAgentDiagnosticsDialog, type LocalAgentDiagnosticsData } from 'shared/ui/LocalAgentDiagnosticsDialog';
 
 import {
   useLocalAgentFleetDiagnosticsQuery,
   useLocalAgentFleetLogsQuery,
+  useLocalAgentOutboxActionMutation,
   useUpdateLocalAgentNowMutation,
 } from '../../../application';
 
@@ -22,6 +23,7 @@ export function LocalAgentFleetDiagnosticsDialog({
   const logsSupported = Boolean(agent?.capabilities.includes('remote_logs'));
   const logsQuery = useLocalAgentFleetLogsQuery(agent?.id ?? null, logsSupported);
   const updateMutation = useUpdateLocalAgentNowMutation();
+  const outboxActionMutation = useLocalAgentOutboxActionMutation();
   const diagnostics = query.data?.status as LocalAgentDiagnosticsData | undefined;
 
   const requestUpdate = async () => {
@@ -31,6 +33,19 @@ export function LocalAgentFleetDiagnosticsDialog({
       toast.success(t('localAgents.messages.updateRequested'));
     } catch {
       toast.error(t('localAgents.messages.updateFailed'));
+    }
+  };
+
+  const manageOutbox = async (operationId: string, action: AdminLocalAgentOutboxAction, reason: string) => {
+    if (!agent) return;
+    try {
+      await outboxActionMutation.mutateAsync({ id: agent.id, operationId, action, reason });
+      toast.success(
+        t(action === 'retry' ? 'localAgents.messages.outboxRetryRequested' : 'localAgents.messages.outboxResolved'),
+      );
+    } catch {
+      toast.error(t('localAgents.messages.outboxActionFailed'));
+      throw new Error('outbox action failed');
     }
   };
 
@@ -45,6 +60,9 @@ export function LocalAgentFleetDiagnosticsDialog({
       canUpdate={Boolean(agent?.online && agent.capabilities.includes('auto_update'))}
       updatePending={updateMutation.isPending}
       onUpdate={() => void requestUpdate()}
+      canManageOutbox={Boolean(agent?.online && agent.capabilities.includes('outbox_management'))}
+      outboxActionPending={outboxActionMutation.isPending}
+      onOutboxAction={manageOutbox}
       logsSupported={logsSupported}
       logs={logsQuery.data}
       logsLoading={logsQuery.isLoading}

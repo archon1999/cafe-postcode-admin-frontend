@@ -4,6 +4,8 @@ import type {
   AdminLocalAgentBulkActionResult,
   AdminLocalAgentDiagnostics,
   AdminLocalAgentLogs,
+  AdminLocalAgentOutboxAction,
+  AdminLocalAgentOutboxActionResult,
   AdminLocalAgentsQueryParams,
   AdminLocalAgentUpdateResult,
   AdminPaginatedResponse,
@@ -41,6 +43,15 @@ export const adminLocalAgentGateway = {
   getAdminLocalAgentLogs(id: string) {
     return instance
       .get<AdminLocalAgentLogs>(`/api/v1/admin/local-agents/${id}/logs/`)
+      .then((response) => response.data);
+  },
+
+  manageAdminLocalAgentOutbox(id: string, operationId: string, action: AdminLocalAgentOutboxAction, reason: string) {
+    return instance
+      .post<AdminLocalAgentOutboxActionResult>(
+        `/api/v1/admin/local-agents/${id}/outbox/${encodeURIComponent(operationId)}/`,
+        { action, reason },
+      )
       .then((response) => response.data);
   },
 

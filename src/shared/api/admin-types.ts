@@ -1197,6 +1197,15 @@ export type AdminLocalAgentUpdateResult = {
   result: Record<string, unknown>;
 };
 
+export type AdminLocalAgentOutboxAction = 'retry' | 'resolve';
+
+export type AdminLocalAgentOutboxActionResult = {
+  ok: boolean;
+  action: AdminLocalAgentOutboxAction;
+  operationId: string;
+  result: Record<string, unknown>;
+};
+
 export type AdminLocalAgentLogs = {
   ok: boolean;
   available: boolean;
