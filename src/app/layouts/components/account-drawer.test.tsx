@@ -189,7 +189,6 @@ describe('AccountDrawer', () => {
         roleCodes: [],
       },
       activatedAt: '2026-01-01',
-      expiresOn: '2026-12-31',
     });
     useCurrentUserMock.mockReturnValue({
       profile,

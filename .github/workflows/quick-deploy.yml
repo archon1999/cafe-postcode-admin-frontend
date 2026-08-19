@@ -1,0 +1,45 @@
+name: Admin Quick Deploy
+run-name: Admin quick production deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_sha:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    steps:
+      - name: Deploy published image
+        uses: appleboy/ssh-action@7eaf76671a0d7eec5d98ee897acda4f968735a17
+        env:
+          RELEASE_SHA: ${{ inputs.image_sha }}
+          RELEASE_IMAGE: ghcr.io/${{ github.repository_owner }}/cafe-postcode-admin:${{ inputs.image_sha }}
+          GHCR_USERNAME: ${{ github.actor }}
+          GHCR_TOKEN: ${{ github.token }}
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          fingerprint: ${{ secrets.HOST_FINGERPRINT }}
+          port: ${{ secrets.PORT }}
+          command_timeout: 10m
+          envs: RELEASE_SHA,RELEASE_IMAGE,GHCR_USERNAME,GHCR_TOKEN
+          script: |
+            set -Eeuo pipefail
+            cd /home/postcode/admin-frontend
+            git fetch --prune origin production
+            git checkout --detach origin/production
+            printf '%s' "${GHCR_TOKEN}" | docker login ghcr.io --username "${GHCR_USERNAME}" --password-stdin
+            docker pull "${RELEASE_IMAGE}"
+            export ADMIN_FRONTEND_IMAGE="${RELEASE_IMAGE}"
+            docker compose --env-file .env.production up -d --no-build --wait --wait-timeout 120
+            curl -fsS http://127.0.0.1:4200/healthz >/dev/null

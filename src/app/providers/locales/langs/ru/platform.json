@@ -28,7 +28,6 @@
     "tariff": "Тариф",
     "username": "Username",
     "password": "Password",
-    "activatedAt": "Дата активации",
     "activatedAt": "Дата активации"
   },
   "filters": {

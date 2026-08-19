@@ -331,14 +331,6 @@
     "soliqIntegration": {
       "title": "Интеграция с налоговой",
       "description": "Текущее состояние интеграции FiscalDriveService и основные идентификаторы."
-    },
-    "balance": {
-      "title": "Баланс",
-      "description": "В этом разделе отображаются баланс на следующий период, сумма списания и статус периода."
-    },
-    "balanceHistory": {
-      "title": "История баланса",
-      "description": "Последние движения по балансу: пополнения и списания за период."
     }
   },
   "restaurantManagement": {
@@ -427,7 +419,6 @@
     "createIntegration": "Новая интеграция",
     "hideAuthCode": "Скрыть код",
     "showAuthCode": "Показать код",
-    "topUpBalance": "Пополнить баланс",
     "uploadPosAuthBackgroundImage": "Загрузить изображение",
     "replacePosAuthBackgroundImage": "Заменить изображение",
     "removePosAuthBackgroundImage": "Удалить изображение"

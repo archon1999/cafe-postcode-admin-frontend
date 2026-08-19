@@ -332,14 +332,6 @@
     "soliqIntegration": {
       "title": "Солиқ билан интеграция",
       "description": "Солиқ OFD интеграциясининг жорий ҳолати ва асосий идентификаторлари."
-    },
-    "balance": {
-      "title": "Баланс",
-      "description": "Кейинги давр учун баланс, ечим суммаси ва статус ҳолати шу бўлимда кўринади."
-    },
-    "balanceHistory": {
-      "title": "Баланс тарихи",
-      "description": "Сўнгги баланс ҳаракатлари: тўлдиришлар ва давр учун ечимлар."
     }
   },
   "restaurantManagement": {
@@ -428,7 +420,6 @@
     "createIntegration": "Янги интегратсия",
     "hideAuthCode": "Кодни яшириш",
     "showAuthCode": "Кодни кўрсатиш",
-    "topUpBalance": "Балансни тўлдириш",
     "uploadPosAuthBackgroundImage": "Расм юклаш",
     "replacePosAuthBackgroundImage": "Расмни алмаштириш",
     "removePosAuthBackgroundImage": "Расмни ўчириш"

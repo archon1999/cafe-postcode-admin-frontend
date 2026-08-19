@@ -332,14 +332,6 @@
     "soliqIntegration": {
       "title": "Soliq bilan integratsiya",
       "description": "FiscalDriveService integratsiyasining joriy holati va asosiy identifikatorlari."
-    },
-    "balance": {
-      "title": "Balans",
-      "description": "Keyingi davr uchun balans, yechim summasi va status holati shu bo'limda ko'rinadi."
-    },
-    "balanceHistory": {
-      "title": "Balans tarixi",
-      "description": "So'nggi balans harakatlari: to'ldirishlar va davr uchun yechimlar."
     }
   },
   "restaurantManagement": {
@@ -430,8 +422,7 @@
     "uploadPosAuthBackgroundImage": "Rasm yuklash",
     "replacePosAuthBackgroundImage": "Rasmni almashtirish",
     "removePosAuthBackgroundImage": "Rasmni o'chirish",
-    "createIntegration": "Yangi integratsiya",
-    "topUpBalance": "Balansni to'ldirish"
+    "createIntegration": "Yangi integratsiya"
   },
   "dialogs": {
     "branchCreate": {
