@@ -2,17 +2,15 @@
 
 import '@testing-library/jest-dom/vitest';
 
-import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import RestaurantDetailPage from './RestaurantDetailPage';
 
 const replaceMock = vi.fn();
-const mutateTopUpAsyncMock = vi.fn();
 
 let currentProfile: Record<string, unknown> | null = {};
 let detailQueryState: Record<string, unknown> = { data: undefined, isLoading: false, error: null };
-let historyQueryState: Record<string, unknown> = { data: { data: [] }, isLoading: false };
 
 vi.mock('app/layouts/Dashboard', () => ({
   Content: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
@@ -26,9 +24,6 @@ vi.mock('app/providers/locales', () => ({
           'sections.customerOverview.title': "Mijoz ma'lumotlari",
           'sections.activeUsers.title': 'Aktiv foydalanuvchilar',
           'sections.soliqIntegration.title': 'Soliq bilan integratsiya',
-          'actions.topUpBalance': "Balansni to'ldirish",
-          'fields.topUpAmount': "To'ldirish summasi",
-          'fields.note': 'Izoh',
         }) as Record<string, string>
       )[key] ?? key,
   }),
@@ -51,11 +46,6 @@ vi.mock('modules/auth/domain/services/current-user', () => ({
 
 vi.mock('modules/business-partner/restaurants/application', () => ({
   useGetRestaurantDetailQuery: () => detailQueryState,
-  useGetRestaurantBalanceTransactionsQuery: () => historyQueryState,
-  useTopUpRestaurantBalanceMutation: () => ({
-    mutateAsync: mutateTopUpAsyncMock,
-    isPending: false,
-  }),
 }));
 
 vi.mock('shared/hooks/router', () => ({
@@ -98,7 +88,6 @@ describe('RestaurantDetailPage', () => {
   beforeEach(() => {
     currentProfile = {};
     replaceMock.mockReset();
-    mutateTopUpAsyncMock.mockReset();
     detailQueryState = {
       data: {
         id: 'restaurant-1',
@@ -109,8 +98,6 @@ describe('RestaurantDetailPage', () => {
         address: 'Tashkent',
         isActive: true,
         activationType: 'custom',
-        billingPeriod: 'monthly',
-        expiresOn: '2026-05-01',
         tariff: null,
         activeUsers: [
           {
@@ -129,38 +116,13 @@ describe('RestaurantDetailPage', () => {
           taxNumber: '301234567',
           endpointUrl: 'https://soliq.example/api',
         },
-        balance: {
-          currentBalance: 5000,
-          nextChargeAmount: 1200,
-          nextChargeOn: '2026-05-01',
-          nextPeriodStatus: 'active',
-          lastTopUpAt: '2026-04-18T10:00:00Z',
-        },
       },
       isLoading: false,
       error: null,
     };
-    historyQueryState = {
-      data: {
-        data: [
-          {
-            id: 'tx-1',
-            kind: 'top_up',
-            amount: 5000,
-            balanceAfter: 5000,
-            performedBy: { id: 'user-99', fullName: 'Partner Owner', username: 'partner-owner' },
-            note: 'Initial top-up',
-            createdAt: '2026-04-18T10:00:00Z',
-          },
-        ],
-      },
-      isLoading: false,
-    };
   });
 
-  it('renders detail sections and submits top-up payload', async () => {
-    mutateTopUpAsyncMock.mockResolvedValueOnce(undefined);
-
+  it('renders restaurant detail sections without subscription billing data', () => {
     render(<RestaurantDetailPage />);
 
     expect(screen.getAllByText('Alpha Cafe')).toHaveLength(2);
@@ -169,19 +131,5 @@ describe('RestaurantDetailPage', () => {
     expect(screen.getByText('Soliq bilan integratsiya')).toBeInTheDocument();
     expect(screen.getByText('alpha-admin')).toBeInTheDocument();
     expect(screen.getByText('fiscal-drive-service')).toBeInTheDocument();
-    expect(screen.getAllByText('5000 som')).toHaveLength(3);
-
-    fireEvent.click(screen.getByRole('button', { name: "Balansni to'ldirish" }));
-    const dialog = screen.getByRole('dialog');
-    fireEvent.change(within(dialog).getByLabelText("To'ldirish summasi"), { target: { value: '3500' } });
-    fireEvent.change(within(dialog).getByLabelText('Izoh'), { target: { value: ' manual top-up ' } });
-    fireEvent.click(within(dialog).getByRole('button', { name: "Balansni to'ldirish" }));
-
-    await waitFor(() => {
-      expect(mutateTopUpAsyncMock).toHaveBeenCalledWith({
-        amount: 3500,
-        note: 'manual top-up',
-      });
-    });
   });
 });

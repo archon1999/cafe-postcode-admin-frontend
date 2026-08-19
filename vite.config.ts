@@ -7,7 +7,7 @@ const backendUrl = process.env.VITE_DEV_PROXY_TARGET || 'http://127.0.0.1:8000';
 
 export default defineConfig({
   build: {
-    sourcemap: true,
+    sourcemap: false,
   },
   server: {
     port: 4200,

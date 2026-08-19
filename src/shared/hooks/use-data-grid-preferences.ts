@@ -13,6 +13,10 @@ type PersistedGridPreferences<TFilters> = {
 
 type GridPreferenceDefaults<TFilters> = PersistedGridPreferences<TFilters>;
 
+function resolveSetStateAction<T>(value: SetStateAction<T>, previous: T): T {
+  return typeof value === 'function' ? (value as (previousValue: T) => T)(previous) : value;
+}
+
 function readPreferences<TFilters>(key: string, defaults: GridPreferenceDefaults<TFilters>) {
   const saved = StorageService.getItem<Partial<PersistedGridPreferences<TFilters>>>(`${STORAGE_PREFIX}:${key}`);
 
@@ -42,7 +46,7 @@ export function useDataGridPreferences<TFilters>(key: string, defaults: GridPref
       value: SetStateAction<PersistedGridPreferences<TFilters>[K]>,
     ) => {
       setPreferences((previous) => {
-        const nextValue = typeof value === 'function' ? value(previous[field]) : value;
+        const nextValue = resolveSetStateAction(value, previous[field]);
         const next = { ...previous, [field]: nextValue };
         StorageService.setItem(`${STORAGE_PREFIX}:${key}`, next);
         return next;
@@ -64,7 +68,7 @@ export function useDataGridPreferences<TFilters>(key: string, defaults: GridPref
     <K extends keyof TFilters>(field: K, value: SetStateAction<TFilters[K]>) => {
       setFilters((previous) => ({
         ...previous,
-        [field]: typeof value === 'function' ? value(previous[field]) : value,
+        [field]: resolveSetStateAction(value, previous[field]),
       }));
     },
     [setFilters],

@@ -5,7 +5,7 @@ import {
   RolesSelect,
   type RoleSelectOption,
 } from 'modules/user-management/roles/ui/components/RolesSelect/RolesSelect';
-import { RHFSumCurrencyField, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
+import { RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
 
 import type { TariffFormValues } from './tariff-form';
 
@@ -27,8 +27,6 @@ export const TariffFormFields = ({
   <>
     <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' }, gap: 3 }}>
       <RHFTextField<TariffFormValues> name="name" label={t('fields.name')} />
-      <RHFSumCurrencyField<TariffFormValues> name="monthlyPrice" label={t('fields.monthlyPrice')} />
-      <RHFSumCurrencyField<TariffFormValues> name="yearlyPrice" label={t('fields.yearlyPrice')} />
       <RHFTextField<TariffFormValues>
         name="description"
         label={t('fields.description')}

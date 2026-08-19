@@ -2,7 +2,8 @@ import type { GridColDef } from '@mui/x-data-grid';
 import { useMemo } from 'react';
 
 import { useTranslate } from 'app/providers/locales';
-import { useAdminScopeStore, useCurrentUser } from 'modules/auth';
+import { useAdminScopeStore } from 'modules/auth';
+import { useCurrentUser } from 'modules/auth/domain/services/current-user';
 
 import { insertBranchColumn, type BranchScopedRow } from './branch-scope-columns.utils';
 

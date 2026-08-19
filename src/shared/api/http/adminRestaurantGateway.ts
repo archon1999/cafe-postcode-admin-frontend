@@ -5,13 +5,13 @@ import type {
   AdminRestaurantActivationOptions,
   AdminRestaurantActivationPayload,
   AdminRestaurantActivationResult,
-  AdminRestaurantBalanceTransaction,
-  AdminRestaurantBalanceTransactionsQueryParams,
   AdminRestaurantDetail,
   AdminRestaurantLookupResult,
   AdminRestaurantPayload,
   AdminRestaurantsQueryParams,
-  AdminRestaurantTopUpPayload,
+  AdminRestaurantTariffChangePayload,
+  AdminRestaurantTariffChangePreview,
+  AdminRestaurantTariffChangeResult,
 } from '../admin-types';
 
 import { instance } from './axiosInstance.ts';
@@ -87,49 +87,29 @@ export const adminRestaurantGateway = {
       .then((response) => response.data);
   },
 
-  rotateAdminRestaurantAuthCode(id: string) {
-    return instance
-      .post<AdminRestaurant>(`/api/v1/admin/platform/restaurants/${id}/rotate-auth-code/`)
-      .then((response) => response.data);
-  },
-
   deactivateAdminRestaurant(id: string) {
     return instance
       .post<void>(`/api/v1/admin/platform/restaurants/${id}/deactivate/`)
       .then((response) => response.data);
   },
 
-  extendAdminRestaurant(id: string) {
+  getAdminRestaurantTariffChangePreview(id: string, tariffId: string) {
     return instance
-      .post<AdminRestaurant>(`/api/v1/admin/platform/restaurants/${id}/extend/`)
+      .get<AdminRestaurantTariffChangePreview>(`/api/v1/admin/platform/restaurants/${id}/tariff-change/`, {
+        params: { tariffId },
+      })
+      .then((response) => response.data);
+  },
+
+  changeAdminRestaurantTariff(id: string, payload: AdminRestaurantTariffChangePayload) {
+    return instance
+      .post<AdminRestaurantTariffChangeResult>(`/api/v1/admin/platform/restaurants/${id}/tariff-change/`, payload)
       .then((response) => response.data);
   },
 
   resetAdminRestaurantPassword(id: string) {
     return instance
       .post<AdminRestaurantActivationResult>(`/api/v1/admin/platform/restaurants/${id}/reset-password/`)
-      .then((response) => response.data);
-  },
-
-  getAdminRestaurantBalanceTransactions(id: string, params?: AdminRestaurantBalanceTransactionsQueryParams) {
-    return instance
-      .get<AdminPaginatedResponse<AdminRestaurantBalanceTransaction>>(
-        `/api/v1/admin/platform/restaurants/${id}/balance-transactions/`,
-        {
-          params: {
-            page: params?.page,
-            pageSize: params?.pageSize,
-            search: params?.search,
-            ordering: params?.ordering,
-          },
-        },
-      )
-      .then((response) => response.data);
-  },
-
-  topUpAdminRestaurantBalance(id: string, payload: AdminRestaurantTopUpPayload) {
-    return instance
-      .post<AdminRestaurantBalanceTransaction>(`/api/v1/admin/platform/restaurants/${id}/top-up/`, payload)
       .then((response) => response.data);
   },
 };

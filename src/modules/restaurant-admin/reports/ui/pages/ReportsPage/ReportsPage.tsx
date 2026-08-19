@@ -8,7 +8,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ListPageBody, ListPageContent } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath, RouterPathHelper, canAccessReports } from 'app/routes';
-import { useCurrentUser } from 'modules/auth';
+import { useCurrentUser } from 'modules/auth/domain/services/current-user';
 import type { AdminReportKey } from 'shared/api/admin-types';
 import { DEFAULT_PAGINATION_MODEL, DEFAULT_COLUMN_VISIBILITY_MODEL } from 'shared/constants';
 import { useParams, useRouter } from 'shared/hooks/router';

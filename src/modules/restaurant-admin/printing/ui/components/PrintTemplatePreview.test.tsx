@@ -73,6 +73,9 @@ describe('PrintTemplatePreview schema-1 semantics', () => {
     expect(screen.getByText('Aziza')).toBeInTheDocument();
     expect(screen.queryByText('Yashirin')).not.toBeInTheDocument();
     expect(screen.getByText('Osh')).toBeInTheDocument();
+    expect(screen.getByText('Nomi')).toBeInTheDocument();
+    expect(screen.getByText('Soni')).toBeInTheDocument();
+    expect(screen.getByText('Summa')).toBeInTheDocument();
     expect(screen.getByText('x2')).toBeInTheDocument();
     expect(screen.getByText('Piyozsiz')).toBeInTheDocument();
     expect(screen.getByText('QQS (12%)')).toBeInTheDocument();

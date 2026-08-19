@@ -29,6 +29,9 @@
                    "sku":  "SKU",
                    "stoplist":  "Стоп-лист",
                    "description":  "Описание",
+                   "itemType": "Тип позиции",
+                   "itemTypeProduct": "Товар",
+                   "itemTypeService": "Услуга",
                    "price":  "Цена",
                    "saleUnit": "Единица продажи",
                    "saleUnitPiece": "Штука",
@@ -75,7 +78,9 @@
                    "mxikImageSource":  "Обновлено через MXIK",
                    "catalogImageUnavailable":  "Для выбранного MXIK изображение не найдено. Можно загрузить файл вручную.",
                    "catalogImageDescription":  "Изображение MXIK подгружается автоматически. Загруженное вручную изображение имеет приоритет.",
-                   "manualImageSource":  "Загружено вручную"
+                   "manualImageSource":  "Загружено вручную",
+                   "nameLanguages":  "Языки названия",
+                   "translateOnlyOneLanguage":  "Перевод работает, когда заполнен только один язык"
                },
     "kinds":  {
                   "dish":  "Блюдо",
@@ -92,8 +97,12 @@
                     "createItem":  "Новый товар",
                     "searchMxik":  "Найти по ИКПУ/MXИК",
                     "restoreMxikImage":  "Вернуть изображение MXIK",
-                    "removeImage":  "Удалить изображение"
+                    "removeImage":  "Удалить изображение",
+                    "translateName":  "Перевести название на другие языки"
                 },
+    "messages":  {
+                     "nameTranslated":  "Название переведено на остальные языки"
+                 },
     "dialogs":  {
                     "deleteCategory":  {
                                            "title":  "Удалить категорию",

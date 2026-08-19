@@ -11,7 +11,6 @@ import { DEFAULT_PAGINATION_MODEL, DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_SELE
 import { CustomGridActionsCellItem, DataGrid, DataGridEmptyState } from 'shared/ui/CustomDataGrid';
 import { Iconify } from 'shared/ui/Iconify';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
-import { formatMoney } from 'shared/utils/format-money';
 
 import { useGetTariffsListQuery } from '../../../application';
 
@@ -43,20 +42,6 @@ export function TariffsGrid() {
   const columns = useMemo<GridColDef<AdminTariff>[]>(
     () => [
       { field: 'name', headerName: t('fields.name'), minWidth: 200, flex: 1 },
-      {
-        field: 'monthlyPrice',
-        headerName: t('fields.monthlyPrice'),
-        minWidth: 180,
-        flex: 0.7,
-        renderCell: ({ row }) => formatMoney(row.monthlyPrice),
-      },
-      {
-        field: 'yearlyPrice',
-        headerName: t('fields.yearlyPrice'),
-        minWidth: 180,
-        flex: 0.7,
-        renderCell: ({ row }) => formatMoney(row.yearlyPrice),
-      },
       {
         field: 'isActive',
         headerName: t('fields.status'),

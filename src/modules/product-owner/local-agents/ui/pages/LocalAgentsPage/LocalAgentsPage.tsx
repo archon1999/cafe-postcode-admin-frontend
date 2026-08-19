@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 import { ListPageBody, ListPageContent } from 'app/layouts/Dashboard';
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { RoutePath, canAccessLocalAgents } from 'app/routes';
-import { useCurrentUser } from 'modules/auth';
+import { useCurrentUser } from 'modules/auth/domain/services/current-user';
 import type { AdminLocalAgent, AdminLocalAgentBulkAction, AdminLocalAgentStatus } from 'shared/api/admin-types';
 import { DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
 import { useRouter } from 'shared/hooks/router';

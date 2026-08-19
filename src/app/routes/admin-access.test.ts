@@ -86,10 +86,16 @@ describe('admin access', () => {
     expect(canAccessAdminPath(RoutePath.userList, snapshot)).toBe(false);
   });
 
-  it('opens local agents first for superusers', () => {
+  it('opens the security control center first for superusers', () => {
     const snapshot = createSnapshot([], { isSuperuser: true });
 
-    expect(getDefaultAdminPath(snapshot)).toBe(RoutePath.platformLocalAgentList);
+    expect(getDefaultAdminPath(snapshot)).toBe(RoutePath.platformSecurityCenter);
+    expect(canAccessAdminPath(RoutePath.platformSecurityCenter, snapshot)).toBe(true);
+    expect(canAccessAdminPath(RoutePath.platformDevicePairing, snapshot)).toBe(true);
+    expect(canAccessAdminPath(RoutePath.platformAdminAlias, snapshot)).toBe(true);
+    expect(canAccessAdminPath(RoutePath.platformSecurityCenter, createSnapshot([]))).toBe(false);
+    expect(canAccessAdminPath(RoutePath.platformDevicePairing, createSnapshot([]))).toBe(false);
+    expect(canAccessAdminPath(RoutePath.platformAdminAlias, createSnapshot([]))).toBe(false);
   });
 
   it('keeps restaurant-admin scope away from roles and permissions pages', () => {

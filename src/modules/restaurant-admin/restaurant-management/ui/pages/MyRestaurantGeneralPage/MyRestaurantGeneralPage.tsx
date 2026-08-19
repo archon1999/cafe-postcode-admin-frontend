@@ -16,7 +16,8 @@ import { toast } from 'sonner';
 
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath, canAccessMyRestaurant } from 'app/routes';
-import { useAdminRestaurantScopeId, useCurrentUser } from 'modules/auth';
+import { useAdminRestaurantScopeId } from 'modules/auth';
+import { useCurrentUser } from 'modules/auth/domain/services/current-user';
 import {
   restaurantFormDefaultValues,
   restaurantFormSchema,
@@ -30,7 +31,7 @@ import { useRouter } from 'shared/hooks/router';
 import { Form } from 'shared/ui/HookForm';
 import { Iconify } from 'shared/ui/Iconify';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
-import { formatDate, formatDateTime } from 'shared/utils/format-time';
+import { formatDateTime } from 'shared/utils/format-time';
 
 import { useGetMyRestaurantQuery, useUpdateMyRestaurantSettingsMutation } from '../../../application';
 import { MyRestaurantSectionLayout } from '../../components/MyRestaurantSectionLayout';
@@ -44,7 +45,6 @@ const MyRestaurantGeneralPage = () => {
   const { replace } = useRouter();
   const restaurantId = useAdminRestaurantScopeId();
   const canManageMyRestaurant = canAccessMyRestaurant(profile);
-  const [isAuthCodeVisible, setIsAuthCodeVisible] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const methods = useForm<RestaurantFormInput, unknown, RestaurantFormValues>({
     resolver: zodResolver(restaurantFormSchema),
@@ -78,18 +78,6 @@ const MyRestaurantGeneralPage = () => {
   const tariffName =
     restaurant.tariff?.name ??
     (restaurant.activationType === 'custom' ? tPlatform('labels.customActivation') : t('labels.notSelected'));
-  const billingPeriodLabel =
-    restaurant.billingPeriod === 'monthly'
-      ? tPlatform('labels.monthly')
-      : restaurant.billingPeriod === 'yearly'
-        ? tPlatform('labels.yearly')
-        : null;
-  const durationText = billingPeriodLabel
-    ? restaurant.expiresOn
-      ? `${billingPeriodLabel} · ${formatDate(restaurant.expiresOn)}`
-      : billingPeriodLabel
-    : t('labels.notSelected');
-
   const openEditor = () => {
     methods.reset(restaurantToFormValues(restaurant));
     setEditOpen(true);
@@ -116,7 +104,6 @@ const MyRestaurantGeneralPage = () => {
       restaurant.activatedAt ? formatDateTime(restaurant.activatedAt) : t('labels.notSelected'),
     ],
     [t('fields.tariff'), tariffName],
-    [tPlatform('fields.billingPeriod'), durationText],
   ];
 
   return (
@@ -151,19 +138,6 @@ const MyRestaurantGeneralPage = () => {
                 label={restaurant.isActive ? tCommon('status.active') : tCommon('status.inactive')}
                 sx={{ alignSelf: 'flex-start' }}
               />
-            </Stack>
-            <Stack spacing={0.75}>
-              <Typography variant="caption" color="text.secondary">
-                {t('fields.authCode')}
-              </Typography>
-              <Stack direction="row" spacing={1.5} alignItems="center">
-                <Typography variant="body2" sx={{ letterSpacing: '0.18em', fontWeight: 700 }}>
-                  {isAuthCodeVisible ? (restaurant.authCode ?? '------') : '***'}
-                </Typography>
-                <Button size="small" color="inherit" onClick={() => setIsAuthCodeVisible((value) => !value)}>
-                  {isAuthCodeVisible ? t('actions.hideAuthCode') : t('actions.showAuthCode')}
-                </Button>
-              </Stack>
             </Stack>
             <Stack spacing={0.5} sx={{ gridColumn: { md: '1 / -1' } }}>
               <Typography variant="caption" color="text.secondary">

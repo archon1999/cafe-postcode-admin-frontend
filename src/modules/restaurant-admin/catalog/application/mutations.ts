@@ -5,11 +5,18 @@ import type {
   CatalogItemGroupPayload,
   CatalogItemPayload,
   CatalogModifierGroupPayload,
+  CatalogNameTranslationPayload,
 } from 'shared/api/admin-types';
 
 import { catalogRepository } from '../data-access';
 
 import { catalogKeys } from './keys';
+
+export function useTranslateCatalogNameMutation() {
+  return useMutation({
+    mutationFn: (payload: CatalogNameTranslationPayload) => catalogRepository.translateName(payload),
+  });
+}
 
 export function useCreateCatalogCategoryMutation() {
   const queryClient = useQueryClient();

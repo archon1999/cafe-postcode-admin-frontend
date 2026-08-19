@@ -21,20 +21,14 @@
     "name": "Nomi",
     "classification": "Tasnifi",
     "description": "Tavsif",
-    "monthlyPrice": "Oylik narx",
-    "yearlyPrice": "Yillik narx",
     "permissions": "Ruxsatlar",
     "allowedRoles": "Ruxsat etilgan rollar",
     "operationalSettings": "Operatsion sozlamalar (JSON)",
     "customTariff": "Aktivlashtirish turi",
     "tariff": "Tarif",
-    "billingPeriod": "Tarif muddati",
-    "startsOn": "Boshlanish sanasi",
     "activatedAt": "Aktivlashtirilgan sana",
-    "expiresOn": "Amal qilish muddati",
     "username": "Username",
-    "password": "Password",
-    "authCode": "Aktivatsiya kodi"
+    "password": "Password"
   },
   "filters": {
     "search": "Qidiruv",
@@ -48,8 +42,7 @@
     "notSelected": "Tanlanmagan",
     "existingTariff": "Mavjud tarif",
     "customActivation": "Maxsus tarif",
-    "monthly": "Oylik",
-    "yearly": "Yillik",
+    "withoutRole": "Rolsiz xodimlar",
     "selectedRolesCount": "Tanlangan rollar: {{count}}",
     "selectedPermissionsCount": "Tanlangan ruxsatlar: {{count}}"
   },
@@ -65,7 +58,7 @@
     "edit": "Tahrirlash",
     "activate": "Aktivlashtirish",
     "deactivate": "Deaktivlashtirish",
-    "extend": "Muddatini uzaytirish",
+    "changeTariff": "Tarifni o'zgartirish",
     "resetPassword": "Parolni yangilash",
     "rotateAuthCode": "Aktivatsiya kodini yangilash",
     "createBusinessPartner": "Yangi biznes hamkor",
@@ -98,9 +91,13 @@
       "title": "Restoranni deaktivlashtirish",
       "description": "\"{{name}}\" restoranni deaktivlashtirmoqchimisiz?"
     },
-    "extendRestaurant": {
-      "title": "Tarif muddatini uzaytirish",
-      "description": "\"{{name}}\" restoranining amal qilish muddatini uzaytirmoqchimisiz?"
+    "changeTariff": {
+      "title": "Shahobcha tarifini o'zgartirish",
+      "credentialsHint": "Tarif o'zgarganda xodimlarning login va parollari o'zgarmaydi. Har bir mavjud rol uchun yangi tarifdagi rolni tanlang.",
+      "mappingTitle": "{{tariff}} tarifiga rollarni moslash",
+      "newRole": "Yangi rol",
+      "loading": "Xodimlar va rollar yuklanmoqda...",
+      "noEmployees": "Shahobchada mapping qilinadigan xodimlar yo'q. Tarifni to'g'ridan-to'g'ri almashtirish mumkin."
     },
     "restaurantCredentials": {
       "title": "Restoran admini kredensiallari",

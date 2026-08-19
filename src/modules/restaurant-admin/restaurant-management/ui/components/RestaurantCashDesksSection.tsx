@@ -95,73 +95,73 @@ export function RestaurantCashDesksSection({
     [tCommon],
   );
 
-  const baseColumns = useMemo<GridColDef<AdminCashDesk>[]>(
-    () =>
-      [
-        { field: 'name', headerName: t('fields.name'), minWidth: 220, flex: 1 },
-        {
-          field: 'fiscalIntegrationName',
-          headerName: 'Fiscal integratsiya',
-          minWidth: 220,
-          flex: 1,
-          renderCell: ({ row }) => row.fiscalIntegrationName || row.fiscalProvider || '-',
-        },
-        {
-          field: 'paymentIntegrationName',
-          headerName: 'MARTA terminal',
-          minWidth: 240,
-          flex: 1,
-          renderCell: ({ row }) => row.paymentIntegrationName || '-',
-        },
-        {
-          field: 'printerIntegrationName',
-          headerName: 'Printer',
-          minWidth: 180,
-          flex: 0.7,
-          renderCell: ({ row }) => row.printerIntegrationName || '-',
-        },
-        {
-          field: 'isActive',
-          headerName: t('fields.status'),
-          minWidth: 120,
-          flex: 0.5,
-          renderCell: ({ row }) => (
-            <Chip
-              size="small"
-              label={row.isActive ? tCommon('status.active') : tCommon('status.inactive')}
-              color={row.isActive ? 'success' : 'default'}
-              variant="soft"
-            />
-          ),
-        },
-        {
-          type: 'actions',
-          field: 'actions',
-          headerName: tCommon('actions.title'),
-          minWidth: 90,
-          getActions: (params) => [
-            <CustomGridActionsCellItem
-              actionKind="edit"
-              key="edit"
-              label={t('actions.edit')}
-              icon={<Iconify icon="solar:pen-bold" />}
-              onClick={() => {
-                setEditingRow(params.row);
-                setDialogOpen(true);
-              }}
-            />,
-            <CustomGridActionsCellItem
-              actionKind="delete"
-              key="delete"
-              label={t('actions.delete')}
-              icon={<Iconify icon="solar:trash-bin-trash-bold" />}
-              onClick={() => setRowToDelete(params.row)}
-            />,
-          ],
-        },
-      ].filter((column) => restaurantId || column.field !== 'actions'),
-    [restaurantId, setDialogOpen, t, tCommon],
-  );
+  const baseColumns = useMemo<GridColDef<AdminCashDesk>[]>(() => {
+    const columns: GridColDef<AdminCashDesk>[] = [
+      { field: 'name', headerName: t('fields.name'), minWidth: 220, flex: 1 },
+      {
+        field: 'fiscalIntegrationName',
+        headerName: 'Fiscal integratsiya',
+        minWidth: 220,
+        flex: 1,
+        renderCell: ({ row }) => row.fiscalIntegrationName || row.fiscalProvider || '-',
+      },
+      {
+        field: 'paymentIntegrationName',
+        headerName: 'MARTA terminal',
+        minWidth: 240,
+        flex: 1,
+        renderCell: ({ row }) => row.paymentIntegrationName || '-',
+      },
+      {
+        field: 'printerIntegrationName',
+        headerName: 'Printer',
+        minWidth: 180,
+        flex: 0.7,
+        renderCell: ({ row }) => row.printerIntegrationName || '-',
+      },
+      {
+        field: 'isActive',
+        headerName: t('fields.status'),
+        minWidth: 120,
+        flex: 0.5,
+        renderCell: ({ row }) => (
+          <Chip
+            size="small"
+            label={row.isActive ? tCommon('status.active') : tCommon('status.inactive')}
+            color={row.isActive ? 'success' : 'default'}
+            variant="soft"
+          />
+        ),
+      },
+      {
+        type: 'actions',
+        field: 'actions',
+        headerName: tCommon('actions.title'),
+        minWidth: 90,
+        getActions: (params) => [
+          <CustomGridActionsCellItem
+            actionKind="edit"
+            key="edit"
+            label={t('actions.edit')}
+            icon={<Iconify icon="solar:pen-bold" />}
+            onClick={() => {
+              setEditingRow(params.row);
+              setDialogOpen(true);
+            }}
+          />,
+          <CustomGridActionsCellItem
+            actionKind="delete"
+            key="delete"
+            label={t('actions.delete')}
+            icon={<Iconify icon="solar:trash-bin-trash-bold" />}
+            onClick={() => setRowToDelete(params.row)}
+          />,
+        ],
+      },
+    ];
+
+    return columns.filter((column) => restaurantId || column.field !== 'actions');
+  }, [restaurantId, setDialogOpen, t, tCommon]);
   const columns = useBranchScopeColumns(baseColumns);
 
   const hasActiveFilters = Boolean(search || statuses.length);

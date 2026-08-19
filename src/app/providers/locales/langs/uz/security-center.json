@@ -1,0 +1,344 @@
+{
+  "title": "Qurilmalar va xavfsizlik",
+  "controlCenter": {
+    "title": "Xavfsizlik boshqaruv markazi",
+    "openControl": "Control PWA'ni ochish",
+    "tabsLabel": "Control-center bo‘limlari",
+    "description": "Migratsiya tayyorligi, xavfsizlik hodisalari va Telegram ulanishlarini bitta operatsion ko‘rinishda nazorat qiling.",
+    "refresh": "Yangilash",
+    "status": {
+      "critical": "Zudlik bilan tekshirish kerak",
+      "attention": "E’tibor talab qilinadi",
+      "stable": "Operatsion holat barqaror"
+    },
+    "snapshot": { "lastUpdated": "Oxirgi yangilanish" },
+    "metrics": {
+      "label": "Xavfsizlik va rollout ko‘rsatkichlari",
+      "migratedBranches": "Migratsiyasi yakunlangan shahobchalar",
+      "blockedBranches": "Tayyorgarligi bloklangan shahobchalar",
+      "highRiskEvents": "Ko‘rib chiqilmagan yuqori xavfli hodisalar"
+    },
+    "nextActions": {
+      "title": "Keyingi amallar",
+      "description": "Xavf va rollout bosqichiga qarab saralangan operatsion navbat.",
+      "partialData": "Xavfsizlik hodisalari oqimi to‘liq yuklanmadi. Holatni xavfsiz deb hisoblamang va qayta yangilang.",
+      "emptyTitle": "Shoshilinch amal yo‘q",
+      "emptyDescription": "Joriy server ma’lumotlarida ko‘rib chiqilmagan xavf yoki rollout blokeri topilmadi."
+    },
+    "actions": {
+      "count": "Soni: {{count}}",
+      "moreBranches": " · yana {{count}} ta",
+      "open": "Ochish",
+      "securityEvents": {
+        "title": "Yuqori xavfli hodisalarni tekshiring",
+        "description": "Ko‘rib chiqilmagan HIGH va CRITICAL hodisalar: {{count}}, shundan CRITICAL: {{critical}}."
+      },
+      "pendingPairings": {
+        "title": "Kutilayotgan qurilmalarni tasdiqlang",
+        "description": "QR va qurilma ekranidagi 6 belgili nazorat kodini solishtirib, {{count}} ta so‘rovni ko‘rib chiqing."
+      },
+      "fixPrerequisites": {
+        "title": "Rollout shartlarini tiklang",
+        "description": "{{count}} ta shahobchada Agent, bridge yoki server tasdig‘i bo‘yicha bloker bor."
+      },
+      "readyForPOSUpdate": {
+        "title": "POS yangilanishini boshlang",
+        "description": "{{count}} ta shahobchada bridge tekshiruvlari o‘tgan va POS yangilanishiga tayyor."
+      },
+      "migrationInProgress": {
+        "title": "POS migratsiyasini yakunlang",
+        "description": "{{count}} ta shahobchada faol POS yoki bog‘lanmagan sessiyalar bo‘yicha ish qolgan."
+      },
+      "readyForBridgeOff": {
+        "title": "Vaqtinchalik bridge’ni o‘chiring",
+        "description": "{{count}} ta shahobcha finalizatsiya tekshiruvlaridan o‘tgan va bridge hali yoqilgan."
+      }
+    },
+    "pending": {
+      "title": "Kutilayotgan QR ulashlar",
+      "description": "Faqat muddati tugamagan qurilma so‘rovlari.",
+      "loadError": "Pairing so‘rovlarini yuklab bo‘lmadi. Migratsiya hisoblagichidan foydalaning va qayta yangilang.",
+      "empty": "Faol pairing so‘rovi yo‘q.",
+      "openAll": "Barcha pairinglarni ochish"
+    },
+    "risk": {
+      "title": "So‘nggi yuqori xavfli hodisalar",
+      "description": "Ko‘rib chiqilmagan HIGH va CRITICAL yozuvlar.",
+      "loadError": "Xavfsizlik hodisalarini yuklab bo‘lmadi.",
+      "refreshError": "Xavfsizlik hodisalari yangilanmadi. Ko‘rsatilayotgan holat to‘liq bo‘lmasligi mumkin.",
+      "empty": "Ko‘rib chiqilmagan yuqori xavfli hodisa yo‘q.",
+      "openAll": "Barcha hodisalarni ochish"
+    },
+    "details": {
+      "title": "Batafsil boshqaruv",
+      "description": "Qurilmalar, QR ulashlar, Telegram va audit hodisalari bo‘yicha to‘liq amallar.",
+      "tabsLabel": "Xavfsizlik boshqaruv bo‘limlari"
+    }
+  },
+  "tabs": {
+    "migration": "Migratsiya",
+    "devices": "Qurilmalar",
+    "pairings": "QR ulash",
+    "telegram": "Telegram",
+    "events": "Xavfsizlik hodisalari"
+  },
+  "migration": {
+    "refresh": "Yangilash",
+    "readyForUpdate": "POS yangilashga tayyor: {{count}}",
+    "requiresAction": "Amal talab qiladi: {{count}}",
+    "details": "Batafsil",
+    "detailsTitle": "{{branch}} migratsiyasi",
+    "noBlockers": "Bu bosqich uchun bloker topilmadi.",
+    "table": {
+      "branch": "Shahobcha",
+      "agent": "Local Agent",
+      "pos": "Faol POS",
+      "unbound": "Bog‘lanmagan",
+      "stage": "Bosqich",
+      "action": "Amal"
+    }
+  },
+  "common": {
+    "search": "Qidiruv",
+    "all": "Barchasi",
+    "status": "Holat",
+    "actions": "Amallar",
+    "cancel": "Bekor qilish",
+    "close": "Yopish"
+  },
+  "overview": {
+    "activeDevices": "Faol qurilmalar",
+    "pendingPairings": "Kutilayotgan QR ulashlar",
+    "migratedAgents": "Ko‘chirilgan agentlar",
+    "unboundPosSessions": "Qurilmaga bog‘lanmagan POS sessiyalar",
+    "migratedTvMonitors": "Ko‘chirilgan TV monitorlar",
+    "branchesWithoutAgent": "Agentsiz shahobchalar"
+  },
+  "readiness": {
+    "title": "Shahobchalar migratsiyasiga tayyorlik",
+    "description": "POS'ni yangilashga tayyorlikni va vaqtinchalik bridge'ni o‘chirishdan oldingi migratsiya yakunini alohida tekshiring.",
+    "loading": "Shahobchalar tayyorligi yuklanmoqda…",
+    "retry": "Qayta urinish",
+    "loadErrorTitle": "Shahobchalar tayyorligini yuklab bo‘lmadi",
+    "loadErrorDescription": "Eskirgan yoki to‘liq bo‘lmagan holat asosida qaror qabul qilinmasligi uchun ma’lumotlar ko‘rsatilmadi.",
+    "refreshError": "Tayyorlik ma’lumotlarini yangilab bo‘lmadi. Quyida oxirgi muvaffaqiyatli yuklangan holat ko‘rsatilgan.",
+    "empty": "Tekshiriladigan faol shahobchalar yo‘q.",
+    "fullyMigratedCount": "To‘liq ko‘chirilgan: {{count}} / {{total}}",
+    "branchId": "Shahobcha ID'si",
+    "notAvailable": "Ma’lumot yo‘q",
+    "statusAria": "{{gate}}: {{status}}",
+    "branchStatusAria": "{{branch}}: {{status}}",
+    "summary": {
+      "progress": "Rollout yakunlanishi",
+      "pos": "POS",
+      "unbound": "bog‘lanmagan"
+    },
+    "agentStates": {
+      "missing": "Agent yo‘q",
+      "offline": "Agent offline",
+      "migrationRequired": "Migratsiya kerak",
+      "online": "Agent online"
+    },
+    "filters": {
+      "label": "Shahobchalarni filtrlash",
+      "all": "Barchasi",
+      "attention": "Amal kerak",
+      "complete": "Yakunlangan",
+      "searchPlaceholder": "Shahobcha nomi bo‘yicha qidirish",
+      "resultCount": "Ko‘rsatilmoqda: {{count}} ta shahobcha",
+      "noResults": "Tanlangan filtrga mos shahobcha topilmadi."
+    },
+    "statuses": {
+      "ready": "Tayyor",
+      "notReady": "Tayyor emas",
+      "notRequired": "Endi talab qilinmaydi",
+      "fullyMigrated": "Migratsiya yakunlangan",
+      "notFullyMigrated": "Migratsiya yakunlanmagan"
+    },
+    "gates": {
+      "posUpdate": "POS yangilanishiga tayyorlik",
+      "finalization": "Bridge'ni o‘chirishga tayyorlik"
+    },
+    "posUpdatePassed": "Bridge tayyor: POS'ni yangilashni boshlash mumkin. Bu bosqichda bog‘lanmagan sessiyalar bo‘lishi tabiiy.",
+    "posUpdateNotRequired": "POS allaqachon ko‘chirilgan; vaqtinchalik bridge holati yakunlashga to‘sqinlik qilmaydi.",
+    "finalizationPassed": "Faol ko‘chirilgan POS mavjud, bog‘lanmagan sessiyalar yo‘q va agent qurilmasi faol.",
+    "stages": {
+      "fixPrerequisites": "Tayyorgarlik bloklangan",
+      "readyForPOSUpdate": "POS'ni yangilash mumkin",
+      "migrationInProgress": "Migratsiya davom etmoqda",
+      "readyForBridgeOff": "Migratsiya yakunlangan"
+    },
+    "nextActions": {
+      "fixPrerequisites": "Quyidagi sabablarni bartaraf eting va POS'ni yangilashdan oldin agentning yangi heartbeat'ini kuting.",
+      "readyForPOSUpdate": "Shahobchadagi POS'ni yangilang, so‘ng faol sessiyalar yangi qurilmalarga bog‘lanishini kuting.",
+      "migrationInProgress": "POS ko‘chirishni yakunlang va finalizatsiya to‘siqlarini bartaraf eting. Bridge'ni muddatidan oldin o‘chirmang.",
+      "readyForBridgeOff": "Shahobcha tasdiqlangan rollout rejasi bo‘yicha vaqtinchalik bridge'ni yakuniy o‘chirishga tayyor."
+    },
+    "details": {
+      "activePOSDevices": "Faol POS qurilmalari",
+      "unboundPOSSessions": "Bog‘lanmagan POS sessiyalar",
+      "agentVersion": "Agent versiyasi",
+      "agentDeviceStatus": "Agent qurilmasi",
+      "agentLastSeen": "Agentning oxirgi aloqasi",
+      "bridgeLastSeen": "Bridge'ning oxirgi check-in'i",
+      "bridgeDeadline": "Bridge amal qilish muddati",
+      "terminalCount": "Check-in'dagi terminallar"
+    },
+    "reasons": {
+      "agentMissing": "Shahobchada Local Agent yo‘q.",
+      "agentOffline": "Local Agent tarmoqda emas.",
+      "agentDeviceNotMigrated": "Local Agent yangi qurilma identifikatsiyasiga ko‘chirilmagan.",
+      "agentDeviceNotActive": "Ko‘chirilgan Local Agent qurilmasi faol emas.",
+      "bridgeCapabilityMissing": "Agent cheklangan legacy POS bridge imkoniyatini bildirmagan.",
+      "bridgeNotConfigured": "Legacy POS bridge sozlanmagan.",
+      "bridgeNotEnabled": "Legacy POS bridge yoqilmagan.",
+      "bridgeCheckInMissing": "Hech bir POS terminaldan check-in kuzatilmagan.",
+      "bridgeCheckInInvalid": "Oxirgi check-in ma’lumoti yoki terminallar soni noto‘g‘ri.",
+      "bridgeHeartbeatMissing": "Agent heartbeat'ida bridge holati yo‘q.",
+      "bridgeHeartbeatInvalid": "Heartbeat'dagi bridge holati server tekshiruvidan o‘tmagan.",
+      "bridgeSourceCommitInvalid": "Bridge manba commit identifikatori yo‘q yoki noto‘g‘ri.",
+      "bridgeBuildTimestampInvalid": "Bridge yig‘ilgan vaqti yo‘q yoki noto‘g‘ri.",
+      "bridgeDeadlineInvalid": "Bridge amal qilish muddati yo‘q yoki noto‘g‘ri.",
+      "bridgeExpired": "Vaqtinchalik bridge amal qilish muddati tugagan.",
+      "bridgeFailureUnknown": "Bridge noma’lum xatolikni bildirdi: {{failure}}.",
+      "bridgeServerNotReady": "Server bridge'ning POS yangilanishiga tayyorligini tasdiqlamadi.",
+      "activePOSDevicesMissing": "Hech bir faol ko‘chirilgan POS qurilmasi yo‘q.",
+      "unboundPOSSessions": "Qurilmaga bog‘lanmagan faol POS sessiyalar qolgan: {{count}}.",
+      "migrationCountsInvalid": "Migratsiya hisoblagichlari yo‘q yoki noto‘g‘ri."
+    }
+  },
+  "deviceTypes": {
+    "POS_TERMINAL": "POS terminal",
+    "LOCAL_AGENT": "Local Agent",
+    "TV_MONITOR": "TV monitor",
+    "CONTROL_DEVICE": "Boshqaruv qurilmasi"
+  },
+  "statuses": {
+    "ACTIVE": "Faol",
+    "REVOKED": "Bekor qilingan",
+    "PENDING": "Kutilmoqda",
+    "APPROVED": "Tasdiqlangan",
+    "REJECTED": "Rad etilgan"
+  },
+  "severities": {
+    "INFO": "Ma’lumot",
+    "LOW": "Past",
+    "MEDIUM": "O‘rta",
+    "HIGH": "Yuqori",
+    "CRITICAL": "Kritik"
+  },
+  "devices": {
+    "device": "Qurilma",
+    "restaurant": "Shahobcha",
+    "platform": "Platforma",
+    "type": "Qurilma turi",
+    "version": "Versiya",
+    "lastSeen": "Oxirgi aloqa",
+    "lease": "Lease muddati",
+    "searchPlaceholder": "Qurilma, shahobcha yoki fingerprint",
+    "revoke": "Revoke",
+    "revokeTitle": "{{name}} qurilmasini bekor qilish",
+    "revokeDescription": "Bu qurilmaning POS yoki Agent kirishi darhol to‘xtaydi. Qayta ulash uchun yangi QR tasdiqlash talab qilinadi.",
+    "revokeReason": "Sabab",
+    "revokeReasonMin": "Kamida 5 ta belgi kiriting.",
+    "empty": "Mos qurilma topilmadi.",
+    "messages": {
+      "revoked": "Qurilma bekor qilindi.",
+      "revokeFailed": "Qurilmani bekor qilib bo‘lmadi."
+    }
+  },
+  "pairings": {
+    "pendingTitle": "Kutilayotgan qurilmalar",
+    "pendingDescription": "Faqat qurilma ekranidagi QR va 6 belgili ko‘rsatma kodi mos bo‘lsa tasdiqlang.",
+    "scan": "QR skanerlash",
+    "scanTitle": "Qurilmani ulash",
+    "scanDescription": "Qurilma ekranidagi QR kodni skanerlang yoki ishonchli pairing linkini kiriting.",
+    "cameraPreview": "QR kamera ko‘rinishi",
+    "startCamera": "Kamerani yoqish",
+    "stopCamera": "Kamerani to‘xtatish",
+    "link": "Pairing link",
+    "secretHint": "Link maxfiy va bir martalik. Uni chat yoki logga yubormang.",
+    "verify": "Tekshirish",
+    "restaurant": "Ulanadigan shahobcha",
+    "deviceName": "Qurilma nomi",
+    "compareCode": "Quyidagi kod qurilma ekranidagi kod bilan aynan bir xil bo‘lishi shart.",
+    "fingerprint": "Kalit fingerprinti",
+    "expiresAt": "Amal qiladi",
+    "approve": "Ulash",
+    "reject": "Rad etish",
+    "empty": "Hozir kutilayotgan pairing yo‘q.",
+    "loadError": "Kutilayotgan pairinglarni yuklab bo‘lmadi.",
+    "retry": "Qayta urinish",
+    "errors": {
+      "pairing_link_invalid": "Pairing link formati noto‘g‘ri.",
+      "pairing_link_untrusted": "Link ishonchli control domeniga tegishli emas.",
+      "cameraUnavailable": "Kameraga ruxsat yo‘q yoki kamera mavjud emas. Linkni qo‘lda kiriting.",
+      "notFound": "Pairing topilmadi yoki server hali so‘rovni olmagan.",
+      "expired": "Pairing muddati tugagan. Qurilmada yangi QR yarating.",
+      "notPending": "Bu pairing avval ishlatilgan yoki rad etilgan."
+    },
+    "messages": {
+      "approved": "Qurilma shahobchaga xavfsiz ulandi.",
+      "approveFailed": "Qurilmani ulab bo‘lmadi. QR muddati va kodni tekshiring.",
+      "rejected": "Pairing rad etildi.",
+      "rejectFailed": "Pairingni rad etib bo‘lmadi."
+    }
+  },
+  "telegram": {
+    "selectRestaurant": "Yuqoridagi shahobcha tanlagichidan bitta shahobchani tanlang.",
+    "linkTitle": "Telegram hisobotini ulash",
+    "linkDescription": "5 daqiqalik, faqat bir marta ishlaydigan Telegram deep-link yaratiladi.",
+    "createLink": "Bir martalik link yaratish",
+    "connectedUsers": "Ulangan foydalanuvchilar",
+    "linkedAt": "Ulangan",
+    "revoke": "Uzish",
+    "empty": "Bu shahobchaga Telegram foydalanuvchisi ulanmagan.",
+    "linkReady": "Telegram link tayyor",
+    "oneTimeWarning": "Link 5 daqiqada tugaydi va birinchi muvaffaqiyatli ishlatilgandan keyin qayta ishlamaydi.",
+    "expiresAt": "Amal qiladi",
+    "copy": "Nusxalash",
+    "revokeTitle": "Telegram ulanishini uzish",
+    "revokeDescription": "Bu foydalanuvchi ushbu shahobchaning moliyaviy hisobotlarini boshqa ola olmaydi.",
+    "messages": {
+      "issueFailed": "Telegram link yaratib bo‘lmadi.",
+      "copied": "Link nusxalandi.",
+      "revoked": "Telegram ulanishi uzildi.",
+      "revokeFailed": "Telegram ulanishini uzib bo‘lmadi."
+    }
+  },
+  "events": {
+    "searchPlaceholder": "Hodisa, IP, foydalanuvchi yoki request ID",
+    "severity": "Xavf darajasi",
+    "reviewState": "Ko‘rib chiqish holati",
+    "unreviewed": "Ko‘rib chiqilmagan",
+    "reviewed": "Ko‘rib chiqilgan",
+    "result": "Natija",
+    "ip": "IP",
+    "actor": "Foydalanuvchi",
+    "requestId": "Request ID",
+    "acknowledge": "Ko‘rib chiqildi deb belgilash",
+    "empty": "Mos xavfsizlik hodisasi topilmadi.",
+    "loadError": "Xavfsizlik hodisalarini yuklab bo‘lmadi.",
+    "retry": "Qayta urinish",
+    "messages": {
+      "acknowledged": "Hodisa ko‘rib chiqildi deb belgilandi.",
+      "acknowledgeFailed": "Hodisani belgilab bo‘lmadi."
+    }
+  },
+  "eventTypes": {
+    "device_pairing_created": "Yangi qurilma pairing so‘rovi",
+    "device_pairing_approved": "Qurilma pairing tasdiqlandi",
+    "device_pairing_rejected": "Qurilma pairing rad etildi",
+    "device_revoked": "Qurilma bekor qilindi",
+    "device_signature_invalid": "Qurilma imzosi noto‘g‘ri",
+    "device_replay_detected": "Takroriy imzoli so‘rov aniqlandi",
+    "device_scope_denied": "Qurilma scope so‘rovi rad etildi",
+    "pin_login_failed": "Noto‘g‘ri PIN kiritildi",
+    "pin_login_locked": "PIN kirish vaqtincha bloklandi",
+    "admin_login_failed": "Admin login xatosi",
+    "tenant_scope_denied": "Boshqa shahobcha ma’lumotiga urinish",
+    "telegram_link_issued": "Telegram bir martalik link yaratildi",
+    "telegram_link_consumed": "Telegram link ishlatildi",
+    "telegram_subscription_revoked": "Telegram ulanishi uzildi"
+  }
+}

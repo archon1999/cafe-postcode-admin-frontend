@@ -14,6 +14,7 @@ export {
   useUpdateCatalogItemMutation,
   useUpdateCatalogItemGroupMutation,
   useUpdateCatalogModifierGroupMutation,
+  useTranslateCatalogNameMutation,
 } from './mutations';
 export {
   useGetCatalogCategoriesListQuery,

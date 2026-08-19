@@ -16,9 +16,9 @@ export type RestaurantInstallerManifest = {
   schemaVersion: number;
   restaurantId: string;
   restaurantName: string;
-  restaurantCode: string;
   backendUrl: string;
   coordinatorMode: boolean;
+  pairingMode: 'device_qr';
   localHttpListen: string;
 };
 

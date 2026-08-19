@@ -13,17 +13,22 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isLoading = useAuthStore((state) => state.isLoading);
   const isBootstrapping = useAuthStore((state) => state.isBootstrapping);
+  const isLocked = useAuthStore((state) => state.status === 'locked');
   const { profile } = useCurrentUser();
 
   if (isLoading || isBootstrapping) {
     return <SplashScreen />;
   }
 
+  if (isLocked) {
+    return null;
+  }
+
   if (!isAuthenticated) {
     const returnTo = location.pathname + location.search;
     const loginPath = `${RoutePath.login}${returnTo !== '/' ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`;
 
-    return <Navigate to={loginPath} replace />;
+    return <Navigate to={`${loginPath}${location.hash}`} replace />;
   }
 
   if (!profile) {

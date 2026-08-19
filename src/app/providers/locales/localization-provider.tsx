@@ -4,6 +4,7 @@ import 'dayjs/locale/uz-latn';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider as Provider } from '@mui/x-date-pickers/LocalizationProvider';
+import { useEffect } from 'react';
 
 import dayjs from 'shared/utils/dayjs';
 
@@ -18,6 +19,15 @@ export function LocalizationProvider({ children }: Props) {
   const { currentLang } = useTranslate();
 
   dayjs.locale(currentLang.adapterLocale);
+
+  useEffect(() => {
+    const previousLang = document.documentElement.lang;
+    document.documentElement.lang = currentLang.value;
+
+    return () => {
+      document.documentElement.lang = previousLang;
+    };
+  }, [currentLang.value]);
 
   return (
     <Provider

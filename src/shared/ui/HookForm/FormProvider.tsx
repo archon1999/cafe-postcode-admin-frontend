@@ -2,19 +2,19 @@ import type React from 'react';
 import type { UseFormReturn, FieldValues } from 'react-hook-form';
 import { FormProvider as RHFForm } from 'react-hook-form';
 
-export type FormProps<T extends FieldValues = FieldValues> = {
+export type FormProps<T extends FieldValues = FieldValues, TContext = unknown, TTransformedValues = T> = {
   onSubmit?: React.FormEventHandler<HTMLFormElement>;
   children: React.ReactNode;
-  methods: UseFormReturn<T>;
+  methods: UseFormReturn<T, TContext, TTransformedValues>;
   autoComplete?: React.FormHTMLAttributes<HTMLFormElement>['autoComplete'];
 };
 
-export function Form<T extends FieldValues = FieldValues>({
+export function Form<T extends FieldValues = FieldValues, TContext = unknown, TTransformedValues = T>({
   children,
   onSubmit,
   methods,
   autoComplete = 'off',
-}: FormProps<T>) {
+}: FormProps<T, TContext, TTransformedValues>) {
   return (
     <RHFForm {...methods}>
       <form onSubmit={onSubmit} noValidate autoComplete={autoComplete}>

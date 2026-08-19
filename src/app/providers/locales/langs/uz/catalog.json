@@ -38,6 +38,9 @@
                    "sku":  "SKU",
                    "stoplist":  "Stop-list",
                    "description":  "Tavsif",
+                   "itemType": "Mahsulot turi",
+                   "itemTypeProduct": "Tovar",
+                   "itemTypeService": "Xizmat",
                    "price":  "Narx",
                    "saleUnit": "Sotish birligi",
                    "saleUnitPiece": "Dona",
@@ -84,7 +87,9 @@
                    "mxikDetails":  "MXIK ma\u0027lumotlari",
                    "cashSaleForbidden":  "Naqd sotish mumkin emas",
                    "cashSaleLimited":  "Faqat 25 mln gacha naqd sotish mumkin",
-                   "cashSaleUnlimited":  "Hohlagancha sotadi"
+                   "cashSaleUnlimited":  "Hohlagancha sotadi",
+                   "nameLanguages":  "Nom tillari",
+                   "translateOnlyOneLanguage":  "Tarjima faqat bitta til to'ldirilganda ishlaydi"
                },
     "kinds":  {
                   "dish":  "Taom",
@@ -103,8 +108,12 @@
                     "createItem":  "Yangi mahsulot",
                     "searchMxik":  "MXIK bo\u0027yicha qidiring",
                     "removeImage":  "Rasmni olib tashlash",
-                    "restoreMxikImage":  "MXIK rasmini tiklash"
+                    "restoreMxikImage":  "MXIK rasmini tiklash",
+                    "translateName":  "Nomni boshqa tillarga tarjima qilish"
                 },
+    "messages":  {
+                     "nameTranslated":  "Nom qolgan tillarga tarjima qilindi"
+                 },
     "dialogs":  {
                     "deleteCategory":  {
                                            "title":  "Kategoriyani o\u0027chirish",

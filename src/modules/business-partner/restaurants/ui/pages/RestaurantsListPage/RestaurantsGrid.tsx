@@ -17,7 +17,7 @@ import {
   type RestaurantCredentialsDialogState,
   RestaurantDeactivateDialog,
   RestaurantDeleteDialog,
-  RestaurantExtendDialog,
+  RestaurantTariffChangeDialog,
 } from '../../components';
 
 import {
@@ -40,7 +40,7 @@ export function RestaurantsGrid() {
   const [branchParent, setBranchParent] = useState<AdminRestaurant | null>(null);
   const [rowToDeactivate, setRowToDeactivate] = useState<AdminRestaurant | null>(null);
   const [rowToActivate, setRowToActivate] = useState<AdminRestaurant | null>(null);
-  const [rowToExtend, setRowToExtend] = useState<AdminRestaurant | null>(null);
+  const [rowToChangeTariff, setRowToChangeTariff] = useState<AdminRestaurant | null>(null);
   const [credentialsDialogOpen, setCredentialsDialogOpen] = useState<RestaurantCredentialsDialogState>(null);
   const columnActions = useMemo(
     () => ({
@@ -49,7 +49,7 @@ export function RestaurantsGrid() {
       onCredentials: setCredentialsDialogOpen,
       onDeactivate: setRowToDeactivate,
       onDelete: setRowToDelete,
-      onExtend: setRowToExtend,
+      onChangeTariff: setRowToChangeTariff,
     }),
     [],
   );
@@ -161,16 +161,15 @@ export function RestaurantsGrid() {
           setRowToActivate(null);
           setCredentialsDialogOpen({
             credentials: { username: result.username, password: result.password },
-            authCode: result.restaurant.authCode ?? null,
             mode: 'activation',
           });
         }}
       />
 
-      <RestaurantExtendDialog
-        open={rowToExtend}
-        onClose={() => setRowToExtend(null)}
-        onSuccess={() => setRowToExtend(null)}
+      <RestaurantTariffChangeDialog
+        open={rowToChangeTariff}
+        onClose={() => setRowToChangeTariff(null)}
+        onSuccess={() => setRowToChangeTariff(null)}
       />
 
       <RestaurantCredentialsDialog open={credentialsDialogOpen} onClose={() => setCredentialsDialogOpen(null)} />

@@ -10,11 +10,19 @@ import type {
   CatalogItemGroupPayload,
   CatalogModifierGroup,
   CatalogModifierGroupPayload,
+  CatalogNameTranslation,
+  CatalogNameTranslationPayload,
 } from '../admin-types';
 
 import { instance } from './axiosInstance.ts';
 
 export const adminCatalogGateway = {
+  translateAdminCatalogName(payload: CatalogNameTranslationPayload) {
+    return instance
+      .post<CatalogNameTranslation>('/api/v1/admin/catalog/translations/name/', payload)
+      .then((response) => response.data);
+  },
+
   getAdminCatalogCategories(params?: AdminCatalogCategoriesQueryParams) {
     return instance
       .get<AdminPaginatedResponse<CatalogCategory>>('/api/v1/admin/catalog/categories/', {

@@ -29,7 +29,7 @@ export function today(template?: string): string {
   return getCurrentTashkentTime().startOf('day').format(template);
 }
 
-export function fDateTime(input: DateInput, template = FORMAT_PATTERNS.dateTime): string {
+export function fDateTime(input: DateInput, template: string = FORMAT_PATTERNS.dateTime): string {
   if (!input) return '';
 
   const date = toTashkentDayjs(input);

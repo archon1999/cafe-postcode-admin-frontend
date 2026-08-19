@@ -3,7 +3,7 @@ import Tabs from '@mui/material/Tabs';
 
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath, canAccessMyRestaurantGeneral, canAccessMyRestaurantSetup } from 'app/routes';
-import { useCurrentUser } from 'modules/auth';
+import { useCurrentUser } from 'modules/auth/domain/services/current-user';
 import { usePathname } from 'shared/hooks/router';
 import { Iconify } from 'shared/ui/Iconify';
 import { RouterLink } from 'shared/ui/RouterLink';

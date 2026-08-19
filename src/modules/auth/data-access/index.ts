@@ -1,1 +1,1 @@
-export { getCurrentUserRequest, loginRequest, logoutRequest } from './api/auth.api';
+export * from './api/auth.api';

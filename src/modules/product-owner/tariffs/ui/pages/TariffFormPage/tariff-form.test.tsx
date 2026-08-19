@@ -156,8 +156,6 @@ vi.mock('./TariffFormFields', () => ({
           onClick={() => {
             setValue('name', ' Starter tariff ');
             setValue('description', ' Included features ');
-            setValue('monthlyPrice', 15000);
-            setValue('yearlyPrice', '');
           }}>
           {testLabels.fillBaseValues}
         </button>
@@ -209,8 +207,6 @@ describe('TariffFormPage role and permission behavior', () => {
       expect(mutateCreateAsyncMock).toHaveBeenCalledWith({
         name: 'Starter tariff',
         description: 'Included features',
-        monthlyPrice: 15000,
-        yearlyPrice: 0,
         isActive: true,
         allowedRoleIds: [],
         permissionIds: [],
@@ -248,8 +244,6 @@ describe('TariffFormPage role and permission behavior', () => {
       expect(mutateCreateAsyncMock).toHaveBeenCalledWith({
         name: 'Starter tariff',
         description: 'Included features',
-        monthlyPrice: 15000,
-        yearlyPrice: 0,
         isActive: true,
         allowedRoleIds: ['role-cashier', 'role-manager'],
         permissionIds: ['permission-manual', 'permission-shared', 'permission-a', 'permission-b'],
@@ -287,8 +281,6 @@ describe('tariff form schema boundary', () => {
     expect(tariffFormSchema.parse({ name: 'Starter' })).toEqual({
       name: 'Starter',
       description: '',
-      monthlyPrice: '',
-      yearlyPrice: '',
       isActive: true,
       allowedRoleIds: [],
       permissionIds: [],

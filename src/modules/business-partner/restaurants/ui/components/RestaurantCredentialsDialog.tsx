@@ -2,11 +2,10 @@ import { useTranslate } from 'app/providers/locales';
 import { CredentialsRevealDialog } from 'modules/product-owner/business-partners/ui/components/CredentialsRevealDialog.tsx';
 import type { AdminGeneratedCredentials } from 'shared/api/admin-types.ts';
 
-export type RestaurantCredentialsDialogMode = 'activation' | 'reset' | 'auth_code';
+export type RestaurantCredentialsDialogMode = 'activation' | 'reset';
 
 export type RestaurantCredentialsDialogState = {
   credentials?: AdminGeneratedCredentials | null;
-  authCode?: string | null;
   mode: RestaurantCredentialsDialogMode;
 } | null;
 
@@ -24,16 +23,12 @@ export function RestaurantCredentialsDialog({ open, onClose }: RestaurantCredent
           { label: t('fields.password'), value: open.credentials.password },
         ]
       : []),
-    ...(open?.authCode ? [{ label: t('fields.authCode'), value: open.authCode }] : []),
   ];
-  const title =
-    open?.mode === 'auth_code' ? t('dialogs.restaurantAuthCode.title') : t('dialogs.restaurantCredentials.title');
+  const title = t('dialogs.restaurantCredentials.title');
   const description =
     open?.mode === 'reset'
       ? t('dialogs.restaurantCredentials.resetDescription')
-      : open?.mode === 'auth_code'
-        ? t('dialogs.restaurantAuthCode.description')
-        : t('dialogs.restaurantCredentials.description');
+      : t('dialogs.restaurantCredentials.description');
 
   return (
     <CredentialsRevealDialog

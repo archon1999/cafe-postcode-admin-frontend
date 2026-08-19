@@ -4,6 +4,10 @@ import type { CatalogRepository } from '../../domain';
 import { buildCatalogCategoryFormData, buildCatalogItemFormData } from '../catalogFormData';
 
 export const catalogRepository: CatalogRepository = {
+  translateName(payload) {
+    return apiClient.translateAdminCatalogName(payload);
+  },
+
   getCategories() {
     return apiClient.getAdminCatalogCategories({ page: 1, pageSize: 500 }).then((response) => response.data);
   },

@@ -21,20 +21,15 @@
     "name": "Номи",
     "classification": "Таснифи",
     "description": "Тавсиф",
-    "monthlyPrice": "Ойлик нарх",
-    "yearlyPrice": "Йиллик нарх",
     "permissions": "Рухсатлар",
     "allowedRoles": "Рухсат этилган роллар",
     "operationalSettings": "Операцион созламалар (JSON)",
     "customTariff": "Активлаштириш тури",
     "tariff": "Тариф",
-    "startsOn": "Бошланиш санаси",
     "username": "Username",
     "password": "Password",
-    "authCode": "Активатсия коди",
     "activatedAt": "Активлаштирилган сана",
-    "billingPeriod": "Тариф муддати",
-    "expiresOn": "Амал қилиш муддати"
+    "activatedAt": "Активлаштирилган сана"
   },
   "filters": {
     "search": "Қидирув",
@@ -48,6 +43,7 @@
     "notSelected": "Танланмаган",
     "existingTariff": "Мавжуд тариф",
     "customActivation": "Махсус тариф",
+    "withoutRole": "Ролсиз ходимлар",
     "selectedRolesCount": "Танланган роллар: {{count}}",
     "selectedPermissionsCount": "Танланган рухсатлар: {{count}}",
     "monthly": "Ойлик",
@@ -73,7 +69,7 @@
     "close": "Ёпиш",
     "showAuthCode": "Кодни кўрсатиш",
     "hideAuthCode": "Кодни яшириш",
-    "extend": "Муддатини узайтириш"
+    "changeTariff": "Тарифни ўзгартириш"
   },
   "dialogs": {
     "deactivatePartner": {
@@ -107,9 +103,13 @@
       "title": "Ресторанни активлаштириш",
       "customDescription": "Махсус тариф режимида роллар ва рухсатларни қўлда танлаб, ресторанни шу конфигурация билан активлаштирасиз."
     },
-    "extendRestaurant": {
-      "description": "\"{{name}}\" ресторанининг амал қилиш муддатини узайтирмоқчимисиз?",
-      "title": "Тариф муддатини узайтириш"
+    "changeTariff": {
+      "title": "Шахобча тарифини ўзгартириш",
+      "credentialsHint": "Тариф ўзгарганда ходимларнинг логин ва пароллари ўзгармайди. Ҳар бир мавжуд рол учун янги тарифдаги ролни танланг.",
+      "mappingTitle": "{{tariff}} тарифига ролларни мослаш",
+      "newRole": "Янги рол",
+      "loading": "Ходимлар ва роллар юкланмоқда...",
+      "noEmployees": "Шахобчада мосланадиган ходимлар йўқ. Тарифни тўғридан-тўғри алмаштириш мумкин."
     }
   },
   "localAgents": {

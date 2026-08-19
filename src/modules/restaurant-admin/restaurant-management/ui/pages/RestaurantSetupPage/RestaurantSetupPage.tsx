@@ -185,7 +185,7 @@ const RestaurantSetupPage = () => {
 
   const downloadInstaller = async () => {
     try {
-      await downloadLocalAgentInstaller(readiness.installerManifest.restaurantCode);
+      await downloadLocalAgentInstaller();
       toast.success(t('setup.messages.installerDownloaded'));
     } catch {
       toast.error(t('setup.messages.installerDownloadFailed'));

@@ -9,6 +9,9 @@ import type {
   AdminRestaurant,
   AdminRestaurantBranchCreatePayload,
   AdminRestaurantPayload,
+  AdminRestaurantTariffChangePayload,
+  AdminRestaurantTariffChangePreview,
+  AdminRestaurantTariffChangeResult,
 } from 'shared/api/admin-types';
 
 export interface OrganizationsRepository {
@@ -32,6 +35,11 @@ export interface OrganizationsRepository {
   createRestaurant(payload: AdminRestaurantPayload): Promise<AdminRestaurant>;
   createRestaurantBranch(parentId: string, payload: AdminRestaurantBranchCreatePayload): Promise<AdminRestaurant>;
   updateRestaurant(id: string, payload: AdminRestaurantPayload): Promise<AdminRestaurant>;
+  getRestaurantTariffChangePreview(id: string, tariffId: string): Promise<AdminRestaurantTariffChangePreview>;
+  changeRestaurantTariff(
+    id: string,
+    payload: AdminRestaurantTariffChangePayload,
+  ): Promise<AdminRestaurantTariffChangeResult>;
   deleteRestaurant(id: string): Promise<void>;
   getHalls(): Promise<AdminHall[]>;
 }

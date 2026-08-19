@@ -24,7 +24,6 @@ const RESTAURANT_PERMISSION_CODES: PermissionCode[] = [
   'restaurants.activate',
   'restaurants.deactivate',
   'restaurants.reset_password',
-  'restaurants.rotate_auth_code',
 ];
 const REPORT_PERMISSION_CODES: PermissionCode[] = ['reports.view'];
 const EXPENSE_PERMISSION_CODES: PermissionCode[] = [
@@ -87,6 +86,7 @@ const MY_RESTAURANT_PRINT_TEMPLATE_PERMISSION_CODES: PermissionCode[] = [
 const EMPLOYEE_PERMISSION_CODES: PermissionCode[] = ['employees.view', 'employees.create', 'employees.update'];
 
 const ADMIN_LANDING_CANDIDATES = [
+  RoutePath.platformSecurityCenter,
   RoutePath.platformLocalAgentList,
   RoutePath.platformBusinessPartnerList,
   RoutePath.platformTariffList,
@@ -131,6 +131,10 @@ export function canAccessBusinessPartners(snapshot?: AdminAccessSnapshot | null)
 }
 
 export function canAccessLocalAgents(snapshot?: AdminAccessSnapshot | null) {
+  return Boolean(snapshot?.isSuperuser);
+}
+
+export function canAccessSecurityCenter(snapshot?: AdminAccessSnapshot | null) {
   return Boolean(snapshot?.isSuperuser);
 }
 
@@ -270,6 +274,14 @@ export function canAccessAdminPath(pathname: string, snapshot?: AdminAccessSnaps
 
   if (matchesPrefix(pathname, RoutePath.platformLocalAgentList)) {
     return canAccessLocalAgents(snapshot);
+  }
+
+  if (
+    matchesPrefix(pathname, RoutePath.platformSecurityCenter) ||
+    matchesPrefix(pathname, RoutePath.platformDevicePairing) ||
+    matchesPrefix(pathname, RoutePath.platformAdminAlias)
+  ) {
+    return canAccessSecurityCenter(snapshot);
   }
 
   if (matchesPrefix(pathname, RoutePath.platformTariffList)) {

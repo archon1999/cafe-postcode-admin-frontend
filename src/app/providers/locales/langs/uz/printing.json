@@ -3,7 +3,6 @@
   "description": "Oshxona, prechek, oddiy to'lov va fiskal chek ko'rinishini boshqaring.",
   "kinds": {
     "kitchen_ticket": "Oshxona cheki",
-    "order_precheck": "Prechek",
     "payment_receipt_plain": "Oddiy to'lov cheki",
     "payment_receipt_fiscal": "Fiskal chek"
   },

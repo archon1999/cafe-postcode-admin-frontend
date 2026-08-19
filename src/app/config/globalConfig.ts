@@ -7,6 +7,7 @@ export type ConfigValue = {
   appVersion: string;
   serverUrl: string;
   assetsDir: string;
+  controlAppUrl: string;
   auth: {
     method: 'token';
     skip: boolean;
@@ -19,6 +20,7 @@ export const CONFIG: ConfigValue = {
   appVersion: packageJson.version,
   serverUrl: import.meta.env.VITE_SERVER_URL ?? '',
   assetsDir: import.meta.env.VITE_ASSETS_DIR ?? '',
+  controlAppUrl: import.meta.env.VITE_CONTROL_APP_URL?.trim() || '/control/',
   auth: {
     method: 'token',
     skip: false,

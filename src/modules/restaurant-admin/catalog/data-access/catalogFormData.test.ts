@@ -7,6 +7,9 @@ describe('catalogFormData', () => {
     const imageFile = new File(['cover'], 'cover.png', { type: 'image/png' });
     const formData = buildCatalogCategoryFormData({
       name: 'Salatlar',
+      nameUz: 'Salatlar',
+      nameUzCrl: 'Салатлар',
+      nameRu: 'Салаты',
       mxikCode: '00709001906000000',
       mxikName: 'Salat barg',
       mxikPayload: { mxikCode: '00709001906000000', mxikName: 'Salat barg' },
@@ -21,6 +24,9 @@ describe('catalogFormData', () => {
     });
 
     expect(formData.get('name')).toBe('Salatlar');
+    expect(formData.get('nameUz')).toBe('Salatlar');
+    expect(formData.get('nameUzCrl')).toBe('Салатлар');
+    expect(formData.get('nameRu')).toBe('Салаты');
     expect(formData.get('mxikCode')).toBe('00709001906000000');
     expect(formData.get('mxikPayload')).toBe('{"mxikCode":"00709001906000000","mxikName":"Salat barg"}');
     expect(formData.get('imageUrl')).toBe('https://example.com/mxik.png');
@@ -35,6 +41,9 @@ describe('catalogFormData', () => {
   it('builds item form data with nullable fields and flags', () => {
     const formData = buildCatalogItemFormData({
       name: 'Lavash',
+      nameUz: 'Lavash',
+      nameUzCrl: 'Лаваш',
+      nameRu: 'Лаваш',
       category: null,
       description: 'Issiq',
       mxikCode: '',
@@ -44,6 +53,7 @@ describe('catalogFormData', () => {
       imageSource: '',
       clearImage: true,
       restoreMxikImage: false,
+      itemType: 'product',
       price: 32000,
       saleUnit: 'kg',
       isActive: false,
@@ -52,6 +62,9 @@ describe('catalogFormData', () => {
 
     expect(Object.fromEntries(formData.entries())).toEqual({
       name: 'Lavash',
+      nameUz: 'Lavash',
+      nameUzCrl: 'Лаваш',
+      nameRu: 'Лаваш',
       mxikCode: '',
       mxikName: '',
       mxikPayload: '{}',
@@ -61,6 +74,7 @@ describe('catalogFormData', () => {
       restoreMxikImage: 'false',
       category: '',
       description: 'Issiq',
+      itemType: 'product',
       price: '32000',
       saleUnit: 'kg',
       isActive: 'false',

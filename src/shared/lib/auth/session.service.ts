@@ -1,26 +1,36 @@
 import { AUTH_STORAGE_KEYS } from './keys';
 
+let accessToken: string | null = null;
+let accessExpiresAt: string | null = null;
+
+function purgeLegacyTokenStorage(): void {
+  window.localStorage.removeItem(AUTH_STORAGE_KEYS.ACCESS_TOKEN);
+  window.sessionStorage.removeItem(AUTH_STORAGE_KEYS.ACCESS_TOKEN);
+}
+
+if (typeof window !== 'undefined') {
+  purgeLegacyTokenStorage();
+}
+
 export const sessionService = {
-  setAccessToken(token: string): void {
-    localStorage.setItem(AUTH_STORAGE_KEYS.ACCESS_TOKEN, JSON.stringify(token));
-    sessionStorage.removeItem(AUTH_STORAGE_KEYS.ACCESS_TOKEN);
+  setAccessToken(token: string, expiresAt?: string): void {
+    accessToken = token;
+    accessExpiresAt = expiresAt ?? null;
+    purgeLegacyTokenStorage();
   },
 
   getAccessToken(): string | null {
-    const localValue = localStorage.getItem(AUTH_STORAGE_KEYS.ACCESS_TOKEN);
-    const sessionValue = sessionStorage.getItem(AUTH_STORAGE_KEYS.ACCESS_TOKEN);
-    const value = localValue ?? sessionValue;
+    return accessToken;
+  },
 
-    if (!localValue && sessionValue) {
-      localStorage.setItem(AUTH_STORAGE_KEYS.ACCESS_TOKEN, sessionValue);
-      sessionStorage.removeItem(AUTH_STORAGE_KEYS.ACCESS_TOKEN);
-    }
-
-    return value ? (JSON.parse(value) as string) : null;
+  getAccessExpiresAt(): string | null {
+    return accessExpiresAt;
   },
 
   removeAccessToken(): void {
-    localStorage.removeItem(AUTH_STORAGE_KEYS.ACCESS_TOKEN);
+    accessToken = null;
+    accessExpiresAt = null;
+    purgeLegacyTokenStorage();
   },
 
   hasAccessToken(): boolean {

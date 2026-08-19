@@ -7,22 +7,26 @@ import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import { useEffect, useState } from 'react';
 import { useForm, type Resolver } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { useTranslate } from 'app/providers/locales';
 import type { CatalogCategory, CatalogCategoryPayload, CatalogImageSource } from 'shared/api/admin-types';
 import { EntityFormActions } from 'shared/ui/EntityFormActions';
-import { Form, RHFSelect, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
+import { Form, RHFSelect, RHFSwitch } from 'shared/ui/HookForm';
 
 import {
   useCreateCatalogCategoryMutation,
   useDeleteCatalogCategoryMutation,
   useGetPrepStationsQuery,
   useUpdateCatalogCategoryMutation,
+  useTranslateCatalogNameMutation,
 } from '../../application';
 import { getMxikPrimaryPictureUrl } from '../../data-access';
 
 import { CatalogImageEditor } from './CatalogImageEditor';
+import { countFilledCatalogNames, getCatalogLocalizedName, resolveCatalogNameForLocale } from './catalogLocalizedName';
+import { CatalogLocalizedNameFields } from './CatalogLocalizedNameFields';
 import { buildMxikOption, MxikAutocompleteField } from './MxikAutocompleteField';
 
 const mxikOptionSchema = z
@@ -40,16 +44,23 @@ const imageFieldSchema = z.custom<File | string | null | undefined>(
   (value) => value === undefined || value === null || typeof value === 'string' || value instanceof File,
 );
 
-const categoryFormSchema = z.object({
-  name: z.string().min(1, { message: 'Nomi talab qilinadi' }),
-  mxik: mxikOptionSchema,
-  imageFile: imageFieldSchema.optional(),
-  imageSource: z.enum(['mxik-cache', 'manual', '']),
-  prepStation: z.string().optional(),
-  clearImage: z.boolean(),
-  restoreMxikImage: z.boolean(),
-  isActive: z.boolean(),
-});
+const categoryFormSchema = z
+  .object({
+    nameUz: z.string(),
+    nameUzCrl: z.string(),
+    nameRu: z.string(),
+    mxik: mxikOptionSchema,
+    imageFile: imageFieldSchema.optional(),
+    imageSource: z.enum(['mxik-cache', 'manual', '']),
+    prepStation: z.string().optional(),
+    clearImage: z.boolean(),
+    restoreMxikImage: z.boolean(),
+    isActive: z.boolean(),
+  })
+  .refine((values) => Boolean(values.nameUz.trim() || values.nameUzCrl.trim() || values.nameRu.trim()), {
+    message: 'Kamida bitta tildagi nom talab qilinadi',
+    path: ['nameUz'],
+  });
 
 export type CategoryFormValues = z.infer<typeof categoryFormSchema>;
 
@@ -61,7 +72,9 @@ type CatalogCategoryFormProps = {
 };
 
 const defaultValues: CategoryFormValues = {
-  name: '',
+  nameUz: '',
+  nameUzCrl: '',
+  nameRu: '',
   mxik: null,
   imageFile: null,
   imageSource: '',
@@ -90,6 +103,7 @@ function CatalogCategoryFormInner({
   const createMutation = useCreateCatalogCategoryMutation();
   const updateMutation = useUpdateCatalogCategoryMutation(category?.id ?? '');
   const deleteMutation = useDeleteCatalogCategoryMutation();
+  const translateMutation = useTranslateCatalogNameMutation();
   const prepStationsQuery = useGetPrepStationsQuery();
 
   const methods = useForm<CategoryFormValues>({
@@ -98,13 +112,16 @@ function CatalogCategoryFormInner({
   });
 
   const { handleSubmit, reset, formState, watch, setValue, getValues } = methods;
-  const isSubmitting = formState.isSubmitting || createMutation.isPending || updateMutation.isPending;
+  const isSubmitting =
+    formState.isSubmitting || createMutation.isPending || updateMutation.isPending || translateMutation.isPending;
   const selectedMxikCode = watch('mxik')?.code ?? '';
   const selectedImage = watch('imageFile');
 
   useEffect(() => {
     reset({
-      name: category?.name ?? '',
+      nameUz: category?.nameUz ?? category?.name ?? '',
+      nameUzCrl: category?.nameUzCrl ?? '',
+      nameRu: category?.nameRu ?? '',
       mxik: buildMxikOption(category?.mxikCode, category?.mxikName, category?.mxikPayload),
       imageFile: category?.imageUrl ?? null,
       imageSource: (category?.imageSource ?? '') as CatalogImageSource | '',
@@ -180,6 +197,25 @@ function CatalogCategoryFormInner({
     setValue('restoreMxikImage', true, { shouldDirty: true });
   };
 
+  const applyNameTranslation = async (names: ReturnType<typeof getCatalogLocalizedName>) => {
+    const translated = await translateMutation.mutateAsync(names);
+    setValue('nameUz', translated.nameUz, { shouldDirty: true, shouldValidate: true });
+    setValue('nameUzCrl', translated.nameUzCrl, { shouldDirty: true, shouldValidate: true });
+    setValue('nameRu', translated.nameRu, { shouldDirty: true, shouldValidate: true });
+    return translated;
+  };
+
+  const handleTranslateName = async () => {
+    const names = getCatalogLocalizedName(getValues());
+    if (countFilledCatalogNames(names) !== 1) return;
+    try {
+      await applyNameTranslation(names);
+      toast.success(t('messages.nameTranslated'));
+    } catch {
+      // Global React Query error handling shows the actionable API error.
+    }
+  };
+
   const onSubmit = handleSubmit(async (values) => {
     if (!values.mxik) {
       return;
@@ -198,8 +234,14 @@ function CatalogCategoryFormInner({
               : ''
             : values.imageSource;
 
+    let localizedName = getCatalogLocalizedName(values);
+    if (countFilledCatalogNames(localizedName) === 1) {
+      localizedName = await applyNameTranslation(localizedName);
+    }
+
     const payload: CatalogCategoryPayload = {
-      name: values.name.trim(),
+      name: resolveCatalogNameForLocale(localizedName, currentLang.value),
+      ...localizedName,
       mxikCode: values.mxik.code,
       mxikName: values.mxik.name ?? '',
       mxikPayload: values.mxik.raw ?? {},
@@ -237,7 +279,12 @@ function CatalogCategoryFormInner({
           gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
           gap: 3,
         }}>
-        <RHFTextField<CategoryFormValues> name="name" label={t('fields.name')} />
+        <CatalogLocalizedNameFields
+          disabled={isSubmitting}
+          translating={translateMutation.isPending}
+          onTranslate={() => void handleTranslateName()}
+          sx={{ gridColumn: { xs: 'auto', md: '1 / -1' } }}
+        />
         <RHFSelect<CategoryFormValues>
           name="prepStation"
           label={t('fields.prepStation')}

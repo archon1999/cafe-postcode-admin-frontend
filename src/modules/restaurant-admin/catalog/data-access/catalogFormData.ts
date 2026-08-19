@@ -30,6 +30,9 @@ function buildCatalogFormData(payload: CatalogMutationPayload): FormData {
   const formData = new FormData();
 
   appendText(formData, 'name', payload.name);
+  appendText(formData, 'nameUz', payload.nameUz);
+  appendText(formData, 'nameUzCrl', payload.nameUzCrl);
+  appendText(formData, 'nameRu', payload.nameRu);
   appendText(formData, 'mxikCode', payload.mxikCode ?? '');
   appendText(formData, 'mxikName', payload.mxikName ?? '');
   formData.append('mxikPayload', JSON.stringify(payload.mxikPayload ?? {}));
@@ -56,6 +59,10 @@ function buildCatalogFormData(payload: CatalogMutationPayload): FormData {
 
   if ('description' in payload) {
     appendText(formData, 'description', payload.description);
+  }
+
+  if ('itemType' in payload) {
+    appendText(formData, 'itemType', payload.itemType);
   }
 
   if ('price' in payload) {

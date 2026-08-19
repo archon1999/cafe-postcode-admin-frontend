@@ -1,7 +1,7 @@
 import { Navigate } from 'react-router';
 
 import { RoutePath, getDefaultMyRestaurantPath } from 'app/routes';
-import { useCurrentUser } from 'modules/auth';
+import { useCurrentUser } from 'modules/auth/domain/services/current-user';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 
 const MyRestaurantPage = () => {

@@ -5,14 +5,11 @@ import { useMemo } from 'react';
 
 import { useTranslate } from 'app/providers/locales';
 import { RouterPathHelper } from 'app/routes';
-import {
-  useResetRestaurantPasswordMutation,
-  useRotateRestaurantAuthCodeMutation,
-} from 'modules/product-owner/business-partners/application';
+import { useResetRestaurantPasswordMutation } from 'modules/product-owner/business-partners/application';
 import type { AdminRestaurant } from 'shared/api/admin-types';
 import { CustomGridActionsCellItem } from 'shared/ui/CustomDataGrid';
 import { Iconify } from 'shared/ui/Iconify';
-import { formatDate, formatDateTime } from 'shared/utils/format-time';
+import { formatDateTime } from 'shared/utils/format-time';
 
 import { RestaurantDetailLinkCell, type RestaurantCredentialsDialogState } from '../../components';
 
@@ -22,7 +19,7 @@ interface RestaurantsGridColumnActions {
   onCredentials: (state: RestaurantCredentialsDialogState) => void;
   onDeactivate: (restaurant: AdminRestaurant) => void;
   onDelete: (restaurant: AdminRestaurant) => void;
-  onExtend: (restaurant: AdminRestaurant) => void;
+  onChangeTariff: (restaurant: AdminRestaurant) => void;
 }
 
 export function useRestaurantsGridColumns(actions: RestaurantsGridColumnActions) {
@@ -30,7 +27,6 @@ export function useRestaurantsGridColumns(actions: RestaurantsGridColumnActions)
   const { t: tPlatform } = useTranslate('platform');
   const { t: tCommon } = useTranslate('common');
   const resetPasswordMutation = useResetRestaurantPasswordMutation();
-  const rotateAuthCodeMutation = useRotateRestaurantAuthCodeMutation();
 
   const columns = useMemo<GridColDef<AdminRestaurant>[]>(
     () => [
@@ -52,29 +48,11 @@ export function useRestaurantsGridColumns(actions: RestaurantsGridColumnActions)
           row.tariff?.name ?? (row.activationType === 'custom' ? tPlatform('labels.customActivation') : null),
       },
       {
-        field: 'billingPeriod',
-        headerName: tPlatform('fields.billingPeriod'),
-        minWidth: 150,
-        flex: 0.65,
-        valueGetter: (_value, row) => {
-          if (row.billingPeriod === 'monthly') return tPlatform('labels.monthly');
-          if (row.billingPeriod === 'yearly') return tPlatform('labels.yearly');
-          return null;
-        },
-      },
-      {
         field: 'activatedAt',
         headerName: tPlatform('fields.activatedAt'),
         minWidth: 180,
         flex: 0.8,
         renderCell: ({ row }) => (row.activatedAt ? formatDateTime(row.activatedAt) : '-'),
-      },
-      {
-        field: 'expiresOn',
-        headerName: tPlatform('fields.expiresOn'),
-        minWidth: 160,
-        flex: 0.7,
-        renderCell: ({ row }) => (row.expiresOn ? formatDate(row.expiresOn) : '-'),
       },
       {
         field: 'isActive',
@@ -125,37 +103,18 @@ export function useRestaurantsGridColumns(actions: RestaurantsGridColumnActions)
                 const result = await resetPasswordMutation.mutateAsync(row.id);
                 actions.onCredentials({
                   credentials: { username: result.username, password: result.password },
-                  authCode: null,
                   mode: 'reset',
                 });
               }}
             />,
             <CustomGridActionsCellItem
               actionKind="view"
-              key="rotate-auth-code"
-              label={tPlatform('actions.rotateAuthCode')}
-              icon={<Iconify icon="solar:refresh-bold" />}
+              key="change-tariff"
+              label={tPlatform('actions.changeTariff')}
+              icon={<Iconify icon="solar:transfer-horizontal-bold" />}
               showInMenu
-              disabled={!row.isActive}
-              onClick={async () => {
-                const result = await rotateAuthCodeMutation.mutateAsync(row.id);
-                actions.onCredentials({
-                  credentials: null,
-                  authCode: result.authCode ?? null,
-                  mode: 'auth_code',
-                });
-              }}
+              onClick={() => actions.onChangeTariff(row)}
             />,
-            row.billingPeriod ? (
-              <CustomGridActionsCellItem
-                actionKind="view"
-                key="extend"
-                label={tPlatform('actions.extend')}
-                icon={<Iconify icon="solar:calendar-add-bold" />}
-                showInMenu
-                onClick={() => actions.onExtend(row)}
-              />
-            ) : null,
             <CustomGridActionsCellItem
               actionKind={row.isActive ? 'delete' : 'view'}
               key="activate"
@@ -173,11 +132,11 @@ export function useRestaurantsGridColumns(actions: RestaurantsGridColumnActions)
           ].filter(Boolean) as ReactElement[],
       },
     ],
-    [actions, resetPasswordMutation, rotateAuthCodeMutation, t, tCommon, tPlatform],
+    [actions, resetPasswordMutation, t, tCommon, tPlatform],
   );
 
   return {
     columns,
-    isMutating: resetPasswordMutation.isPending || rotateAuthCodeMutation.isPending,
+    isMutating: resetPasswordMutation.isPending,
   };
 }

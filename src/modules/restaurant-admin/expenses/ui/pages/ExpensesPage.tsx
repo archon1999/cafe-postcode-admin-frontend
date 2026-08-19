@@ -29,7 +29,7 @@ import { toast } from 'sonner';
 import { useShowAllBranches } from 'app/layouts/components/branch-scope-columns';
 import { ListPageBody, ListPageContent } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
-import { useCurrentUser } from 'modules/auth';
+import { useCurrentUser } from 'modules/auth/domain/services/current-user';
 import type { AdminCashExpense, AdminExpenseCategory } from 'shared/api/admin-types';
 import { useDataGridPreferences } from 'shared/hooks/use-data-grid-preferences';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';

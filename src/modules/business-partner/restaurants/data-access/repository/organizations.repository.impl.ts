@@ -67,6 +67,12 @@ export const organizationsRepository: OrganizationsRepository = {
   updateRestaurant(id, payload) {
     return apiClient.updateAdminRestaurant(id, buildAdminRestaurantRequestPayload(payload));
   },
+  getRestaurantTariffChangePreview(id, tariffId) {
+    return apiClient.getAdminRestaurantTariffChangePreview(id, tariffId);
+  },
+  changeRestaurantTariff(id, payload) {
+    return apiClient.changeAdminRestaurantTariff(id, payload);
+  },
   deleteRestaurant(id) {
     return apiClient.deleteAdminRestaurant(id);
   },

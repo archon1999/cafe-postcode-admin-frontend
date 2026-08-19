@@ -8,6 +8,7 @@ const ICONS = {
   platform: <Iconify icon="solar:planet-bold-duotone" width={24} />,
   businessPartners: <Iconify icon="solar:users-group-two-rounded-bold-duotone" width={20} />,
   localAgents: <Iconify icon="solar:server-square-bold-duotone" width={20} />,
+  securityCenter: <Iconify icon="solar:shield-keyhole-bold-duotone" width={20} />,
   tariffs: <Iconify icon="solar:ticket-sale-bold-duotone" width={20} />,
   ordersGroup: <Iconify icon="solar:bill-list-bold-duotone" width={24} />,
   orders: <Iconify icon="solar:document-text-bold-duotone" width={20} />,
@@ -57,6 +58,13 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
   };
 
   const productOwnerItems = [
+    canAccess(RoutePath.platformSecurityCenter)
+      ? {
+          title: t('securityCenter'),
+          path: RoutePath.platformSecurityCenter,
+          icon: ICONS.securityCenter,
+        }
+      : null,
     canAccess(RoutePath.platformBusinessPartnerList)
       ? {
           title: t('businessPartners'),

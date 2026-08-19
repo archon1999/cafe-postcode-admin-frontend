@@ -2,7 +2,6 @@ import { create } from 'zustand';
 
 import type { AdminSessionUser } from 'shared/api/admin-types';
 import { AUTH_STORAGE_KEYS } from 'shared/lib/auth/keys';
-import { StorageService } from 'shared/lib/storage';
 
 export interface CurrentUserState {
   currentUser: AdminSessionUser | null;
@@ -10,21 +9,21 @@ export interface CurrentUserState {
   clearCurrentUser: () => void;
 }
 
-const persistedCurrentUser = StorageService.getItem<AdminSessionUser>(AUTH_STORAGE_KEYS.CURRENT_USER);
+if (typeof window !== 'undefined') {
+  window.localStorage.removeItem(AUTH_STORAGE_KEYS.CURRENT_USER);
+  window.sessionStorage.removeItem(AUTH_STORAGE_KEYS.CURRENT_USER);
+}
 
 export const useCurrentUserStore = create<CurrentUserState>((set) => ({
-  currentUser: persistedCurrentUser,
+  currentUser: null,
   setCurrentUser: (user) => {
-    if (user) {
-      StorageService.setItem(AUTH_STORAGE_KEYS.CURRENT_USER, user);
-    } else {
-      StorageService.removeItem(AUTH_STORAGE_KEYS.CURRENT_USER);
-    }
-
     set({ currentUser: user ?? null });
   },
   clearCurrentUser: () => {
-    StorageService.removeItem(AUTH_STORAGE_KEYS.CURRENT_USER);
+    if (typeof window !== 'undefined') {
+      window.localStorage.removeItem(AUTH_STORAGE_KEYS.CURRENT_USER);
+      window.sessionStorage.removeItem(AUTH_STORAGE_KEYS.CURRENT_USER);
+    }
     set({ currentUser: null });
   },
 }));

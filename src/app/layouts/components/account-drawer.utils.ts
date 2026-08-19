@@ -131,11 +131,6 @@ export function buildAccountDrawerContent({ profile, user, tCommon }: AccountDra
           value: formatDate(profile?.activatedAt),
           icon: 'solar:calendar-bold-duotone',
         },
-        {
-          label: tCommon('accountDrawer.labels.expiresOn'),
-          value: formatDate(profile?.expiresOn),
-          icon: 'solar:calendar-search-bold-duotone',
-        },
       ],
     },
   };

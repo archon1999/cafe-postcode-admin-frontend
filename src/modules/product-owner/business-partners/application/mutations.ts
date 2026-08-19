@@ -120,33 +120,11 @@ export function useDeactivateRestaurantMutation() {
   });
 }
 
-export function useExtendRestaurantMutation() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (id: string) => apiClient.extendAdminRestaurant(id),
-    onSuccess: async (_data, id) => {
-      await invalidate(queryClient, [organizationsKeys.restaurants(), organizationsKeys.restaurantDetail(id)]);
-    },
-  });
-}
-
 export function useResetRestaurantPasswordMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (id: string) => apiClient.resetAdminRestaurantPassword(id),
-    onSuccess: async (_data, id) => {
-      await invalidate(queryClient, [organizationsKeys.restaurants(), organizationsKeys.restaurantDetail(id)]);
-    },
-  });
-}
-
-export function useRotateRestaurantAuthCodeMutation() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (id: string) => apiClient.rotateAdminRestaurantAuthCode(id),
     onSuccess: async (_data, id) => {
       await invalidate(queryClient, [organizationsKeys.restaurants(), organizationsKeys.restaurantDetail(id)]);
     },

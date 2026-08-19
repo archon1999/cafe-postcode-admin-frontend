@@ -11,7 +11,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { useTranslate } from 'app/providers/locales';
-import { useCurrentUser } from 'modules/auth';
+import { useCurrentUser } from 'modules/auth/domain/services/current-user';
 import type { AdminHall } from 'shared/api/admin-types';
 import { useRedirectOnNotFound } from 'shared/hooks/router';
 import { EntityFormActions } from 'shared/ui/EntityFormActions';

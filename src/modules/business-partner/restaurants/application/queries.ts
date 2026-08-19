@@ -10,9 +10,8 @@ import type {
   AdminPrepStation,
   AdminPrepStationsQueryParams,
   AdminRestaurant,
-  AdminRestaurantBalanceTransaction,
-  AdminRestaurantBalanceTransactionsQueryParams,
   AdminRestaurantDetail,
+  AdminRestaurantTariffChangePreview,
   AdminRestaurantsQueryParams,
 } from 'shared/api/admin-types';
 import { apiClient } from 'shared/api/http/apiClient';
@@ -159,15 +158,15 @@ export function useGetRestaurantDetailQuery(
   });
 }
 
-export function useGetRestaurantBalanceTransactionsQuery(
+export function useGetRestaurantTariffChangePreviewQuery(
   id: string,
-  params: AdminRestaurantBalanceTransactionsQueryParams,
-  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminRestaurantBalanceTransaction>>, 'queryFn' | 'queryKey'>,
+  tariffId: string,
+  options?: Omit<UseQueryOptions<AdminRestaurantTariffChangePreview>, 'queryFn' | 'queryKey'>,
 ) {
   return useQuery({
-    queryKey: organizationsKeys.restaurantBalanceTransactionsList(id, params),
-    queryFn: () => apiClient.getAdminRestaurantBalanceTransactions(id, params),
-    enabled: Boolean(id),
+    queryKey: organizationsKeys.restaurantTariffChange(id, tariffId),
+    queryFn: () => organizationsRepository.getRestaurantTariffChangePreview(id, tariffId),
+    enabled: Boolean(id && tariffId),
     ...options,
   });
 }

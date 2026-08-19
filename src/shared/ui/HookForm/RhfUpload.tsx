@@ -19,7 +19,7 @@ export function RHFUploadAvatar<TForm extends FieldValues = FieldValues>({
   slotProps,
   ...other
 }: RHFUploadProps<TForm>) {
-  const { control, setValue, resetField } = useFormContext();
+  const { control, setValue, resetField } = useFormContext<TForm>();
 
   return (
     <Controller

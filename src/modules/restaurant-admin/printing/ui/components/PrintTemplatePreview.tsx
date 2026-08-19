@@ -111,15 +111,17 @@ function PreviewBlock({ block, data }: { block: PrintTemplateBlock; data: Record
     const items = Array.isArray(data.items) ? (data.items as Record<string, unknown>[]) : [];
     return (
       <Stack spacing={0.65} sx={{ fontSize: block.size === 'large' ? 18 : 'inherit' }}>
-        <Stack direction="row" spacing={1} sx={{ fontWeight: 700 }}>
-          {(block.columns ?? []).map((column, index) => (
-            <Box
-              key={`${block.id}-header-${index}`}
-              sx={{ flex: column.grow ?? 0, minWidth: column.grow ? 0 : 50, textAlign: column.align }}>
-              {column.label}
-            </Box>
-          ))}
-        </Stack>
+        {block.showHeaders !== false ? (
+          <Stack direction="row" spacing={1} sx={{ fontWeight: 700 }}>
+            {(block.columns ?? []).map((column, index) => (
+              <Box
+                key={`${block.id}-header-${index}`}
+                sx={{ flex: column.grow ?? 0, minWidth: column.grow ? 0 : 50, textAlign: column.align }}>
+                {column.label}
+              </Box>
+            ))}
+          </Stack>
+        ) : null}
         {items.map((item, itemIndex) => (
           <Box key={`${block.id}-item-${itemIndex}`}>
             <Stack direction="row" spacing={1}>

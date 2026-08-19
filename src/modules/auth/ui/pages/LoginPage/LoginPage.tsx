@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
@@ -13,53 +14,41 @@ import { Form, RHFTextField } from 'shared/ui/HookForm';
 import { Iconify } from 'shared/ui/Iconify';
 
 import { useLoginMutation } from '../../../application/mutations';
-import { loginSchema, LoginSchemaType } from '../../../domain/entities/login.schema';
+import { loginSchema, type LoginSchemaType } from '../../../domain/entities/login.schema';
 
 const LoginPage = () => {
   const { t } = useTranslate('auth');
-  const [showPassword, setPassword] = useState(false);
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(false);
   const methods = useForm<LoginSchemaType>({
     resolver: zodResolver(loginSchema),
-    defaultValues: {
-      username: '',
-      password: '',
-    },
+    defaultValues: { username: '', password: '' },
   });
-
-  const {
-    handleSubmit,
-    formState: { isSubmitting },
-  } = methods;
-
   const loginMutation = useLoginMutation();
-
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = methods.handleSubmit(async (data) => {
+    setError(false);
     try {
-      await loginMutation.mutateAsync(data);
-    } catch (error) {
-      console.error(error);
+      const response = await loginMutation.mutateAsync(data);
+      if (response.status !== 'authenticated') setError(true);
+    } catch {
+      setError(true);
     }
   });
 
   return (
     <>
       <AnimateLogoRotate sx={{ mb: 3, mx: 'auto' }} />
-      <Box
-        sx={{
-          mb: 5,
-          gap: 1.5,
-          display: 'flex',
-          textAlign: 'center',
-          whiteSpace: 'pre-line',
-          flexDirection: 'column',
-        }}>
-        <Typography variant="h5">{t('login.title')}</Typography>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {t('login.description')}
+      <Box sx={{ mb: 4, textAlign: 'center' }}>
+        <Typography variant="h5">{t('loginFlow.credentials.title')}</Typography>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
+          {t('loginFlow.credentials.description')}
         </Typography>
       </Box>
-
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {t('loginFlow.error')}
+        </Alert>
+      )}
       <Form onSubmit={onSubmit} methods={methods} autoComplete="on">
         <Box sx={{ gap: 3, display: 'flex', flexDirection: 'column' }}>
           <RHFTextField<LoginSchemaType>
@@ -68,7 +57,6 @@ const LoginPage = () => {
             autoComplete="username"
             slotProps={{ inputLabel: { shrink: true }, htmlInput: { 'data-testid': 'login-username' } }}
           />
-
           <RHFTextField<LoginSchemaType>
             name="password"
             label={t('login.password')}
@@ -81,7 +69,7 @@ const LoginPage = () => {
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
-                      onClick={() => setPassword((prevValue) => !prevValue)}
+                      onClick={() => setShowPassword((current) => !current)}
                       edge="end"
                       data-testid="login-password-toggle">
                       <Iconify icon={showPassword ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
@@ -91,15 +79,13 @@ const LoginPage = () => {
               },
             }}
           />
-
           <Button
             fullWidth
             color="inherit"
             size="large"
             type="submit"
             variant="contained"
-            loading={isSubmitting}
-            loadingIndicator={t('login.signingIn')}
+            loading={loginMutation.isPending}
             data-testid="login-submit">
             {t('login.submit')}
           </Button>

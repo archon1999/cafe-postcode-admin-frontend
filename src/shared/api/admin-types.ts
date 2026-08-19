@@ -95,7 +95,6 @@ export type AdminCashExpensesResponse = AdminPaginatedResponse<AdminCashExpense>
 export type AdminReportKey = 'summary' | 'sales' | 'receipts' | 'topItems' | 'topStaff' | 'paymentBreakdown' | 'shifts';
 export type AdminReportPeriodType = 'day' | 'month' | 'year';
 export type AdminBusinessPartnerStatus = 'draft' | 'active' | 'inactive';
-export type AdminBillingPeriod = 'monthly' | 'yearly';
 export type AdminBusinessPartnerRestaurant = {
   id: string;
   name: string;
@@ -422,32 +421,6 @@ export type AdminRestaurantSoliqSummary = {
   endpointUrl?: string | null;
 };
 
-export type AdminRestaurantBalanceSummary = {
-  currentBalance: number;
-  nextChargeAmount?: number | null;
-  nextChargeOn?: string | null;
-  nextPeriodStatus?: 'active' | 'inactive' | null;
-  lastTopUpAt?: string | null;
-};
-
-export type AdminRestaurantBalanceTransactionActor = {
-  id: string;
-  fullName: string;
-  username: string;
-};
-
-export type AdminRestaurantBalanceTransaction = {
-  id: string;
-  kind: 'top_up' | 'renewal_charge';
-  amount: number;
-  balanceAfter: number;
-  performedBy?: AdminRestaurantBalanceTransactionActor | null;
-  note: string;
-  periodStart?: string | null;
-  periodEnd?: string | null;
-  createdAt: string;
-};
-
 export type AdminPosMonitorVariant = 'default' | 'light_compact';
 export type AdminPaymentTotalMode = 'fixed' | 'cashier_editable';
 
@@ -465,7 +438,6 @@ export type AdminRestaurant = {
   address: string;
   fakturaPayload?: Record<string, unknown>;
   currency: string;
-  authCode?: string;
   posAuthBackgroundImageUrl?: string | null;
   serviceFeeEnabled: boolean;
   serviceFeePercent: number | string;
@@ -478,9 +450,6 @@ export type AdminRestaurant = {
   activatedAt?: string | null;
   deactivatedAt?: string | null;
   activationType?: 'tariff' | 'custom' | null;
-  startsOn?: string | null;
-  expiresOn?: string | null;
-  billingPeriod?: AdminBillingPeriod | null;
   restaurantAccessActive?: boolean;
   permissionCodes?: string[];
   roleCodes?: string[];
@@ -491,7 +460,6 @@ export type AdminRestaurant = {
 export type AdminRestaurantDetail = AdminRestaurant & {
   activeUsers: AdminRestaurantActiveUser[];
   soliqIntegration?: AdminRestaurantSoliqSummary | null;
-  balance: AdminRestaurantBalanceSummary;
 };
 
 export type AdminRestaurantPayload = {
@@ -575,8 +543,6 @@ export type AdminTariff = {
   id: string;
   name: string;
   description: string;
-  monthlyPrice: number;
-  yearlyPrice: number;
   isActive: boolean;
   permissions: AdminPermissionSummary[];
   allowedRoles: AdminRoleSummary[];
@@ -585,17 +551,12 @@ export type AdminTariff = {
 export type AdminTariffPayload = {
   name: string;
   description: string;
-  monthlyPrice: number;
-  yearlyPrice: number;
   isActive: boolean;
   allowedRoleIds: string[];
   permissionIds?: string[];
 };
 
-export type AdminTariffOption = Pick<
-  AdminTariff,
-  'id' | 'name' | 'description' | 'monthlyPrice' | 'yearlyPrice' | 'permissions' | 'allowedRoles'
->;
+export type AdminTariffOption = Pick<AdminTariff, 'id' | 'name' | 'description' | 'permissions' | 'allowedRoles'>;
 
 export type AdminRestaurantActivationOptions = {
   tariffs: AdminTariffOption[];
@@ -617,22 +578,49 @@ export type AdminPartnerActivationResult = AdminGeneratedCredentials & {
 
 export type AdminRestaurantActivationPayload = {
   activationType?: 'tariff' | 'custom';
-  billingPeriod: AdminBillingPeriod;
-  monthlyPrice?: number;
-  yearlyPrice?: number;
   tariffId?: string;
   allowedRoleIds?: string[];
   permissionIds?: string[];
-  startsOn: string;
 };
 
 export type AdminRestaurantActivationResult = AdminGeneratedCredentials & {
   restaurant: AdminRestaurant;
 };
 
-export type AdminRestaurantTopUpPayload = {
-  amount: number;
-  note?: string;
+export type AdminRestaurantTariffChangeEmployee = {
+  id: string;
+  username: string;
+  fullName: string;
+  isActive: boolean;
+};
+
+export type AdminRestaurantTariffChangeRoleGroup = {
+  sourceRole: AdminRoleSummary | null;
+  suggestedTargetRole: AdminRoleSummary | null;
+  employeeCount: number;
+  employees: AdminRestaurantTariffChangeEmployee[];
+};
+
+export type AdminRestaurantTariffChangePreview = {
+  restaurant: Pick<AdminRestaurant, 'id' | 'name'>;
+  currentTariff: Pick<AdminRestaurantTariff, 'id' | 'name'> | null;
+  targetTariff: Pick<AdminRestaurantTariff, 'id' | 'name'> & { allowedRoles: AdminRoleSummary[] };
+  roleGroups: AdminRestaurantTariffChangeRoleGroup[];
+};
+
+export type AdminRestaurantRoleMapping = {
+  sourceRoleId: string | null;
+  targetRoleId: string;
+};
+
+export type AdminRestaurantTariffChangePayload = {
+  tariffId: string;
+  roleMappings: AdminRestaurantRoleMapping[];
+};
+
+export type AdminRestaurantTariffChangeResult = {
+  restaurant: AdminRestaurant;
+  updatedUsers: number;
 };
 
 export type AdminKitchenTicketItem = {
@@ -841,6 +829,9 @@ export type CatalogCategory = {
   restaurantId?: string | null;
   restaurantName?: string | null;
   name: string;
+  nameUz?: string | null;
+  nameUzCrl?: string | null;
+  nameRu?: string | null;
   mxikCode: string;
   mxikName?: string;
   mxikPayload?: Record<string, unknown>;
@@ -856,6 +847,9 @@ export type CatalogImageSource = 'mxik-cache' | 'manual';
 
 export type CatalogCategoryPayload = {
   name: string;
+  nameUz?: string;
+  nameUzCrl?: string;
+  nameRu?: string;
   mxikCode: string;
   mxikName?: string;
   mxikPayload?: Record<string, unknown>;
@@ -909,6 +903,9 @@ export type CatalogItem = {
   prepStation?: string | null;
   prepStationName?: string | null;
   name: string;
+  nameUz?: string | null;
+  nameUzCrl?: string | null;
+  nameRu?: string | null;
   mxikCode?: string;
   mxikName?: string;
   mxikPayload?: Record<string, unknown>;
@@ -917,6 +914,7 @@ export type CatalogItem = {
   requiresMarking?: boolean;
   markingGtin?: string | null;
   description: string;
+  itemType?: 'product' | 'service';
   price: number;
   saleUnit?: 'piece' | 'kg';
   sortOrder: number;
@@ -929,6 +927,9 @@ export type CatalogItemPayload = {
   category?: string | null;
   prepStation?: string | null;
   name: string;
+  nameUz?: string;
+  nameUzCrl?: string;
+  nameRu?: string;
   mxikCode?: string;
   mxikName?: string;
   mxikPayload?: Record<string, unknown>;
@@ -938,6 +939,7 @@ export type CatalogItemPayload = {
   clearImage?: boolean;
   restoreMxikImage?: boolean;
   description: string;
+  itemType: 'product' | 'service';
   price: number;
   saleUnit?: 'piece' | 'kg';
   sortOrder?: number;
@@ -945,6 +947,14 @@ export type CatalogItemPayload = {
   isActive: boolean;
   isStoplisted: boolean;
 };
+
+export type CatalogNameTranslationPayload = {
+  nameUz: string;
+  nameUzCrl: string;
+  nameRu: string;
+};
+
+export type CatalogNameTranslation = CatalogNameTranslationPayload;
 
 export type CatalogItemGroupMember = {
   id: string;
@@ -1051,8 +1061,6 @@ export type AdminUser = {
   inn?: string | null;
   restaurantName?: string | null;
   activatedAt?: string | null;
-  expiresOn?: string | null;
-  billingPeriod?: AdminBillingPeriod | null;
   activationType?: 'tariff' | 'custom' | null;
   tariff?: AdminRestaurantTariff | null;
 };
@@ -1084,10 +1092,34 @@ export type AdminLoginRequest = {
   password: string;
 };
 
-export type AdminLoginResponse = {
-  token: string;
-  user: AdminSessionUser;
+export type AdminAuthSessionResponse = {
+  id: string;
+  status: string;
+  surface: string;
+  expiresAt: string;
+  createdAt: string;
+  lockedAt: string | null;
+  mfaVerifiedAt: string | null;
+  refreshFamilyId: string | null;
 };
+
+export type AdminCredentialResponse = {
+  status: 'authenticated';
+  accessToken: string;
+  accessExpiresAt: string;
+  refreshExpiresAt: string;
+  user: AdminSessionUser;
+  session: AdminAuthSessionResponse;
+  recoveryCodes?: string[];
+};
+
+export type AdminLoginResponse =
+  | AdminCredentialResponse
+  | {
+      status: 'mfa_required' | 'mfa_enrollment_required';
+      challengeToken: string;
+      challengeExpiresAt: string;
+    };
 
 export type AdminReportSummary = {
   grossSalesTotal: number;
@@ -1354,8 +1386,6 @@ export type AdminIntegrationConfigsQueryParams = AdminListQueryParams & {
 export type AdminRestaurantsQueryParams = AdminListQueryParams & {
   isActive?: boolean;
 };
-
-export type AdminRestaurantBalanceTransactionsQueryParams = AdminListQueryParams;
 
 export type AdminBusinessPartnersQueryParams = AdminListQueryParams & {
   isActive?: boolean;

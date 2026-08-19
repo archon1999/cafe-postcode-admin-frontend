@@ -23,6 +23,12 @@ const BusinessPartnerFormPage = lazy(
 const LocalAgentsPage = lazy(
   () => import('modules/product-owner/local-agents/ui/pages/LocalAgentsPage/LocalAgentsPage'),
 );
+const SecurityCenterPage = lazy(
+  () => import('modules/product-owner/security-center/ui/pages/SecurityCenterPage/SecurityCenterPage'),
+);
+const LegacyPairingRedirectPage = lazy(
+  () => import('modules/product-owner/security-center/ui/pages/LegacyPairingRedirectPage'),
+);
 const TariffsListPage = lazy(() => import('modules/product-owner/tariffs/ui/pages/TariffsListPage/TariffsListPage'));
 const TariffFormPage = lazy(() => import('modules/product-owner/tariffs/ui/pages/TariffFormPage/TariffFormPage'));
 const RolesListPage = lazy(() => import('modules/user-management/roles/ui/pages/RolesListPage/RolesListPage'));
@@ -184,6 +190,18 @@ const mainChildren: RouteObject[] = [
   {
     path: RoutePath.platformLocalAgentList,
     element: <LocalAgentsPage />,
+  },
+  {
+    path: RoutePath.platformSecurityCenter,
+    element: <SecurityCenterPage />,
+  },
+  {
+    path: RoutePath.platformDevicePairing,
+    element: <LegacyPairingRedirectPage />,
+  },
+  {
+    path: RoutePath.platformAdminAlias,
+    element: <Navigate replace to={RoutePath.platformSecurityCenter} />,
   },
   {
     path: RoutePath.platformTariffList,

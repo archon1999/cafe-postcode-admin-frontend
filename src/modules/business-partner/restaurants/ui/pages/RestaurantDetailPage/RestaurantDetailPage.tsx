@@ -1,24 +1,18 @@
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath, RouterPathHelper, canAccessRestaurants } from 'app/routes';
 import { useCurrentUser } from 'modules/auth/domain/services/current-user';
-import {
-  useGetRestaurantBalanceTransactionsQuery,
-  useGetRestaurantDetailQuery,
-  useTopUpRestaurantBalanceMutation,
-} from 'modules/business-partner/restaurants/application';
+import { useGetRestaurantDetailQuery } from 'modules/business-partner/restaurants/application';
 import { useParams, useRedirectOnNotFound, useRouter } from 'shared/hooks/router';
 import { BackToListButton } from 'shared/ui/BackToListButton';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { Iconify } from 'shared/ui/Iconify';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 import { RouterLink } from 'shared/ui/RouterLink';
-
-import { RestaurantBalanceTopUpDialog } from '../../components/RestaurantBalanceTopUpDialog';
 
 import { RestaurantDetailSections } from './RestaurantDetailSections';
 
@@ -29,17 +23,10 @@ const RestaurantDetailPage = () => {
   const id = typeof params.id === 'string' ? params.id : undefined;
   const { replace } = useRouter();
   const canManageRestaurants = canAccessRestaurants(profile);
-  const [topUpDialogOpen, setTopUpDialogOpen] = useState(false);
 
   const detailQuery = useGetRestaurantDetailQuery(id ?? '', {
     enabled: Boolean(id && canManageRestaurants),
   });
-  const balanceTransactionsQuery = useGetRestaurantBalanceTransactionsQuery(
-    id ?? '',
-    { page: 1, pageSize: 10 },
-    { enabled: Boolean(id && canManageRestaurants) },
-  );
-  const topUpMutation = useTopUpRestaurantBalanceMutation(id ?? '');
 
   useRedirectOnNotFound(detailQuery.error, Boolean(id));
 
@@ -77,22 +64,7 @@ const RestaurantDetailPage = () => {
         }
       />
 
-      <RestaurantDetailSections
-        restaurant={restaurant}
-        transactions={balanceTransactionsQuery.data?.data ?? []}
-        transactionsLoading={balanceTransactionsQuery.isLoading}
-        onTopUp={() => setTopUpDialogOpen(true)}
-      />
-
-      <RestaurantBalanceTopUpDialog
-        open={topUpDialogOpen}
-        isSubmitting={topUpMutation.isPending}
-        onClose={() => setTopUpDialogOpen(false)}
-        onSubmit={async (payload) => {
-          await topUpMutation.mutateAsync(payload);
-          setTopUpDialogOpen(false);
-        }}
-      />
+      <RestaurantDetailSections restaurant={restaurant} />
     </Content>
   );
 };

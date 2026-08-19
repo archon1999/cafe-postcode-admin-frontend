@@ -1,0 +1,329 @@
+{
+  "title": "Қурилмалар ва хавфсизлик",
+  "controlCenter": {
+    "title": "Хавфсизлик бошқарув маркази",
+    "openControl": "Control PWA'ни очиш",
+    "tabsLabel": "Control-center бўлимлари",
+    "description": "Миграция тайёрлиги, хавфсизлик ҳодисалари ва Telegram уланишларини битта операцион кўринишда назорат қилинг.",
+    "refresh": "Янгилаш",
+    "status": {
+      "critical": "Зудлик билан текшириш керак",
+      "attention": "Эътибор талаб қилинади",
+      "stable": "Операцион ҳолат барқарор"
+    },
+    "snapshot": { "lastUpdated": "Охирги янгиланиш" },
+    "metrics": {
+      "label": "Хавфсизлик ва rollout кўрсаткичлари",
+      "migratedBranches": "Миграцияси якунланган шаҳобчалар",
+      "blockedBranches": "Тайёргарлиги блокланган шаҳобчалар",
+      "highRiskEvents": "Кўриб чиқилмаган юқори хавфли ҳодисалар"
+    },
+    "nextActions": {
+      "title": "Кейинги амаллар",
+      "description": "Хавф ва rollout босқичига қараб сараланган операцион навбат.",
+      "partialData": "Хавфсизлик ҳодисалари оқими тўлиқ юкланмади. Ҳолатни хавфсиз деб ҳисобламанг ва қайта янгиланг.",
+      "emptyTitle": "Шошилинч амал йўқ",
+      "emptyDescription": "Жорий сервер маълумотларида кўриб чиқилмаган хавф ёки rollout блокери топилмади."
+    },
+    "actions": {
+      "count": "Сони: {{count}}",
+      "moreBranches": " · яна {{count}} та",
+      "open": "Очиш",
+      "securityEvents": {
+        "title": "Юқори хавфли ҳодисаларни текширинг",
+        "description": "Кўриб чиқилмаган HIGH ва CRITICAL ҳодисалар: {{count}}, шундан CRITICAL: {{critical}}."
+      },
+      "pendingPairings": {
+        "title": "Кутилаётган қурилмаларни тасдиқланг",
+        "description": "QR ва қурилма экранидаги 6 белгили назорат кодини солиштириб, {{count}} та сўровни кўриб чиқинг."
+      },
+      "fixPrerequisites": {
+        "title": "Rollout шартларини тикланг",
+        "description": "{{count}} та шаҳобчада Agent, bridge ёки сервер тасдиғи бўйича блокер бор."
+      },
+      "readyForPOSUpdate": {
+        "title": "POS янгиланишини бошланг",
+        "description": "{{count}} та шаҳобчада bridge текширувлари ўтган ва POS янгиланишига тайёр."
+      },
+      "migrationInProgress": {
+        "title": "POS миграциясини якунланг",
+        "description": "{{count}} та шаҳобчада фаол POS ёки боғланмаган сессиялар бўйича иш қолган."
+      },
+      "readyForBridgeOff": {
+        "title": "Вақтинчалик bridge'ни ўчиринг",
+        "description": "{{count}} та шаҳобча финализация текширувларидан ўтган ва bridge ҳали ёқилган."
+      }
+    },
+    "pending": {
+      "title": "Кутилаётган QR улашлар",
+      "description": "Фақат муддати тугамаган қурилма сўровлари.",
+      "loadError": "Pairing сўровларини юклаб бўлмади. Миграция ҳисоблагичидан фойдаланинг ва қайта янгиланг.",
+      "empty": "Фаол pairing сўрови йўқ.",
+      "openAll": "Барча pairing'ларни очиш"
+    },
+    "risk": {
+      "title": "Сўнгги юқори хавфли ҳодисалар",
+      "description": "Кўриб чиқилмаган HIGH ва CRITICAL ёзувлар.",
+      "loadError": "Хавфсизлик ҳодисаларини юклаб бўлмади.",
+      "refreshError": "Хавфсизлик ҳодисалари янгиланмади. Кўрсатилаётган ҳолат тўлиқ бўлмаслиги мумкин.",
+      "empty": "Кўриб чиқилмаган юқори хавфли ҳодиса йўқ.",
+      "openAll": "Барча ҳодисаларни очиш"
+    },
+    "details": {
+      "title": "Батафсил бошқарув",
+      "description": "Қурилмалар, QR улашлар, Telegram ва аудит ҳодисалари бўйича тўлиқ амаллар.",
+      "tabsLabel": "Хавфсизлик бошқарув бўлимлари"
+    }
+  },
+  "tabs": { "migration": "Миграция", "devices": "Қурилмалар", "pairings": "QR улаш", "telegram": "Telegram", "events": "Хавфсизлик ҳодисалари" },
+  "migration": {
+    "refresh": "Янгилаш",
+    "readyForUpdate": "POS янгилашга тайёр: {{count}}",
+    "requiresAction": "Амал талаб қилади: {{count}}",
+    "details": "Батафсил",
+    "detailsTitle": "{{branch}} миграцияси",
+    "noBlockers": "Бу босқич учун блокер топилмади.",
+    "table": {
+      "branch": "Шаҳобча",
+      "agent": "Local Agent",
+      "pos": "Фаол POS",
+      "unbound": "Боғланмаган",
+      "stage": "Босқич",
+      "action": "Амал"
+    }
+  },
+  "common": {
+    "search": "Қидирув",
+    "all": "Барчаси",
+    "status": "Ҳолат",
+    "actions": "Амаллар",
+    "cancel": "Бекор қилиш",
+    "close": "Ёпиш"
+  },
+  "overview": {
+    "activeDevices": "Фаол қурилмалар",
+    "pendingPairings": "Кутилаётган QR улашлар",
+    "migratedAgents": "Кўчирилган агентлар",
+    "unboundPosSessions": "Қурилмага боғланмаган POS сессиялар",
+    "migratedTvMonitors": "Кўчирилган TV мониторлар",
+    "branchesWithoutAgent": "Агентсиз шаҳобчалар"
+  },
+  "readiness": {
+    "title": "Шаҳобчалар миграциясига тайёрлик",
+    "description": "POS'ни янгилашга тайёрликни ва вақтинчалик bridge'ни ўчиришдан олдинги миграция якунини алоҳида текширинг.",
+    "loading": "Шаҳобчалар тайёрлиги юкланмоқда…",
+    "retry": "Қайта уриниш",
+    "loadErrorTitle": "Шаҳобчалар тайёрлигини юклаб бўлмади",
+    "loadErrorDescription": "Эскирган ёки тўлиқ бўлмаган ҳолат асосида қарор қабул қилинмаслиги учун маълумотлар кўрсатилмади.",
+    "refreshError": "Тайёрлик маълумотларини янгилаб бўлмади. Қуйида охирги муваффақиятли юкланган ҳолат кўрсатилган.",
+    "empty": "Текшириладиган фаол шаҳобчалар йўқ.",
+    "fullyMigratedCount": "Тўлиқ кўчирилган: {{count}} / {{total}}",
+    "branchId": "Шаҳобча ID'си",
+    "notAvailable": "Маълумот йўқ",
+    "statusAria": "{{gate}}: {{status}}",
+    "branchStatusAria": "{{branch}}: {{status}}",
+    "summary": {
+      "progress": "Rollout якунланиши",
+      "pos": "POS",
+      "unbound": "боғланмаган"
+    },
+    "agentStates": {
+      "missing": "Agent йўқ",
+      "offline": "Agent offline",
+      "migrationRequired": "Миграция керак",
+      "online": "Agent online"
+    },
+    "filters": {
+      "label": "Шаҳобчаларни фильтрлаш",
+      "all": "Барчаси",
+      "attention": "Амал керак",
+      "complete": "Якунланган",
+      "searchPlaceholder": "Шаҳобча номи бўйича қидириш",
+      "resultCount": "Кўрсатилмоқда: {{count}} та шаҳобча",
+      "noResults": "Танланган фильтрга мос шаҳобча топилмади."
+    },
+    "statuses": {
+      "ready": "Тайёр",
+      "notReady": "Тайёр эмас",
+      "notRequired": "Энди талаб қилинмайди",
+      "fullyMigrated": "Миграция якунланган",
+      "notFullyMigrated": "Миграция якунланмаган"
+    },
+    "gates": {
+      "posUpdate": "POS янгиланишига тайёрлик",
+      "finalization": "Bridge'ни ўчиришга тайёрлик"
+    },
+    "posUpdatePassed": "Bridge тайёр: POS'ни янгилашни бошлаш мумкин. Бу босқичда боғланмаган сессиялар бўлиши табиий.",
+    "posUpdateNotRequired": "POS аллақачон кўчирилган; вақтинчалик bridge ҳолати якунлашга тўсқинлик қилмайди.",
+    "finalizationPassed": "Фаол кўчирилган POS мавжуд, боғланмаган сессиялар йўқ ва агент қурилмаси фаол.",
+    "stages": {
+      "fixPrerequisites": "Тайёргарлик блокланган",
+      "readyForPOSUpdate": "POS'ни янгилаш мумкин",
+      "migrationInProgress": "Миграция давом этмоқда",
+      "readyForBridgeOff": "Миграция якунланган"
+    },
+    "nextActions": {
+      "fixPrerequisites": "Қуйидаги сабабларни бартараф этинг ва POS'ни янгилашдан олдин агентнинг янги heartbeat'ини кутинг.",
+      "readyForPOSUpdate": "Шаҳобчадаги POS'ни янгиланг, сўнг фаол сессиялар янги қурилмаларга боғланишини кутинг.",
+      "migrationInProgress": "POS кўчиришни якунланг ва финализация тўсиқларини бартараф этинг. Bridge'ни муддатидан олдин ўчирманг.",
+      "readyForBridgeOff": "Шаҳобча тасдиқланган rollout режаси бўйича вақтинчалик bridge'ни якуний ўчиришга тайёр."
+    },
+    "details": {
+      "activePOSDevices": "Фаол POS қурилмалари",
+      "unboundPOSSessions": "Боғланмаган POS сессиялар",
+      "agentVersion": "Агент версияси",
+      "agentDeviceStatus": "Агент қурилмаси",
+      "agentLastSeen": "Агентнинг охирги алоқаси",
+      "bridgeLastSeen": "Bridge'нинг охирги check-in'и",
+      "bridgeDeadline": "Bridge амал қилиш муддати",
+      "terminalCount": "Check-in'даги терминаллар"
+    },
+    "reasons": {
+      "agentMissing": "Шаҳобчада Local Agent йўқ.",
+      "agentOffline": "Local Agent тармоқда эмас.",
+      "agentDeviceNotMigrated": "Local Agent янги қурилма идентификациясига кўчирилмаган.",
+      "agentDeviceNotActive": "Кўчирилган Local Agent қурилмаси фаол эмас.",
+      "bridgeCapabilityMissing": "Агент чекланган legacy POS bridge имкониятини билдирмаган.",
+      "bridgeNotConfigured": "Legacy POS bridge созланмаган.",
+      "bridgeNotEnabled": "Legacy POS bridge ёқилмаган.",
+      "bridgeCheckInMissing": "Ҳеч бир POS терминалдан check-in кузатилмаган.",
+      "bridgeCheckInInvalid": "Охирги check-in маълумоти ёки терминаллар сони нотўғри.",
+      "bridgeHeartbeatMissing": "Агент heartbeat'ида bridge ҳолати йўқ.",
+      "bridgeHeartbeatInvalid": "Heartbeat'даги bridge ҳолати сервер текширувидан ўтмаган.",
+      "bridgeSourceCommitInvalid": "Bridge манба commit идентификатори йўқ ёки нотўғри.",
+      "bridgeBuildTimestampInvalid": "Bridge йиғилган вақти йўқ ёки нотўғри.",
+      "bridgeDeadlineInvalid": "Bridge амал қилиш муддати йўқ ёки нотўғри.",
+      "bridgeExpired": "Вақтинчалик bridge амал қилиш муддати тугаган.",
+      "bridgeFailureUnknown": "Bridge номаълум хатоликни билдирди: {{failure}}.",
+      "bridgeServerNotReady": "Сервер bridge'нинг POS янгиланишига тайёрлигини тасдиқламади.",
+      "activePOSDevicesMissing": "Ҳеч бир фаол кўчирилган POS қурилмаси йўқ.",
+      "unboundPOSSessions": "Қурилмага боғланмаган фаол POS сессиялар қолган: {{count}}.",
+      "migrationCountsInvalid": "Миграция ҳисоблагичлари йўқ ёки нотўғри."
+    }
+  },
+  "deviceTypes": {
+    "POS_TERMINAL": "POS терминал",
+    "LOCAL_AGENT": "Local Agent",
+    "TV_MONITOR": "TV монитор",
+    "CONTROL_DEVICE": "Бошқарув қурилмаси"
+  },
+  "statuses": {
+    "ACTIVE": "Фаол",
+    "REVOKED": "Бекор қилинган",
+    "PENDING": "Кутилмоқда",
+    "APPROVED": "Тасдиқланган",
+    "REJECTED": "Рад этилган"
+  },
+  "severities": { "INFO": "Маълумот", "LOW": "Паст", "MEDIUM": "Ўрта", "HIGH": "Юқори", "CRITICAL": "Критик" },
+  "devices": {
+    "device": "Қурилма",
+    "restaurant": "Шаҳобча",
+    "platform": "Платформа",
+    "type": "Қурилма тури",
+    "version": "Версия",
+    "lastSeen": "Охирги алоқа",
+    "lease": "Lease муддати",
+    "searchPlaceholder": "Қурилма, шаҳобча ёки fingerprint",
+    "revoke": "Revoke",
+    "revokeTitle": "{{name}} қурилмасини бекор қилиш",
+    "revokeDescription": "Бу қурилманинг POS ёки Agent кириши дарҳол тўхтайди. Қайта улаш учун янги QR тасдиқлаш талаб қилинади.",
+    "revokeReason": "Сабаб",
+    "revokeReasonMin": "Камида 5 та белги киритинг.",
+    "empty": "Мос қурилма топилмади.",
+    "messages": { "revoked": "Қурилма бекор қилинди.", "revokeFailed": "Қурилмани бекор қилиб бўлмади." }
+  },
+  "pairings": {
+    "pendingTitle": "Кутилаётган қурилмалар",
+    "pendingDescription": "Фақат қурилма экранидаги QR ва 6 белгили кўрсатма коди мос бўлса тасдиқланг.",
+    "scan": "QR сканерлаш",
+    "scanTitle": "Қурилмани улаш",
+    "scanDescription": "Қурилма экранидаги QR кодни сканерланг ёки ишончли pairing линкни киритинг.",
+    "cameraPreview": "QR камера кўриниши",
+    "startCamera": "Камерани ёқиш",
+    "stopCamera": "Камерани тўхтатиш",
+    "link": "Pairing линк",
+    "secretHint": "Линк махфий ва бир марталик. Уни чат ёки логга юборманг.",
+    "verify": "Текшириш",
+    "restaurant": "Уланадиган шаҳобча",
+    "deviceName": "Қурилма номи",
+    "compareCode": "Қуйидаги код қурилма экранидаги код билан айнан бир хил бўлиши шарт.",
+    "fingerprint": "Калит fingerprint'и",
+    "expiresAt": "Амал қилади",
+    "approve": "Улаш",
+    "reject": "Рад этиш",
+    "empty": "Ҳозир кутилаётган pairing йўқ.",
+    "loadError": "Кутилаётган pairing'ларни юклаб бўлмади.",
+    "retry": "Қайта уриниш",
+    "errors": {
+      "pairing_link_invalid": "Pairing линк формати нотўғри.",
+      "pairing_link_untrusted": "Линк ишончли control доменига тегишли эмас.",
+      "cameraUnavailable": "Камерага рухсат йўқ ёки камера мавжуд эмас. Линкни қўлда киритинг.",
+      "notFound": "Pairing топилмади ёки сервер ҳали сўровни олмаган.",
+      "expired": "Pairing муддати тугаган. Қурилмада янги QR яратинг.",
+      "notPending": "Бу pairing аввал ишлатилган ёки рад этилган."
+    },
+    "messages": {
+      "approved": "Қурилма шаҳобчага хавфсиз уланди.",
+      "approveFailed": "Қурилмани улаб бўлмади. QR муддати ва кодни текширинг.",
+      "rejected": "Pairing рад этилди.",
+      "rejectFailed": "Pairing'ни рад этиб бўлмади."
+    }
+  },
+  "telegram": {
+    "selectRestaurant": "Юқоридаги шаҳобча танлагичидан битта шаҳобчани танланг.",
+    "linkTitle": "Telegram ҳисоботини улаш",
+    "linkDescription": "5 дақиқалик, фақат бир марта ишлайдиган Telegram deep-link яратилади.",
+    "createLink": "Бир марталик линк яратиш",
+    "connectedUsers": "Уланган фойдаланувчилар",
+    "linkedAt": "Уланган",
+    "revoke": "Узиш",
+    "empty": "Бу шаҳобчага Telegram фойдаланувчиси уланмаган.",
+    "linkReady": "Telegram линк тайёр",
+    "oneTimeWarning": "Линк 5 дақиқада тугайди ва биринчи муваффақиятли ишлатилгандан кейин қайта ишламайди.",
+    "expiresAt": "Амал қилади",
+    "copy": "Нусхалаш",
+    "revokeTitle": "Telegram уланишини узиш",
+    "revokeDescription": "Бу фойдаланувчи ушбу шаҳобчанинг молиявий ҳисоботларини бошқа ола олмайди.",
+    "messages": {
+      "issueFailed": "Telegram линк яратиб бўлмади.",
+      "copied": "Линк нусхаланди.",
+      "revoked": "Telegram уланиши узилди.",
+      "revokeFailed": "Telegram уланишини узиб бўлмади."
+    }
+  },
+  "events": {
+    "searchPlaceholder": "Ҳодиса, IP, фойдаланувчи ёки request ID",
+    "severity": "Хавф даражаси",
+    "reviewState": "Кўриб чиқиш ҳолати",
+    "unreviewed": "Кўриб чиқилмаган",
+    "reviewed": "Кўриб чиқилган",
+    "result": "Натижа",
+    "ip": "IP",
+    "actor": "Фойдаланувчи",
+    "requestId": "Request ID",
+    "acknowledge": "Кўриб чиқилди деб белгилаш",
+    "empty": "Мос хавфсизлик ҳодисаси топилмади.",
+    "loadError": "Хавфсизлик ҳодисаларини юклаб бўлмади.",
+    "retry": "Қайта уриниш",
+    "messages": {
+      "acknowledged": "Ҳодиса кўриб чиқилди деб белгиланди.",
+      "acknowledgeFailed": "Ҳодисани белгилаб бўлмади."
+    }
+  },
+  "eventTypes": {
+    "device_pairing_created": "Янги қурилма pairing сўрови",
+    "device_pairing_approved": "Қурилма pairing тасдиқланди",
+    "device_pairing_rejected": "Қурилма pairing рад этилди",
+    "device_revoked": "Қурилма бекор қилинди",
+    "device_signature_invalid": "Қурилма имзоси нотўғри",
+    "device_replay_detected": "Такрорий имзоли сўров аниқланди",
+    "device_scope_denied": "Қурилма scope сўрови рад этилди",
+    "pin_login_failed": "Нотўғри PIN киритилди",
+    "pin_login_locked": "PIN кириш вақтинча блокланди",
+    "admin_login_failed": "Админ логин хатоси",
+    "tenant_scope_denied": "Бошқа шаҳобча маълумотига уриниш",
+    "telegram_link_issued": "Telegram бир марталик линк яратилди",
+    "telegram_link_consumed": "Telegram линк ишлатилди",
+    "telegram_subscription_revoked": "Telegram уланиши узилди"
+  }
+}

@@ -2,8 +2,9 @@ import type { AdminSessionUser } from 'shared/api/admin-types';
 
 import { getCurrentUserRequest } from '../data-access';
 import { adminScopeStore } from '../domain/stores/admin-scope.store';
-import { authStore } from '../domain/stores/authentication.store';
 import { currentUserStore } from '../domain/stores/current-user.store';
+
+import { clearAdminAuthentication } from './session-coordinator';
 
 type SyncCurrentUserOptions = {
   fallbackUser?: AdminSessionUser;
@@ -36,7 +37,7 @@ export async function syncCurrentUser(options: SyncCurrentUserOptions = {}) {
         }
 
         if (logoutOnError) {
-          authStore.getState().logout();
+          clearAdminAuthentication();
         }
 
         throw error;

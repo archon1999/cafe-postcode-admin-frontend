@@ -8,7 +8,6 @@ import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-li
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type { AdminPermission, AdminRole } from 'shared/api/admin-types';
-import { getCurrentTashkentTime } from 'shared/utils/dayjs';
 
 vi.mock('app/providers/locales', () => ({
   useTranslate: () => ({
@@ -60,7 +59,7 @@ afterEach(() => {
 });
 
 describe('RestaurantActivationDialog', () => {
-  it('shows custom price fields when custom activation is selected', () => {
+  it('shows custom role and permission fields when custom activation is selected', () => {
     render(
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <RestaurantActivationDialog
@@ -87,8 +86,8 @@ describe('RestaurantActivationDialog', () => {
 
     fireEvent.click(screen.getByLabelText('labels.customActivation'));
 
-    expect(screen.getByLabelText('fields.monthlyPrice')).toBeInTheDocument();
-    expect(screen.getByLabelText('fields.yearlyPrice')).toBeInTheDocument();
+    expect(screen.getByLabelText('fields.allowedRoles')).toBeInTheDocument();
+    expect(screen.getByLabelText('fields.permissions')).toBeInTheDocument();
   });
 
   it('hides custom activation when custom tariff is not allowed', () => {
@@ -121,7 +120,6 @@ describe('RestaurantActivationDialog', () => {
       systemRole('role-manager', 'Manager', [sharedPermission, closeOrders]),
     ];
     const onSubmit = vi.fn().mockResolvedValue(undefined);
-    const startsOn = getCurrentTashkentTime().format('YYYY-MM-DD');
 
     render(
       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -139,8 +137,6 @@ describe('RestaurantActivationDialog', () => {
     );
 
     fireEvent.click(screen.getByLabelText('labels.customActivation'));
-    fireEvent.change(screen.getByLabelText('fields.monthlyPrice'), { target: { value: '100000' } });
-    fireEvent.change(screen.getByLabelText('fields.yearlyPrice'), { target: { value: '1000000' } });
     selectOptions('permissionIds', 'Update settings (settings.update)');
     selectOptions('allowedRoleIds', 'Cashier', 'Manager');
 
@@ -151,12 +147,8 @@ describe('RestaurantActivationDialog', () => {
     });
     expect(onSubmit).toHaveBeenCalledWith({
       activationType: 'custom',
-      billingPeriod: 'monthly',
-      monthlyPrice: 100000,
-      yearlyPrice: 1000000,
       allowedRoleIds: ['role-cashier', 'role-manager'],
       permissionIds: ['permission-manual', 'permission-read', 'permission-shared', 'permission-close'],
-      startsOn,
     });
   });
 

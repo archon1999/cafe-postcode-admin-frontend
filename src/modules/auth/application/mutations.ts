@@ -1,64 +1,145 @@
 import { useMutation, type UseMutationOptions } from '@tanstack/react-query';
+import { useCallback } from 'react';
 import { useNavigate } from 'react-router';
 
 import { RoutePath, getDefaultAdminPath } from 'app/routes';
-import type { AdminLoginRequest, AdminLoginResponse } from 'shared/api/admin-types';
+import type { AdminLoginRequest, AdminSessionUser } from 'shared/api/admin-types';
 import { useSearchParams } from 'shared/hooks/router';
 
-import { loginRequest, logoutRequest } from '../data-access';
-import { adminScopeStore } from '../domain/stores/admin-scope.store';
-import { useAuthStore } from '../domain/stores/authentication.store';
+import {
+  completeMFAChallengeRequest,
+  confirmMFAEnrollmentRequest,
+  lockRequest,
+  loginRequest,
+  logoutRequest,
+  startMFAEnrollmentRequest,
+  unlockRequest,
+} from '../data-access';
+import type {
+  AdminCredentialResponse,
+  AdminLoginResponse,
+  MFAEnrollmentResponse,
+  MFAProof,
+} from '../domain/entities/admin-auth.types';
+import { authStore } from '../domain/stores/authentication.store';
 import { currentUserStore } from '../domain/stores/current-user.store';
 
-import { syncCurrentUser } from './current-user';
+import { getSafeAdminReturnTarget } from './safe-return-to';
+import { applyAdminCredentials, clearAdminAuthentication, markAdminSessionLocked } from './session-coordinator';
+
+function useAdminAuthNavigation() {
+  const navigate = useNavigate();
+  const searchParams = useSearchParams();
+
+  return useCallback(
+    (user: AdminSessionUser) => {
+      const returnTo = getSafeAdminReturnTarget(searchParams.get('returnTo'));
+      const redirectPath = returnTo || getDefaultAdminPath(user) || RoutePath.main;
+      void navigate(redirectPath, { replace: true });
+    },
+    [navigate, searchParams],
+  );
+}
 
 export const useLoginMutation = (
   options?: Omit<UseMutationOptions<AdminLoginResponse, Error, AdminLoginRequest, unknown>, 'mutationFn'>,
 ) => {
-  const navigate = useNavigate();
-  const searchParams = useSearchParams();
-  const setAccessToken = useAuthStore((state) => state.setAccessToken);
-
+  const navigateAfterAuthentication = useAdminAuthNavigation();
   return useMutation({
-    mutationFn: (params: AdminLoginRequest) => loginRequest(params),
-    onSuccess: async (data) => {
-      if (data.token) {
-        currentUserStore.getState().clearCurrentUser();
-        setAccessToken(data.token, { bootstrapping: true });
+    ...options,
+    mutationFn: loginRequest,
+    onSuccess: (data, variables, onMutateResult, context) => {
+      if (data.status === 'authenticated') {
+        applyAdminCredentials(data);
+        navigateAfterAuthentication(data.user);
+      }
+      options?.onSuccess?.(data, variables, onMutateResult, context);
+    },
+  });
+};
 
-        let profile = data.user;
+export const useMFAEnrollmentStartMutation = (
+  options?: Omit<UseMutationOptions<MFAEnrollmentResponse, Error, string, unknown>, 'mutationFn'>,
+) => useMutation({ mutationFn: startMFAEnrollmentRequest, ...options });
 
-        try {
-          profile = await syncCurrentUser({ fallbackUser: data.user });
-        } catch (error) {
-          console.error('Failed to fetch current user profile', error);
+export const useMFAEnrollmentConfirmMutation = (
+  options?: Omit<
+    UseMutationOptions<AdminCredentialResponse, Error, { challengeToken: string; code: string }, unknown>,
+    'mutationFn'
+  >,
+) =>
+  useMutation({
+    ...options,
+    mutationFn: ({ challengeToken, code }) => confirmMFAEnrollmentRequest(challengeToken, code),
+    onSuccess: (data, variables, onMutateResult, context) => {
+      applyAdminCredentials(data);
+      options?.onSuccess?.(data, variables, onMutateResult, context);
+    },
+  });
 
-          // Keep login flow usable even if profile hydration fails after token is issued.
-          if (!data.user.isSuperuser) {
-            adminScopeStore.getState().clearScope();
-          }
-        } finally {
-          useAuthStore.getState().setBootstrapping(false);
-        }
+export const useMFAChallengeMutation = (
+  options?: Omit<
+    UseMutationOptions<AdminCredentialResponse, Error, { challengeToken: string; proof: MFAProof }, unknown>,
+    'mutationFn'
+  >,
+) => {
+  const navigateAfterAuthentication = useAdminAuthNavigation();
+  return useMutation({
+    ...options,
+    mutationFn: ({ challengeToken, proof }) => completeMFAChallengeRequest(challengeToken, proof),
+    onSuccess: (data, variables, onMutateResult, context) => {
+      applyAdminCredentials(data);
+      navigateAfterAuthentication(data.user);
+      options?.onSuccess?.(data, variables, onMutateResult, context);
+    },
+  });
+};
 
-        const returnTo = searchParams.get('returnTo');
-        const redirectPath = returnTo || getDefaultAdminPath(profile) || RoutePath.main;
+export const useContinueAfterEnrollment = () => {
+  const navigateAfterAuthentication = useAdminAuthNavigation();
+  return useCallback(() => {
+    const current = currentUserStore.getState().currentUser;
+    if (current) {
+      navigateAfterAuthentication(current);
+    }
+  }, [navigateAfterAuthentication]);
+};
 
-        void navigate(redirectPath, { replace: true });
+export const useUnlockMutation = (
+  options?: Omit<UseMutationOptions<AdminCredentialResponse, Error, string, unknown>, 'mutationFn'>,
+) =>
+  useMutation({
+    ...options,
+    mutationFn: unlockRequest,
+    onSuccess: (data, variables, onMutateResult, context) => {
+      applyAdminCredentials(data);
+      options?.onSuccess?.(data, variables, onMutateResult, context);
+    },
+  });
+
+export const useLockMutation = (options?: Omit<UseMutationOptions<void, Error, void, unknown>, 'mutationFn'>) =>
+  useMutation({
+    mutationFn: async () => {
+      const token = authStore.getState().getAccessToken();
+      if (token) {
+        const response = await lockRequest(token);
+        markAdminSessionLocked(response.lockedAt);
+      } else {
+        markAdminSessionLocked();
       }
     },
     ...options,
   });
-};
 
 export const useLogoutMutation = (options?: Omit<UseMutationOptions<void, Error, void, unknown>, 'mutationFn'>) => {
   const navigate = useNavigate();
-
   return useMutation({
-    mutationFn: () => logoutRequest(),
-    onSuccess: () => {
-      void navigate(RoutePath.login, { replace: true });
-    },
     ...options,
+    mutationFn: logoutRequest,
+    onSuccess: (data, variables, onMutateResult, context) => {
+      clearAdminAuthentication();
+      void navigate(RoutePath.login, { replace: true });
+      options?.onSuccess?.(data, variables, onMutateResult, context);
+    },
   });
 };

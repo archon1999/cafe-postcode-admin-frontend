@@ -102,8 +102,6 @@ const TariffFormPage = () => {
     methods.reset({
       name: query.data.name,
       description: query.data.description,
-      monthlyPrice: Number(query.data.monthlyPrice),
-      yearlyPrice: Number(query.data.yearlyPrice),
       isActive: query.data.isActive,
       allowedRoleIds: query.data.allowedRoles.map((role) => role.id),
       permissionIds: query.data.permissions.map((permission) => permission.id),
@@ -138,8 +136,6 @@ const TariffFormPage = () => {
     const payload = {
       name: values.name.trim(),
       description: values.description.trim(),
-      monthlyPrice: values.monthlyPrice === '' ? 0 : values.monthlyPrice,
-      yearlyPrice: values.yearlyPrice === '' ? 0 : values.yearlyPrice,
       isActive: values.isActive,
       allowedRoleIds: values.allowedRoleIds,
       permissionIds: uniquePermissionIds(values.permissionIds),

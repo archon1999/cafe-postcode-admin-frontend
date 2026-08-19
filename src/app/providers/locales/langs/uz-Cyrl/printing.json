@@ -3,7 +3,6 @@
   "description": "Ошхона, оддий тўлов ва фискал чек кўринишини бошқаринг.",
   "kinds": {
     "kitchen_ticket": "Ошхона чеки",
-    "order_precheck": "Пречек",
     "payment_receipt_plain": "Оддий тўлов чеки",
     "payment_receipt_fiscal": "Фискал чек"
   },

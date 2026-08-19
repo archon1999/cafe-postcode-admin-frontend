@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 import { useTranslate } from 'app/providers/locales';
+import type { AdminReceiptStatus } from 'shared/api/admin-types';
 import { downloadBlob } from 'shared/utils/download';
 
 import { reportsRepository } from '../../data-access';
@@ -15,7 +16,7 @@ type Options = {
   search: string;
   ordering?: string;
   paymentMethod?: string;
-  receiptStatus?: string;
+  receiptStatus?: AdminReceiptStatus;
   receiptKind?: 'plain' | 'fiscal';
   categoryId?: string;
   cashDeskId?: string;

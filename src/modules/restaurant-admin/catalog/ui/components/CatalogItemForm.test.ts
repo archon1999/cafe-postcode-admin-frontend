@@ -3,7 +3,9 @@ import { describe, expect, it } from 'vitest';
 import { catalogItemFormSchema } from '../../data-access/catalogItemForm.schema';
 
 const validFormValues = {
-  name: 'Lavash',
+  nameUz: 'Lavash',
+  nameUzCrl: '',
+  nameRu: '',
   category: '',
   description: '',
   mxik: null,
@@ -11,6 +13,7 @@ const validFormValues = {
   imageSource: '' as const,
   clearImage: false,
   restoreMxikImage: false,
+  itemType: 'product' as const,
   isActive: true,
   isStoplisted: false,
 };
@@ -31,5 +34,11 @@ describe('CatalogItemForm price coercion', () => {
     const result = catalogItemFormSchema.parse({ ...validFormValues, price: 100000, saleUnit: 'kg' });
 
     expect(result.saleUnit).toBe('kg');
+  });
+
+  it('defaults the item type to product', () => {
+    const result = catalogItemFormSchema.parse({ ...validFormValues, itemType: undefined, price: 1000 });
+
+    expect(result.itemType).toBe('product');
   });
 });

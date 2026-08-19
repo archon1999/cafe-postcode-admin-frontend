@@ -4,6 +4,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 import { useTranslate } from 'app/providers/locales';
 import type { CatalogImageSource, CatalogItem, CatalogItemPayload } from 'shared/api/admin-types';
@@ -17,6 +18,7 @@ import {
   useGetMxikDetailsQuery,
   useGetCatalogModifierGroupsQuery,
   useUpdateCatalogItemMutation,
+  useTranslateCatalogNameMutation,
 } from '../../application';
 import { getMxikPrimaryPictureUrl } from '../../data-access';
 import {
@@ -27,6 +29,7 @@ import {
 
 import { CatalogItemFormFields } from './CatalogItemFormFields';
 import { getMxikDetailLang, getMxikImageLang } from './catalogItemMxik';
+import { countFilledCatalogNames, getCatalogLocalizedName, resolveCatalogNameForLocale } from './catalogLocalizedName';
 import { buildMxikOption } from './MxikAutocompleteField';
 
 type CatalogItemFormProps = {
@@ -38,7 +41,9 @@ type CatalogItemFormProps = {
 };
 
 const defaultValues: CatalogItemFormInput = {
-  name: '',
+  nameUz: '',
+  nameUzCrl: '',
+  nameRu: '',
   category: '',
   description: '',
   mxik: null,
@@ -46,6 +51,7 @@ const defaultValues: CatalogItemFormInput = {
   imageSource: '',
   clearImage: false,
   restoreMxikImage: false,
+  itemType: 'product',
   price: 0,
   saleUnit: 'piece',
   modifierGroups: [],
@@ -69,6 +75,7 @@ function CatalogItemFormInner({
   const createMutation = useCreateCatalogItemMutation();
   const updateMutation = useUpdateCatalogItemMutation(item?.id ?? '');
   const deleteMutation = useDeleteCatalogItemMutation();
+  const translateMutation = useTranslateCatalogNameMutation();
   const methods = useForm<CatalogItemFormInput, unknown, CatalogItemFormValues>({
     resolver: zodResolver(catalogItemFormSchema),
     defaultValues,
@@ -80,11 +87,14 @@ function CatalogItemFormInner({
     { code: selectedMxik?.code, lang: getMxikDetailLang(currentLang.value) },
     { enabled: Boolean(selectedMxik?.code) },
   );
-  const isSubmitting = formState.isSubmitting || createMutation.isPending || updateMutation.isPending;
+  const isSubmitting =
+    formState.isSubmitting || createMutation.isPending || updateMutation.isPending || translateMutation.isPending;
 
   useEffect(() => {
     reset({
-      name: item?.name ?? '',
+      nameUz: item?.nameUz ?? item?.name ?? '',
+      nameUzCrl: item?.nameUzCrl ?? '',
+      nameRu: item?.nameRu ?? '',
       category: item?.category ?? defaultCategoryId ?? '',
       description: item?.description ?? '',
       mxik: buildMxikOption(item?.mxikCode, item?.mxikName, item?.mxikPayload),
@@ -92,6 +102,7 @@ function CatalogItemFormInner({
       imageSource: (item?.imageSource ?? '') as CatalogImageSource | '',
       clearImage: false,
       restoreMxikImage: false,
+      itemType: item?.itemType ?? 'product',
       price: item?.price ?? 0,
       saleUnit: item?.saleUnit ?? 'piece',
       modifierGroups: item?.modifierGroups ?? [],
@@ -152,6 +163,25 @@ function CatalogItemFormInner({
     setValue('restoreMxikImage', true, { shouldDirty: true });
   };
 
+  const applyNameTranslation = async (names: ReturnType<typeof getCatalogLocalizedName>) => {
+    const translated = await translateMutation.mutateAsync(names);
+    setValue('nameUz', translated.nameUz, { shouldDirty: true, shouldValidate: true });
+    setValue('nameUzCrl', translated.nameUzCrl, { shouldDirty: true, shouldValidate: true });
+    setValue('nameRu', translated.nameRu, { shouldDirty: true, shouldValidate: true });
+    return translated;
+  };
+
+  const handleTranslateName = async () => {
+    const names = getCatalogLocalizedName(getValues());
+    if (countFilledCatalogNames(names) !== 1) return;
+    try {
+      await applyNameTranslation(names);
+      toast.success(t('messages.nameTranslated'));
+    } catch {
+      // Global React Query error handling shows the actionable API error.
+    }
+  };
+
   const onSubmit = handleSubmit(async (values) => {
     const resolvedMxikImageUrl = values.mxik?.code
       ? (await getMxikPrimaryPictureUrl(values.mxik.code, getMxikImageLang(currentLang.value))) || null
@@ -166,8 +196,14 @@ function CatalogItemFormInner({
               ? 'mxik-cache'
               : ''
             : values.imageSource;
+    let localizedName = getCatalogLocalizedName(values);
+    if (countFilledCatalogNames(localizedName) === 1) {
+      localizedName = await applyNameTranslation(localizedName);
+    }
+
     const payload: CatalogItemPayload = {
-      name: values.name.trim(),
+      name: resolveCatalogNameForLocale(localizedName, currentLang.value),
+      ...localizedName,
       category: values.category || null,
       description: values.description?.trim() ?? '',
       mxikCode: values.mxik?.code ?? '',
@@ -178,8 +214,9 @@ function CatalogItemFormInner({
       imageFile: values.imageFile instanceof File ? values.imageFile : null,
       clearImage: values.clearImage,
       restoreMxikImage: values.restoreMxikImage,
-      price: values.price,
-      saleUnit: values.saleUnit,
+      itemType: values.itemType,
+      price: values.itemType === 'service' ? 0 : values.price,
+      saleUnit: values.itemType === 'service' ? 'piece' : values.saleUnit,
       modifierGroups: values.modifierGroups,
       isActive: values.isActive,
       isStoplisted: values.isStoplisted,
@@ -204,7 +241,9 @@ function CatalogItemFormInner({
       selectedMxik={selectedMxik}
       onClearImage={clearImage}
       onRestoreMxikImage={restoreMxikImage}
-      onMxikNamePicked={(name) => setValue('name', name, { shouldDirty: true, shouldValidate: true })}
+      translatingName={translateMutation.isPending}
+      onTranslateName={() => void handleTranslateName()}
+      onMxikNamePicked={(name) => setValue('nameUz', name, { shouldDirty: true, shouldValidate: true })}
     />
   );
 

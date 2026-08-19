@@ -6,7 +6,7 @@ import type {
   AdminPrepStationPayload,
   AdminRestaurantPayload,
   AdminRestaurantBranchCreatePayload,
-  AdminRestaurantTopUpPayload,
+  AdminRestaurantTariffChangePayload,
 } from 'shared/api/admin-types';
 import { apiClient } from 'shared/api/http/apiClient';
 
@@ -165,14 +165,16 @@ export function useDeleteRestaurantMutation() {
   });
 }
 
-export function useTopUpRestaurantBalanceMutation(id: string) {
+export function useChangeRestaurantTariffMutation(id: string) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (payload: AdminRestaurantTopUpPayload) => apiClient.topUpAdminRestaurantBalance(id, payload),
+    mutationFn: (payload: AdminRestaurantTariffChangePayload) =>
+      organizationsRepository.changeRestaurantTariff(id, payload),
     onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: organizationsKeys.restaurantOverview(id) }),
-        queryClient.invalidateQueries({ queryKey: organizationsKeys.restaurantBalanceTransactions(id) }),
+      await invalidateQueryKeys(queryClient, [
+        organizationsKeys.restaurants(),
+        organizationsKeys.restaurantDetail(id),
+        organizationsKeys.restaurantOverview(id),
       ]);
     },
   });

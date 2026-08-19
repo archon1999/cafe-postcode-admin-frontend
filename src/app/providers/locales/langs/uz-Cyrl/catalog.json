@@ -29,6 +29,9 @@
                    "sku":  "SKU",
                    "stoplist":  "Стоп-лист",
                    "description":  "Тавсиф",
+                   "itemType": "Маҳсулот тури",
+                   "itemTypeProduct": "Товар",
+                   "itemTypeService": "Хизмат",
                    "price":  "Нарх",
                    "saleUnit": "Сотиш бирлиги",
                    "saleUnitPiece": "Дона",
@@ -75,7 +78,9 @@
                    "mxikImageSource":  "MXIK орқали янгиланган",
                    "catalogImageUnavailable":  "Танланган MXIK учун расм топилмади. Қўлда расм юклашингиз мумкин.",
                    "catalogImageDescription":  "MXIK расми автоматик юкланади. Қўлда юкланган расм устун туради.",
-                   "manualImageSource":  "Қўлда юкланган"
+                   "manualImageSource":  "Қўлда юкланган",
+                   "nameLanguages":  "Ном тиллари",
+                   "translateOnlyOneLanguage":  "Таржима фақат битта тил тўлдирилганда ишлайди"
                },
     "kinds":  {
                   "dish":  "Таом",
@@ -92,8 +97,12 @@
                     "createItem":  "Янги маҳсулот",
                     "searchMxik":  "MXИК бўйича қидиринг",
                     "restoreMxikImage":  "MXIK расмини тиклаш",
-                    "removeImage":  "Расмни олиб ташлаш"
+                    "removeImage":  "Расмни олиб ташлаш",
+                    "translateName":  "Номни бошқа тилларга таржима қилиш"
                 },
+    "messages":  {
+                     "nameTranslated":  "Ном қолган тилларга таржима қилинди"
+                 },
     "dialogs":  {
                     "deleteCategory":  {
                                            "title":  "Категорияни ўчириш",

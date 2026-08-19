@@ -4,7 +4,7 @@ services:
   frontend:
     build:
       context: .
-    image: postcode/admin-frontend:production
+    image: ${ADMIN_FRONTEND_IMAGE:-postcode/admin-frontend:production}
     ports:
       - "127.0.0.1:${ADMIN_FRONTEND_PORT:-4200}:80"
     restart: unless-stopped

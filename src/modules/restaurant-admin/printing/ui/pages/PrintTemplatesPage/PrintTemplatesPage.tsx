@@ -21,7 +21,7 @@ import { toast } from 'sonner';
 import { Content } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath, canAccessMyRestaurantPrintTemplates } from 'app/routes';
-import { useCurrentUser } from 'modules/auth';
+import { useCurrentUser } from 'modules/auth/domain/services/current-user';
 import {
   useCreatePrintTemplateVersionMutation,
   usePrintPresetCatalogQuery,
@@ -41,12 +41,7 @@ import { LoadingScreen } from 'shared/ui/LoadingScreen';
 
 import { PrintBlockEditor } from './components/PrintBlockEditor';
 
-const TEMPLATE_KINDS: PrintTemplateKind[] = [
-  'kitchen_ticket',
-  'order_precheck',
-  'payment_receipt_plain',
-  'payment_receipt_fiscal',
-];
+const TEMPLATE_KINDS: PrintTemplateKind[] = ['kitchen_ticket', 'payment_receipt_plain', 'payment_receipt_fiscal'];
 
 function cloneLayout(layout: PrintTemplateLayout): PrintTemplateLayout {
   return JSON.parse(JSON.stringify(layout)) as PrintTemplateLayout;

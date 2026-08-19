@@ -279,7 +279,7 @@ describe('apiClient query params', () => {
     });
   });
 
-  it('sends billing period during restaurant activation', async () => {
+  it('sends only the selected tariff during restaurant activation', async () => {
     postMock.mockResolvedValueOnce({
       data: {
         restaurant: { id: 'restaurant-1', name: 'Cafe', isActive: true },
@@ -290,33 +290,36 @@ describe('apiClient query params', () => {
 
     await apiClient.activateAdminRestaurant('restaurant-1', {
       activationType: 'tariff',
-      billingPeriod: 'monthly',
       tariffId: 'tariff-1',
-      startsOn: '2026-04-07',
     });
 
     expect(postMock).toHaveBeenCalledWith('/api/v1/admin/platform/restaurants/restaurant-1/activate/', {
       activationType: 'tariff',
-      billingPeriod: 'monthly',
       tariffId: 'tariff-1',
-      startsOn: '2026-04-07',
     });
   });
 
-  it('extends restaurant subscription without a payload body', async () => {
-    postMock.mockResolvedValueOnce({
-      data: {
-        id: 'restaurant-1',
-        name: 'Cafe',
-        isActive: true,
-        billingPeriod: 'monthly',
-        expiresOn: '2026-05-07',
-      },
+  it('previews and applies restaurant tariff role mappings', async () => {
+    const preview = { restaurant: { id: 'restaurant-1', name: 'Cafe' }, roleGroups: [] };
+    const changed = { restaurant: { id: 'restaurant-1', name: 'Cafe' }, updatedUsers: 2 };
+    getMock.mockResolvedValueOnce({ data: preview });
+    postMock.mockResolvedValueOnce({ data: changed });
+
+    const previewResult = await apiClient.getAdminRestaurantTariffChangePreview('restaurant-1', 'tariff-2');
+    const changedResult = await apiClient.changeAdminRestaurantTariff('restaurant-1', {
+      tariffId: 'tariff-2',
+      roleMappings: [{ sourceRoleId: 'role-old', targetRoleId: 'role-new' }],
     });
 
-    await apiClient.extendAdminRestaurant('restaurant-1');
-
-    expect(postMock).toHaveBeenCalledWith('/api/v1/admin/platform/restaurants/restaurant-1/extend/');
+    expect(getMock).toHaveBeenCalledWith('/api/v1/admin/platform/restaurants/restaurant-1/tariff-change/', {
+      params: { tariffId: 'tariff-2' },
+    });
+    expect(postMock).toHaveBeenCalledWith('/api/v1/admin/platform/restaurants/restaurant-1/tariff-change/', {
+      tariffId: 'tariff-2',
+      roleMappings: [{ sourceRoleId: 'role-old', targetRoleId: 'role-new' }],
+    });
+    expect(previewResult).toBe(preview);
+    expect(changedResult).toBe(changed);
   });
 });
 
@@ -1212,7 +1215,7 @@ describe('apiClient tariff and catalog gateway contracts', () => {
       pageSize: 10,
       search: 'pro',
       isActive: true,
-      ordering: 'monthlyPrice',
+      ordering: 'name',
     });
     const itemResult = await apiClient.getAdminCatalogItems({
       page: 3,
@@ -1225,7 +1228,7 @@ describe('apiClient tariff and catalog gateway contracts', () => {
     });
 
     expect(getMock).toHaveBeenNthCalledWith(1, '/api/v1/admin/platform/tariffs/', {
-      params: { page: 2, pageSize: 10, search: 'pro', isActive: true, ordering: 'monthlyPrice' },
+      params: { page: 2, pageSize: 10, search: 'pro', isActive: true, ordering: 'name' },
     });
     expect(getMock).toHaveBeenNthCalledWith(2, '/api/v1/admin/catalog/items/', {
       params: {
@@ -1289,12 +1292,10 @@ describe('apiClient identity, restaurant and operations gateway contracts', () =
       'deleteAdminRestaurant',
       'activateAdminRestaurant',
       'getAdminRestaurantActivationOptions',
-      'rotateAdminRestaurantAuthCode',
       'deactivateAdminRestaurant',
-      'extendAdminRestaurant',
+      'getAdminRestaurantTariffChangePreview',
+      'changeAdminRestaurantTariff',
       'resetAdminRestaurantPassword',
-      'getAdminRestaurantBalanceTransactions',
-      'topUpAdminRestaurantBalance',
     ] as const;
     const operationMethods = [
       'getAdminKitchenTickets',
@@ -1339,23 +1340,6 @@ describe('apiClient identity, restaurant and operations gateway contracts', () =
         employment_status_in: 'active',
         ordering: '-createdAt',
       },
-    });
-    expect(result).toBe(data);
-  });
-
-  it('preserves restaurant balance transaction filters', async () => {
-    const data = { page: 1, pageSize: 50, count: 0, total: 0, pagesCount: 0, data: [] };
-    getMock.mockResolvedValueOnce({ data });
-
-    const result = await apiClient.getAdminRestaurantBalanceTransactions('restaurant-1', {
-      page: 1,
-      pageSize: 50,
-      search: 'top-up',
-      ordering: '-createdAt',
-    });
-
-    expect(getMock).toHaveBeenCalledWith('/api/v1/admin/platform/restaurants/restaurant-1/balance-transactions/', {
-      params: { page: 1, pageSize: 50, search: 'top-up', ordering: '-createdAt' },
     });
     expect(result).toBe(data);
   });

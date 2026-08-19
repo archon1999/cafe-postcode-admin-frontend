@@ -1,65 +1,108 @@
 import { create } from 'zustand';
 
-import { queryClient } from 'shared/api';
 import { sessionService } from 'shared/lib/auth/session.service';
 
-import { adminScopeStore } from './admin-scope.store';
-import { currentUserStore } from './current-user.store';
+import type { AdminCredentialResponse } from '../entities/admin-auth.types';
+
+export type AdminAuthStatus = 'bootstrapping' | 'anonymous' | 'authenticated' | 'locked';
 
 export interface AuthState {
+  status: AdminAuthStatus;
   isAuthenticated: boolean;
   isLoading: boolean;
   isBootstrapping: boolean;
+  lockedAt: string | null;
+  accessExpiresAt: string | null;
 
-  setAccessToken: (accessToken: string, options?: { bootstrapping?: boolean }) => void;
+  setCredentials: (credentials: AdminCredentialResponse) => void;
+  setAccessToken: (accessToken: string, options?: { bootstrapping?: boolean; expiresAt?: string }) => void;
+  markLocked: (lockedAt?: string | null) => void;
   logout: () => void;
   checkAuth: () => void;
   setBootstrapping: (isBootstrapping: boolean) => void;
-
   getAccessToken: () => string | null;
 }
 
-const hasActiveSession = sessionService.isSessionActive();
-
 export const useAuthStore = create<AuthState>((set) => ({
-  isAuthenticated: hasActiveSession,
+  status: 'bootstrapping',
+  isAuthenticated: false,
   isLoading: false,
-  isBootstrapping: hasActiveSession,
+  isBootstrapping: true,
+  lockedAt: null,
+  accessExpiresAt: null,
 
-  setAccessToken: (accessToken: string, options) => {
-    sessionService.setAccessToken(accessToken);
+  setCredentials: (credentials) => {
+    sessionService.setAccessToken(credentials.accessToken, credentials.accessExpiresAt);
     set({
+      status: 'authenticated',
+      isAuthenticated: true,
+      isLoading: false,
+      isBootstrapping: false,
+      lockedAt: null,
+      accessExpiresAt: credentials.accessExpiresAt,
+    });
+  },
+
+  setAccessToken: (accessToken, options) => {
+    sessionService.setAccessToken(accessToken, options?.expiresAt);
+    set({
+      status: 'authenticated',
       isAuthenticated: true,
       isLoading: false,
       isBootstrapping: options?.bootstrapping ?? false,
+      lockedAt: null,
+      accessExpiresAt: options?.expiresAt ?? null,
     });
-    queryClient.clear();
+  },
+
+  markLocked: (lockedAt) => {
+    sessionService.clearSession();
+    set({
+      status: 'locked',
+      isAuthenticated: true,
+      isLoading: false,
+      isBootstrapping: false,
+      lockedAt: lockedAt ?? new Date().toISOString(),
+      accessExpiresAt: null,
+    });
   },
 
   logout: () => {
     sessionService.clearSession();
-    adminScopeStore.getState().clearScope();
-    currentUserStore.getState().clearCurrentUser();
-    set({ isAuthenticated: false, isLoading: false, isBootstrapping: false });
-    queryClient.clear();
+    set({
+      status: 'anonymous',
+      isAuthenticated: false,
+      isLoading: false,
+      isBootstrapping: false,
+      lockedAt: null,
+      accessExpiresAt: null,
+    });
   },
 
   checkAuth: () => {
-    const isActive = sessionService.isSessionActive();
+    const active = sessionService.isSessionActive();
     set({
-      isAuthenticated: isActive,
+      status: active ? 'authenticated' : 'anonymous',
+      isAuthenticated: active,
       isLoading: false,
       isBootstrapping: false,
     });
   },
 
-  setBootstrapping: (isBootstrapping: boolean) => {
-    set({ isBootstrapping });
+  setBootstrapping: (isBootstrapping) => {
+    set((state) => ({
+      isBootstrapping,
+      status: isBootstrapping
+        ? 'bootstrapping'
+        : state.status === 'locked'
+          ? 'locked'
+          : state.isAuthenticated
+            ? 'authenticated'
+            : 'anonymous',
+    }));
   },
 
-  getAccessToken: () => {
-    return sessionService.getAccessToken();
-  },
+  getAccessToken: () => sessionService.getAccessToken(),
 }));
 
 export const authStore = {

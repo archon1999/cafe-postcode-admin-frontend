@@ -299,7 +299,7 @@ export function RHFAutocompleteWithQuery<
             return [];
           } else {
             if (valueMode === 'object') {
-              return formValue ?? null;
+              return (formValue as TOption | null | undefined) ?? null;
             } else {
               return options.find((o) => o.value === formValue) ?? null;
             }

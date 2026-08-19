@@ -3,7 +3,8 @@ import { useState } from 'react';
 
 import { useTranslate } from 'app/providers/locales';
 import { canAccessMyRestaurantIntegrations } from 'app/routes';
-import { useAdminRestaurantScopeId, useCurrentUser } from 'modules/auth';
+import { useAdminRestaurantScopeId } from 'modules/auth';
+import { useCurrentUser } from 'modules/auth/domain/services/current-user';
 import { Iconify } from 'shared/ui/Iconify';
 
 import { MyRestaurantSectionLayout } from '../../components/MyRestaurantSectionLayout';

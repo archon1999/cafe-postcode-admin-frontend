@@ -241,7 +241,7 @@ const datePickerComponents: Components<Theme> = {
   MuiDatePicker: { defaultProps: { format: FORMAT_PATTERNS.date, slots: { ...defaultProps.dateSlots } } },
   MuiDesktopDatePicker: { defaultProps: { format: FORMAT_PATTERNS.date, slots: { ...defaultProps.dateSlots } } },
   MuiMobileDatePicker: { defaultProps: { format: FORMAT_PATTERNS.date, slots: { ...defaultProps.dateSlots } } },
-  MuiStaticDatePicker: { defaultProps: { format: FORMAT_PATTERNS.date, slots: { ...defaultProps.dateSlots } } },
+  MuiStaticDatePicker: { defaultProps: { slots: { ...defaultProps.dateSlots } } },
 };
 
 const timePickerComponents: Components<Theme> = {
@@ -254,7 +254,7 @@ const timePickerComponents: Components<Theme> = {
     defaultProps: { ampm: false, format: FORMAT_PATTERNS.time, slots: { ...defaultProps.timeSlots } },
   },
   MuiStaticTimePicker: {
-    defaultProps: { ampm: false, format: FORMAT_PATTERNS.time, slots: { ...defaultProps.timeSlots } },
+    defaultProps: { ampm: false, slots: { ...defaultProps.timeSlots } },
   },
 };
 
@@ -272,7 +272,7 @@ const dateTimePickerComponents: Components<Theme> = {
     defaultProps: { ampm: false, format: FORMAT_PATTERNS.dateTime, slots: { ...defaultProps.dateSlots } },
   },
   MuiStaticDateTimePicker: {
-    defaultProps: { ampm: false, format: FORMAT_PATTERNS.dateTime, slots: { ...defaultProps.dateSlots } },
+    defaultProps: { ampm: false, slots: { ...defaultProps.dateSlots } },
   },
 };
 

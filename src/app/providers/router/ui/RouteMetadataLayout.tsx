@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Outlet, useLocation } from 'react-router';
 
+import { AdminAuthOverlays } from 'modules/auth/ui/components/AdminAuthOverlays';
+
 import { getTitleNamespaces, resolvePageTitle } from '../config/page-title';
 
 export function RouteMetadataLayout() {
@@ -30,5 +32,10 @@ export function RouteMetadataLayout() {
     };
   }, [i18n, i18n.resolvedLanguage, pathname, t]);
 
-  return <Outlet />;
+  return (
+    <>
+      <AdminAuthOverlays />
+      <Outlet />
+    </>
+  );
 }

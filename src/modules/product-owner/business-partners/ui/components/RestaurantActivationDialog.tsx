@@ -56,7 +56,7 @@ export function RestaurantActivationDialog({
   });
   const previousDerivedPermissionIdsRef = useRef<string[]>([]);
 
-  const activationType = methods.watch('activationType');
+  const activationType = methods.watch('activationType') ?? 'tariff';
   const selectedTariffId = methods.watch('tariffId');
   const watchedRoleIds = methods.watch('allowedRoleIds');
   const watchedPermissionIds = methods.watch('permissionIds');
@@ -131,21 +131,15 @@ export function RestaurantActivationDialog({
     if (values.activationType === 'custom') {
       await onSubmit({
         activationType: 'custom',
-        billingPeriod: values.billingPeriod,
-        monthlyPrice: values.monthlyPrice,
-        yearlyPrice: values.yearlyPrice,
         allowedRoleIds: values.allowedRoleIds,
         permissionIds: uniqueIds(values.permissionIds),
-        startsOn: values.startsOn,
       });
       return;
     }
 
     await onSubmit({
       activationType: 'tariff',
-      billingPeriod: values.billingPeriod,
       tariffId: values.tariffId,
-      startsOn: values.startsOn,
     });
   });
 

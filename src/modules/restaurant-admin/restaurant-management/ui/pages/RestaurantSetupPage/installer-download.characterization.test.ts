@@ -33,8 +33,8 @@ describe('Local Agent installer download contract', () => {
     vi.unstubAllGlobals();
   });
 
-  it('fetches the generic same-origin setup and saves it with the restaurant code', async () => {
-    await downloadLocalAgentInstaller('NhhgND');
+  it('fetches the generic same-origin setup without embedding restaurant credentials', async () => {
+    await downloadLocalAgentInstaller();
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const [requestUrl, requestInit] = fetchMock.mock.calls[0] as [URL, RequestInit];
@@ -43,7 +43,7 @@ describe('Local Agent installer download contract', () => {
     expect(requestInit).toEqual({ cache: 'no-store', credentials: 'same-origin' });
 
     expect(clickMock).toHaveBeenCalledTimes(1);
-    expect(downloadedFileNames).toEqual(['CafePostcodeAgentSetup-NhhgND.exe']);
+    expect(downloadedFileNames).toEqual(['CafePostcodeAgentSetup.exe']);
     expect(createObjectURLMock).toHaveBeenCalledTimes(1);
     expect(revokeObjectURLMock).toHaveBeenCalledWith('blob:local-agent-installer');
   });
@@ -51,7 +51,7 @@ describe('Local Agent installer download contract', () => {
   it('does not create or click a download when the setup request fails', async () => {
     fetchMock.mockResolvedValueOnce(new Response(null, { status: 502 }));
 
-    await expect(downloadLocalAgentInstaller('NhhgND')).rejects.toThrow('Local Agent installer HTTP 502');
+    await expect(downloadLocalAgentInstaller()).rejects.toThrow('Local Agent installer HTTP 502');
     expect(createObjectURLMock).not.toHaveBeenCalled();
     expect(clickMock).not.toHaveBeenCalled();
   });

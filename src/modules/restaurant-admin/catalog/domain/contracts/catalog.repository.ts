@@ -8,9 +8,12 @@ import type {
   CatalogItemGroupPayload,
   CatalogModifierGroup,
   CatalogModifierGroupPayload,
+  CatalogNameTranslation,
+  CatalogNameTranslationPayload,
 } from 'shared/api/admin-types';
 
 export interface CatalogRepository {
+  translateName(payload: CatalogNameTranslationPayload): Promise<CatalogNameTranslation>;
   getCategories(): Promise<CatalogCategory[]>;
   getCategoryById(id: string): Promise<CatalogCategory>;
   createCategory(payload: CatalogCategoryPayload): Promise<CatalogCategory>;

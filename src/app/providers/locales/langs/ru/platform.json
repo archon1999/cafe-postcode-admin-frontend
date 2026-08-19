@@ -21,20 +21,15 @@
     "name": "Название",
     "classification": "Классификация",
     "description": "Описание",
-    "monthlyPrice": "Месячная цена",
-    "yearlyPrice": "Годовая цена",
     "permissions": "Разрешения",
     "allowedRoles": "Доступные роли",
     "operationalSettings": "Операционные настройки (JSON)",
     "customTariff": "Тип активации",
     "tariff": "Тариф",
-    "startsOn": "Дата начала",
     "username": "Username",
     "password": "Password",
-    "authCode": "Код активации",
     "activatedAt": "Дата активации",
-    "billingPeriod": "Срок тарифа",
-    "expiresOn": "Срок действия"
+    "activatedAt": "Дата активации"
   },
   "filters": {
     "search": "Поиск",
@@ -48,6 +43,7 @@
     "notSelected": "Не выбрано",
     "existingTariff": "Готовый тариф",
     "customActivation": "Кастомный тариф",
+    "withoutRole": "Сотрудники без роли",
     "selectedRolesCount": "Выбрано ролей: {{count}}",
     "selectedPermissionsCount": "Выбрано разрешений: {{count}}",
     "monthly": "Ежемесячный",
@@ -73,7 +69,7 @@
     "close": "Закрыть",
     "showAuthCode": "Показать код",
     "hideAuthCode": "Скрыть код",
-    "extend": "Продлить"
+    "changeTariff": "Изменить тариф"
   },
   "dialogs": {
     "deactivatePartner": {
@@ -107,9 +103,13 @@
       "title": "Активация ресторана",
       "customDescription": "В режиме кастомного тарифа вы вручную выбираете роли и разрешения и активируете ресторан с этой конфигурацией."
     },
-    "extendRestaurant": {
-      "description": "Продлить срок действия ресторана \"{{name}}\"?",
-      "title": "Продление срока тарифа"
+    "changeTariff": {
+      "title": "Изменение тарифа филиала",
+      "credentialsHint": "При изменении тарифа логины и пароли сотрудников не меняются. Выберите новую роль для каждой текущей роли.",
+      "mappingTitle": "Сопоставление ролей для тарифа {{tariff}}",
+      "newRole": "Новая роль",
+      "loading": "Загрузка сотрудников и ролей...",
+      "noEmployees": "В филиале нет сотрудников для сопоставления. Тариф можно изменить напрямую."
     }
   },
   "localAgents": {

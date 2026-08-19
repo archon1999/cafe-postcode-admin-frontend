@@ -6,11 +6,7 @@ import Typography from '@mui/material/Typography';
 
 import { useTranslate } from 'app/providers/locales';
 import type { AdminPermission, AdminRole, AdminTariffOption } from 'shared/api/admin-types';
-import { RHFDatePicker, RHFMultiSelect, RHFRadioGroup, RHFSelect, RHFSumCurrencyField } from 'shared/ui/HookForm';
-import { getCurrentTashkentTime } from 'shared/utils/dayjs';
-import { formatMoney } from 'shared/utils/format-money';
-
-import { BILLING_PERIOD_OPTIONS } from './restaurantActivationForm';
+import { RHFMultiSelect, RHFRadioGroup, RHFSelect } from 'shared/ui/HookForm';
 
 type RestaurantActivationFieldsProps = {
   activationType: 'tariff' | 'custom';
@@ -46,16 +42,6 @@ export function RestaurantActivationFields({
           ...(customTariffAllowed ? [{ value: 'custom', label: t('labels.customActivation') }] : []),
         ]}
       />
-      <RHFRadioGroup
-        name="billingPeriod"
-        label={t('fields.billingPeriod')}
-        row
-        options={BILLING_PERIOD_OPTIONS.map((option) => ({
-          value: option.value,
-          label: t(`labels.${option.labelKey}`),
-        }))}
-      />
-
       {activationType === 'tariff' ? (
         <>
           <RHFSelect name="tariffId" label={t('fields.tariff')}>
@@ -74,12 +60,6 @@ export function RestaurantActivationFields({
                   <Typography variant="body2">{selectedTariff.description}</Typography>
                 ) : null}
                 <Typography variant="body2">
-                  {t('fields.monthlyPrice')}: {formatMoney(selectedTariff.monthlyPrice)}
-                </Typography>
-                <Typography variant="body2">
-                  {t('fields.yearlyPrice')}: {formatMoney(selectedTariff.yearlyPrice)}
-                </Typography>
-                <Typography variant="body2">
                   {t('fields.allowedRoles')}: {selectedTariff.allowedRoles.map((role) => role.name).join(', ')}
                 </Typography>
               </Stack>
@@ -94,8 +74,6 @@ export function RestaurantActivationFields({
               <Typography variant="body2">{t('dialogs.activateRestaurant.customDescription')}</Typography>
             </Stack>
           </Alert>
-          <RHFSumCurrencyField name="monthlyPrice" label={t('fields.monthlyPrice')} />
-          <RHFSumCurrencyField name="yearlyPrice" label={t('fields.yearlyPrice')} />
           <RHFMultiSelect
             name="allowedRoleIds"
             label={t('fields.allowedRoles')}
@@ -127,13 +105,6 @@ export function RestaurantActivationFields({
           </Typography>
         </>
       )}
-
-      <RHFDatePicker
-        name="startsOn"
-        label={t('fields.startsOn')}
-        outputFormat="YYYY-MM-DD"
-        maxDate={getCurrentTashkentTime()}
-      />
     </>
   );
 }

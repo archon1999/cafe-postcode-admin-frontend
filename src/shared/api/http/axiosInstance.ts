@@ -1,7 +1,13 @@
 import axios, { type AxiosInstance, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios';
 
-import { authStore } from 'modules/auth';
+import {
+  clearAdminAuthentication,
+  markAdminSessionLocked,
+  refreshAdminSession,
+} from 'modules/auth/application/session-coordinator';
 import { adminScopeStore, currentUserStore } from 'modules/auth/domain';
+import { consumeAdminActivitySignal } from 'modules/auth/domain/services/admin-activity.service';
+import { authStore } from 'modules/auth/domain/stores/authentication.store';
 
 const baseURL = import.meta.env.VITE_API_BASE_URL || '';
 
@@ -33,6 +39,11 @@ instance.interceptors.request.use(
 
     if (token) {
       config.headers.Authorization = `Token ${token}`;
+      if (consumeAdminActivitySignal()) {
+        config.headers['X-Admin-User-Activity'] = '1';
+      } else {
+        delete config.headers['X-Admin-User-Activity'];
+      }
     }
 
     if (currentUser?.isSuperuser) {
@@ -66,14 +77,32 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error) => {
-    const requestUrl = error.config?.url ?? '';
-    const isLoginRequest = requestUrl.includes('/api/v1/admin/auth/login/');
+    const config = error.config as
+      | (InternalAxiosRequestConfig & {
+          _adminAuthRetry?: boolean;
+        })
+      | undefined;
+    const responseCode = error.response?.data?.code as string | undefined;
 
-    if (error.response?.status === 401 && !isLoginRequest) {
-      authStore.getState().logout();
+    if (error.response?.status === 423 || responseCode === 'session_locked') {
+      markAdminSessionLocked(error.response?.data?.lockedAt ?? error.response?.data?.locked_at);
+      return Promise.reject(error);
+    }
 
-      if (window.location.pathname !== '/auth/login') {
-        window.location.href = '/auth/login';
+    if (error.response?.status === 401 && config && !config._adminAuthRetry) {
+      config._adminAuthRetry = true;
+      try {
+        const credentials = await refreshAdminSession();
+        config.headers.Authorization = `Token ${credentials.accessToken}`;
+        return instance(config);
+      } catch (refreshError) {
+        const refreshCode = (refreshError as { response?: { data?: { code?: string } } }).response?.data?.code;
+        if (refreshCode === 'session_locked') {
+          markAdminSessionLocked();
+        } else {
+          clearAdminAuthentication();
+        }
+        return Promise.reject(refreshError);
       }
     }
 

@@ -20,6 +20,7 @@ import {
   getMxikCashSaleStatus,
   getMxikLabelStatus,
 } from './catalogItemMxik';
+import { CatalogLocalizedNameFields } from './CatalogLocalizedNameFields';
 import { CatalogModifierGroupsField } from './CatalogModifierGroupsField';
 import { MxikAutocompleteField } from './MxikAutocompleteField';
 
@@ -37,6 +38,8 @@ type Props = {
   onClearImage: () => void;
   onRestoreMxikImage: () => void;
   onMxikNamePicked: (name: string) => void;
+  translatingName: boolean;
+  onTranslateName: () => void;
 };
 
 export function CatalogItemFormFields({
@@ -53,6 +56,8 @@ export function CatalogItemFormFields({
   onClearImage,
   onRestoreMxikImage,
   onMxikNamePicked,
+  translatingName,
+  onTranslateName,
 }: Props) {
   const { t } = useTranslate('catalog');
   const { t: tCommon } = useTranslate('common');
@@ -62,6 +67,7 @@ export function CatalogItemFormFields({
   const labelStatus = getMxikLabelStatus(mxikDetails, selectedMxik?.raw);
   const { watch } = useFormContext<CatalogItemFormInput>();
   const saleUnit = watch('saleUnit');
+  const itemType = watch('itemType');
 
   return (
     <Stack spacing={3} sx={isDialog ? { pt: 1 } : undefined}>
@@ -80,7 +86,12 @@ export function CatalogItemFormFields({
           gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
           gap: 3,
         }}>
-        <RHFTextField<CatalogItemFormInput> name="name" label={t('fields.name')} />
+        <CatalogLocalizedNameFields
+          disabled={disabled}
+          translating={translatingName}
+          onTranslate={onTranslateName}
+          sx={{ gridColumn: { xs: 'auto', md: '1 / -1' } }}
+        />
         <RHFSelect<CatalogItemFormInput>
           name="category"
           label={t('fields.category')}
@@ -91,6 +102,10 @@ export function CatalogItemFormFields({
               {category.name}
             </MenuItem>
           ))}
+        </RHFSelect>
+        <RHFSelect<CatalogItemFormInput> name="itemType" label={t('fields.itemType')}>
+          <MenuItem value="product">{t('fields.itemTypeProduct')}</MenuItem>
+          <MenuItem value="service">{t('fields.itemTypeService')}</MenuItem>
         </RHFSelect>
         <MxikAutocompleteField<CatalogItemFormInput>
           name="mxik"
@@ -146,14 +161,18 @@ export function CatalogItemFormFields({
             </Stack>
           </Box>
         ) : null}
-        <RHFSelect<CatalogItemFormInput> name="saleUnit" label={t('fields.saleUnit')}>
-          <MenuItem value="piece">{t('fields.saleUnitPiece')}</MenuItem>
-          <MenuItem value="kg">{t('fields.saleUnitKilogram')}</MenuItem>
-        </RHFSelect>
-        <RHFSumCurrencyField<CatalogItemFormInput>
-          name="price"
-          label={saleUnit === 'kg' ? t('fields.pricePerKilogram') : t('fields.pricePerPiece')}
-        />
+        {itemType === 'product' ? (
+          <>
+            <RHFSelect<CatalogItemFormInput> name="saleUnit" label={t('fields.saleUnit')}>
+              <MenuItem value="piece">{t('fields.saleUnitPiece')}</MenuItem>
+              <MenuItem value="kg">{t('fields.saleUnitKilogram')}</MenuItem>
+            </RHFSelect>
+            <RHFSumCurrencyField<CatalogItemFormInput>
+              name="price"
+              label={saleUnit === 'kg' ? t('fields.pricePerKilogram') : t('fields.pricePerPiece')}
+            />
+          </>
+        ) : null}
         <CatalogModifierGroupsField groups={modifierGroups} loading={modifierGroupsLoading} disabled={disabled} />
         <RHFTextField<CatalogItemFormInput>
           name="description"

@@ -1,0 +1,338 @@
+{
+  "title": "Устройства и безопасность",
+  "controlCenter": {
+    "title": "Центр управления безопасностью",
+    "openControl": "Открыть Control PWA",
+    "tabsLabel": "Разделы control-center",
+    "description": "Контролируйте готовность миграции, события безопасности и подключения Telegram из одного операционного экрана.",
+    "refresh": "Обновить",
+    "status": {
+      "critical": "Требуется срочная проверка",
+      "attention": "Требуется внимание",
+      "stable": "Операционное состояние стабильно"
+    },
+    "snapshot": { "lastUpdated": "Последнее обновление" },
+    "metrics": {
+      "label": "Показатели безопасности и rollout",
+      "migratedBranches": "Филиалы с завершённой миграцией",
+      "blockedBranches": "Филиалы с заблокированной подготовкой",
+      "highRiskEvents": "Непроверенные события высокого риска"
+    },
+    "nextActions": {
+      "title": "Следующие действия",
+      "description": "Операционная очередь, отсортированная по риску и этапу rollout.",
+      "partialData": "Лента событий безопасности загружена не полностью. Не считайте состояние безопасным и повторите обновление.",
+      "emptyTitle": "Срочных действий нет",
+      "emptyDescription": "В текущих серверных данных нет непроверенного риска или блокера rollout."
+    },
+    "actions": {
+      "count": "Количество: {{count}}",
+      "moreBranches": " · ещё {{count}}",
+      "open": "Открыть",
+      "securityEvents": {
+        "title": "Проверьте события высокого риска",
+        "description": "Непроверенных HIGH и CRITICAL событий: {{count}}, из них CRITICAL: {{critical}}."
+      },
+      "pendingPairings": {
+        "title": "Подтвердите ожидающие устройства",
+        "description": "Сверьте QR и шестизначный контрольный код на экране устройства для {{count}} запросов."
+      },
+      "fixPrerequisites": {
+        "title": "Восстановите условия rollout",
+        "description": "В {{count}} филиалах есть блокер Agent, bridge или серверного подтверждения."
+      },
+      "readyForPOSUpdate": {
+        "title": "Начните обновление POS",
+        "description": "В {{count}} филиалах проверки bridge пройдены и POS готов к обновлению."
+      },
+      "migrationInProgress": {
+        "title": "Завершите миграцию POS",
+        "description": "В {{count}} филиалах осталась работа по активному POS или непривязанным сессиям."
+      },
+      "readyForBridgeOff": {
+        "title": "Отключите временный bridge",
+        "description": "В {{count}} филиалах проверки финализации пройдены, а bridge всё ещё включён."
+      }
+    },
+    "pending": {
+      "title": "Ожидающие QR-привязки",
+      "description": "Только неистёкшие запросы устройств.",
+      "loadError": "Не удалось загрузить запросы привязки. Используйте счётчик миграции и повторите обновление.",
+      "empty": "Активных запросов привязки нет.",
+      "openAll": "Открыть все привязки"
+    },
+    "risk": {
+      "title": "Последние события высокого риска",
+      "description": "Непроверенные записи HIGH и CRITICAL.",
+      "loadError": "Не удалось загрузить события безопасности.",
+      "refreshError": "События безопасности не обновились. Показанное состояние может быть неполным.",
+      "empty": "Непроверенных событий высокого риска нет.",
+      "openAll": "Открыть все события"
+    },
+    "details": {
+      "title": "Детальное управление",
+      "description": "Полные действия по устройствам, QR-привязкам, Telegram и событиям аудита.",
+      "tabsLabel": "Разделы управления безопасностью"
+    }
+  },
+  "tabs": {
+    "migration": "Миграция",
+    "devices": "Устройства",
+    "pairings": "QR-привязка",
+    "telegram": "Telegram",
+    "events": "События безопасности"
+  },
+  "migration": {
+    "refresh": "Обновить",
+    "readyForUpdate": "Готово к обновлению POS: {{count}}",
+    "requiresAction": "Требует действия: {{count}}",
+    "details": "Подробнее",
+    "detailsTitle": "Миграция {{branch}}",
+    "noBlockers": "Для этого этапа блокировок нет.",
+    "table": {
+      "branch": "Филиал",
+      "agent": "Local Agent",
+      "pos": "Активные POS",
+      "unbound": "Не привязано",
+      "stage": "Этап",
+      "action": "Действие"
+    }
+  },
+  "common": {
+    "search": "Поиск",
+    "all": "Все",
+    "status": "Статус",
+    "actions": "Действия",
+    "cancel": "Отмена",
+    "close": "Закрыть"
+  },
+  "overview": {
+    "activeDevices": "Активные устройства",
+    "pendingPairings": "Ожидающие привязки",
+    "migratedAgents": "Перенесённые агенты",
+    "unboundPosSessions": "POS-сессии без устройства",
+    "migratedTvMonitors": "Перенесённые TV-мониторы",
+    "branchesWithoutAgent": "Филиалы без агента"
+  },
+  "readiness": {
+    "title": "Готовность филиалов к миграции",
+    "description": "Проверяйте отдельно готовность к обновлению POS и завершение миграции перед отключением временного bridge.",
+    "loading": "Загрузка готовности филиалов…",
+    "retry": "Повторить",
+    "loadErrorTitle": "Не удалось загрузить готовность филиалов",
+    "loadErrorDescription": "Данные не показаны, чтобы не принять решение по устаревшему или неполному состоянию.",
+    "refreshError": "Не удалось обновить данные готовности. Ниже показан последний успешно загруженный снимок.",
+    "empty": "Активных филиалов для проверки нет.",
+    "fullyMigratedCount": "Полностью перенесено: {{count}} из {{total}}",
+    "branchId": "ID филиала",
+    "notAvailable": "Нет данных",
+    "statusAria": "{{gate}}: {{status}}",
+    "branchStatusAria": "{{branch}}: {{status}}",
+    "summary": {
+      "progress": "Завершение rollout",
+      "pos": "POS",
+      "unbound": "непривязано"
+    },
+    "agentStates": {
+      "missing": "Agent отсутствует",
+      "offline": "Agent не в сети",
+      "migrationRequired": "Нужна миграция",
+      "online": "Agent в сети"
+    },
+    "filters": {
+      "label": "Фильтр филиалов",
+      "all": "Все",
+      "attention": "Нужно действие",
+      "complete": "Завершено",
+      "searchPlaceholder": "Поиск по названию филиала",
+      "resultCount": "Показано филиалов: {{count}}",
+      "noResults": "Нет филиалов, соответствующих выбранному фильтру."
+    },
+    "statuses": {
+      "ready": "Готово",
+      "notReady": "Не готово",
+      "notRequired": "Больше не требуется",
+      "fullyMigrated": "Миграция завершена",
+      "notFullyMigrated": "Миграция не завершена"
+    },
+    "gates": {
+      "posUpdate": "Готовность к обновлению POS",
+      "finalization": "Готовность к отключению bridge"
+    },
+    "posUpdatePassed": "Bridge готов: можно начинать обновление POS. Непривязанные сессии на этом этапе допустимы.",
+    "posUpdateNotRequired": "POS уже мигрирован; состояние временного bridge больше не блокирует завершение.",
+    "finalizationPassed": "Есть активный мигрированный POS, непривязанных сессий нет, а устройство агента активно.",
+    "stages": {
+      "fixPrerequisites": "Подготовка заблокирована",
+      "readyForPOSUpdate": "Можно обновлять POS",
+      "migrationInProgress": "Миграция выполняется",
+      "readyForBridgeOff": "Миграция завершена"
+    },
+    "nextActions": {
+      "fixPrerequisites": "Устраните причины ниже и дождитесь нового heartbeat агента перед обновлением POS.",
+      "readyForPOSUpdate": "Обновите POS в этом филиале, затем дождитесь привязки активных сессий к новым устройствам.",
+      "migrationInProgress": "Завершите перенос POS и устраните блокировки финализации. Не отключайте bridge раньше времени.",
+      "readyForBridgeOff": "Филиал готов к финальному отключению временного bridge по утверждённому плану rollout."
+    },
+    "details": {
+      "activePOSDevices": "Активные POS-устройства",
+      "unboundPOSSessions": "Непривязанные POS-сессии",
+      "agentVersion": "Версия агента",
+      "agentDeviceStatus": "Устройство агента",
+      "agentLastSeen": "Последняя связь агента",
+      "bridgeLastSeen": "Последний check-in bridge",
+      "bridgeDeadline": "Срок действия bridge",
+      "terminalCount": "Терминалы в check-in"
+    },
+    "reasons": {
+      "agentMissing": "У филиала нет Local Agent.",
+      "agentOffline": "Local Agent не в сети.",
+      "agentDeviceNotMigrated": "Local Agent не перенесён на новую идентификацию устройства.",
+      "agentDeviceNotActive": "Перенесённое устройство Local Agent не активно.",
+      "bridgeCapabilityMissing": "Agent не сообщил о поддержке ограниченного legacy POS bridge.",
+      "bridgeNotConfigured": "Legacy POS bridge не настроен.",
+      "bridgeNotEnabled": "Legacy POS bridge не включён.",
+      "bridgeCheckInMissing": "Нет check-in ни от одного POS-терминала.",
+      "bridgeCheckInInvalid": "Данные последнего check-in или количество терминалов некорректны.",
+      "bridgeHeartbeatMissing": "В heartbeat агента нет состояния bridge.",
+      "bridgeHeartbeatInvalid": "Состояние bridge в heartbeat не прошло серверную проверку.",
+      "bridgeSourceCommitInvalid": "Идентификатор исходного commit bridge отсутствует или некорректен.",
+      "bridgeBuildTimestampInvalid": "Время сборки bridge отсутствует или некорректно.",
+      "bridgeDeadlineInvalid": "Срок действия bridge отсутствует или некорректен.",
+      "bridgeExpired": "Срок действия временного bridge истёк.",
+      "bridgeFailureUnknown": "Bridge сообщил неизвестную ошибку: {{failure}}.",
+      "bridgeServerNotReady": "Сервер не подтвердил готовность bridge к обновлению POS.",
+      "activePOSDevicesMissing": "Нет ни одного активного мигрированного POS-устройства.",
+      "unboundPOSSessions": "Остались активные POS-сессии без привязки: {{count}}.",
+      "migrationCountsInvalid": "Счётчики миграции отсутствуют или некорректны."
+    }
+  },
+  "deviceTypes": {
+    "POS_TERMINAL": "POS-терминал",
+    "LOCAL_AGENT": "Local Agent",
+    "TV_MONITOR": "TV-монитор",
+    "CONTROL_DEVICE": "Устройство управления"
+  },
+  "statuses": {
+    "ACTIVE": "Активно",
+    "REVOKED": "Отозвано",
+    "PENDING": "Ожидает",
+    "APPROVED": "Подтверждено",
+    "REJECTED": "Отклонено"
+  },
+  "severities": {
+    "INFO": "Информация",
+    "LOW": "Низкий",
+    "MEDIUM": "Средний",
+    "HIGH": "Высокий",
+    "CRITICAL": "Критический"
+  },
+  "devices": {
+    "device": "Устройство",
+    "restaurant": "Филиал",
+    "platform": "Платформа",
+    "type": "Тип устройства",
+    "version": "Версия",
+    "lastSeen": "Последняя связь",
+    "lease": "Срок lease",
+    "searchPlaceholder": "Устройство, филиал или fingerprint",
+    "revoke": "Отозвать",
+    "revokeTitle": "Отозвать устройство {{name}}",
+    "revokeDescription": "Доступ POS или Agent с этого устройства прекратится немедленно. Для повторного подключения потребуется новое QR-подтверждение.",
+    "revokeReason": "Причина",
+    "revokeReasonMin": "Введите не менее 5 символов.",
+    "empty": "Подходящие устройства не найдены.",
+    "messages": { "revoked": "Устройство отозвано.", "revokeFailed": "Не удалось отозвать устройство." }
+  },
+  "pairings": {
+    "pendingTitle": "Ожидающие устройства",
+    "pendingDescription": "Подтверждайте только когда QR и шестизначный контрольный код совпадают с экраном устройства.",
+    "scan": "Сканировать QR",
+    "scanTitle": "Привязка устройства",
+    "scanDescription": "Отсканируйте QR с экрана устройства или вставьте доверенную ссылку привязки.",
+    "cameraPreview": "Предпросмотр QR-камеры",
+    "startCamera": "Включить камеру",
+    "stopCamera": "Остановить камеру",
+    "link": "Ссылка привязки",
+    "secretHint": "Ссылка секретная и одноразовая. Не отправляйте её в чат или логи.",
+    "verify": "Проверить",
+    "restaurant": "Филиал для привязки",
+    "deviceName": "Имя устройства",
+    "compareCode": "Код ниже должен в точности совпадать с кодом на экране устройства.",
+    "fingerprint": "Fingerprint ключа",
+    "expiresAt": "Действует до",
+    "approve": "Привязать",
+    "reject": "Отклонить",
+    "empty": "Ожидающих привязок сейчас нет.",
+    "loadError": "Не удалось загрузить ожидающие привязки.",
+    "retry": "Повторить",
+    "errors": {
+      "pairing_link_invalid": "Неверный формат ссылки привязки.",
+      "pairing_link_untrusted": "Ссылка не принадлежит доверенному control-домену.",
+      "cameraUnavailable": "Нет доступа к камере или камера недоступна. Вставьте ссылку вручную.",
+      "notFound": "Привязка не найдена или запрос ещё не дошёл до сервера.",
+      "expired": "Срок привязки истёк. Создайте новый QR на устройстве.",
+      "notPending": "Эта привязка уже использована или отклонена."
+    },
+    "messages": {
+      "approved": "Устройство безопасно привязано к филиалу.",
+      "approveFailed": "Не удалось привязать устройство. Проверьте срок QR и код.",
+      "rejected": "Привязка отклонена.",
+      "rejectFailed": "Не удалось отклонить привязку."
+    }
+  },
+  "telegram": {
+    "selectRestaurant": "Выберите один филиал в переключателе выше.",
+    "linkTitle": "Подключение Telegram-отчётов",
+    "linkDescription": "Будет создана одноразовая Telegram-ссылка сроком на 5 минут.",
+    "createLink": "Создать одноразовую ссылку",
+    "connectedUsers": "Подключённые пользователи",
+    "linkedAt": "Подключён",
+    "revoke": "Отключить",
+    "empty": "К этому филиалу не подключены пользователи Telegram.",
+    "linkReady": "Telegram-ссылка готова",
+    "oneTimeWarning": "Ссылка истекает через 5 минут и перестаёт работать после первого успешного использования.",
+    "expiresAt": "Действует до",
+    "copy": "Копировать",
+    "revokeTitle": "Отключить Telegram",
+    "revokeDescription": "Пользователь больше не сможет получать финансовые отчёты этого филиала.",
+    "messages": {
+      "issueFailed": "Не удалось создать Telegram-ссылку.",
+      "copied": "Ссылка скопирована.",
+      "revoked": "Telegram-подключение отключено.",
+      "revokeFailed": "Не удалось отключить Telegram-подключение."
+    }
+  },
+  "events": {
+    "searchPlaceholder": "Событие, IP, пользователь или request ID",
+    "severity": "Уровень риска",
+    "reviewState": "Статус проверки",
+    "unreviewed": "Не проверено",
+    "reviewed": "Проверено",
+    "result": "Результат",
+    "ip": "IP",
+    "actor": "Пользователь",
+    "requestId": "Request ID",
+    "acknowledge": "Отметить проверенным",
+    "empty": "Подходящие события безопасности не найдены.",
+    "loadError": "Не удалось загрузить события безопасности.",
+    "retry": "Повторить",
+    "messages": { "acknowledged": "Событие отмечено проверенным.", "acknowledgeFailed": "Не удалось отметить событие." }
+  },
+  "eventTypes": {
+    "device_pairing_created": "Новый запрос привязки устройства",
+    "device_pairing_approved": "Привязка устройства подтверждена",
+    "device_pairing_rejected": "Привязка устройства отклонена",
+    "device_revoked": "Устройство отозвано",
+    "device_signature_invalid": "Неверная подпись устройства",
+    "device_replay_detected": "Обнаружен повтор подписанного запроса",
+    "device_scope_denied": "Запрос вне scope устройства отклонён",
+    "pin_login_failed": "Введён неверный PIN",
+    "pin_login_locked": "PIN-вход временно заблокирован",
+    "admin_login_failed": "Ошибка входа администратора",
+    "tenant_scope_denied": "Попытка доступа к другому филиалу",
+    "telegram_link_issued": "Создана одноразовая Telegram-ссылка",
+    "telegram_link_consumed": "Telegram-ссылка использована",
+    "telegram_subscription_revoked": "Telegram-подключение отключено"
+  }
+}
