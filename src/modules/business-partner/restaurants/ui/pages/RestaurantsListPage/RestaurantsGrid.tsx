@@ -1,11 +1,15 @@
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
-import type { GridRowSelectionModel, GridSortModel } from '@mui/x-data-grid';
+import type { GridSortModel } from '@mui/x-data-grid';
 import { gridClasses } from '@mui/x-data-grid';
 import { useCallback, useMemo, useState } from 'react';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
-import type { AdminRestaurant } from 'shared/api/admin-types';
-import { DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_PAGINATION_MODEL, DEFAULT_SELECTION_MODEL } from 'shared/constants';
+import { useCurrentUser } from 'modules/auth/domain/services/current-user';
+import type { AdminRestaurantBranchType, AdminRestaurantListItem } from 'shared/api/admin-types';
+import { DEFAULT_COLUMN_VISIBILITY_MODEL, DEFAULT_PAGINATION_MODEL } from 'shared/constants';
 import { DataGrid, DataGridEmptyState } from 'shared/ui/CustomDataGrid';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 
@@ -16,9 +20,9 @@ import {
   RestaurantCredentialsDialog,
   type RestaurantCredentialsDialogState,
   RestaurantDeactivateDialog,
-  RestaurantDeleteDialog,
   RestaurantTariffChangeDialog,
 } from '../../components';
+import { canUseRestaurantPermission } from '../../shared/restaurant-helpers';
 
 import {
   DEFAULT_RESTAURANTS_GRID_FILTERS,
@@ -27,20 +31,24 @@ import {
 } from './RestaurantsGridToolbar';
 import { useRestaurantsGridColumns } from './useRestaurantsGridColumns';
 
-export function RestaurantsGrid() {
+type RestaurantsGridProps = {
+  summaryError: boolean;
+  onRetrySummary: () => void;
+};
+
+export function RestaurantsGrid({ summaryError, onRetrySummary }: RestaurantsGridProps) {
   const { t, currentLang } = useTranslate('organizations');
+  const { profile } = useCurrentUser();
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
 
   const [paginationModel, setPaginationModel] = useState(DEFAULT_PAGINATION_MODEL);
   const [filters, setFilters] = useState<RestaurantsGridFilters>(DEFAULT_RESTAURANTS_GRID_FILTERS);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState(DEFAULT_COLUMN_VISIBILITY_MODEL);
-  const [selectedRows, setSelectedRows] = useState<GridRowSelectionModel>(DEFAULT_SELECTION_MODEL);
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
-  const [rowToDelete, setRowToDelete] = useState<AdminRestaurant | null>(null);
-  const [branchParent, setBranchParent] = useState<AdminRestaurant | null>(null);
-  const [rowToDeactivate, setRowToDeactivate] = useState<AdminRestaurant | null>(null);
-  const [rowToActivate, setRowToActivate] = useState<AdminRestaurant | null>(null);
-  const [rowToChangeTariff, setRowToChangeTariff] = useState<AdminRestaurant | null>(null);
+  const [branchParent, setBranchParent] = useState<AdminRestaurantListItem | null>(null);
+  const [rowToDeactivate, setRowToDeactivate] = useState<AdminRestaurantListItem | null>(null);
+  const [rowToActivate, setRowToActivate] = useState<AdminRestaurantListItem | null>(null);
+  const [rowToChangeTariff, setRowToChangeTariff] = useState<AdminRestaurantListItem | null>(null);
   const [credentialsDialogOpen, setCredentialsDialogOpen] = useState<RestaurantCredentialsDialogState>(null);
   const columnActions = useMemo(
     () => ({
@@ -48,20 +56,31 @@ export function RestaurantsGrid() {
       onActivate: setRowToActivate,
       onCredentials: setCredentialsDialogOpen,
       onDeactivate: setRowToDeactivate,
-      onDelete: setRowToDelete,
       onChangeTariff: setRowToChangeTariff,
     }),
     [],
   );
-  const { columns, isMutating } = useRestaurantsGridColumns(columnActions);
+  const capabilities = useMemo(
+    () => ({
+      canCreate: canUseRestaurantPermission(profile, 'create'),
+      canUpdate: canUseRestaurantPermission(profile, 'update'),
+      canActivate: canUseRestaurantPermission(profile, 'activate'),
+      canDeactivate: canUseRestaurantPermission(profile, 'deactivate'),
+      canResetPassword: canUseRestaurantPermission(profile, 'reset_password'),
+      canChangeTariff: canUseRestaurantPermission(profile, 'change_tariff'),
+    }),
+    [profile],
+  );
+  const { columns, isMutating } = useRestaurantsGridColumns(columnActions, capabilities);
   const query = useGetRestaurantsListQuery({
     page: paginationModel.page + 1,
     pageSize: paginationModel.pageSize,
     search: filters.search || undefined,
     isActive: filters.statuses.length === 1 ? filters.statuses[0] === 'active' : undefined,
+    branchType: filters.branchTypes.length === 1 ? (filters.branchTypes[0] as AdminRestaurantBranchType) : undefined,
     ordering: getOrderingFromSortModel(sortModel),
   });
-  const hasActiveFilters = Boolean(filters.search || filters.statuses.length);
+  const hasActiveFilters = Boolean(filters.search || filters.statuses.length || filters.branchTypes.length);
   const handleFiltersChange = useCallback((next: RestaurantsGridFilters) => {
     setFilters(next);
     setPaginationModel((prev) => ({ ...prev, page: 0 }));
@@ -69,78 +88,90 @@ export function RestaurantsGrid() {
 
   return (
     <>
-      <Card sx={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'hidden' }}>
-        <DataGrid
-          checkboxSelection
-          rows={query.data?.data ?? []}
-          columns={columns}
-          rowCount={query.data?.total ?? 0}
-          loading={query.isLoading || isMutating}
-          onRefresh={() => void query.refetch()}
-          refreshing={query.isFetching}
-          localeText={localeText}
-          paginationMode="server"
-          sortingMode="server"
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
-          sortModel={sortModel}
-          onSortModelChange={setSortModel}
-          rowSelectionModel={selectedRows}
-          onRowSelectionModelChange={setSelectedRows}
-          columnVisibilityModel={columnVisibilityModel}
-          onColumnVisibilityModelChange={setColumnVisibilityModel}
-          disableColumnMenu
-          slots={{
-            noRowsOverlay: () => (
-              <DataGridEmptyState
-                hasActiveFilters={hasActiveFilters}
-                noData={{
-                  title: t('empty.restaurants.noData.title'),
-                  description: t('empty.restaurants.noData.description'),
-                }}
-                noResults={{
-                  title: t('empty.restaurants.noResults.title'),
-                  description: t('empty.restaurants.noResults.description'),
-                }}
-              />
-            ),
-            noResultsOverlay: () => (
-              <DataGridEmptyState
-                forceFiltered
-                noData={{
-                  title: t('empty.restaurants.noData.title'),
-                  description: t('empty.restaurants.noData.description'),
-                }}
-                noResults={{
-                  title: t('empty.restaurants.noResults.title'),
-                  description: t('empty.restaurants.noResults.description'),
-                }}
-              />
-            ),
-            toolbar: () => (
-              <RestaurantsGridToolbar
-                value={filters}
-                onChange={handleFiltersChange}
-                columns={columns}
-                columnVisibilityModel={columnVisibilityModel}
-                defaultColumnVisibilityModel={DEFAULT_COLUMN_VISIBILITY_MODEL}
-                onSaveColumns={setColumnVisibilityModel}
-              />
-            ),
-          }}
-          sx={{
-            border: 'none',
-            [`& .${gridClasses.cell}`]: { display: 'flex', alignItems: 'center' },
-            '& .MuiDataGrid-toolbarContainer': { px: 2.5, py: 2 },
-          }}
-        />
-      </Card>
+      <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, gap: 2 }}>
+        {query.isError || summaryError ? (
+          <Alert
+            severity="error"
+            action={
+              <Button
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  void query.refetch();
+                  onRetrySummary();
+                }}>
+                {t('portfolio.retry')}
+              </Button>
+            }>
+            {t('portfolio.loadFailed')}
+          </Alert>
+        ) : null}
 
-      <RestaurantDeleteDialog
-        open={rowToDelete}
-        onClose={() => setRowToDelete(null)}
-        onSuccess={() => setRowToDelete(null)}
-      />
+        <Card sx={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 420, overflow: 'hidden' }}>
+          <DataGrid
+            rows={query.data?.data ?? []}
+            columns={columns}
+            rowCount={query.data?.total ?? 0}
+            loading={query.isLoading || isMutating}
+            onRefresh={() => void query.refetch()}
+            refreshing={query.isFetching}
+            localeText={localeText}
+            paginationMode="server"
+            sortingMode="server"
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
+            sortModel={sortModel}
+            onSortModelChange={setSortModel}
+            columnVisibilityModel={columnVisibilityModel}
+            onColumnVisibilityModelChange={setColumnVisibilityModel}
+            disableColumnMenu
+            rowHeight={72}
+            slots={{
+              noRowsOverlay: () => (
+                <DataGridEmptyState
+                  hasActiveFilters={hasActiveFilters}
+                  noData={{
+                    title: t('empty.restaurants.noData.title'),
+                    description: t('empty.restaurants.noData.description'),
+                  }}
+                  noResults={{
+                    title: t('empty.restaurants.noResults.title'),
+                    description: t('empty.restaurants.noResults.description'),
+                  }}
+                />
+              ),
+              noResultsOverlay: () => (
+                <DataGridEmptyState
+                  forceFiltered
+                  noData={{
+                    title: t('empty.restaurants.noData.title'),
+                    description: t('empty.restaurants.noData.description'),
+                  }}
+                  noResults={{
+                    title: t('empty.restaurants.noResults.title'),
+                    description: t('empty.restaurants.noResults.description'),
+                  }}
+                />
+              ),
+              toolbar: () => (
+                <RestaurantsGridToolbar
+                  value={filters}
+                  onChange={handleFiltersChange}
+                  columns={columns}
+                  columnVisibilityModel={columnVisibilityModel}
+                  defaultColumnVisibilityModel={DEFAULT_COLUMN_VISIBILITY_MODEL}
+                  onSaveColumns={setColumnVisibilityModel}
+                />
+              ),
+            }}
+            sx={{
+              border: 'none',
+              [`& .${gridClasses.cell}`]: { display: 'flex', alignItems: 'center' },
+              '& .MuiDataGrid-toolbarContainer': { px: 2.5, py: 2 },
+            }}
+          />
+        </Card>
+      </Box>
 
       <RestaurantBranchCreateDialog
         parentId={branchParent?.id ?? null}

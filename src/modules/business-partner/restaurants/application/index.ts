@@ -29,6 +29,7 @@ export {
   useGetRestaurantTariffChangePreviewQuery,
   useGetRestaurantByIdQuery,
   useGetRestaurantDetailQuery,
+  useGetRestaurantPortfolioSummaryQuery,
   useGetRestaurantsListQuery,
   useGetRestaurantsQuery,
 } from './queries';

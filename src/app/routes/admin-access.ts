@@ -23,6 +23,7 @@ const RESTAURANT_PERMISSION_CODES: PermissionCode[] = [
   'restaurants.update',
   'restaurants.activate',
   'restaurants.deactivate',
+  'restaurants.change_tariff',
   'restaurants.reset_password',
 ];
 const REPORT_PERMISSION_CODES: PermissionCode[] = ['reports.view'];

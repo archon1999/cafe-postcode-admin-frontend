@@ -17,12 +17,13 @@ import {
   useGetRestaurantTariffChangePreviewQuery,
 } from 'modules/business-partner/restaurants/application';
 import { useGetRestaurantActivationOptionsQuery } from 'modules/product-owner/business-partners/application';
-import type { AdminRestaurant } from 'shared/api/admin-types';
+
+import type { RestaurantActionTarget } from '../shared/restaurant-helpers';
 
 const NULL_ROLE_KEY = '__without_role__';
 
 type RestaurantTariffChangeDialogProps = {
-  open: AdminRestaurant | null;
+  open: RestaurantActionTarget | null;
   onClose: () => void;
   onSuccess: () => void;
 };

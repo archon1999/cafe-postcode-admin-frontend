@@ -55,8 +55,17 @@ export const organizationsRepository: OrganizationsRepository = {
   getRestaurants() {
     return apiClient.getAdminRestaurants({ page: 1, pageSize: 500 }).then((response) => response.data);
   },
+  getRestaurantsList(params) {
+    return apiClient.getAdminRestaurants(params);
+  },
+  getRestaurantPortfolioSummary() {
+    return apiClient.getAdminRestaurantPortfolioSummary();
+  },
   getRestaurantById(id) {
     return apiClient.getAdminRestaurantById(id);
+  },
+  getRestaurantDetail(id) {
+    return apiClient.getAdminRestaurantDetail(id);
   },
   createRestaurant(payload) {
     return apiClient.createAdminRestaurant(buildAdminRestaurantRequestPayload(payload));

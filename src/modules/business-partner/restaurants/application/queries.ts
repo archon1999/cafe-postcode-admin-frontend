@@ -11,6 +11,8 @@ import type {
   AdminPrepStationsQueryParams,
   AdminRestaurant,
   AdminRestaurantDetail,
+  AdminRestaurantListItem,
+  AdminRestaurantPortfolioSummary,
   AdminRestaurantTariffChangePreview,
   AdminRestaurantsQueryParams,
 } from 'shared/api/admin-types';
@@ -115,7 +117,9 @@ export function useGetOrganizationsPrepStationByIdQuery(
   });
 }
 
-export function useGetRestaurantsQuery(options?: Omit<UseQueryOptions<AdminRestaurant[]>, 'queryFn' | 'queryKey'>) {
+export function useGetRestaurantsQuery(
+  options?: Omit<UseQueryOptions<AdminRestaurantListItem[]>, 'queryFn' | 'queryKey'>,
+) {
   return useQuery({
     queryKey: organizationsKeys.restaurants(),
     queryFn: () => organizationsRepository.getRestaurants(),
@@ -125,11 +129,21 @@ export function useGetRestaurantsQuery(options?: Omit<UseQueryOptions<AdminResta
 
 export function useGetRestaurantsListQuery(
   params: AdminRestaurantsQueryParams,
-  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminRestaurant>>, 'queryFn' | 'queryKey'>,
+  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminRestaurantListItem>>, 'queryFn' | 'queryKey'>,
 ) {
   return useQuery({
     queryKey: organizationsKeys.restaurantsList(params),
-    queryFn: () => apiClient.getAdminRestaurants(params),
+    queryFn: () => organizationsRepository.getRestaurantsList(params),
+    ...options,
+  });
+}
+
+export function useGetRestaurantPortfolioSummaryQuery(
+  options?: Omit<UseQueryOptions<AdminRestaurantPortfolioSummary>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: organizationsKeys.restaurantsSummary(),
+    queryFn: () => organizationsRepository.getRestaurantPortfolioSummary(),
     ...options,
   });
 }
@@ -152,7 +166,7 @@ export function useGetRestaurantDetailQuery(
 ) {
   return useQuery({
     queryKey: organizationsKeys.restaurantOverview(id),
-    queryFn: () => apiClient.getAdminRestaurantDetail(id),
+    queryFn: () => organizationsRepository.getRestaurantDetail(id),
     enabled: Boolean(id),
     ...options,
   });

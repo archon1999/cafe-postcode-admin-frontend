@@ -86,7 +86,7 @@ afterEach(() => {
 
 describe('RestaurantDetailPage', () => {
   beforeEach(() => {
-    currentProfile = {};
+    currentProfile = { permissionCodes: ['restaurants.view'] };
     replaceMock.mockReset();
     detailQueryState = {
       data: {
@@ -99,6 +99,39 @@ describe('RestaurantDetailPage', () => {
         isActive: true,
         activationType: 'custom',
         tariff: null,
+        serviceFeeEnabled: false,
+        serviceFeePercent: 0,
+        vatEnabled: true,
+        vatPercent: 12,
+        markingCheckEnabled: false,
+        posMonitorVariant: 'default',
+        paymentTotalMode: 'fixed',
+        currency: 'UZS',
+        operationalSummary: {
+          activeUsers: 1,
+          cashDesks: 1,
+          prepStations: 1,
+          distributionPoints: 1,
+          menuItems: 10,
+          activeDevices: 2,
+          onlineDevices: 1,
+          lastSeenAt: '2026-08-20T10:00:00Z',
+        },
+        setupReadiness: {
+          ready: false,
+          progressPercent: 71,
+          blockingIssueCount: 1,
+          steps: [
+            {
+              id: 'profile',
+              status: 'ready',
+              issueCount: 0,
+              blockingIssueCount: 0,
+              issueCodes: [],
+            },
+          ],
+        },
+        branches: [],
         activeUsers: [
           {
             id: 'user-1',
@@ -125,7 +158,7 @@ describe('RestaurantDetailPage', () => {
   it('renders restaurant detail sections without subscription billing data', () => {
     render(<RestaurantDetailPage />);
 
-    expect(screen.getAllByText('Alpha Cafe')).toHaveLength(2);
+    expect(screen.getByText('Alpha Cafe')).toBeInTheDocument();
     expect(screen.getByText("Mijoz ma'lumotlari")).toBeInTheDocument();
     expect(screen.getByText('Aktiv foydalanuvchilar')).toBeInTheDocument();
     expect(screen.getByText('Soliq bilan integratsiya')).toBeInTheDocument();

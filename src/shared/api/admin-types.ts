@@ -421,6 +421,85 @@ export type AdminRestaurantSoliqSummary = {
   endpointUrl?: string | null;
 };
 
+export type AdminRestaurantBranchType = 'root' | 'branch';
+
+export type AdminRestaurantListItem = {
+  id: string;
+  parentId?: string | null;
+  parentName?: string | null;
+  branchType: AdminRestaurantBranchType;
+  name: string;
+  legalName: string;
+  taxNumber: string;
+  phone: string;
+  address: string;
+  isActive: boolean;
+  restaurantAccessActive?: boolean;
+  activationType?: 'tariff' | 'custom' | null;
+  activatedAt?: string | null;
+  deactivatedAt?: string | null;
+  tariff?: AdminRestaurantTariff | null;
+  branchCount: number;
+  activeUsersCount: number;
+  activeDeviceCount: number;
+  onlineDeviceCount: number;
+  lastSeenAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type AdminRestaurantPortfolioSummary = {
+  totalCount: number;
+  rootCount: number;
+  branchCount: number;
+  activeCount: number;
+  inactiveCount: number;
+  draftCount: number;
+  accessMismatchCount: number;
+  withoutTariffCount: number;
+  activeUsersCount: number;
+  activeDeviceCount: number;
+  onlineDeviceCount: number;
+};
+
+export type AdminRestaurantOperationalSummary = {
+  activeUsers: number;
+  cashDesks: number;
+  prepStations: number;
+  distributionPoints: number;
+  menuItems: number;
+  activeDevices: number;
+  onlineDevices: number;
+  lastSeenAt?: string | null;
+};
+
+export type AdminRestaurantReadinessStep = {
+  id: string;
+  status: 'ready' | 'warning' | 'blocked';
+  issueCount: number;
+  blockingIssueCount: number;
+  issueCodes: string[];
+};
+
+export type AdminRestaurantReadinessSummary = {
+  ready: boolean;
+  progressPercent: number;
+  blockingIssueCount: number;
+  steps: AdminRestaurantReadinessStep[];
+};
+
+export type AdminRestaurantBranchSummary = {
+  id: string;
+  name: string;
+  address: string;
+  isActive: boolean;
+  restaurantAccessActive?: boolean;
+  activeUsersCount: number;
+  activeDeviceCount: number;
+  onlineDeviceCount: number;
+  lastSeenAt?: string | null;
+};
+
 export type AdminPosMonitorVariant = 'default' | 'light_compact';
 export type AdminPaymentTotalMode = 'fixed' | 'cashier_editable';
 
@@ -460,6 +539,9 @@ export type AdminRestaurant = {
 export type AdminRestaurantDetail = AdminRestaurant & {
   activeUsers: AdminRestaurantActiveUser[];
   soliqIntegration?: AdminRestaurantSoliqSummary | null;
+  operationalSummary: AdminRestaurantOperationalSummary;
+  setupReadiness: AdminRestaurantReadinessSummary;
+  branches: AdminRestaurantBranchSummary[];
 };
 
 export type AdminRestaurantPayload = {
@@ -1385,6 +1467,7 @@ export type AdminIntegrationConfigsQueryParams = AdminListQueryParams & {
 
 export type AdminRestaurantsQueryParams = AdminListQueryParams & {
   isActive?: boolean;
+  branchType?: AdminRestaurantBranchType;
 };
 
 export type AdminBusinessPartnersQueryParams = AdminListQueryParams & {

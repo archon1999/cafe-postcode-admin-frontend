@@ -10,6 +10,7 @@ import type {
   AdminPrepStation,
   AdminPrepStationsQueryParams,
   AdminRestaurant,
+  AdminRestaurantListItem,
   AdminRestaurantsQueryParams,
 } from 'shared/api/admin-types';
 import { apiClient } from 'shared/api/http/apiClient';
@@ -114,7 +115,9 @@ export function useGetIntegrationConfigByIdQuery(
   });
 }
 
-export function useGetRestaurantsQuery(options?: Omit<UseQueryOptions<AdminRestaurant[]>, 'queryFn' | 'queryKey'>) {
+export function useGetRestaurantsQuery(
+  options?: Omit<UseQueryOptions<AdminRestaurantListItem[]>, 'queryFn' | 'queryKey'>,
+) {
   return useQuery({
     queryKey: organizationsKeys.restaurants(),
     queryFn: () => organizationsRepository.getRestaurants(),
@@ -132,7 +135,7 @@ export function useGetMyRestaurantQuery(options?: Omit<UseQueryOptions<AdminRest
 
 export function useGetRestaurantsListQuery(
   params: AdminRestaurantsQueryParams,
-  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminRestaurant>>, 'queryFn' | 'queryKey'>,
+  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminRestaurantListItem>>, 'queryFn' | 'queryKey'>,
 ) {
   return useQuery({
     queryKey: organizationsKeys.restaurantsList(params),

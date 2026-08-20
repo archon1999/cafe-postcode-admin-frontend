@@ -104,6 +104,7 @@ export function useActivateRestaurantMutation() {
       await invalidate(queryClient, [
         organizationsKeys.restaurants(),
         organizationsKeys.restaurantDetail(variables.id),
+        organizationsKeys.restaurantOverview(variables.id),
       ]);
     },
   });
@@ -115,7 +116,11 @@ export function useDeactivateRestaurantMutation() {
   return useMutation({
     mutationFn: (id: string) => apiClient.deactivateAdminRestaurant(id),
     onSuccess: async (_data, id) => {
-      await invalidate(queryClient, [organizationsKeys.restaurants(), organizationsKeys.restaurantDetail(id)]);
+      await invalidate(queryClient, [
+        organizationsKeys.restaurants(),
+        organizationsKeys.restaurantDetail(id),
+        organizationsKeys.restaurantOverview(id),
+      ]);
     },
   });
 }
@@ -126,7 +131,11 @@ export function useResetRestaurantPasswordMutation() {
   return useMutation({
     mutationFn: (id: string) => apiClient.resetAdminRestaurantPassword(id),
     onSuccess: async (_data, id) => {
-      await invalidate(queryClient, [organizationsKeys.restaurants(), organizationsKeys.restaurantDetail(id)]);
+      await invalidate(queryClient, [
+        organizationsKeys.restaurants(),
+        organizationsKeys.restaurantDetail(id),
+        organizationsKeys.restaurantOverview(id),
+      ]);
     },
   });
 }

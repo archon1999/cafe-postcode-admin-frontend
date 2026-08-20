@@ -2,11 +2,12 @@ import Button from '@mui/material/Button';
 
 import { useTranslate } from 'app/providers/locales';
 import { useDeactivateRestaurantMutation } from 'modules/product-owner/business-partners/application';
-import type { AdminRestaurant } from 'shared/api/admin-types.ts';
 import { ConfirmDialog } from 'shared/ui/CustomDialog';
 
+import type { RestaurantActionTarget } from '../shared/restaurant-helpers';
+
 type RestaurantDeactivateDialogProps = {
-  open: AdminRestaurant | null;
+  open: RestaurantActionTarget | null;
   onClose: () => void;
   onSuccess?: () => void;
 };

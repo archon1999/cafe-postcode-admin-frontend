@@ -200,6 +200,105 @@
       "fiscalDriveServiceDownloadFailed": "Fiscal Drive Serviceни юклаб бўлмади."
     }
   },
+  "portfolio": {
+    "description": "Барча шахобчаларнинг ҳолати, ходимлари ва қурилмаларини бир жойдан кузатинг.",
+    "searchPlaceholder": "Номи, СТИР, телефон, манзил ёки асосий шахобча бўйича қидиринг",
+    "metrics": {
+      "total": "Жами шахобчалар",
+      "totalHint": "{{roots}} асосий · {{branches}} филиал",
+      "active": "Фаол шахобчалар",
+      "activeHint": "{{inactive}} фаол эмас · {{draft}} қоралама",
+      "staff": "Фаол ходимлар",
+      "staffHint": "Барча шахобчаларда",
+      "devices": "Онлайн қурилмалар",
+      "devicesHint": "{{total}} та фаол қурилмадан"
+    },
+    "branchTypes": { "root": "Асосий", "branch": "Филиал" },
+    "parentLabel": "Асосий: {{name}}",
+    "columns": {
+      "contact": "Алоқа ва манзил",
+      "staff": "Ходимлар",
+      "devices": "Қурилмалар",
+      "lastSeen": "Охирги фаоллик"
+    },
+    "devicesOnline": "қурилма онлайн",
+    "noDevices": "Қурилма уланмаган",
+    "noActivity": "Фаоллик йўқ",
+    "lifecycle": {
+      "active": "Фаол",
+      "inactive": "Фаол эмас",
+      "draft": "Қоралама",
+      "attention": "Текшириш керак"
+    },
+    "retry": "Қайта уриниш",
+    "loadFailed": "Шахобчалар маълумотини юклаб бўлмади."
+  },
+  "restaurantDetail": {
+    "pageTitle": "Шахобча профили",
+    "loadFailed": "Шахобча маълумотини юклаб бўлмади.",
+    "moreActions": "Бошқа амаллар",
+    "parent": "Асосий шахобча:",
+    "activatedAt": "Фаоллаштирилган: {{date}}",
+    "metrics": {
+      "staff": "Фаол ходимлар",
+      "staffHint": "Шахобчага бириктирилган",
+      "servicePoints": "Хизмат нуқталари",
+      "servicePointsHint": "{{cashDesks}} касса · {{prepStations}} станция",
+      "menu": "Меню позициялари",
+      "menuHint": "Фаол маҳсулотлар",
+      "devices": "Қурилмалар онлайн",
+      "lastSeen": "Охирги алоқа: {{date}}"
+    },
+    "sections": {
+      "branches": "Филиаллар тармоғи",
+      "branchesDescription": "Асосий шахобчага уланган филиалларнинг тезкор ҳолати.",
+      "settings": "Савдо ва POS созламалари"
+    },
+    "branchCount": "{{count}} та филиал",
+    "emptyBranches": "Бу шахобчага ҳали филиал қўшилмаган.",
+    "moreUsers": "Яна {{count}} та фаол фойдаланувчи бор.",
+    "readiness": {
+      "title": "Ишга тайёрлик",
+      "description": "Савдони барқарор бошлаш учун зарур бўлган барча қисмлар.",
+      "readyHint": "Шахобча ишлашга тайёр.",
+      "blockingHint": "{{count}} та муҳим иш бажарилиши керак.",
+      "progress": "{{value}}% тайёр",
+      "moreIssues": "Яна {{count}} та масала",
+      "stepReady": "Ҳаммаси жойида",
+      "status": { "ready": "Тайёр", "warning": "Эътибор", "blocked": "Блокланган" },
+      "steps": {
+        "profile": "Шахобча профили",
+        "staff": "Ходимлар ва PIN",
+        "service_points": "Касса ва хизмат нуқталари",
+        "menu": "Меню",
+        "integrations": "Интеграциялар",
+        "coordinator": "Локал координатор",
+        "printing": "Чоп этиш шаблонлари"
+      },
+      "issues": {
+        "restaurant_inactive": "Шахобчани фаоллаштириш керак.",
+        "missing_legal_name": "Юридик номни киритинг.",
+        "missing_tax_number": "СТИРни киритинг.",
+        "missing_phone": "Телефон рақамини киритинг.",
+        "missing_address": "Манзилни киритинг.",
+        "missing_pos_user": "POS ҳуқуқига эга ходим яратинг.",
+        "missing_pos_pin": "Камида битта POS ходимига PIN беринг.",
+        "missing_cash_desk": "Фаол касса яратинг.",
+        "missing_prep_station": "Фаол тайёрлаш станциясини яратинг.",
+        "missing_distribution_point": "Хизмат ёки тарқатиш нуқтасини яратинг.",
+        "empty_menu": "Менюга камида битта фаол маҳсулот қўшинг.",
+        "menu_category_without_prep_station": "Меню категорияларини тайёрлаш станцияларига боғланг.",
+        "menu_item_without_category": "Категориясиз меню маҳсулотларини тўғриланг.",
+        "cash_desk_printer_missing": "Касса принтерини созланг.",
+        "cash_desk_payment_missing": "Карта тўлови интеграциясини созланг.",
+        "cash_desk_fiscal_missing": "Фискал интеграцияни созланг.",
+        "prep_station_printer_missing": "Ошхона принтерини созланг.",
+        "local_agent_missing": "Локал координаторни ўрнатинг ва уланг.",
+        "local_agent_offline": "Локал координатор ҳозир офлайн.",
+        "print_templates_missing": "Барча чоп этиш шаблонларини нашр қилинг."
+      }
+    }
+  },
   "fields": {
     "name": "Номи",
     "address": "Манзил",
@@ -276,6 +375,7 @@
     "clearSearch": "Қидирувни тозалаш",
     "default": "Асосий тури",
     "branch": "Филиал",
+    "branchType": "Шаҳобча тури",
     "kind": "Тури",
     "status": "Ҳолат",
     "orderEntryMode": "Буюртма режими",

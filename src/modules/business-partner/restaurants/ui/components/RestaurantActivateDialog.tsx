@@ -3,14 +3,12 @@ import {
   useGetRestaurantActivationOptionsQuery,
 } from 'modules/product-owner/business-partners/application';
 import { RestaurantActivationDialog } from 'modules/product-owner/business-partners/ui/components/RestaurantActivationDialog.tsx';
-import type {
-  AdminRestaurant,
-  AdminRestaurantActivationPayload,
-  AdminRestaurantActivationResult,
-} from 'shared/api/admin-types.ts';
+import type { AdminRestaurantActivationPayload, AdminRestaurantActivationResult } from 'shared/api/admin-types.ts';
+
+import type { RestaurantActionTarget } from '../shared/restaurant-helpers';
 
 type RestaurantActivateDialogProps = {
-  open: AdminRestaurant | null;
+  open: RestaurantActionTarget | null;
   onClose: () => void;
   onSuccess: (result: AdminRestaurantActivationResult) => void;
 };

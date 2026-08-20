@@ -126,6 +126,7 @@ const RestaurantFormPage = () => {
               isSubmitting={methods.formState.isSubmitting}
               onLookup={handleLookup}
               t={t}
+              hideStatus
             />
             <FormActions
               isSubmitting={methods.formState.isSubmitting}

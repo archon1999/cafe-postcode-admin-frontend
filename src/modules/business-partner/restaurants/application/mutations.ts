@@ -134,6 +134,7 @@ export function useCreateRestaurantBranchMutation(parentId: string) {
       await invalidateQueryKeys(queryClient, [
         organizationsKeys.restaurants(),
         organizationsKeys.restaurantDetail(parentId),
+        organizationsKeys.restaurantOverview(parentId),
       ]);
     },
   });
@@ -150,7 +151,11 @@ export function useUpdateRestaurantMutation(id: string) {
   return useMutation({
     mutationFn: (payload: AdminRestaurantPayload) => organizationsRepository.updateRestaurant(id, payload),
     onSuccess: async () => {
-      await invalidateQueryKeys(queryClient, [organizationsKeys.restaurants(), organizationsKeys.restaurantDetail(id)]);
+      await invalidateQueryKeys(queryClient, [
+        organizationsKeys.restaurants(),
+        organizationsKeys.restaurantDetail(id),
+        organizationsKeys.restaurantOverview(id),
+      ]);
     },
   });
 }

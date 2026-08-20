@@ -1,6 +1,6 @@
 export const ORGANIZATION_RECORD_STATUS_FILTER_VALUES = ['active', 'inactive'] as const;
 
-export const ORGANIZATION_BRANCH_KIND_FILTER_VALUES = ['default', 'regular'] as const;
+export const ORGANIZATION_BRANCH_KIND_FILTER_VALUES = ['root', 'branch'] as const;
 
 export const ORGANIZATION_FEATURE_ROLE_VALUES = [
   'admin',

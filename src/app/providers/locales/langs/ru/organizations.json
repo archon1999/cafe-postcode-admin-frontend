@@ -200,6 +200,105 @@
       "fiscalDriveServiceDownloadFailed": "Не удалось скачать Fiscal Drive Service."
     }
   },
+  "portfolio": {
+    "description": "Контролируйте состояние, сотрудников и устройства всех филиалов в одном месте.",
+    "searchPlaceholder": "Поиск по названию, ИНН, телефону, адресу или головной точке",
+    "metrics": {
+      "total": "Всего точек",
+      "totalHint": "{{roots}} головных · {{branches}} филиалов",
+      "active": "Активные точки",
+      "activeHint": "{{inactive}} неактивных · {{draft}} черновиков",
+      "staff": "Активные сотрудники",
+      "staffHint": "Во всех филиалах",
+      "devices": "Устройства онлайн",
+      "devicesHint": "Из {{total}} активных устройств"
+    },
+    "branchTypes": { "root": "Головная", "branch": "Филиал" },
+    "parentLabel": "Головная: {{name}}",
+    "columns": {
+      "contact": "Контакты и адрес",
+      "staff": "Сотрудники",
+      "devices": "Устройства",
+      "lastSeen": "Последняя активность"
+    },
+    "devicesOnline": "устройств онлайн",
+    "noDevices": "Нет устройств",
+    "noActivity": "Нет активности",
+    "lifecycle": {
+      "active": "Активна",
+      "inactive": "Неактивна",
+      "draft": "Черновик",
+      "attention": "Требует проверки"
+    },
+    "retry": "Повторить",
+    "loadFailed": "Не удалось загрузить данные филиалов."
+  },
+  "restaurantDetail": {
+    "pageTitle": "Профиль точки",
+    "loadFailed": "Не удалось загрузить данные точки.",
+    "moreActions": "Другие действия",
+    "parent": "Головная точка:",
+    "activatedAt": "Активирована: {{date}}",
+    "metrics": {
+      "staff": "Активные сотрудники",
+      "staffHint": "Назначены этой точке",
+      "servicePoints": "Точки обслуживания",
+      "servicePointsHint": "{{cashDesks}} касс · {{prepStations}} станций",
+      "menu": "Позиции меню",
+      "menuHint": "Активные товары",
+      "devices": "Устройства онлайн",
+      "lastSeen": "Последняя связь: {{date}}"
+    },
+    "sections": {
+      "branches": "Сеть филиалов",
+      "branchesDescription": "Быстрое состояние филиалов головной точки.",
+      "settings": "Торговые и POS-настройки"
+    },
+    "branchCount": "Филиалов: {{count}}",
+    "emptyBranches": "К этой точке пока не добавлены филиалы.",
+    "moreUsers": "Ещё {{count}} активных пользователей.",
+    "readiness": {
+      "title": "Готовность к работе",
+      "description": "Все необходимые компоненты для стабильного запуска продаж.",
+      "readyHint": "Точка готова к работе.",
+      "blockingHint": "Нужно выполнить {{count}} важных задач.",
+      "progress": "Готово на {{value}}%",
+      "moreIssues": "Ещё {{count}} проблем",
+      "stepReady": "Всё в порядке",
+      "status": { "ready": "Готово", "warning": "Внимание", "blocked": "Блокирует" },
+      "steps": {
+        "profile": "Профиль точки",
+        "staff": "Сотрудники и PIN",
+        "service_points": "Кассы и точки обслуживания",
+        "menu": "Меню",
+        "integrations": "Интеграции",
+        "coordinator": "Локальный координатор",
+        "printing": "Шаблоны печати"
+      },
+      "issues": {
+        "restaurant_inactive": "Активируйте точку.",
+        "missing_legal_name": "Укажите юридическое название.",
+        "missing_tax_number": "Укажите ИНН.",
+        "missing_phone": "Укажите номер телефона.",
+        "missing_address": "Укажите адрес.",
+        "missing_pos_user": "Создайте сотрудника с доступом к POS.",
+        "missing_pos_pin": "Назначьте PIN хотя бы одному POS-сотруднику.",
+        "missing_cash_desk": "Создайте активную кассу.",
+        "missing_prep_station": "Создайте активную станцию приготовления.",
+        "missing_distribution_point": "Создайте точку обслуживания или выдачи.",
+        "empty_menu": "Добавьте хотя бы один активный товар в меню.",
+        "menu_category_without_prep_station": "Привяжите категории к станциям приготовления.",
+        "menu_item_without_category": "Исправьте товары без категории.",
+        "cash_desk_printer_missing": "Настройте принтер кассы.",
+        "cash_desk_payment_missing": "Настройте интеграцию карточной оплаты.",
+        "cash_desk_fiscal_missing": "Настройте фискальную интеграцию.",
+        "prep_station_printer_missing": "Настройте кухонный принтер.",
+        "local_agent_missing": "Установите и подключите локальный координатор.",
+        "local_agent_offline": "Локальный координатор сейчас офлайн.",
+        "print_templates_missing": "Опубликуйте все шаблоны печати."
+      }
+    }
+  },
   "fields": {
     "name": "Название",
     "address": "Адрес",
@@ -275,6 +374,7 @@
     "clearSearch": "Очистить поиск",
     "default": "Тип по умолчанию",
     "branch": "Филиал",
+    "branchType": "Тип точки",
     "kind": "Тип",
     "status": "Статус",
     "orderEntryMode": "Режим заказа",

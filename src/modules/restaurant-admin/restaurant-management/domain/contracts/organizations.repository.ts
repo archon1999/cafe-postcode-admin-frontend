@@ -7,6 +7,7 @@ import type {
   AdminPrepStation,
   AdminPrepStationPayload,
   AdminRestaurant,
+  AdminRestaurantListItem,
   AdminRestaurantPayload,
 } from 'shared/api/admin-types';
 
@@ -26,7 +27,7 @@ export interface OrganizationsRepository {
   createIntegrationConfig(payload: AdminIntegrationConfigPayload): Promise<AdminIntegrationConfig>;
   updateIntegrationConfig(id: string, payload: AdminIntegrationConfigPayload): Promise<AdminIntegrationConfig>;
   deleteIntegrationConfig(id: string): Promise<void>;
-  getRestaurants(): Promise<AdminRestaurant[]>;
+  getRestaurants(): Promise<AdminRestaurantListItem[]>;
   getMyRestaurant(): Promise<AdminRestaurant>;
   getRestaurantById(id: string): Promise<AdminRestaurant>;
   createRestaurant(payload: AdminRestaurantPayload): Promise<AdminRestaurant>;

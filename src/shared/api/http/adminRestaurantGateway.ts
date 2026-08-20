@@ -6,7 +6,9 @@ import type {
   AdminRestaurantActivationPayload,
   AdminRestaurantActivationResult,
   AdminRestaurantDetail,
+  AdminRestaurantListItem,
   AdminRestaurantLookupResult,
+  AdminRestaurantPortfolioSummary,
   AdminRestaurantPayload,
   AdminRestaurantsQueryParams,
   AdminRestaurantTariffChangePayload,
@@ -21,15 +23,22 @@ const RESTAURANT_BRANCH_CREATE_TIMEOUT_MS = 120_000;
 export const adminRestaurantGateway = {
   getAdminRestaurants(params?: AdminRestaurantsQueryParams) {
     return instance
-      .get<AdminPaginatedResponse<AdminRestaurant>>('/api/v1/admin/restaurants/', {
+      .get<AdminPaginatedResponse<AdminRestaurantListItem>>('/api/v1/admin/restaurants/', {
         params: {
           page: params?.page,
           pageSize: params?.pageSize,
           search: params?.search,
           isActive: params?.isActive,
+          branchType: params?.branchType,
           ordering: params?.ordering,
         },
       })
+      .then((response) => response.data);
+  },
+
+  getAdminRestaurantPortfolioSummary() {
+    return instance
+      .get<AdminRestaurantPortfolioSummary>('/api/v1/admin/restaurants/portfolio-summary/')
       .then((response) => response.data);
   },
 

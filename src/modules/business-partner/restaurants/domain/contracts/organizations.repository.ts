@@ -8,7 +8,12 @@ import type {
   AdminPrepStationPayload,
   AdminRestaurant,
   AdminRestaurantBranchCreatePayload,
+  AdminRestaurantDetail,
+  AdminRestaurantListItem,
   AdminRestaurantPayload,
+  AdminRestaurantPortfolioSummary,
+  AdminRestaurantsQueryParams,
+  AdminPaginatedResponse,
   AdminRestaurantTariffChangePayload,
   AdminRestaurantTariffChangePreview,
   AdminRestaurantTariffChangeResult,
@@ -30,8 +35,11 @@ export interface OrganizationsRepository {
   createPrepStation(payload: AdminPrepStationPayload): Promise<AdminPrepStation>;
   updatePrepStation(id: string, payload: AdminPrepStationPayload): Promise<AdminPrepStation>;
   deletePrepStation(id: string): Promise<void>;
-  getRestaurants(): Promise<AdminRestaurant[]>;
+  getRestaurants(): Promise<AdminRestaurantListItem[]>;
+  getRestaurantsList(params: AdminRestaurantsQueryParams): Promise<AdminPaginatedResponse<AdminRestaurantListItem>>;
+  getRestaurantPortfolioSummary(): Promise<AdminRestaurantPortfolioSummary>;
   getRestaurantById(id: string): Promise<AdminRestaurant>;
+  getRestaurantDetail(id: string): Promise<AdminRestaurantDetail>;
   createRestaurant(payload: AdminRestaurantPayload): Promise<AdminRestaurant>;
   createRestaurantBranch(parentId: string, payload: AdminRestaurantBranchCreatePayload): Promise<AdminRestaurant>;
   updateRestaurant(id: string, payload: AdminRestaurantPayload): Promise<AdminRestaurant>;

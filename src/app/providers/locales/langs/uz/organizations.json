@@ -200,6 +200,105 @@
       "fiscalDriveServiceDownloadFailed": "Fiscal Drive Service-ni yuklab bo'lmadi."
     }
   },
+  "portfolio": {
+    "description": "Barcha shahobchalarning holati, xodimlari va qurilmalarini bir joydan kuzating.",
+    "searchPlaceholder": "Nomi, STIR, telefon, manzil yoki asosiy shahobcha bo'yicha qidiring",
+    "metrics": {
+      "total": "Jami shahobchalar",
+      "totalHint": "{{roots}} asosiy · {{branches}} filial",
+      "active": "Faol shahobchalar",
+      "activeHint": "{{inactive}} faol emas · {{draft}} qoralama",
+      "staff": "Faol xodimlar",
+      "staffHint": "Barcha shahobchalarda",
+      "devices": "Onlayn qurilmalar",
+      "devicesHint": "{{total}} ta faol qurilmadan"
+    },
+    "branchTypes": { "root": "Asosiy", "branch": "Filial" },
+    "parentLabel": "Asosiy: {{name}}",
+    "columns": {
+      "contact": "Aloqa va manzil",
+      "staff": "Xodimlar",
+      "devices": "Qurilmalar",
+      "lastSeen": "Oxirgi faollik"
+    },
+    "devicesOnline": "qurilma onlayn",
+    "noDevices": "Qurilma ulanmagan",
+    "noActivity": "Faollik yo'q",
+    "lifecycle": {
+      "active": "Faol",
+      "inactive": "Faol emas",
+      "draft": "Qoralama",
+      "attention": "Tekshirish kerak"
+    },
+    "retry": "Qayta urinish",
+    "loadFailed": "Shahobchalar ma'lumotini yuklab bo'lmadi."
+  },
+  "restaurantDetail": {
+    "pageTitle": "Shahobcha profili",
+    "loadFailed": "Shahobcha ma'lumotini yuklab bo'lmadi.",
+    "moreActions": "Boshqa amallar",
+    "parent": "Asosiy shahobcha:",
+    "activatedAt": "Faollashtirilgan: {{date}}",
+    "metrics": {
+      "staff": "Faol xodimlar",
+      "staffHint": "Shahobchaga biriktirilgan",
+      "servicePoints": "Xizmat nuqtalari",
+      "servicePointsHint": "{{cashDesks}} kassa · {{prepStations}} stansiya",
+      "menu": "Menyu pozitsiyalari",
+      "menuHint": "Faol mahsulotlar",
+      "devices": "Qurilmalar onlayn",
+      "lastSeen": "Oxirgi aloqa: {{date}}"
+    },
+    "sections": {
+      "branches": "Filiallar tarmog'i",
+      "branchesDescription": "Asosiy shahobchaga ulangan filiallarning tezkor holati.",
+      "settings": "Savdo va POS sozlamalari"
+    },
+    "branchCount": "{{count}} ta filial",
+    "emptyBranches": "Bu shahobchaga hali filial qo'shilmagan.",
+    "moreUsers": "Yana {{count}} ta faol foydalanuvchi bor.",
+    "readiness": {
+      "title": "Ishga tayyorlik",
+      "description": "Savdoni barqaror boshlash uchun zarur bo'lgan barcha qismlar.",
+      "readyHint": "Shahobcha ishlashga tayyor.",
+      "blockingHint": "{{count}} ta muhim ish bajarilishi kerak.",
+      "progress": "{{value}}% tayyor",
+      "moreIssues": "Yana {{count}} ta masala",
+      "stepReady": "Hammasi joyida",
+      "status": { "ready": "Tayyor", "warning": "E'tibor", "blocked": "Bloklangan" },
+      "steps": {
+        "profile": "Shahobcha profili",
+        "staff": "Xodimlar va PIN",
+        "service_points": "Kassa va xizmat nuqtalari",
+        "menu": "Menyu",
+        "integrations": "Integratsiyalar",
+        "coordinator": "Lokal koordinator",
+        "printing": "Chop etish shablonlari"
+      },
+      "issues": {
+        "restaurant_inactive": "Shahobchani faollashtirish kerak.",
+        "missing_legal_name": "Yuridik nomni kiriting.",
+        "missing_tax_number": "STIRni kiriting.",
+        "missing_phone": "Telefon raqamini kiriting.",
+        "missing_address": "Manzilni kiriting.",
+        "missing_pos_user": "POS huquqiga ega xodim yarating.",
+        "missing_pos_pin": "Kamida bitta POS xodimiga PIN bering.",
+        "missing_cash_desk": "Faol kassa yarating.",
+        "missing_prep_station": "Faol tayyorlash stansiyasini yarating.",
+        "missing_distribution_point": "Xizmat yoki tarqatish nuqtasini yarating.",
+        "empty_menu": "Menyuga kamida bitta faol mahsulot qo'shing.",
+        "menu_category_without_prep_station": "Menyu kategoriyalarini tayyorlash stansiyalariga bog'lang.",
+        "menu_item_without_category": "Kategoriyasiz menyu mahsulotlarini to'g'rilang.",
+        "cash_desk_printer_missing": "Kassa printerini sozlang.",
+        "cash_desk_payment_missing": "Karta to'lovi integratsiyasini sozlang.",
+        "cash_desk_fiscal_missing": "Fiskal integratsiyani sozlang.",
+        "prep_station_printer_missing": "Oshxona printerini sozlang.",
+        "local_agent_missing": "Lokal koordinatorni o'rnating va ulang.",
+        "local_agent_offline": "Lokal koordinator hozir oflayn.",
+        "print_templates_missing": "Barcha chop etish shablonlarini nashr qiling."
+      }
+    }
+  },
   "fields": {
     "name": "Nomi",
     "address": "Manzil",
@@ -276,6 +375,7 @@
     "clearSearch": "Qidiruvni tozalash",
     "default": "Asosiy turi",
     "branch": "Filial",
+    "branchType": "Shahobcha turi",
     "kind": "Turi",
     "status": "Holat",
     "orderEntryMode": "Buyurtma rejimi",

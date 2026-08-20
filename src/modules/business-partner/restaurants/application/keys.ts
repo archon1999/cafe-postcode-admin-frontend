@@ -26,6 +26,7 @@ export const organizationsKeys = {
   prepStationDetail: prepStationKeys.id,
   restaurants: () => restaurantsKeys.all,
   restaurantsList: restaurantsKeys.list,
+  restaurantsSummary: () => [...restaurantsKeys.all, 'summary'] as const,
   restaurantDetail: restaurantKeys.id,
   restaurantOverview: restaurantOverviewKeys.id,
   restaurantTariffChange: (restaurantId: string, tariffId: string) =>

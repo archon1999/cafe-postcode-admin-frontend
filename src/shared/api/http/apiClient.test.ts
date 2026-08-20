@@ -1282,6 +1282,7 @@ describe('apiClient identity, restaurant and operations gateway contracts', () =
     ] as const;
     const restaurantMethods = [
       'getAdminRestaurants',
+      'getAdminRestaurantPortfolioSummary',
       'getAdminRestaurantById',
       'getAdminRestaurantDetail',
       'lookupAdminRestaurant',
