@@ -30,7 +30,7 @@ export const themeConfig: ThemeConfig = {
   },
 
   fontFamily: {
-    primary: 'Public Sans Variable',
+    primary: 'Nunito Sans Variable',
     secondary: 'Barlow',
   },
 
