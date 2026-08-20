@@ -75,7 +75,13 @@
       "tabsLabel": "Хавфсизлик бошқарув бўлимлари"
     }
   },
-  "tabs": { "migration": "Миграция", "devices": "Қурилмалар", "pairings": "QR улаш", "telegram": "Telegram", "events": "Хавфсизлик ҳодисалари" },
+  "tabs": {
+    "migration": "Миграция",
+    "devices": "Қурилмалар",
+    "pairings": "QR улаш",
+    "telegram": "Telegram",
+    "events": "Хавфсизлик ҳодисалари"
+  },
   "migration": {
     "refresh": "Янгилаш",
     "readyForUpdate": "POS янгилашга тайёр: {{count}}",
@@ -94,6 +100,7 @@
   },
   "common": {
     "search": "Қидирув",
+    "clearSearch": "Қидирувни тозалаш",
     "all": "Барчаси",
     "status": "Ҳолат",
     "actions": "Амаллар",
@@ -271,10 +278,18 @@
   },
   "telegram": {
     "selectRestaurant": "Юқоридаги шаҳобча танлагичидан битта шаҳобчани танланг.",
+    "selectRestaurantTooltip": "Бир марталик линк яратиш учун юқоридан битта шаҳобчани танланг.",
     "linkTitle": "Telegram ҳисоботини улаш",
     "linkDescription": "5 дақиқалик, фақат бир марта ишлайдиган Telegram deep-link яратилади.",
     "createLink": "Бир марталик линк яратиш",
     "connectedUsers": "Уланган фойдаланувчилар",
+    "user": "Фойдаланувчи",
+    "telegramId": "Telegram ID",
+    "notifications": "Билдиришномалар",
+    "enabled": "Ёқилган",
+    "disabled": "Ўчирилган",
+    "searchPlaceholder": "Исм, username ёки Telegram ID",
+    "loadError": "Telegram уланишларини юклаб бўлмади.",
     "linkedAt": "Уланган",
     "revoke": "Узиш",
     "empty": "Бу шаҳобчага Telegram фойдаланувчиси уланмаган.",
@@ -293,6 +308,11 @@
   },
   "events": {
     "searchPlaceholder": "Ҳодиса, IP, фойдаланувчи ёки request ID",
+    "event": "Ҳодиса",
+    "createdAt": "Вақт",
+    "details": "Батафсил",
+    "detailsTitle": "Ҳодиса тафсилотлари",
+    "metadata": "Техник маълумотлар",
     "severity": "Хавф даражаси",
     "reviewState": "Кўриб чиқиш ҳолати",
     "unreviewed": "Кўриб чиқилмаган",

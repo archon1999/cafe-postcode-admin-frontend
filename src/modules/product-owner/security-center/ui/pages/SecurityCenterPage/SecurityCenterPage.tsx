@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
+import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import { useEffect, useState } from 'react';
@@ -14,17 +15,19 @@ import { useRouter } from 'shared/hooks/router';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { Iconify } from 'shared/ui/Iconify';
 
-import { MigrationPanel } from './components/MigrationPanel';
-import { SecurityEventsPanel } from './components/SecurityEventsPanel';
-import { TelegramPanel } from './components/TelegramPanel';
-
-type ControlCenterTab = 'migration' | 'security' | 'telegram';
+import {
+  ControlCenterOverview,
+  type ControlCenterSection,
+  MigrationPanel,
+  SecurityEventsPanel,
+  TelegramPanel,
+} from './components';
 
 function SecurityCenterPage() {
   const { t } = useTranslate('security-center');
   const { profile } = useCurrentUser();
   const { replace } = useRouter();
-  const [tab, setTab] = useState<ControlCenterTab>('migration');
+  const [tab, setTab] = useState<ControlCenterSection>('migration');
 
   useEffect(() => {
     if (profile && !profile.isSuperuser) replace(RoutePath.main);
@@ -35,7 +38,7 @@ function SecurityCenterPage() {
   return (
     <ListPageContent>
       <CustomBreadcrumbs
-        heading={t('controlCenter.title')}
+        heading={t('title')}
         action={
           <Button
             component="a"
@@ -48,24 +51,43 @@ function SecurityCenterPage() {
         }
       />
       <ListPageBody sx={{ overflow: 'auto', pb: 3 }}>
-        <Card sx={{ overflow: 'hidden' }}>
-          <Tabs
-            value={tab}
-            onChange={(_event, value: ControlCenterTab) => setTab(value)}
-            variant="scrollable"
-            allowScrollButtonsMobile
-            aria-label={t('controlCenter.tabsLabel')}
-            sx={{ px: { xs: 1, sm: 2 }, borderBottom: 1, borderColor: 'divider' }}>
-            <Tab value="migration" label={t('tabs.migration')} />
-            <Tab value="security" label={t('tabs.events')} />
-            <Tab value="telegram" label={t('tabs.telegram')} />
-          </Tabs>
-          <Box sx={{ p: { xs: 2, sm: 3 } }}>
-            {tab === 'migration' && <MigrationPanel />}
-            {tab === 'security' && <SecurityEventsPanel />}
-            {tab === 'telegram' && <TelegramPanel />}
-          </Box>
-        </Card>
+        <Stack spacing={3}>
+          <ControlCenterOverview onOpenSection={setTab} />
+
+          <Card variant="outlined" sx={{ overflow: 'hidden' }}>
+            <Tabs
+              value={tab}
+              onChange={(_event, value: ControlCenterSection) => setTab(value)}
+              variant="scrollable"
+              allowScrollButtonsMobile
+              aria-label={t('controlCenter.details.tabsLabel')}
+              sx={{ px: { xs: 1, sm: 2 }, borderBottom: 1, borderColor: 'divider' }}>
+              <Tab
+                value="migration"
+                icon={<Iconify icon="solar:buildings-3-bold-duotone" />}
+                iconPosition="start"
+                label={t('tabs.migration')}
+              />
+              <Tab
+                value="security"
+                icon={<Iconify icon="solar:shield-warning-bold-duotone" />}
+                iconPosition="start"
+                label={t('tabs.events')}
+              />
+              <Tab
+                value="telegram"
+                icon={<Iconify icon="logos:telegram" />}
+                iconPosition="start"
+                label={t('tabs.telegram')}
+              />
+            </Tabs>
+            <Box>
+              {tab === 'migration' && <MigrationPanel />}
+              {tab === 'security' && <SecurityEventsPanel />}
+              {tab === 'telegram' && <TelegramPanel />}
+            </Box>
+          </Card>
+        </Stack>
       </ListPageBody>
     </ListPageContent>
   );

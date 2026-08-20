@@ -2,24 +2,19 @@ import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
-import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
+import type { GridColDef, GridColumnVisibilityModel, GridPaginationModel } from '@mui/x-data-grid';
 import { useMemo, useState } from 'react';
 
 import { useTranslate } from 'app/providers/locales';
+import { DEFAULT_COLUMN_VISIBILITY_MODEL } from 'shared/constants';
+import { DataGrid, DataGridEmptyState, DataGridFiltersToolbar } from 'shared/ui/CustomDataGrid';
 import { formatDateTime } from 'shared/utils/format-time';
 
 import { useDeviceMigrationSummaryQuery } from '../../../../application';
@@ -42,6 +37,13 @@ const stageColor: Record<BranchRolloutStage, 'error' | 'info' | 'warning' | 'suc
   migrationInProgress: 'warning',
   readyForBridgeOff: 'success',
 };
+
+const rolloutStages: BranchRolloutStage[] = [
+  'fixPrerequisites',
+  'readyForPOSUpdate',
+  'migrationInProgress',
+  'readyForBridgeOff',
+];
 
 function GateDetails({ title, gate }: { title: string; gate: RolloutReadinessGate }) {
   const { t } = useTranslate('security-center');
@@ -81,7 +83,12 @@ export function MigrationPanel() {
   const { t } = useTranslate('security-center');
   const query = useDeviceMigrationSummaryQuery();
   const [selected, setSelected] = useState<MigrationRow | null>(null);
-  const [page, setPage] = useState(0);
+  const [search, setSearch] = useState('');
+  const [stages, setStages] = useState<BranchRolloutStage[]>([]);
+  const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(
+    DEFAULT_COLUMN_VISIBILITY_MODEL,
+  );
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ page: 0, pageSize: 10 });
   const snapshotAt = query.dataUpdatedAt || Date.now();
   const rows = useMemo<MigrationRow[]>(
     () =>
@@ -93,20 +100,108 @@ export function MigrationPanel() {
         }),
     [query.data?.branches, snapshotAt],
   );
-  const fullyMigrated = rows.filter((row) => row.readiness.fullyMigrated).length;
-  const readyForUpdate = rows.filter((row) => !row.readiness.fullyMigrated && row.readiness.posUpdate.ready).length;
-  const visibleRows = rows.slice(page * 10, page * 10 + 10);
+  const filteredRows = useMemo(() => {
+    const normalizedSearch = search.trim().toLocaleLowerCase();
 
-  if (query.isLoading) {
-    return (
-      <Stack role="status" aria-label={t('readiness.loading')} alignItems="center" spacing={1.5} sx={{ py: 8 }}>
-        <CircularProgress size={32} />
-        <Typography color="text.secondary">{t('readiness.loading')}</Typography>
-      </Stack>
+    return rows.filter(
+      (row) =>
+        (!normalizedSearch || row.branch.restaurantName.toLocaleLowerCase().includes(normalizedSearch)) &&
+        (!stages.length || stages.includes(row.readiness.stage)),
     );
-  }
+  }, [rows, search, stages]);
+  const columns = useMemo<GridColDef<MigrationRow>[]>(
+    () => [
+      {
+        field: 'branch',
+        headerName: t('migration.table.branch'),
+        minWidth: 220,
+        flex: 1,
+        valueGetter: (_value, row) => row.branch.restaurantName,
+        renderCell: ({ row }) => <Typography variant="subtitle2">{row.branch.restaurantName}</Typography>,
+      },
+      {
+        field: 'agent',
+        headerName: t('migration.table.agent'),
+        minWidth: 180,
+        flex: 0.8,
+        sortable: false,
+        renderCell: ({ row }) => {
+          const agentState = !row.branch.agent
+            ? 'missing'
+            : row.branch.agent.online
+              ? row.branch.agent.deviceMigrated
+                ? 'online'
+                : 'migrationRequired'
+              : 'offline';
 
-  if (query.isError || !query.data) {
+          return (
+            <Stack justifyContent="center" sx={{ height: 1, minWidth: 0 }}>
+              <Typography variant="body2">{t(`readiness.agentStates.${agentState}`)}</Typography>
+              {row.branch.agent?.lastSeenAt && (
+                <Typography variant="caption" color="text.secondary">
+                  {formatDateTime(row.branch.agent.lastSeenAt)}
+                </Typography>
+              )}
+            </Stack>
+          );
+        },
+      },
+      {
+        field: 'activePOSDevices',
+        headerName: t('migration.table.pos'),
+        width: 110,
+        align: 'center',
+        headerAlign: 'center',
+        valueGetter: (_value, row) => row.branch.activePOSDevices,
+      },
+      {
+        field: 'unboundPOSSessions',
+        headerName: t('migration.table.unbound'),
+        width: 120,
+        align: 'center',
+        headerAlign: 'center',
+        valueGetter: (_value, row) => row.branch.unboundPOSSessions,
+      },
+      {
+        field: 'stage',
+        headerName: t('migration.table.stage'),
+        minWidth: 210,
+        flex: 0.8,
+        valueGetter: (_value, row) => t(`readiness.stages.${row.readiness.stage}`),
+        renderCell: ({ row }) => (
+          <Chip
+            size="small"
+            variant="soft"
+            color={stageColor[row.readiness.stage]}
+            label={t(`readiness.stages.${row.readiness.stage}`)}
+          />
+        ),
+      },
+    ],
+    [t],
+  );
+  const filters = useMemo(
+    () => [
+      {
+        id: 'stages',
+        label: t('migration.table.stage'),
+        value: stages,
+        options: rolloutStages.map((stage) => ({
+          value: stage,
+          label: t(`readiness.stages.${stage}`),
+        })),
+        onApply: (values: string[]) => {
+          setStages(values as BranchRolloutStage[]);
+          setPaginationModel((previous) => ({ ...previous, page: 0 }));
+        },
+        testId: 'migration-stage-filter',
+        emptyLabel: t('common.all'),
+      },
+    ],
+    [stages, t],
+  );
+
+  if (query.isError && !query.data) {
     return (
       <Alert
         severity="error"
@@ -121,111 +216,66 @@ export function MigrationPanel() {
   }
 
   return (
-    <Stack spacing={2.5}>
-      <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" spacing={1.5}>
-        <Box>
-          <Typography variant="h6">{t('readiness.title')}</Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-            {t('readiness.description')}
-          </Typography>
-        </Box>
-        <Button variant="outlined" size="small" onClick={() => void query.refetch()} disabled={query.isFetching}>
-          {t('migration.refresh')}
-        </Button>
-      </Stack>
-
+    <Stack spacing={2}>
       {query.isError && <Alert severity="warning">{t('readiness.refreshError')}</Alert>}
 
-      <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
-        <Chip
-          variant="soft"
-          color="success"
-          label={t('readiness.fullyMigratedCount', { count: fullyMigrated, total: rows.length })}
+      <Box sx={{ width: 1 }}>
+        <DataGrid
+          autoHeight
+          rows={filteredRows}
+          columns={columns}
+          getRowId={(row) => row.branch.restaurantId}
+          pagination
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          pageSizeOptions={[10]}
+          loading={query.isLoading || query.isFetching}
+          onRefresh={() => query.refetch()}
+          refreshing={query.isFetching}
+          autoRefreshIntervalMs={false}
+          disableColumnMenu
+          columnVisibilityModel={columnVisibilityModel}
+          onColumnVisibilityModelChange={setColumnVisibilityModel}
+          onRowClick={({ row }) => setSelected(row)}
+          slots={{
+            noRowsOverlay: () => (
+              <DataGridEmptyState
+                hasActiveFilters={Boolean(search || stages.length)}
+                noData={{ title: t('readiness.empty') }}
+                noResults={{ title: t('readiness.filters.noResults') }}
+              />
+            ),
+            toolbar: () => (
+              <DataGridFiltersToolbar
+                searchLabel={t('common.search')}
+                searchPlaceholder={t('readiness.filters.searchPlaceholder')}
+                clearSearchLabel={t('common.clearSearch')}
+                search={search}
+                onSearchChange={(value) => {
+                  setSearch(value.trim());
+                  setPaginationModel((previous) => ({ ...previous, page: 0 }));
+                }}
+                onClearSearch={() => {
+                  setSearch('');
+                  setPaginationModel((previous) => ({ ...previous, page: 0 }));
+                }}
+                filters={filters}
+                columns={columns}
+                columnVisibilityModel={columnVisibilityModel}
+                defaultColumnVisibilityModel={DEFAULT_COLUMN_VISIBILITY_MODEL}
+                onSaveColumns={setColumnVisibilityModel}
+              />
+            ),
+          }}
+          sx={{
+            border: 'none',
+            flex: 'none',
+            '& .MuiDataGrid-cell': { display: 'flex', alignItems: 'center' },
+            '& .MuiDataGrid-row': { cursor: 'pointer' },
+            '& .MuiDataGrid-toolbarContainer': { px: 2.5, py: 2 },
+          }}
         />
-        <Chip variant="soft" color="info" label={t('migration.readyForUpdate', { count: readyForUpdate })} />
-        <Chip
-          variant="soft"
-          color="warning"
-          label={t('migration.requiresAction', { count: rows.length - fullyMigrated })}
-        />
-      </Stack>
-
-      {!rows.length ? (
-        <Typography color="text.secondary" textAlign="center" sx={{ py: 6 }}>
-          {t('readiness.empty')}
-        </Typography>
-      ) : (
-        <Box sx={{ border: 1, borderColor: 'divider', borderRadius: 1.5, overflow: 'hidden' }}>
-          <TableContainer>
-            <Table size="small" sx={{ minWidth: 760 }}>
-              <TableHead>
-                <TableRow>
-                  <TableCell>{t('migration.table.branch')}</TableCell>
-                  <TableCell>{t('migration.table.agent')}</TableCell>
-                  <TableCell align="center">{t('migration.table.pos')}</TableCell>
-                  <TableCell align="center">{t('migration.table.unbound')}</TableCell>
-                  <TableCell>{t('migration.table.stage')}</TableCell>
-                  <TableCell align="right">{t('migration.table.action')}</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {visibleRows.map((row) => {
-                  const { branch, readiness } = row;
-                  const agentState = !branch.agent
-                    ? 'missing'
-                    : branch.agent.online
-                      ? branch.agent.deviceMigrated
-                        ? 'online'
-                        : 'migrationRequired'
-                      : 'offline';
-                  return (
-                    <TableRow key={branch.restaurantId} hover>
-                      <TableCell>
-                        <Typography variant="subtitle2">{branch.restaurantName}</Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body2">{t(`readiness.agentStates.${agentState}`)}</Typography>
-                        {branch.agent?.lastSeenAt && (
-                          <Typography variant="caption" color="text.secondary">
-                            {formatDateTime(branch.agent.lastSeenAt)}
-                          </Typography>
-                        )}
-                      </TableCell>
-                      <TableCell align="center">{branch.activePOSDevices}</TableCell>
-                      <TableCell align="center">{branch.unboundPOSSessions}</TableCell>
-                      <TableCell>
-                        <Chip
-                          size="small"
-                          variant="soft"
-                          color={stageColor[readiness.stage]}
-                          label={t(`readiness.stages.${readiness.stage}`)}
-                        />
-                      </TableCell>
-                      <TableCell align="right">
-                        <Button size="small" onClick={() => setSelected(row)}>
-                          {t('migration.details')}
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            component="div"
-            count={rows.length}
-            page={page}
-            rowsPerPage={10}
-            rowsPerPageOptions={[10]}
-            onPageChange={(_event, nextPage) => setPage(nextPage)}
-            onRowsPerPageChange={() => undefined}
-            labelRowsPerPage=""
-            labelDisplayedRows={({ from, to, count }) => `${from}–${to} / ${count}`}
-            sx={{ borderTop: 1, borderColor: 'divider' }}
-          />
-        </Box>
-      )}
+      </Box>
 
       <Dialog open={Boolean(selected)} onClose={() => setSelected(null)} fullWidth maxWidth="sm">
         <DialogTitle>{t('migration.detailsTitle', { branch: selected?.branch.restaurantName })}</DialogTitle>

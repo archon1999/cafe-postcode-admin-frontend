@@ -38,9 +38,12 @@ vi.mock('shared/ui/CustomBreadcrumbs', () => ({
 
 vi.mock('shared/ui/Iconify', () => ({ Iconify: () => null }));
 
-vi.mock('./components/MigrationPanel', () => ({ MigrationPanel: () => <div>migration-panel</div> }));
-vi.mock('./components/SecurityEventsPanel', () => ({ SecurityEventsPanel: () => <div>security-panel</div> }));
-vi.mock('./components/TelegramPanel', () => ({ TelegramPanel: () => <div>telegram-panel</div> }));
+vi.mock('./components', () => ({
+  ControlCenterOverview: () => <div>control-center-overview</div>,
+  MigrationPanel: () => <div>migration-panel</div>,
+  SecurityEventsPanel: () => <div>security-panel</div>,
+  TelegramPanel: () => <div>telegram-panel</div>,
+}));
 
 afterEach(cleanup);
 
@@ -48,7 +51,9 @@ describe('SecurityCenterPage scope', () => {
   it('keeps migration, security and Telegram in Admin and sends device operations to Control PWA', () => {
     render(<SecurityCenterPage />);
 
-    const tabs = screen.getByRole('tablist', { name: 'controlCenter.tabsLabel' });
+    expect(screen.getByText('control-center-overview')).toBeVisible();
+
+    const tabs = screen.getByRole('tablist', { name: 'controlCenter.details.tabsLabel' });
     expect(within(tabs).getAllByRole('tab')).toHaveLength(3);
     expect(within(tabs).getByRole('tab', { name: 'tabs.migration' })).toBeVisible();
     expect(within(tabs).getByRole('tab', { name: 'tabs.events' })).toBeVisible();

@@ -3,6 +3,7 @@
 import '@testing-library/jest-dom/vitest';
 
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type { DeviceMigrationSummary } from '../../../../domain';
@@ -11,8 +12,39 @@ import { MigrationPanel } from './MigrationPanel';
 
 const mocks = vi.hoisted(() => ({ query: vi.fn(), refetch: vi.fn() }));
 
+type MockGridRow = {
+  branch: { restaurantId: string; restaurantName: string };
+};
+
+type MockGridColumn = {
+  field: string;
+  renderCell?: (params: { row: MockGridRow }) => ReactNode;
+};
+
 vi.mock('app/providers/locales', () => ({
   useTranslate: () => ({ t: (key: string) => key }),
+}));
+
+vi.mock('shared/ui/CustomDataGrid', () => ({
+  DataGrid: ({
+    rows,
+    columns,
+    onRowClick,
+  }: {
+    rows: MockGridRow[];
+    columns: MockGridColumn[];
+    onRowClick?: (params: { row: MockGridRow }) => void;
+  }) => (
+    <div>
+      {rows.slice(0, 10).map((row) => (
+        <button type="button" key={row.branch.restaurantId} onClick={() => onRowClick?.({ row })}>
+          {columns.find((column) => column.field === 'branch')?.renderCell?.({ row })}
+        </button>
+      ))}
+    </div>
+  ),
+  DataGridEmptyState: () => null,
+  DataGridFiltersToolbar: () => null,
 }));
 
 vi.mock('shared/utils/format-time', () => ({ formatDateTime: (value: string) => value }));
@@ -61,7 +93,7 @@ describe('MigrationPanel', () => {
 
     render(<MigrationPanel />);
 
-    expect(screen.getAllByRole('button', { name: 'migration.details' })).toHaveLength(10);
+    expect(screen.getAllByRole('button', { name: /^Branch / })).toHaveLength(10);
     expect(screen.getByText('Branch 01')).toBeVisible();
     expect(screen.queryByText('Branch 11')).not.toBeInTheDocument();
     expect(screen.queryByText('00000000-0000-4000-8000-000000000001')).not.toBeInTheDocument();
@@ -78,7 +110,7 @@ describe('MigrationPanel', () => {
     });
 
     render(<MigrationPanel />);
-    fireEvent.click(screen.getAllByRole('button', { name: 'migration.details' })[0]);
+    fireEvent.click(screen.getByRole('button', { name: 'Branch 01' }));
 
     expect(screen.getByRole('dialog')).toBeVisible();
     expect(screen.getAllByText('readiness.reasons.agentMissing')).toHaveLength(2);
