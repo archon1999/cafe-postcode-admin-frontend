@@ -107,6 +107,8 @@ export type TelegramLink = {
 
 export type TelegramSubscription = {
   id: string;
+  restaurantId: string;
+  restaurantName: string;
   telegramUserId: string;
   username: string;
   firstName: string;

@@ -33,6 +33,5 @@ export function useTelegramSubscriptionsQuery(restaurantId: string | null) {
   return useQuery({
     queryKey: securityCenterKeys.telegramSubscriptions(restaurantId),
     queryFn: () => securityCenterRepository.listTelegramSubscriptions(),
-    enabled: Boolean(restaurantId),
   });
 }

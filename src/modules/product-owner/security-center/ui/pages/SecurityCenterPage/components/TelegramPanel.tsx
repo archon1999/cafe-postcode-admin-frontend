@@ -87,9 +87,12 @@ export function TelegramPanel() {
     return (subscriptionsQuery.data ?? []).filter((subscription) => {
       if (!normalizedSearch) return true;
 
-      return [subscription.username, subscription.firstName, subscription.telegramUserId].some((value) =>
-        value?.toLocaleLowerCase().includes(normalizedSearch),
-      );
+      return [
+        subscription.username,
+        subscription.firstName,
+        subscription.telegramUserId,
+        subscription.restaurantName,
+      ].some((value) => value?.toLocaleLowerCase().includes(normalizedSearch));
     });
   }, [search, subscriptionsQuery.data]);
 
@@ -117,6 +120,12 @@ export function TelegramPanel() {
         headerName: t('telegram.telegramId'),
         minWidth: 170,
         flex: 0.7,
+      },
+      {
+        field: 'restaurantName',
+        headerName: t('devices.restaurant'),
+        minWidth: 180,
+        flex: 0.8,
       },
       {
         field: 'notificationsEnabled',
@@ -172,7 +181,7 @@ export function TelegramPanel() {
           onPaginationModelChange={setPaginationModel}
           pageSizeOptions={[10, 20, 50]}
           loading={subscriptionsQuery.isLoading || subscriptionsQuery.isFetching}
-          onRefresh={restaurantId ? () => subscriptionsQuery.refetch() : undefined}
+          onRefresh={() => subscriptionsQuery.refetch()}
           refreshing={subscriptionsQuery.isFetching}
           autoRefreshIntervalMs={false}
           disableColumnMenu
@@ -182,7 +191,7 @@ export function TelegramPanel() {
             noRowsOverlay: () => (
               <DataGridEmptyState
                 hasActiveFilters={Boolean(search)}
-                noData={{ title: t(restaurantId ? 'telegram.empty' : 'telegram.selectRestaurant') }}
+                noData={{ title: t('telegram.empty') }}
                 noResults={{ title: t('telegram.empty') }}
               />
             ),
