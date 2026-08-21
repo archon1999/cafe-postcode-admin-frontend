@@ -536,7 +536,7 @@ export type AdminRestaurant = {
   branches?: AdminBranch[];
 };
 
-export type AdminRestaurantDetail = AdminRestaurant & {
+export type AdminRestaurantDetail = Omit<AdminRestaurant, 'branches'> & {
   activeUsers: AdminRestaurantActiveUser[];
   soliqIntegration?: AdminRestaurantSoliqSummary | null;
   operationalSummary: AdminRestaurantOperationalSummary;
@@ -1327,7 +1327,7 @@ export type AdminLocalAgentLogs = {
   detail?: string;
 };
 
-export type AdminLocalAgentBulkAction = 'update' | 'refresh_context' | 'restart';
+export type AdminLocalAgentBulkAction = 'update' | 'refresh_context' | 'repair_autostart' | 'restart';
 
 export type AdminLocalAgentBulkActionResult = {
   ok: boolean;

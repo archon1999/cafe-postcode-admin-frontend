@@ -136,6 +136,7 @@
       "refresh": "Yangilash",
       "bulkUpdate": "Versiyani yangilash",
       "refreshContext": "Ma’lumotlarni yangilash",
+      "repairAutostart": "Avto-ishga tushishni tiklash",
       "restart": "Restart",
       "confirm": "Tasdiqlash"
     },
@@ -159,6 +160,10 @@
       "refresh_context": {
         "title": "Ma’lumotlarni yangilash",
         "description": "Tanlangan {{count}} ta agent backenddan restoran ma’lumotlarini qayta olsinmi?"
+      },
+      "repair_autostart": {
+        "title": "Avto-ishga tushishni tiklash",
+        "description": "Tanlangan {{count}} ta agent Windows avto-ishga tushirish vazifasini xavfsiz qayta o‘rnatsinmi?"
       },
       "restart": {
         "title": "Agentlarni restart qilish",

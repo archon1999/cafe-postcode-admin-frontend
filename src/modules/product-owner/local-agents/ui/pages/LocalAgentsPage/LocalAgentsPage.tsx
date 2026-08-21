@@ -195,6 +195,13 @@ function LocalAgentsPage() {
               onClick: () => setBulkActionToConfirm('refresh_context'),
             },
             {
+              key: 'repair-autostart',
+              label: t('localAgents.actions.repairAutostart'),
+              startIcon: <Iconify icon="solar:shield-check-bold" />,
+              disabled: bulkMutation.isPending,
+              onClick: () => setBulkActionToConfirm('repair_autostart'),
+            },
+            {
               key: 'restart',
               label: t('localAgents.actions.restart'),
               color: 'warning',
