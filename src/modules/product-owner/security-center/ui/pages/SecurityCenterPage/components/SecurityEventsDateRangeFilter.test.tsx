@@ -14,14 +14,17 @@ vi.mock('shared/ui/Iconify', () => ({ Iconify: () => null }));
 vi.mock('modules/restaurant-admin/reports/ui/components/ReportsDateRangePicker', () => ({
   ReportsDateRangePicker: ({
     empty,
+    renderTrigger,
     onPresetChange,
     onRangeChange,
   }: {
     empty?: boolean;
+    renderTrigger?: (props: { displayValue: string; open: boolean; onClick: () => void }) => React.ReactNode;
     onPresetChange: (preset: 'today') => void;
     onRangeChange: (startDate: string, endDate: string) => void;
   }) => (
     <div data-testid="reports-date-range-picker" data-empty={String(empty)}>
+      {renderTrigger?.({ displayValue: empty ? '' : '22.08.2026 - 23.08.2026', open: false, onClick: vi.fn() })}
       <button type="button" onClick={() => onPresetChange('today')}>
         preset
       </button>
@@ -45,6 +48,7 @@ describe('SecurityEventsDateRangeFilter', () => {
     render(<SecurityEventsDateRangeFilter value={null} onChange={onChange} />);
 
     expect(screen.getByTestId('reports-date-range-picker')).toHaveAttribute('data-empty', 'true');
+    expect(screen.getByRole('button', { name: 'events.dateRange.filter' })).toBeVisible();
     expect(onChange).not.toHaveBeenCalled();
 
     fireEvent.click(screen.getByRole('button', { name: 'custom' }));

@@ -10,7 +10,7 @@ import { enUS } from 'date-fns/locale/en-US';
 import { ru } from 'date-fns/locale/ru';
 import { uz } from 'date-fns/locale/uz';
 import { uzCyrl } from 'date-fns/locale/uz-Cyrl';
-import { useEffect, useMemo, useState, type MouseEvent } from 'react';
+import { useEffect, useMemo, useState, type MouseEvent, type ReactNode } from 'react';
 import { DayPicker, TZDate, type DateRange } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 
@@ -31,11 +31,18 @@ import {
   type ReportsFixedDatePreset,
 } from './reportsDateRange';
 
+export type ReportsDateRangePickerTriggerProps = {
+  displayValue: string;
+  open: boolean;
+  onClick: (event: MouseEvent<HTMLElement>) => void;
+};
+
 type ReportsDateRangePickerProps = {
   activePreset: ReportsDatePreset;
   startDate: string;
   endDate: string;
   empty?: boolean;
+  renderTrigger?: (props: ReportsDateRangePickerTriggerProps) => ReactNode;
   onPresetChange: (value: ReportsFixedDatePreset) => void;
   onRangeChange: (startDate: string, endDate: string) => void;
 };
@@ -65,6 +72,7 @@ export function ReportsDateRangePicker({
   startDate,
   endDate,
   empty = false,
+  renderTrigger,
   onPresetChange,
   onRangeChange,
 }: ReportsDateRangePickerProps) {
@@ -172,23 +180,29 @@ export function ReportsDateRangePicker({
     onRangeChange(nextRangeState.startDate, nextRangeState.endDate);
   };
 
+  const openPicker = (event: MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
+
   return (
     <>
-      <TextField
-        size="small"
-        label={t('filters.dateRange')}
-        value={displayValue}
-        onClick={(event: MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget)}
-        InputProps={{
-          readOnly: true,
-          endAdornment: (
-            <InputAdornment position="end">
-              <Iconify icon="solar:calendar-mark-bold" width={18} />
-            </InputAdornment>
-          ),
-        }}
-        sx={{ minWidth: { xs: '100%', md: 320 } }}
-      />
+      {renderTrigger ? (
+        renderTrigger({ displayValue, open, onClick: openPicker })
+      ) : (
+        <TextField
+          size="small"
+          label={t('filters.dateRange')}
+          value={displayValue}
+          onClick={openPicker}
+          InputProps={{
+            readOnly: true,
+            endAdornment: (
+              <InputAdornment position="end">
+                <Iconify icon="solar:calendar-mark-bold" width={18} />
+              </InputAdornment>
+            ),
+          }}
+          sx={{ minWidth: { xs: '100%', md: 320 } }}
+        />
+      )}
 
       <Popover
         open={open}

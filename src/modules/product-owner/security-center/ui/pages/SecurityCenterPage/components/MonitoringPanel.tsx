@@ -492,7 +492,7 @@ function DeviceCounts({ row }: { row: MonitoringRow }) {
       key: 'local-agent',
       label: t('monitoring.devices.localAgent'),
       count: row.devices.activeLocalAgent,
-      icon: 'solar:server-square-bold',
+      icon: 'solar:ssd-round-bold',
     },
     {
       key: 'pos',
