@@ -6,6 +6,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
@@ -160,9 +161,15 @@ export function TelegramPanel({ businessPartnerRestaurantIds }: TelegramPanelPro
         align: 'right',
         headerAlign: 'right',
         renderCell: ({ row }) => (
-          <Button color="error" size="small" onClick={() => setRevokeTarget(row)}>
-            {t('telegram.revoke')}
-          </Button>
+          <Tooltip title={t('telegram.revoke')}>
+            <IconButton
+              color="error"
+              size="small"
+              aria-label={t('telegram.revoke')}
+              onClick={() => setRevokeTarget(row)}>
+              <Iconify icon="solar:link-broken-minimalistic-bold-duotone" width={20} />
+            </IconButton>
+          </Tooltip>
         ),
       },
     ],

@@ -51,7 +51,7 @@ import {
 type HealthStatus = BranchHealthStatus;
 type MonitoringRow = MonitoringBranch & { id: string; health: BranchHealthAssessment };
 
-const HEALTH_PRIORITY: Record<HealthStatus, number> = { critical: 0, attention: 1, healthy: 2 };
+const HEALTH_PRIORITY: Record<HealthStatus, number> = { healthy: 0, attention: 1, critical: 2 };
 const HEALTH_COLORS = { healthy: 'success', attention: 'warning', critical: 'error' } as const;
 const HEALTH_ICONS: Record<HealthStatus, IconifyName> = {
   healthy: 'solar:shield-check-bold',

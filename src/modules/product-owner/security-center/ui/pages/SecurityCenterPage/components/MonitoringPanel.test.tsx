@@ -233,10 +233,18 @@ describe('MonitoringPanel', () => {
     expect(within(alphaRow).getByLabelText('monitoring.devices.telegram: 2')).toBeVisible();
 
     const bravoRow = screen.getByRole('row', { name: /Bravo Critical/i });
+    const charlieRow = screen.getByRole('row', { name: /Charlie Attention/i });
     expect(within(bravoRow).queryByLabelText(/monitoring\.devices\.tv:/i)).not.toBeInTheDocument();
     expect(within(bravoRow).queryByLabelText(/monitoring\.devices\.telegram:/i)).not.toBeInTheDocument();
 
-    for (const row of [alphaRow, bravoRow, screen.getByRole('row', { name: /Charlie Attention/i })]) {
+    expect(
+      screen
+        .getAllByRole('row')
+        .map((row) => [alphaRow, charlieRow, bravoRow].find((branchRow) => branchRow === row)?.textContent)
+        .filter(Boolean),
+    ).toEqual([alphaRow.textContent, charlieRow.textContent, bravoRow.textContent]);
+
+    for (const row of [alphaRow, charlieRow, bravoRow]) {
       expect(row).toHaveStyle({ height: '72px' });
     }
 
