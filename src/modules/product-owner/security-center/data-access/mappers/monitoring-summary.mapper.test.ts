@@ -15,6 +15,7 @@ describe('mapMonitoringOverview', () => {
         revokedDevices: 1,
         activePOSTerminals: 1,
         pendingPairings: 2,
+        riskWindowHours: 24,
         unacknowledgedHigh: 1,
         unacknowledgedCritical: 0,
       },
@@ -66,6 +67,7 @@ describe('mapMonitoringOverview', () => {
     dto.branches[0].devices.active = 99;
 
     expect(mapped.summary.totalBranches).toBe(2);
+    expect(mapped.summary.riskWindowHours).toBe(24);
     expect(mapped.insights).toEqual({
       securityActivity: [
         { date: '2026-08-21', high: 2, critical: 1 },
@@ -145,6 +147,7 @@ describe('mapMonitoringOverview', () => {
     expect(mapped.branches[0].agent).toBeNull();
     expect(mapped.branches[0].devices.activeLocalAgent).toBe(0);
     expect(mapped.branches[0].devices.telegramSubscriptions).toBe(0);
+    expect(mapped.summary.riskWindowHours).toBe(24);
     expect(mapped.insights).toEqual({
       securityActivity: [],
       agentVersions: [],

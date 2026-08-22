@@ -714,6 +714,7 @@ export function MonitoringPanel({ businessPartnerId, onSecurityDateSelect }: Mon
     );
   }, [agentVersionFilter, healthFilter, rows, search]);
   const riskCount = (query.data?.summary.unacknowledgedHigh ?? 0) + (query.data?.summary.unacknowledgedCritical ?? 0);
+  const riskWindowHours = query.data?.summary.riskWindowHours ?? 24;
   const generatedAt = query.data?.generatedAt;
   const generatedAtTimestamp = generatedAt ? Date.parse(generatedAt) : Number.NaN;
   const stale = Number.isFinite(generatedAtTimestamp) && Date.now() - generatedAtTimestamp > STALE_AFTER_MS;
@@ -823,7 +824,7 @@ export function MonitoringPanel({ businessPartnerId, onSecurityDateSelect }: Mon
             value={riskCount}
             icon="solar:danger-bold"
             color="error"
-            helper={`${query.data?.summary.unacknowledgedHigh ?? 0} ${t('monitoring.security.high')} · ${query.data?.summary.unacknowledgedCritical ?? 0} ${t('monitoring.security.critical')}`}
+            helper={`${query.data?.summary.unacknowledgedHigh ?? 0} ${t('monitoring.security.high')} · ${query.data?.summary.unacknowledgedCritical ?? 0} ${t('monitoring.security.critical')} · ${t('monitoring.security.riskWindow', { count: riskWindowHours })}`}
           />
         </Grid>
       </Grid>

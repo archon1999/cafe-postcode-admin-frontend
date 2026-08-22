@@ -44,6 +44,7 @@ export type MonitoringOverviewSummary = {
   revokedDevices: number;
   activePOSTerminals: number;
   pendingPairings: number;
+  riskWindowHours: number;
   unacknowledgedHigh: number;
   unacknowledgedCritical: number;
 };

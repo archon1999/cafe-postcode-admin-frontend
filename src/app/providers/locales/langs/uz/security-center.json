@@ -187,6 +187,7 @@
       "unreviewed": "Ko‘rib chiqilmagan",
       "high": "Yuqori",
       "critical": "Kritik",
+      "riskWindow": "Oxirgi {{count}} soat",
       "lastEvent": "Oxirgi hodisa"
     },
     "actions": {

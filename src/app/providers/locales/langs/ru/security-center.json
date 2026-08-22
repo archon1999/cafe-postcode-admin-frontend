@@ -187,6 +187,7 @@
       "unreviewed": "Не проверено",
       "high": "Высокий риск",
       "critical": "Критичный риск",
+      "riskWindow": "За последние {{count}} ч",
       "lastEvent": "Последнее событие"
     },
     "actions": {

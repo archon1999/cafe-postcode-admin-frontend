@@ -169,6 +169,7 @@ beforeEach(() => {
         revokedDevices: 1,
         activePOSTerminals: 3,
         pendingPairings: 2,
+        riskWindowHours: 24,
         unacknowledgedHigh: 1,
         unacknowledgedCritical: 1,
       },
@@ -212,6 +213,7 @@ describe('MonitoringPanel', () => {
     expect(screen.getAllByText('monitoring.metrics.totalBranches').length).toBeGreaterThan(0);
     expect(screen.getByText('monitoring.metrics.onlineAgents')).toBeVisible();
     expect(screen.getByText('monitoring.metrics.risks')).toBeVisible();
+    expect(screen.getByText('monitoring.security.riskWindow:24', { exact: false })).toBeVisible();
     expect(screen.getByRole('img', { name: 'monitoring.securityActivity.chartLabel' })).toBeVisible();
     expect(screen.getByTestId('security-activity-chart')).toHaveTextContent('monitoring.security.high:0,1,0,2,0,1,1');
     expect(screen.getByTestId('security-activity-chart')).toHaveTextContent(
@@ -284,6 +286,7 @@ describe('MonitoringPanel', () => {
           revokedDevices: 0,
           activePOSTerminals: 0,
           pendingPairings: 0,
+          riskWindowHours: 24,
           unacknowledgedHigh: 0,
           unacknowledgedCritical: 0,
         },

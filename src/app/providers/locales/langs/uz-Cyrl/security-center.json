@@ -187,6 +187,7 @@
       "unreviewed": "Кўриб чиқилмаган",
       "high": "Юқори",
       "critical": "Критик",
+      "riskWindow": "Охирги {{count}} соат",
       "lastEvent": "Охирги ҳодиса"
     },
     "actions": {

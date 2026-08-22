@@ -42,6 +42,7 @@ export type MonitoringOverviewDto = {
     revokedDevices: number;
     activePOSTerminals: number;
     pendingPairings: number;
+    riskWindowHours?: number;
     unacknowledgedHigh: number;
     unacknowledgedCritical: number;
   };
@@ -100,7 +101,11 @@ function mapBranch(dto: MonitoringBranchDto): MonitoringBranch {
 export function mapMonitoringOverview(dto: MonitoringOverviewDto): MonitoringOverview {
   return {
     generatedAt: dto.generatedAt,
-    summary: { ...dto.summary },
+    summary: {
+      ...dto.summary,
+      // Keep the admin compatible during a rolling backend/frontend deploy.
+      riskWindowHours: dto.summary.riskWindowHours ?? 24,
+    },
     insights: {
       securityActivity: (dto.insights?.securityActivity ?? []).map((activity) => ({ ...activity })),
       agentVersions: (dto.insights?.agentVersions ?? []).map((version) => ({ ...version })),
