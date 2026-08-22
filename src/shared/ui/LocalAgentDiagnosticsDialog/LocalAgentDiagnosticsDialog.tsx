@@ -180,7 +180,8 @@ export function LocalAgentDiagnosticsDialog({
   };
 
   const submitOutboxAction = async () => {
-    if (!selectedOutboxAction || !onOutboxAction || !outboxReason.trim()) return;
+    if (!selectedOutboxAction || !onOutboxAction) return;
+    if (selectedOutboxAction.action === 'retry' && !outboxReason.trim()) return;
     try {
       await onOutboxAction(
         selectedOutboxAction.operation.operationId,
@@ -394,7 +395,7 @@ export function LocalAgentDiagnosticsDialog({
             </Typography>
             <TextField
               autoFocus
-              required
+              required={selectedOutboxAction?.action === 'retry'}
               multiline
               minRows={3}
               label={t('setup.agentMonitoring.outbox.reason')}
@@ -412,7 +413,7 @@ export function LocalAgentDiagnosticsDialog({
           <Button
             variant="contained"
             color={selectedOutboxAction?.action === 'resolve' ? 'success' : 'warning'}
-            disabled={!outboxReason.trim() || outboxActionPending}
+            disabled={(selectedOutboxAction?.action === 'retry' && !outboxReason.trim()) || outboxActionPending}
             onClick={() => void submitOutboxAction()}>
             {t(
               selectedOutboxAction?.action === 'retry'

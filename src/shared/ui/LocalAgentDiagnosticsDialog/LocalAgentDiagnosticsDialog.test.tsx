@@ -71,4 +71,27 @@ describe('LocalAgentDiagnosticsDialog outbox lifecycle', () => {
       expect(onOutboxAction).toHaveBeenCalledWith('payment-operation', 'retry', 'Cashier corrected the amount.'),
     );
   });
+
+  it('allows resolving without an audit reason', async () => {
+    const onOutboxAction = vi.fn().mockResolvedValue(undefined);
+    render(
+      <LocalAgentDiagnosticsDialog
+        open
+        onClose={() => {}}
+        diagnostics={diagnostics}
+        canManageOutbox
+        onOutboxAction={onOutboxAction}
+        onRefresh={() => {}}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'setup.agentMonitoring.outbox.resolve' }));
+
+    const actionDialog = screen.getByRole('dialog', { name: 'setup.agentMonitoring.outbox.resolveTitle' });
+    const confirm = within(actionDialog).getByRole('button', { name: 'setup.agentMonitoring.outbox.resolve' });
+    expect(confirm).toBeEnabled();
+    fireEvent.click(confirm);
+
+    await waitFor(() => expect(onOutboxAction).toHaveBeenCalledWith('payment-operation', 'resolve', ''));
+  });
 });
