@@ -5,6 +5,9 @@ type MonitoringAgentDto = {
   version: string;
   lastSeenAt: string | null;
   online: boolean;
+  expectedOffline?: boolean;
+  offlineReason?: MonitoringAgent['offlineReason'];
+  recentRiskEventCount?: number;
   protocolVersion: number;
   deviceStatus: DeviceStatus | null;
 };
@@ -37,6 +40,8 @@ export type MonitoringOverviewDto = {
     totalBranches: number;
     agentOnline: number;
     agentOffline: number;
+    agentExpectedOffline?: number;
+    agentAttentionRequired?: number;
     agentMissing: number;
     activeDevices: number;
     revokedDevices: number;
@@ -76,6 +81,9 @@ function mapAgent(dto: MonitoringAgentDto | null): MonitoringAgent | null {
     version: dto.version,
     lastSeenAt: dto.lastSeenAt,
     online: dto.online,
+    expectedOffline: dto.expectedOffline ?? false,
+    offlineReason: dto.offlineReason ?? (dto.online ? 'online' : 'last_seen_missing'),
+    recentRiskEventCount: dto.recentRiskEventCount ?? 0,
     protocolVersion: dto.protocolVersion,
     deviceStatus: dto.deviceStatus,
   };
@@ -105,6 +113,8 @@ export function mapMonitoringOverview(dto: MonitoringOverviewDto): MonitoringOve
       ...dto.summary,
       // Keep the admin compatible during a rolling backend/frontend deploy.
       riskWindowHours: dto.summary.riskWindowHours ?? 24,
+      agentExpectedOffline: dto.summary.agentExpectedOffline ?? 0,
+      agentAttentionRequired: dto.summary.agentAttentionRequired ?? dto.summary.agentOffline,
     },
     insights: {
       securityActivity: (dto.insights?.securityActivity ?? []).map((activity) => ({ ...activity })),

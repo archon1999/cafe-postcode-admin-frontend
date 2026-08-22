@@ -39,6 +39,8 @@ export type MonitoringOverviewSummary = {
   totalBranches: number;
   agentOnline: number;
   agentOffline: number;
+  agentExpectedOffline?: number;
+  agentAttentionRequired?: number;
   agentMissing: number;
   activeDevices: number;
   revokedDevices: number;
@@ -54,6 +56,16 @@ export type MonitoringAgent = {
   version: string;
   lastSeenAt: string | null;
   online: boolean;
+  expectedOffline?: boolean;
+  offlineReason?:
+    | 'online'
+    | 'natural_inactivity'
+    | 'last_seen_missing'
+    | 'agent_inactive'
+    | 'risk_before_offline'
+    | 'open_cash_shift'
+    | 'orders_after_offline';
+  recentRiskEventCount?: number;
   protocolVersion: number;
   deviceStatus: DeviceStatus | null;
 };

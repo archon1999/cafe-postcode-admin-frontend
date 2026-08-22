@@ -10,6 +10,8 @@ describe('mapMonitoringOverview', () => {
         totalBranches: 2,
         agentOnline: 1,
         agentOffline: 0,
+        agentExpectedOffline: 0,
+        agentAttentionRequired: 0,
         agentMissing: 1,
         activeDevices: 3,
         revokedDevices: 1,
@@ -36,6 +38,9 @@ describe('mapMonitoringOverview', () => {
             version: '1.1.0',
             lastSeenAt: '2026-08-22T09:59:30.000Z',
             online: true,
+            expectedOffline: false,
+            offlineReason: 'online',
+            recentRiskEventCount: 0,
             protocolVersion: 1,
             deviceStatus: 'ACTIVE',
           },
@@ -68,6 +73,8 @@ describe('mapMonitoringOverview', () => {
 
     expect(mapped.summary.totalBranches).toBe(2);
     expect(mapped.summary.riskWindowHours).toBe(24);
+    expect(mapped.summary.agentExpectedOffline).toBe(0);
+    expect(mapped.summary.agentAttentionRequired).toBe(0);
     expect(mapped.insights).toEqual({
       securityActivity: [
         { date: '2026-08-21', high: 2, critical: 1 },
@@ -84,6 +91,9 @@ describe('mapMonitoringOverview', () => {
         version: '1.1.0',
         lastSeenAt: '2026-08-22T09:59:30.000Z',
         online: true,
+        expectedOffline: false,
+        offlineReason: 'online',
+        recentRiskEventCount: 0,
         protocolVersion: 1,
         deviceStatus: 'ACTIVE',
       },
@@ -148,6 +158,8 @@ describe('mapMonitoringOverview', () => {
     expect(mapped.branches[0].devices.activeLocalAgent).toBe(0);
     expect(mapped.branches[0].devices.telegramSubscriptions).toBe(0);
     expect(mapped.summary.riskWindowHours).toBe(24);
+    expect(mapped.summary.agentExpectedOffline).toBe(0);
+    expect(mapped.summary.agentAttentionRequired).toBe(0);
     expect(mapped.insights).toEqual({
       securityActivity: [],
       agentVersions: [],

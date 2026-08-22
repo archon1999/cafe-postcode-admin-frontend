@@ -165,6 +165,7 @@
     "agent": {
       "online": "Онлайн",
       "offline": "Офлайн",
+      "expectedOffline": "Вне работы",
       "missing": "Агент отсутствует",
       "version": "Версия",
       "lastSeen": "Последняя связь",

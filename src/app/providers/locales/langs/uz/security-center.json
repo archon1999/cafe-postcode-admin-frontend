@@ -165,6 +165,7 @@
     "agent": {
       "online": "Online",
       "offline": "Offline",
+      "expectedOffline": "Tanaffusda",
       "missing": "Agent yo‘q",
       "version": "Versiya",
       "lastSeen": "Oxirgi aloqa",

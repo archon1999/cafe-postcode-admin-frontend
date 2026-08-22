@@ -54,7 +54,7 @@ export function assessBranchHealth(
   }
 
   if (!branch.agent) {
-    criticalReasons.push('agent_missing');
+    attentionReasons.push('agent_missing');
   } else {
     if (branch.agent.deviceStatus === 'REVOKED') {
       criticalReasons.push('agent_revoked');
@@ -62,8 +62,8 @@ export function assessBranchHealth(
       criticalReasons.push('agent_inactive');
     }
 
-    if (!branch.agent.online) {
-      criticalReasons.push('agent_offline');
+    if (!branch.agent.online && !branch.agent.expectedOffline) {
+      attentionReasons.push('agent_offline');
     }
   }
 
@@ -73,9 +73,9 @@ export function assessBranchHealth(
   if (branch.devices.activePOS === 0) {
     attentionReasons.push('pos_terminal_missing');
   }
-  if (!branch.devices.lastSeenAt) {
+  if (!branch.devices.lastSeenAt && !branch.agent?.expectedOffline) {
     attentionReasons.push('device_activity_missing');
-  } else if (isDeviceActivityStale(branch, options)) {
+  } else if (!branch.agent?.expectedOffline && isDeviceActivityStale(branch, options)) {
     attentionReasons.push('device_activity_stale');
   }
   if (criticalReasons.length > 0) {

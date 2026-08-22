@@ -86,8 +86,14 @@ function HealthLabel({ status, filled = false }: { status: HealthStatus; filled?
 
 function AgentLabel({ row, showVersion = true }: { row: MonitoringRow; showVersion?: boolean }) {
   const { t } = useTranslate('security-center');
-  const state = !row.agent ? 'missing' : row.agent.online ? 'online' : 'offline';
-  const color = state === 'online' ? 'success' : state === 'offline' ? 'error' : 'warning';
+  const state = !row.agent
+    ? 'missing'
+    : row.agent.online
+      ? 'online'
+      : row.agent.expectedOffline
+        ? 'expectedOffline'
+        : 'offline';
+  const color = state === 'online' ? 'success' : state === 'expectedOffline' ? 'default' : 'warning';
 
   return (
     <Label color={color} sx={{ width: 'fit-content', maxWidth: 1, whiteSpace: 'nowrap' }}>
@@ -815,7 +821,7 @@ export function MonitoringPanel({ businessPartnerId, onSecurityDateSelect }: Mon
             value={query.data?.summary.agentOnline ?? 0}
             icon="solar:monitor-bold"
             color="info"
-            helper={`${query.data?.summary.agentOffline ?? 0} ${t('monitoring.agent.offline')} · ${query.data?.summary.agentMissing ?? 0} ${t('monitoring.agent.missing')}`}
+            helper={`${query.data?.summary.agentExpectedOffline ?? 0} ${t('monitoring.agent.expectedOffline')} · ${query.data?.summary.agentAttentionRequired ?? 0} ${t('monitoring.health.attention')} · ${query.data?.summary.agentMissing ?? 0} ${t('monitoring.agent.missing')}`}
           />
         </Grid>
         <Grid size={{ xs: 6, lg: 3 }}>

@@ -60,7 +60,6 @@ describe('assessBranchHealth', () => {
   });
 
   it.each([
-    ['missing', null, 'agent_missing'],
     [
       'revoked',
       {
@@ -85,23 +84,54 @@ describe('assessBranchHealth', () => {
       },
       'agent_inactive',
     ],
-    [
-      'offline',
-      {
-        id: 'agent-1',
-        version: '1.1.0',
-        lastSeenAt: referenceTime,
-        online: false,
-        protocolVersion: 1,
-        deviceStatus: 'ACTIVE' as const,
-      },
-      'agent_offline',
-    ],
   ])('marks an %s agent as critical', (_label, agent, reason) => {
     const result = assessBranchHealth(branch({ agent }), { referenceTime });
 
     expect(result.status).toBe('critical');
     expect(result.reasons).toContain(reason);
+  });
+
+  it('marks a missing or unexpectedly offline agent for attention instead of critical', () => {
+    expect(assessBranchHealth(branch({ agent: null }), { referenceTime })).toMatchObject({
+      status: 'attention',
+      reasons: expect.arrayContaining(['agent_missing']),
+    });
+
+    expect(
+      assessBranchHealth(
+        branch({
+          agent: {
+            ...branch().agent!,
+            online: false,
+            expectedOffline: false,
+            offlineReason: 'orders_after_offline',
+          },
+        }),
+        { referenceTime },
+      ),
+    ).toMatchObject({ status: 'attention', reasons: expect.arrayContaining(['agent_offline']) });
+  });
+
+  it('keeps a naturally stopped agent healthy even when its last activity is old', () => {
+    const result = assessBranchHealth(
+      branch({
+        agent: {
+          ...branch().agent!,
+          online: false,
+          expectedOffline: true,
+          offlineReason: 'natural_inactivity',
+          lastSeenAt: '2026-08-20T09:00:00.000Z',
+        },
+        devices: {
+          ...branch().devices,
+          online: 0,
+          lastSeenAt: '2026-08-20T09:00:00.000Z',
+        },
+      }),
+      { referenceTime },
+    );
+
+    expect(result).toEqual({ status: 'healthy', reasons: [] });
   });
 
   it('marks high-risk events and a missing POS for attention', () => {

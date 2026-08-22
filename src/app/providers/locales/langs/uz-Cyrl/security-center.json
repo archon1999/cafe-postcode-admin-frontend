@@ -165,6 +165,7 @@
     "agent": {
       "online": "Online",
       "offline": "Offline",
+      "expectedOffline": "Танаффусда",
       "missing": "Агент йўқ",
       "version": "Версия",
       "lastSeen": "Охирги алоқа",
