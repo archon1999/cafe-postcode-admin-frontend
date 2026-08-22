@@ -60,6 +60,7 @@ const HEALTH_ICONS: Record<HealthStatus, IconifyName> = {
 };
 const STALE_AFTER_MS = 2 * 60 * 1000;
 const DEFAULT_ROWS_PER_PAGE = 10;
+const BRANCH_ROW_HEIGHT = 72;
 
 function safeDateTime(value: string | null | undefined) {
   return value ? formatDateTime(value) : '—';
@@ -591,11 +592,23 @@ function BranchTable({
           </TableHead>
           <TableBody>
             {visibleRows.map((row) => (
-              <TableRow hover key={row.id}>
+              <TableRow
+                hover
+                key={row.id}
+                sx={{
+                  height: BRANCH_ROW_HEIGHT,
+                  '& > .MuiTableCell-root': { height: BRANCH_ROW_HEIGHT, py: 1 },
+                }}>
                 <TableCell>
                   <DetailPageLink
                     href={RouterPathHelper.organizationRestaurantDetail(row.restaurantId)}
-                    sx={{ display: 'block', maxWidth: 220 }}>
+                    sx={{
+                      display: 'block',
+                      maxWidth: 220,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}>
                     {row.restaurantName}
                   </DetailPageLink>
                 </TableCell>
@@ -652,12 +665,13 @@ function BranchTable({
 }
 
 export type MonitoringPanelProps = {
+  businessPartnerId?: string | null;
   onSecurityDateSelect?: (date: string) => void;
 };
 
-export function MonitoringPanel({ onSecurityDateSelect }: MonitoringPanelProps = {}) {
+export function MonitoringPanel({ businessPartnerId, onSecurityDateSelect }: MonitoringPanelProps = {}) {
   const { t } = useTranslate('security-center');
-  const query = useMonitoringOverviewQuery();
+  const query = useMonitoringOverviewQuery(businessPartnerId);
   const [search, setSearch] = useState('');
   const [healthFilter, setHealthFilter] = useState<HealthStatus | 'all'>('all');
   const [agentVersionFilter, setAgentVersionFilter] = useState<string | null>(null);

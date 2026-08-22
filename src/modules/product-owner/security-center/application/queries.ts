@@ -5,10 +5,10 @@ import type { SecurityEventListQuery } from '../domain';
 
 import { securityCenterKeys } from './keys';
 
-export function useMonitoringOverviewQuery() {
+export function useMonitoringOverviewQuery(businessPartnerId?: string | null) {
   return useQuery({
-    queryKey: securityCenterKeys.monitoring(),
-    queryFn: () => securityCenterRepository.getMonitoringOverview(),
+    queryKey: securityCenterKeys.monitoring(businessPartnerId),
+    queryFn: () => securityCenterRepository.getMonitoringOverview(businessPartnerId || undefined),
     refetchInterval: 30_000,
   });
 }

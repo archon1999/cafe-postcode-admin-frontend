@@ -41,17 +41,47 @@ vi.mock('shared/ui/CustomBreadcrumbs', () => ({
 vi.mock('shared/ui/Iconify', () => ({ Iconify: () => null }));
 
 vi.mock('./components', () => ({
-  MonitoringPanel: ({ onSecurityDateSelect }: { onSecurityDateSelect?: (date: string) => void }) => (
-    <button type="button" onClick={() => onSecurityDateSelect?.('2026-08-20')}>
+  BusinessPartnerFilter: ({
+    onChange,
+  }: {
+    onChange: (value: { id: string; restaurants: Array<{ id: string }> }) => void;
+  }) => (
+    <button
+      type="button"
+      onClick={() => onChange({ id: 'partner-1', restaurants: [{ id: 'restaurant-1' }, { id: 'restaurant-2' }] })}>
+      select-business-partner
+    </button>
+  ),
+  MonitoringPanel: ({
+    businessPartnerId,
+    onSecurityDateSelect,
+  }: {
+    businessPartnerId?: string;
+    onSecurityDateSelect?: (date: string) => void;
+  }) => (
+    <button
+      type="button"
+      data-business-partner-id={businessPartnerId ?? ''}
+      onClick={() => onSecurityDateSelect?.('2026-08-20')}>
       monitoring-panel
     </button>
   ),
-  SecurityEventsPanel: ({ dateRange }: { dateRange?: { startDate: string; endDate: string } | null }) => (
-    <div>
+  SecurityEventsPanel: ({
+    businessPartnerId,
+    dateRange,
+  }: {
+    businessPartnerId?: string;
+    dateRange?: { startDate: string; endDate: string } | null;
+  }) => (
+    <div data-testid="security-panel" data-business-partner-id={businessPartnerId ?? ''}>
       security-panel {dateRange?.startDate} {dateRange?.endDate}
     </div>
   ),
-  TelegramPanel: () => <div>telegram-panel</div>,
+  TelegramPanel: ({ businessPartnerRestaurantIds }: { businessPartnerRestaurantIds?: string[] | null }) => (
+    <div data-testid="telegram-panel" data-restaurant-ids={businessPartnerRestaurantIds?.join(',') ?? ''}>
+      telegram-panel
+    </div>
+  ),
 }));
 
 afterEach(cleanup);
@@ -83,5 +113,21 @@ describe('SecurityCenterPage scope', () => {
 
     expect(screen.getByRole('tab', { name: 'tabs.events' })).toHaveAttribute('aria-selected', 'true');
     expect(screen.getByText('security-panel 2026-08-20 2026-08-20')).toBeVisible();
+  });
+
+  it('keeps the selected business partner scope across control-center tabs', () => {
+    render(<SecurityCenterPage />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'select-business-partner' }));
+    expect(screen.getByRole('button', { name: 'monitoring-panel' })).toHaveAttribute(
+      'data-business-partner-id',
+      'partner-1',
+    );
+
+    fireEvent.click(screen.getByRole('tab', { name: 'tabs.events' }));
+    expect(screen.getByTestId('security-panel')).toHaveAttribute('data-business-partner-id', 'partner-1');
+
+    fireEvent.click(screen.getByRole('tab', { name: 'tabs.notifications' }));
+    expect(screen.getByTestId('telegram-panel')).toHaveAttribute('data-restaurant-ids', 'restaurant-1,restaurant-2');
   });
 });

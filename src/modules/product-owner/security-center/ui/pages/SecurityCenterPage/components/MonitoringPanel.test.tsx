@@ -9,7 +9,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { MonitoringPanel, type MonitoringPanelProps } from './MonitoringPanel';
 
-const mocks = vi.hoisted(() => ({ query: vi.fn(), refetch: vi.fn() }));
+const mocks = vi.hoisted(() => ({ monitoringScope: vi.fn(), query: vi.fn(), refetch: vi.fn() }));
 
 vi.mock('@mui/material/useMediaQuery', () => ({ default: () => false }));
 vi.mock('app/routes', () => ({
@@ -54,7 +54,12 @@ vi.mock('shared/ui/Chart', () => ({
   ),
   useChart: (options: unknown) => options,
 }));
-vi.mock('../../../../application', () => ({ useMonitoringOverviewQuery: () => mocks.query() }));
+vi.mock('../../../../application', () => ({
+  useMonitoringOverviewQuery: (businessPartnerId?: string | null) => {
+    mocks.monitoringScope(businessPartnerId);
+    return mocks.query();
+  },
+}));
 vi.mock('../../../../domain', () => ({
   assessBranchHealth: (branch: { restaurantName: string }) => {
     if (branch.restaurantName === 'Bravo Critical') return { status: 'critical', reasons: ['agent_offline'] };
@@ -150,6 +155,7 @@ function renderPanel(props?: MonitoringPanelProps) {
 }
 
 beforeEach(() => {
+  mocks.monitoringScope.mockReset();
   mocks.refetch.mockReset();
   mocks.query.mockReturnValue({
     data: {
@@ -194,6 +200,12 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe('MonitoringPanel', () => {
+  it('loads the complete snapshot in the selected business partner scope', () => {
+    renderPanel({ businessPartnerId: 'partner-1' });
+
+    expect(mocks.monitoringScope).toHaveBeenCalledWith('partner-1');
+  });
+
   it('renders real monitoring insights and prioritizes risk status tabs', () => {
     renderPanel();
 
@@ -221,6 +233,10 @@ describe('MonitoringPanel', () => {
     const bravoRow = screen.getByRole('row', { name: /Bravo Critical/i });
     expect(within(bravoRow).queryByLabelText(/monitoring\.devices\.tv:/i)).not.toBeInTheDocument();
     expect(within(bravoRow).queryByLabelText(/monitoring\.devices\.telegram:/i)).not.toBeInTheDocument();
+
+    for (const row of [alphaRow, bravoRow, screen.getByRole('row', { name: /Charlie Attention/i })]) {
+      expect(row).toHaveStyle({ height: '72px' });
+    }
 
     expect(screen.getAllByRole('tab').map((tab) => tab.textContent)).toEqual([
       'monitoring.filters.all3',
@@ -253,6 +269,54 @@ describe('MonitoringPanel', () => {
     fireEvent.click(clearButton!);
 
     expect(screen.getByRole('row', { name: /Alpha Healthy/i })).toBeVisible();
+  });
+
+  it('does not render device type chips with zero counts', () => {
+    mocks.query.mockReturnValue({
+      data: {
+        generatedAt: new Date().toISOString(),
+        summary: {
+          totalBranches: 1,
+          agentOnline: 0,
+          agentOffline: 0,
+          agentMissing: 1,
+          activeDevices: 0,
+          revokedDevices: 0,
+          activePOSTerminals: 0,
+          pendingPairings: 0,
+          unacknowledgedHigh: 0,
+          unacknowledgedCritical: 0,
+        },
+        insights: { securityActivity: [], agentVersions: [], deviceTypes: {} },
+        branches: [
+          {
+            ...branches[0],
+            restaurantName: 'No devices',
+            agent: null,
+            devices: {
+              active: 0,
+              online: 0,
+              revoked: 0,
+              activeLocalAgent: 0,
+              activePOS: 0,
+              activeTV: 0,
+              activeControl: 0,
+              telegramSubscriptions: 0,
+              lastSeenAt: null,
+            },
+          },
+        ],
+      },
+      isLoading: false,
+      isFetching: false,
+      isError: false,
+      refetch: mocks.refetch,
+    });
+
+    renderPanel();
+
+    const row = screen.getByRole('row', { name: /No devices/i });
+    expect(within(row).queryByLabelText(/^monitoring\.devices\./i)).not.toBeInTheDocument();
   });
 
   it('filters the registry by clicking an operational health row', () => {

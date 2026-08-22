@@ -3,6 +3,8 @@
   "controlCenter": {
     "title": "Хавфсизлик бошқарув маркази",
     "openControl": "Control PWA'ни очиш",
+    "businessPartnerFilter": "Бизнес ҳамкор",
+    "allBusinessPartners": "Ҳаммаси",
     "tabsLabel": "Control-center бўлимлари",
     "description": "Шахобчалар, Local Agent'лар, POS қурилмалари ва хавфсизлик ҳодисаларини битта операцион кўринишда назорат қилинг.",
     "refresh": "Янгилаш",

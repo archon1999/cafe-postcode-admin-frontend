@@ -31,9 +31,11 @@ describe('securityCenterRepository query contracts', () => {
       },
     });
 
-    const result = await securityCenterRepository.getMonitoringOverview();
+    const result = await securityCenterRepository.getMonitoringOverview('partner-1');
 
-    expect(getMock).toHaveBeenCalledWith('/api/v1/admin/monitoring/overview/');
+    expect(getMock).toHaveBeenCalledWith('/api/v1/admin/monitoring/overview/', {
+      params: { business_partner_id: 'partner-1' },
+    });
     expect(result.generatedAt).toBe('2026-08-22T10:00:00.000Z');
   });
 
@@ -45,6 +47,7 @@ describe('securityCenterRepository query contracts', () => {
     await securityCenterRepository.listSecurityEvents({
       page: 2,
       pageSize: 20,
+      businessPartnerId: 'partner-1',
       restaurantId: 'restaurant-1',
       eventType: 'DEVICE_PROOF_FAILED',
       deviceId: 'device-1',
@@ -60,6 +63,7 @@ describe('securityCenterRepository query contracts', () => {
       params: {
         page: 2,
         page_size: 20,
+        business_partner_id: 'partner-1',
         restaurant_id: 'restaurant-1',
         event_type: 'DEVICE_PROOF_FAILED',
         severity: 'HIGH',

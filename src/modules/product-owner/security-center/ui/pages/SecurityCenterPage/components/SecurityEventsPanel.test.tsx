@@ -48,10 +48,16 @@ afterEach(cleanup);
 
 describe('SecurityEventsPanel date range integration', () => {
   it('applies a controlled calendar range to the server query', () => {
-    render(<SecurityEventsPanel dateRange={{ startDate: '2026-08-22', endDate: '2026-08-22' }} />);
+    render(
+      <SecurityEventsPanel
+        businessPartnerId="partner-1"
+        dateRange={{ startDate: '2026-08-22', endDate: '2026-08-22' }}
+      />,
+    );
 
     expect(queryMock).toHaveBeenCalledWith(
       expect.objectContaining({
+        businessPartnerId: 'partner-1',
         from: '2026-08-21T19:00:00.000Z',
         to: '2026-08-22T18:59:59.999Z',
       }),

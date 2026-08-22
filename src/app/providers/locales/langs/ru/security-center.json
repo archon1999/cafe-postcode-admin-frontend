@@ -3,6 +3,8 @@
   "controlCenter": {
     "title": "Центр управления безопасностью",
     "openControl": "Открыть Control PWA",
+    "businessPartnerFilter": "Бизнес-партнёр",
+    "allBusinessPartners": "Все",
     "tabsLabel": "Разделы control-center",
     "description": "Контролируйте филиалы, Local Agent, POS-устройства и события безопасности из одного операционного экрана.",
     "refresh": "Обновить",

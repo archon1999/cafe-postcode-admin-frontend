@@ -200,6 +200,7 @@ export type TelegramSubscription = {
 export type SecurityEventListQuery = {
   page: number;
   pageSize: number;
+  businessPartnerId?: string;
   restaurantId?: string;
   eventType?: string;
   severity?: SecuritySeverity;

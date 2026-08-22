@@ -10,7 +10,7 @@ import type {
 } from '../entities';
 
 export interface SecurityCenterRepository {
-  getMonitoringOverview(): Promise<MonitoringOverview>;
+  getMonitoringOverview(businessPartnerId?: string): Promise<MonitoringOverview>;
   getMigrationSummary(): Promise<DeviceMigrationSummary>;
   listSecurityEvents(query: SecurityEventListQuery): Promise<PageResult<SecurityEvent>>;
   acknowledgeSecurityEvent(eventId: string): Promise<SecurityEvent>;

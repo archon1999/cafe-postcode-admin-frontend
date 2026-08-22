@@ -3,6 +3,8 @@
   "controlCenter": {
     "title": "Xavfsizlik boshqaruv markazi",
     "openControl": "Control PWA'ni ochish",
+    "businessPartnerFilter": "Biznes hamkor",
+    "allBusinessPartners": "Hammasi",
     "tabsLabel": "Control-center bo‘limlari",
     "description": "Shahobchalar, Local Agentlar, POS qurilmalari va xavfsizlik hodisalarini bitta operatsion ko‘rinishda nazorat qiling.",
     "refresh": "Yangilash",

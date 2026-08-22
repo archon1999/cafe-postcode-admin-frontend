@@ -53,11 +53,13 @@ function EventDetailField({ label, value }: { label: string; value: React.ReactN
 }
 
 export type SecurityEventsPanelProps = {
+  businessPartnerId?: string | null;
   dateRange?: SecurityEventsDateRange | null;
   onDateRangeChange?: (dateRange: SecurityEventsDateRange | null) => void;
 };
 
 export function SecurityEventsPanel({
+  businessPartnerId,
   dateRange: controlledDateRange,
   onDateRangeChange,
 }: SecurityEventsPanelProps = {}) {
@@ -85,11 +87,12 @@ export function SecurityEventsPanel({
 
   useEffect(() => {
     setPaginationModel((previous) => (previous.page === 0 ? previous : { ...previous, page: 0 }));
-  }, [dateRange?.endDate, dateRange?.startDate]);
+  }, [businessPartnerId, dateRange?.endDate, dateRange?.startDate]);
 
   const query = useSecurityEventsQuery({
     page: paginationModel.page + 1,
     pageSize: paginationModel.pageSize,
+    businessPartnerId: businessPartnerId || undefined,
     search: search.trim() || undefined,
     eventType: eventType || undefined,
     severity: severity || undefined,

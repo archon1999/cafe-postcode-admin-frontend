@@ -10,11 +10,12 @@ import { ListPageBody, ListPageContent } from 'app/layouts/Dashboard';
 import { useTranslate } from 'app/providers/locales';
 import { RoutePath } from 'app/routes';
 import { useCurrentUser } from 'modules/auth/domain/services/current-user';
+import type { AdminBusinessPartner } from 'shared/api/admin-types';
 import { useRouter } from 'shared/hooks/router';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { Iconify } from 'shared/ui/Iconify';
 
-import { MonitoringPanel, SecurityEventsPanel, TelegramPanel } from './components';
+import { BusinessPartnerFilter, MonitoringPanel, SecurityEventsPanel, TelegramPanel } from './components';
 import type { SecurityEventsDateRange } from './components/security-events-date-range';
 
 type ControlCenterSection = 'monitoring' | 'security' | 'notifications';
@@ -24,7 +25,11 @@ function SecurityCenterPage() {
   const { profile } = useCurrentUser();
   const { replace } = useRouter();
   const [tab, setTab] = useState<ControlCenterSection>('monitoring');
+  const [businessPartner, setBusinessPartner] = useState<AdminBusinessPartner | null>(null);
   const [securityEventsDateRange, setSecurityEventsDateRange] = useState<SecurityEventsDateRange | null>(null);
+  const businessPartnerRestaurantIds = businessPartner
+    ? (businessPartner.restaurants ?? []).map((restaurant) => restaurant.id)
+    : null;
 
   const handleSecurityDateSelect = (date: string) => {
     setSecurityEventsDateRange({ startDate: date, endDate: date });
@@ -42,16 +47,24 @@ function SecurityCenterPage() {
       <CustomBreadcrumbs
         heading={t('title')}
         action={
-          <Button
-            component="a"
-            href={CONFIG.controlAppUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            variant="contained"
-            color="black"
-            startIcon={<Iconify icon="solar:monitor-bold" />}>
-            {t('controlCenter.openControl')}
-          </Button>
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            alignItems={{ xs: 'stretch', sm: 'center' }}
+            spacing={1}
+            sx={{ width: { xs: 1, sm: 'auto' } }}>
+            <BusinessPartnerFilter value={businessPartner} onChange={setBusinessPartner} />
+            <Button
+              component="a"
+              href={CONFIG.controlAppUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="contained"
+              color="black"
+              startIcon={<Iconify icon="solar:monitor-bold" />}
+              sx={{ whiteSpace: 'nowrap' }}>
+              {t('controlCenter.openControl')}
+            </Button>
+          </Stack>
         }
       />
       <ListPageBody
@@ -96,15 +109,21 @@ function SecurityCenterPage() {
             />
           </Tabs>
 
-          {tab === 'monitoring' && <MonitoringPanel onSecurityDateSelect={handleSecurityDateSelect} />}
+          {tab === 'monitoring' && (
+            <MonitoringPanel businessPartnerId={businessPartner?.id} onSecurityDateSelect={handleSecurityDateSelect} />
+          )}
           {tab === 'security' && (
             <Card sx={{ minWidth: 0, overflow: 'hidden' }}>
-              <SecurityEventsPanel dateRange={securityEventsDateRange} onDateRangeChange={setSecurityEventsDateRange} />
+              <SecurityEventsPanel
+                businessPartnerId={businessPartner?.id}
+                dateRange={securityEventsDateRange}
+                onDateRangeChange={setSecurityEventsDateRange}
+              />
             </Card>
           )}
           {tab === 'notifications' && (
             <Card sx={{ minWidth: 0, overflow: 'hidden' }}>
-              <TelegramPanel />
+              <TelegramPanel businessPartnerRestaurantIds={businessPartnerRestaurantIds} />
             </Card>
           )}
         </Stack>

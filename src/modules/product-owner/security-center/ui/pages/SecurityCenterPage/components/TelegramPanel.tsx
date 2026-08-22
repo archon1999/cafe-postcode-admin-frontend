@@ -40,7 +40,11 @@ function subscriptionName(subscription: TelegramSubscription) {
   return subscription.firstName || subscription.telegramUserId;
 }
 
-export function TelegramPanel() {
+export type TelegramPanelProps = {
+  businessPartnerRestaurantIds?: string[] | null;
+};
+
+export function TelegramPanel({ businessPartnerRestaurantIds }: TelegramPanelProps = {}) {
   const { t, currentLang } = useTranslate('security-center');
   const restaurantId = useAdminScopeStore((state) => state.selectedRestaurantId);
   const [link, setLink] = useState<TelegramLink | null>(null);
@@ -83,8 +87,10 @@ export function TelegramPanel() {
 
   const rows = useMemo(() => {
     const normalizedSearch = search.trim().toLocaleLowerCase();
+    const allowedRestaurantIds = businessPartnerRestaurantIds ? new Set(businessPartnerRestaurantIds) : null;
 
     return (subscriptionsQuery.data ?? []).filter((subscription) => {
+      if (allowedRestaurantIds && !allowedRestaurantIds.has(subscription.restaurantId)) return false;
       if (!normalizedSearch) return true;
 
       return [
@@ -94,7 +100,7 @@ export function TelegramPanel() {
         subscription.restaurantName,
       ].some((value) => value?.toLocaleLowerCase().includes(normalizedSearch));
     });
-  }, [search, subscriptionsQuery.data]);
+  }, [businessPartnerRestaurantIds, search, subscriptionsQuery.data]);
 
   const columns = useMemo<GridColDef<TelegramSubscription>[]>(
     () => [
@@ -192,7 +198,7 @@ export function TelegramPanel() {
           slots={{
             noRowsOverlay: () => (
               <DataGridEmptyState
-                hasActiveFilters={Boolean(search)}
+                hasActiveFilters={Boolean(search || businessPartnerRestaurantIds)}
                 noData={{ title: t('telegram.empty') }}
                 noResults={{ title: t('telegram.empty') }}
               />

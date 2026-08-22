@@ -33,8 +33,10 @@ function pageParams(query: { page: number; pageSize: number }) {
 }
 
 export const securityCenterRepository: SecurityCenterRepository = {
-  async getMonitoringOverview() {
-    const response = await instance.get<MonitoringOverviewDto>('/api/v1/admin/monitoring/overview/');
+  async getMonitoringOverview(businessPartnerId) {
+    const response = await instance.get<MonitoringOverviewDto>('/api/v1/admin/monitoring/overview/', {
+      params: { business_partner_id: businessPartnerId },
+    });
     return mapMonitoringOverview(response.data);
   },
 
@@ -47,6 +49,7 @@ export const securityCenterRepository: SecurityCenterRepository = {
     const response = await instance.get<ApiPage<SecurityEvent>>('/api/v1/admin/security-events/', {
       params: {
         ...pageParams(query),
+        business_partner_id: query.businessPartnerId,
         restaurant_id: query.restaurantId,
         event_type: query.eventType,
         severity: query.severity,
