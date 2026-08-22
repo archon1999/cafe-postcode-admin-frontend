@@ -7,6 +7,7 @@
 @import '@fontsource-variable/dm-sans';
 @import '@fontsource-variable/inter';
 @import '@fontsource-variable/nunito-sans';
+@import '../../shared/ui/Chart/styles.css';
 @import '../../shared/ui/Scrollbar/styles.css';
 
 html {

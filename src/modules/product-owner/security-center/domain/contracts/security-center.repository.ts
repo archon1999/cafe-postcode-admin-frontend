@@ -1,5 +1,6 @@
 import type {
   DeviceMigrationSummary,
+  MonitoringOverview,
   PageResult,
   RestaurantOption,
   SecurityEvent,
@@ -9,6 +10,7 @@ import type {
 } from '../entities';
 
 export interface SecurityCenterRepository {
+  getMonitoringOverview(): Promise<MonitoringOverview>;
   getMigrationSummary(): Promise<DeviceMigrationSummary>;
   listSecurityEvents(query: SecurityEventListQuery): Promise<PageResult<SecurityEvent>>;
   acknowledgeSecurityEvent(eventId: string): Promise<SecurityEvent>;

@@ -1,10 +1,10 @@
 {
-  "title": "Устройства и безопасность",
+  "title": "Мониторинг филиалов",
   "controlCenter": {
     "title": "Центр управления безопасностью",
     "openControl": "Открыть Control PWA",
     "tabsLabel": "Разделы control-center",
-    "description": "Контролируйте готовность миграции, события безопасности и подключения Telegram из одного операционного экрана.",
+    "description": "Контролируйте филиалы, Local Agent, POS-устройства и события безопасности из одного операционного экрана.",
     "refresh": "Обновить",
     "status": {
       "critical": "Требуется срочная проверка",
@@ -76,11 +76,152 @@
     }
   },
   "tabs": {
+    "monitoring": "Мониторинг",
+    "notifications": "Уведомления",
     "migration": "Миграция",
     "devices": "Устройства",
     "pairings": "QR-привязка",
     "telegram": "Telegram",
     "events": "События безопасности"
+  },
+  "monitoring": {
+    "refresh": "Обновить",
+    "autoRefresh": "Автоматически обновляется каждые 30 секунд",
+    "generatedAt": "Время снимка",
+    "loading": "Загружается состояние филиалов…",
+    "loadError": "Не удалось загрузить данные мониторинга.",
+    "loadErrorDescription": "Проверьте соединение с сервером и повторите попытку.",
+    "retry": "Повторить",
+    "refreshError": "Данные не обновились. Показан последний успешный снимок.",
+    "status": {
+      "healthy": "Основные системы работают стабильно",
+      "attention": "Некоторые филиалы требуют внимания",
+      "critical": "Есть филиалы, требующие срочной проверки"
+    },
+    "health": {
+      "healthy": "В норме",
+      "attention": "Требует внимания",
+      "critical": "Критично"
+    },
+    "metrics": {
+      "totalBranches": "Всего филиалов",
+      "healthyBranches": "В норме",
+      "attentionBranches": "Требуют внимания",
+      "criticalBranches": "Критичные",
+      "onlineAgents": "Агенты онлайн",
+      "risks": "Непроверенные риски"
+    },
+    "operationalHealth": {
+      "title": "Операционное состояние",
+      "description": "Сводка состояния филиалов и подключенных устройств."
+    },
+    "securityActivity": {
+      "title": "Активность безопасности за 7 дней",
+      "description": "События высокого и критического уровня по дням.",
+      "chartLabel": "Диаграмма событий безопасности высокого и критичного уровня за последние 7 дней",
+      "noEvents": "Событий нет",
+      "noData": "История активности безопасности пока недоступна."
+    },
+    "agentVersions": {
+      "title": "Версии агентов",
+      "description": "Агенты онлайн и офлайн по установленным версиям.",
+      "total": "Агентов: {{count}}",
+      "unknown": "Неизвестная версия",
+      "empty": "Нет данных о версиях агентов.",
+      "missing": "Филиалы без установленного агента",
+      "more": "Ещё версий: {{count}}"
+    },
+    "deviceInventory": {
+      "title": "Состав активных устройств",
+      "description": "Подключённые к платформе устройства по типам."
+    },
+    "registry": {
+      "title": "Реестр филиалов",
+      "description": "Состояние, Local Agent, устройства и последняя активность"
+    },
+    "filters": {
+      "searchPlaceholder": "Поиск по названию филиала",
+      "clearSearch": "Очистить поиск",
+      "agentVersion": "Версия агента",
+      "clearAgentVersion": "Сбросить фильтр версии агента",
+      "health": "Состояние",
+      "all": "Все",
+      "results": "Показано филиалов: {{count}}"
+    },
+    "pagination": {
+      "rowsPerPage": "Строк на странице:",
+      "displayed": "{{from}}–{{to}} из {{count}}"
+    },
+    "table": {
+      "branch": "Филиал",
+      "health": "Общее состояние",
+      "agent": "Local Agent",
+      "devices": "Устройства",
+      "activity": "Последняя активность",
+      "security": "Безопасность"
+    },
+    "agent": {
+      "online": "Онлайн",
+      "offline": "Офлайн",
+      "missing": "Агент отсутствует",
+      "version": "Версия",
+      "lastSeen": "Последняя связь",
+      "protocol": "Протокол",
+      "deviceStatus": "Статус устройства"
+    },
+    "devices": {
+      "active": "Активные устройства",
+      "localAgent": "Local Agent",
+      "pos": "POS-терминалы",
+      "tv": "TV-мониторы",
+      "telegram": "Telegram",
+      "control": "Устройства Control",
+      "revoked": "Отозванные",
+      "lastSeen": "Последняя активность устройства",
+      "onlineCount": "устройств онлайн (5 минут)",
+      "none": "Устройства не подключены"
+    },
+    "security": {
+      "unreviewed": "Не проверено",
+      "high": "Высокий риск",
+      "critical": "Критичный риск",
+      "lastEvent": "Последнее событие"
+    },
+    "actions": {
+      "agents": "Local Agent",
+      "openControl": "Открыть Control PWA",
+      "details": "Подробнее"
+    },
+    "details": {
+      "title": "Состояние филиала",
+      "agent": "Local Agent",
+      "devices": "Устройства",
+      "security": "Безопасность"
+    },
+    "empty": {
+      "title": "Активные филиалы не найдены",
+      "description": "Нет активных филиалов для мониторинга.",
+      "noResults": "Нет филиалов, соответствующих выбранному фильтру."
+    },
+    "issues": {
+      "critical_security_event": "Есть непроверенное критичное событие безопасности.",
+      "agent_missing": "Local Agent не установлен.",
+      "agent_revoked": "Устройство Local Agent отозвано.",
+      "agent_inactive": "Устройство Local Agent не активно.",
+      "agent_offline": "Local Agent не связан с сервером.",
+      "high_security_event": "Есть непроверенное событие высокого риска.",
+      "pos_terminal_missing": "Активный POS-терминал не найден.",
+      "device_activity_missing": "Активность устройств ещё не зафиксирована.",
+      "device_activity_stale": "Последняя активность устройств старше 24 часов."
+    },
+    "pendingPairings": "Ожидающие QR-привязки: {{count}}",
+    "pendingPairingsLabel": "Ожидающие QR-привязки",
+    "noIssues": "Проблем, требующих действий, не найдено.",
+    "attention": {
+      "title": "Очередь внимания",
+      "description": "Критичные и потерявшие связь филиалы показаны первыми.",
+      "more": "Ещё филиалов: {{count}}"
+    }
   },
   "migration": {
     "refresh": "Обновить",
@@ -315,6 +456,16 @@
   "events": {
     "searchPlaceholder": "Событие, IP, пользователь или request ID",
     "event": "Событие",
+    "eventFilter": "По событию",
+    "dateRange": {
+      "filter": "По периоду",
+      "title": "Период событий",
+      "start": "Дата начала",
+      "end": "Дата окончания",
+      "apply": "Применить",
+      "clear": "Очистить период",
+      "invalid": "Дата окончания не может быть раньше даты начала."
+    },
     "createdAt": "Время",
     "details": "Подробнее",
     "detailsTitle": "Детали события",
@@ -334,19 +485,86 @@
     "messages": { "acknowledged": "Событие отмечено проверенным.", "acknowledgeFailed": "Не удалось отметить событие." }
   },
   "eventTypes": {
+    "admin_auth_origin_rejected": "Источник входа администратора отклонён",
+    "admin_login_failed": "Ошибка входа администратора",
+    "admin_login_locked_out": "Вход администратора временно заблокирован",
+    "admin_login_succeeded": "Администратор вошёл в систему",
+    "admin_logout": "Администратор вышел из системы",
+    "admin_mfa_challenge_failed": "Проверка MFA администратора не пройдена",
+    "admin_mfa_challenge_issued": "Создана проверка MFA администратора",
+    "admin_mfa_challenge_succeeded": "Проверка MFA администратора пройдена",
+    "admin_mfa_enrolled": "Администратор подключил MFA",
+    "admin_mfa_enrollment_failed": "Администратору не удалось подключить MFA",
+    "admin_mfa_locked_out": "MFA администратора временно заблокирована",
+    "admin_mfa_recovery_code_used": "Использован код восстановления MFA администратора",
+    "admin_mfa_step_up_failed": "Дополнительная проверка MFA не пройдена",
+    "admin_mfa_step_up_locked_out": "Дополнительная проверка MFA заблокирована",
+    "admin_mfa_step_up_succeeded": "Дополнительная проверка MFA пройдена",
+    "admin_refresh_reuse_detected": "Обнаружено повторное использование refresh-токена администратора",
+    "admin_session_locked": "Сессия администратора заблокирована",
+    "admin_session_unlocked": "Сессия администратора разблокирована",
+    "admin_unlock_failed": "Не удалось разблокировать сессию администратора",
+    "admin_unlock_locked_out": "Разблокировка сессии администратора временно запрещена",
+    "control_pairing_attempts_exceeded": "Превышено число попыток привязки в Control",
+    "control_pairing_verification_failed": "Не удалось проверить привязку в Control",
+    "device_lease_recovered": "Разрешение устройства восстановлено",
+    "device_lease_renewed": "Разрешение устройства продлено",
     "device_pairing_created": "Новый запрос привязки устройства",
+    "device_pairing_requested": "Новый запрос привязки устройства",
     "device_pairing_approved": "Привязка устройства подтверждена",
     "device_pairing_rejected": "Привязка устройства отклонена",
+    "device_pairing_replay_detected": "Обнаружено повторное использование запроса привязки",
+    "device_proof_failed": "Проверка подлинности устройства не пройдена",
+    "device_proof_replay_detected": "Обнаружено повторное использование подтверждения устройства",
     "device_revoked": "Устройство отозвано",
     "device_signature_invalid": "Неверная подпись устройства",
     "device_replay_detected": "Обнаружен повтор подписанного запроса",
     "device_scope_denied": "Запрос вне scope устройства отклонён",
+    "legacy_local_agent_migrated": "Старый Local Agent перенесён в новую систему",
+    "legacy_pos_device_migrated": "Старое POS-устройство перенесено в новую систему",
+    "legacy_pos_session_rejected": "Старая POS-сессия отклонена",
+    "legacy_pos_terminal_bind_failed": "Не удалось привязать старый POS-терминал",
+    "legacy_pos_terminal_conflict": "Обнаружен конфликт старого POS-терминала",
+    "legacy_tv_device_migrated": "Старое TV-устройство перенесено в новую систему",
+    "local_agent_auth_denied": "Аутентификация Local Agent отклонена",
+    "local_agent_target_denied": "Обращение Local Agent к адресу отклонено",
+    "local_auth_throttled": "Попытки локальной аутентификации ограничены",
+    "local_device_proof_denied": "Локальная проверка устройства отклонена",
+    "local_legacy_pos_bridge_denied": "Локальный мост старого POS отклонён",
+    "local_network_denied": "Запрос локальной сети отклонён",
+    "local_origin_denied": "Источник локального запроса отклонён",
+    "local_pin_failed": "Ошибка проверки локального PIN",
+    "local_rbac_denied": "Локальная проверка прав отклонена",
+    "local_scope_denied": "Локальный запрос вне scope отклонён",
+    "local_secure_channel_denied": "Локальный защищённый канал отклонён",
+    "local_session_denied": "Локальная сессия отклонена",
+    "pairing_replay_detected": "Обнаружено повторное использование запроса привязки",
+    "pin_failed": "Введён неверный PIN",
     "pin_login_failed": "Введён неверный PIN",
     "pin_login_locked": "PIN-вход временно заблокирован",
-    "admin_login_failed": "Ошибка входа администратора",
+    "pos_login_succeeded": "Выполнен вход в POS",
+    "pos_session_locked": "POS-сессия заблокирована",
+    "pos_session_unlocked": "POS-сессия разблокирована",
+    "telegram_link_token_issued": "Создана одноразовая Telegram-ссылка",
+    "telegram_link_token_rejected": "Telegram-ссылка отклонена",
+    "telegram_subscription_linked": "Telegram-подключение создано",
     "tenant_scope_denied": "Попытка доступа к другому филиалу",
     "telegram_link_issued": "Создана одноразовая Telegram-ссылка",
     "telegram_link_consumed": "Telegram-ссылка использована",
-    "telegram_subscription_revoked": "Telegram-подключение отключено"
+    "telegram_subscription_revoked": "Telegram-подключение отключено",
+    "tenant_platform_scope_denied": "Запрос вне области платформы отклонён",
+    "tenant_system_scope_denied": "Запрос вне области системы отклонён"
+  },
+  "eventResults": {
+    "success": "Успешно",
+    "succeeded": "Успешно",
+    "ok": "Успешно",
+    "approved": "Подтверждено",
+    "pending": "Ожидается",
+    "denied": "Отклонено",
+    "rejected": "Отклонено",
+    "failed": "Неуспешно",
+    "failure": "Неуспешно",
+    "error": "Ошибка"
   }
 }

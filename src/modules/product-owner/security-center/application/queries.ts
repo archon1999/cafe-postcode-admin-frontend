@@ -5,6 +5,14 @@ import type { SecurityEventListQuery } from '../domain';
 
 import { securityCenterKeys } from './keys';
 
+export function useMonitoringOverviewQuery() {
+  return useQuery({
+    queryKey: securityCenterKeys.monitoring(),
+    queryFn: () => securityCenterRepository.getMonitoringOverview(),
+    refetchInterval: 30_000,
+  });
+}
+
 export function useDeviceMigrationSummaryQuery() {
   return useQuery({
     queryKey: securityCenterKeys.migration(),

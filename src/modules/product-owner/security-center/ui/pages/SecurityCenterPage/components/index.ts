@@ -1,4 +1,3 @@
-export * from './ControlCenterOverview';
-export * from './MigrationPanel';
+export * from './MonitoringPanel';
 export * from './SecurityEventsPanel';
 export * from './TelegramPanel';

@@ -1,10 +1,10 @@
 {
-  "title": "Қурилмалар ва хавфсизлик",
+  "title": "Шаҳобчалар назорати",
   "controlCenter": {
     "title": "Хавфсизлик бошқарув маркази",
     "openControl": "Control PWA'ни очиш",
     "tabsLabel": "Control-center бўлимлари",
-    "description": "Миграция тайёрлиги, хавфсизлик ҳодисалари ва Telegram уланишларини битта операцион кўринишда назорат қилинг.",
+    "description": "Шахобчалар, Local Agent'лар, POS қурилмалари ва хавфсизлик ҳодисаларини битта операцион кўринишда назорат қилинг.",
     "refresh": "Янгилаш",
     "status": {
       "critical": "Зудлик билан текшириш керак",
@@ -76,11 +76,152 @@
     }
   },
   "tabs": {
+    "monitoring": "Мониторинг",
+    "notifications": "Билдиришномалар",
     "migration": "Миграция",
     "devices": "Қурилмалар",
     "pairings": "QR улаш",
     "telegram": "Telegram",
     "events": "Хавфсизлик ҳодисалари"
+  },
+  "monitoring": {
+    "refresh": "Янгилаш",
+    "autoRefresh": "Ҳар 30 сонияда автоматик янгиланади",
+    "generatedAt": "Ҳолат вақти",
+    "loading": "Шаҳобчалар ҳолати юкланмоқда…",
+    "loadError": "Мониторинг маълумотларини юклаб бўлмади.",
+    "loadErrorDescription": "Сервер алоқасини текширинг ва қайта уриниб кўринг.",
+    "retry": "Қайта уриниш",
+    "refreshError": "Маълумотлар янгиланмади. Охирги муваффақиятли ҳолат кўрсатилмоқда.",
+    "status": {
+      "healthy": "Асосий тизимлар барқарор ишлаяпти",
+      "attention": "Айрим шаҳобчалар эътибор талаб қилади",
+      "critical": "Зудлик билан текшириладиган шаҳобчалар бор"
+    },
+    "health": {
+      "healthy": "Соғлом",
+      "attention": "Эътибор керак",
+      "critical": "Критик"
+    },
+    "metrics": {
+      "totalBranches": "Жами шаҳобчалар",
+      "healthyBranches": "Соғлом",
+      "attentionBranches": "Эътибор керак",
+      "criticalBranches": "Критик",
+      "onlineAgents": "Online агентлар",
+      "risks": "Кўриб чиқилмаган хавфлар"
+    },
+    "operationalHealth": {
+      "title": "Операцион ҳолат",
+      "description": "Шаҳобчалар соғломлиги ва қурилмалар ҳолатининг жамланмаси."
+    },
+    "securityActivity": {
+      "title": "7 кунлик хавфсизлик фаоллиги",
+      "description": "Юқори ва критик хавфсизлик ҳодисалари кунлар кесимида.",
+      "chartLabel": "Охирги 7 кундаги юқори ва критик хавфсизлик ҳодисалари диаграммаси",
+      "noEvents": "Ҳодиса йўқ",
+      "noData": "Хавфсизлик фаоллиги тарихи ҳали мавжуд эмас."
+    },
+    "agentVersions": {
+      "title": "Агент версиялари",
+      "description": "Ўрнатилган версиялар бўйича online ва offline агентлар.",
+      "total": "{{count}} та агент",
+      "unknown": "Номаълум версия",
+      "empty": "Агент версиялари ҳақида маълумот йўқ.",
+      "missing": "Агент ўрнатилмаган шаҳобчалар",
+      "more": "Яна {{count}} та версия"
+    },
+    "deviceInventory": {
+      "title": "Фаол қурилмалар таркиби",
+      "description": "Платформага уланган қурилмалар тури бўйича."
+    },
+    "registry": {
+      "title": "Шаҳобчалар реестри",
+      "description": "Ҳолат, Local Agent, қурилмалар ва охирги фаоллик"
+    },
+    "filters": {
+      "searchPlaceholder": "Шаҳобча номи бўйича қидириш",
+      "clearSearch": "Қидирувни тозалаш",
+      "agentVersion": "Агент версияси",
+      "clearAgentVersion": "Агент версияси филтрини тозалаш",
+      "health": "Ҳолат",
+      "all": "Барчаси",
+      "results": "{{count}} та шаҳобча кўрсатилмоқда"
+    },
+    "pagination": {
+      "rowsPerPage": "Саҳифадаги қаторлар:",
+      "displayed": "{{from}}–{{to}} / {{count}}"
+    },
+    "table": {
+      "branch": "Шаҳобча",
+      "health": "Умумий ҳолат",
+      "agent": "Local Agent",
+      "devices": "Қурилмалар",
+      "activity": "Охирги фаоллик",
+      "security": "Хавфсизлик"
+    },
+    "agent": {
+      "online": "Online",
+      "offline": "Offline",
+      "missing": "Агент йўқ",
+      "version": "Версия",
+      "lastSeen": "Охирги алоқа",
+      "protocol": "Протокол",
+      "deviceStatus": "Қурилма ҳолати"
+    },
+    "devices": {
+      "active": "Фаол қурилмалар",
+      "localAgent": "Local Agent'лар",
+      "pos": "POS терминаллар",
+      "tv": "TV мониторлар",
+      "telegram": "Telegram",
+      "control": "Control қурилмалари",
+      "revoked": "Бекор қилинган",
+      "lastSeen": "Охирги қурилма фаоллиги",
+      "onlineCount": "қурилма онлайн (5 дақиқа)",
+      "none": "Қурилма уланмаган"
+    },
+    "security": {
+      "unreviewed": "Кўриб чиқилмаган",
+      "high": "Юқори",
+      "critical": "Критик",
+      "lastEvent": "Охирги ҳодиса"
+    },
+    "actions": {
+      "agents": "Local Agent'лар",
+      "openControl": "Control PWA'ни очиш",
+      "details": "Батафсил"
+    },
+    "details": {
+      "title": "Шаҳобча ҳолати",
+      "agent": "Local Agent",
+      "devices": "Қурилмалар",
+      "security": "Хавфсизлик"
+    },
+    "empty": {
+      "title": "Фаол шаҳобча топилмади",
+      "description": "Мониторинг учун фаол шаҳобчалар мавжуд эмас.",
+      "noResults": "Танланган фильтрга мос шаҳобча топилмади."
+    },
+    "issues": {
+      "critical_security_event": "Кўриб чиқилмаган критик хавфсизлик ҳодисаси бор.",
+      "agent_missing": "Local Agent ўрнатилмаган.",
+      "agent_revoked": "Local Agent қурилмаси бекор қилинган.",
+      "agent_inactive": "Local Agent қурилмаси фаол эмас.",
+      "agent_offline": "Local Agent сервер билан алоқада эмас.",
+      "high_security_event": "Кўриб чиқилмаган юқори хавфли ҳодиса бор.",
+      "pos_terminal_missing": "Фаол POS терминал топилмади.",
+      "device_activity_missing": "Қурилмалардан фаоллик ҳали қайд этилмаган.",
+      "device_activity_stale": "Қурилмаларнинг охирги фаоллиги 24 соатдан эски."
+    },
+    "pendingPairings": "Кутилаётган QR улашлар: {{count}}",
+    "pendingPairingsLabel": "Кутилаётган QR улашлар",
+    "noIssues": "Амал талаб қиладиган муаммо топилмади.",
+    "attention": {
+      "title": "Эътибор навбати",
+      "description": "Критик ҳолатлар ва алоқаси узилган шаҳобчалар биринчи кўрсатилади.",
+      "more": "Яна {{count}} та шаҳобча"
+    }
   },
   "migration": {
     "refresh": "Янгилаш",
@@ -309,6 +450,16 @@
   "events": {
     "searchPlaceholder": "Ҳодиса, IP, фойдаланувчи ёки request ID",
     "event": "Ҳодиса",
+    "eventFilter": "Ҳодиса бўйича",
+    "dateRange": {
+      "filter": "Давр бўйича",
+      "title": "Ҳодиса даври",
+      "start": "Бошланиш санаси",
+      "end": "Тугаш санаси",
+      "apply": "Қўллаш",
+      "clear": "Даврни тозалаш",
+      "invalid": "Тугаш санаси бошланиш санасидан олдин бўлиши мумкин эмас."
+    },
     "createdAt": "Вақт",
     "details": "Батафсил",
     "detailsTitle": "Ҳодиса тафсилотлари",
@@ -331,19 +482,86 @@
     }
   },
   "eventTypes": {
-    "device_pairing_created": "Янги қурилма pairing сўрови",
-    "device_pairing_approved": "Қурилма pairing тасдиқланди",
-    "device_pairing_rejected": "Қурилма pairing рад этилди",
+    "admin_auth_origin_rejected": "Админ кириш манбаси рад этилди",
+    "admin_login_failed": "Админ логин хатоси",
+    "admin_login_locked_out": "Админ логин вақтинча блокланди",
+    "admin_login_succeeded": "Админ тизимга кирди",
+    "admin_logout": "Админ тизимдан чиқди",
+    "admin_mfa_challenge_failed": "Админ MFA тасдиғи муваффақиятсиз",
+    "admin_mfa_challenge_issued": "Админ MFA тасдиғи яратилди",
+    "admin_mfa_challenge_succeeded": "Админ MFA тасдиғи муваффақиятли",
+    "admin_mfa_enrolled": "Админ MFA’ни улади",
+    "admin_mfa_enrollment_failed": "Админ MFA’ни улай олмади",
+    "admin_mfa_locked_out": "Админ MFA вақтинча блокланди",
+    "admin_mfa_recovery_code_used": "Админ MFA тиклаш кодидан фойдаланди",
+    "admin_mfa_step_up_failed": "Қўшимча MFA тасдиғи муваффақиятсиз",
+    "admin_mfa_step_up_locked_out": "Қўшимча MFA тасдиғи блокланди",
+    "admin_mfa_step_up_succeeded": "Қўшимча MFA тасдиғи муваффақиятли",
+    "admin_refresh_reuse_detected": "Админ refresh токени қайта ишлатилгани аниқланди",
+    "admin_session_locked": "Админ сессияси блокланди",
+    "admin_session_unlocked": "Админ сессияси блокдан чиқарилди",
+    "admin_unlock_failed": "Админ сессиясини очиш муваффақиятсиз",
+    "admin_unlock_locked_out": "Админ сессиясини очиш вақтинча блокланди",
+    "control_pairing_attempts_exceeded": "Control улаш уринишлари чегарадан ошди",
+    "control_pairing_verification_failed": "Control улаш тасдиғи хато",
+    "device_lease_recovered": "Қурилма рухсати тикланди",
+    "device_lease_renewed": "Қурилма рухсати янгиланди",
+    "device_pairing_created": "Янги қурилма улаш сўрови",
+    "device_pairing_requested": "Янги қурилма улаш сўрови",
+    "device_pairing_approved": "Қурилма уланиши тасдиқланди",
+    "device_pairing_rejected": "Қурилма уланиши рад этилди",
+    "device_pairing_replay_detected": "Қурилма улаш сўрови қайта ишлатилгани аниқланди",
+    "device_proof_failed": "Қурилма хавфсизлик тасдиғи хато",
+    "device_proof_replay_detected": "Қурилма тасдиғи қайта ишлатилгани аниқланди",
     "device_revoked": "Қурилма бекор қилинди",
     "device_signature_invalid": "Қурилма имзоси нотўғри",
     "device_replay_detected": "Такрорий имзоли сўров аниқланди",
     "device_scope_denied": "Қурилма scope сўрови рад этилди",
+    "legacy_local_agent_migrated": "Эски Local Agent янги тизимга ўтказилди",
+    "legacy_pos_device_migrated": "Эски POS қурилмаси янги тизимга ўтказилди",
+    "legacy_pos_session_rejected": "Эски POS сессияси рад этилди",
+    "legacy_pos_terminal_bind_failed": "Эски POS терминалини улаш амалга ошмади",
+    "legacy_pos_terminal_conflict": "Эски POS терминали билан зиддият аниқланди",
+    "legacy_tv_device_migrated": "Эски TV қурилмаси янги тизимга ўтказилди",
+    "local_agent_auth_denied": "Local Agent аутентификацияси рад этилди",
+    "local_agent_target_denied": "Local Agent манзилга мурожаати рад этилди",
+    "local_auth_throttled": "Локал аутентификация уринишлари чекланди",
+    "local_device_proof_denied": "Локал қурилма тасдиғи рад этилди",
+    "local_legacy_pos_bridge_denied": "Эски POS локал кўприги рад этилди",
+    "local_network_denied": "Локал тармоқ сўрови рад этилди",
+    "local_origin_denied": "Локал сўров манбаси рад этилди",
+    "local_pin_failed": "Локал PIN текшируви хато",
+    "local_rbac_denied": "Локал рухсат текшируви рад этилди",
+    "local_scope_denied": "Локал scope сўрови рад этилди",
+    "local_secure_channel_denied": "Локал хавфсиз канал рад этилди",
+    "local_session_denied": "Локал сессия рад этилди",
+    "pairing_replay_detected": "Улаш сўрови қайта ишлатилгани аниқланди",
+    "pin_failed": "Нотўғри PIN киритилди",
     "pin_login_failed": "Нотўғри PIN киритилди",
     "pin_login_locked": "PIN кириш вақтинча блокланди",
-    "admin_login_failed": "Админ логин хатоси",
+    "pos_login_succeeded": "POS тизимига кирилди",
+    "pos_session_locked": "POS сессияси блокланди",
+    "pos_session_unlocked": "POS сессияси блокдан чиқарилди",
+    "telegram_link_token_issued": "Бир марталик Telegram ҳаволаси яратилди",
+    "telegram_link_token_rejected": "Telegram ҳаволаси рад этилди",
+    "telegram_subscription_linked": "Telegram уланиши яратилди",
     "tenant_scope_denied": "Бошқа шаҳобча маълумотига уриниш",
     "telegram_link_issued": "Telegram бир марталик линк яратилди",
     "telegram_link_consumed": "Telegram линк ишлатилди",
-    "telegram_subscription_revoked": "Telegram уланиши узилди"
+    "telegram_subscription_revoked": "Telegram уланиши узилди",
+    "tenant_platform_scope_denied": "Платформа доирасидан ташқари сўров рад этилди",
+    "tenant_system_scope_denied": "Тизим доирасидан ташқари сўров рад этилди"
+  },
+  "eventResults": {
+    "success": "Муваффақиятли",
+    "succeeded": "Муваффақиятли",
+    "ok": "Муваффақиятли",
+    "approved": "Тасдиқланди",
+    "pending": "Кутилмоқда",
+    "denied": "Рад этилди",
+    "rejected": "Рад этилди",
+    "failed": "Муваффақиятсиз",
+    "failure": "Муваффақиятсиз",
+    "error": "Хатолик"
   }
 }

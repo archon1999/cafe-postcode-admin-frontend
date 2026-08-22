@@ -2,7 +2,7 @@
 
 import '@testing-library/jest-dom/vitest';
 
-import { cleanup, render, screen, within } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import type { PropsWithChildren, ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -19,7 +19,9 @@ vi.mock('app/providers/locales', () => ({
   useTranslate: () => ({ t: (key: string) => key }),
 }));
 
-vi.mock('app/routes', () => ({ RoutePath: { main: '/' } }));
+vi.mock('app/routes', () => ({
+  RoutePath: { main: '/', platformLocalAgentList: '/product-owner/local-agents' },
+}));
 
 vi.mock('modules/auth/domain/services/current-user', () => ({
   useCurrentUser: () => ({ profile: { isSuperuser: true } }),
@@ -39,29 +41,47 @@ vi.mock('shared/ui/CustomBreadcrumbs', () => ({
 vi.mock('shared/ui/Iconify', () => ({ Iconify: () => null }));
 
 vi.mock('./components', () => ({
-  ControlCenterOverview: () => <div>control-center-overview</div>,
-  MigrationPanel: () => <div>migration-panel</div>,
-  SecurityEventsPanel: () => <div>security-panel</div>,
+  MonitoringPanel: ({ onSecurityDateSelect }: { onSecurityDateSelect?: (date: string) => void }) => (
+    <button type="button" onClick={() => onSecurityDateSelect?.('2026-08-20')}>
+      monitoring-panel
+    </button>
+  ),
+  SecurityEventsPanel: ({ dateRange }: { dateRange?: { startDate: string; endDate: string } | null }) => (
+    <div>
+      security-panel {dateRange?.startDate} {dateRange?.endDate}
+    </div>
+  ),
   TelegramPanel: () => <div>telegram-panel</div>,
 }));
 
 afterEach(cleanup);
 
 describe('SecurityCenterPage scope', () => {
-  it('keeps migration, security and Telegram in Admin and sends device operations to Control PWA', () => {
+  it('keeps monitoring, security and notifications in Admin and sends device operations to Control PWA', () => {
     render(<SecurityCenterPage />);
-
-    expect(screen.getByText('control-center-overview')).toBeVisible();
 
     const tabs = screen.getByRole('tablist', { name: 'controlCenter.details.tabsLabel' });
     expect(within(tabs).getAllByRole('tab')).toHaveLength(3);
-    expect(within(tabs).getByRole('tab', { name: 'tabs.migration' })).toBeVisible();
+    expect(within(tabs).getByRole('tab', { name: 'tabs.monitoring' })).toBeVisible();
     expect(within(tabs).getByRole('tab', { name: 'tabs.events' })).toBeVisible();
-    expect(within(tabs).getByRole('tab', { name: 'tabs.telegram' })).toBeVisible();
+    expect(within(tabs).getByRole('tab', { name: 'tabs.notifications' })).toBeVisible();
+    expect(within(tabs).queryByRole('tab', { name: 'tabs.migration' })).not.toBeInTheDocument();
     expect(within(tabs).queryByRole('tab', { name: 'tabs.devices' })).not.toBeInTheDocument();
     expect(within(tabs).queryByRole('tab', { name: 'tabs.pairings' })).not.toBeInTheDocument();
 
-    expect(screen.getByRole('link', { name: 'controlCenter.openControl' })).toHaveAttribute('href', 'https://control.cafe-postcode.uz/');
-    expect(screen.getByText('migration-panel')).toBeVisible();
+    expect(screen.getByRole('link', { name: 'controlCenter.openControl' })).toHaveAttribute(
+      'href',
+      'https://control.cafe-postcode.uz/',
+    );
+    expect(screen.getByText('monitoring-panel')).toBeVisible();
+  });
+
+  it('opens the security events tab and applies the selected chart day', () => {
+    render(<SecurityCenterPage />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'monitoring-panel' }));
+
+    expect(screen.getByRole('tab', { name: 'tabs.events' })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByText('security-panel 2026-08-20 2026-08-20')).toBeVisible();
   });
 });

@@ -14,7 +14,7 @@ vi.mock('app/providers/locales', () => ({
 import { LocalAgentDiagnosticsDialog, type LocalAgentDiagnosticsData } from './LocalAgentDiagnosticsDialog';
 
 const diagnostics: LocalAgentDiagnosticsData = {
-  agent: { online: true, version: '0.9.0' },
+  agent: { online: true, version: '1.1.0' },
   backend: { online: true },
   sync: {
     pendingOutbox: 0,

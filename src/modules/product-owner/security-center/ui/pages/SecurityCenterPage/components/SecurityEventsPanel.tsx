@@ -10,11 +10,10 @@ import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { GridColDef, GridColumnVisibilityModel, GridPaginationModel } from '@mui/x-data-grid';
-import type { TFunction } from 'i18next';
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
-import { useTranslate } from 'app/providers/locales';
+import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { DEFAULT_COLUMN_VISIBILITY_MODEL } from 'shared/constants';
 import { DataGrid, DataGridEmptyState, DataGridFiltersToolbar } from 'shared/ui/CustomDataGrid';
 import { formatDateTime } from 'shared/utils/format-time';
@@ -22,6 +21,12 @@ import { formatDateTime } from 'shared/utils/format-time';
 import { useAcknowledgeSecurityEventMutation, useSecurityEventsQuery } from '../../../../application';
 import type { SecurityEvent, SecuritySeverity } from '../../../../domain';
 import { SecurityStatusChip } from '../../../shared';
+
+import { getSecurityEventLabel, getSecurityEventResultLabel, SECURITY_EVENT_TYPES } from './security-event-types';
+import { securityEventsDateRangeToQueryBounds, type SecurityEventsDateRange } from './security-events-date-range';
+import { SecurityEventsDateRangeFilter } from './SecurityEventsDateRangeFilter';
+
+export type { SecurityEventsDateRange } from './security-events-date-range';
 
 const DEFAULT_PAGINATION_MODEL: GridPaginationModel = { page: 0, pageSize: 10 };
 const SECURITY_SEVERITIES: SecuritySeverity[] = ['INFO', 'LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
@@ -36,10 +41,6 @@ function resultColor(result: string): ChipProps['color'] {
   return 'default';
 }
 
-function eventLabel(t: TFunction, eventType: string) {
-  return t(`eventTypes.${eventType.toLocaleLowerCase()}`, { defaultValue: eventType });
-}
-
 function EventDetailField({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <Grid size={{ xs: 12, sm: 6 }}>
@@ -51,22 +52,49 @@ function EventDetailField({ label, value }: { label: string; value: React.ReactN
   );
 }
 
-export function SecurityEventsPanel() {
-  const { t } = useTranslate('security-center');
+export type SecurityEventsPanelProps = {
+  dateRange?: SecurityEventsDateRange | null;
+  onDateRangeChange?: (dateRange: SecurityEventsDateRange | null) => void;
+};
+
+export function SecurityEventsPanel({
+  dateRange: controlledDateRange,
+  onDateRangeChange,
+}: SecurityEventsPanelProps = {}) {
+  const { t, currentLang } = useTranslate('security-center');
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_PAGINATION_MODEL);
   const [search, setSearch] = useState('');
+  const [eventType, setEventType] = useState('');
   const [severity, setSeverity] = useState<SecuritySeverity | ''>('');
   const [acknowledged, setAcknowledged] = useState<'' | 'true' | 'false'>('false');
   const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(
     DEFAULT_COLUMN_VISIBILITY_MODEL,
   );
   const [selected, setSelected] = useState<SecurityEvent | null>(null);
+  const [uncontrolledDateRange, setUncontrolledDateRange] = useState<SecurityEventsDateRange | null>(null);
+  const dateRange = controlledDateRange === undefined ? uncontrolledDateRange : controlledDateRange;
+  const dateBounds = useMemo(() => securityEventsDateRangeToQueryBounds(dateRange), [dateRange]);
+  const setDateRange = useCallback(
+    (nextDateRange: SecurityEventsDateRange | null) => {
+      if (controlledDateRange === undefined) setUncontrolledDateRange(nextDateRange);
+      onDateRangeChange?.(nextDateRange);
+      setPaginationModel((previous) => ({ ...previous, page: 0 }));
+    },
+    [controlledDateRange, onDateRangeChange],
+  );
+
+  useEffect(() => {
+    setPaginationModel((previous) => (previous.page === 0 ? previous : { ...previous, page: 0 }));
+  }, [dateRange?.endDate, dateRange?.startDate]);
+
   const query = useSecurityEventsQuery({
     page: paginationModel.page + 1,
     pageSize: paginationModel.pageSize,
     search: search.trim() || undefined,
+    eventType: eventType || undefined,
     severity: severity || undefined,
     acknowledged: acknowledged === '' ? undefined : acknowledged === 'true',
+    ...dateBounds,
   });
   const acknowledgeMutation = useAcknowledgeSecurityEventMutation();
 
@@ -88,7 +116,7 @@ export function SecurityEventsPanel() {
         minWidth: 260,
         flex: 1,
         sortable: false,
-        renderCell: ({ row }) => <Typography variant="subtitle2">{eventLabel(t, row.eventType)}</Typography>,
+        renderCell: ({ row }) => <Typography variant="subtitle2">{getSecurityEventLabel(t, row.eventType)}</Typography>,
       },
       {
         field: 'severity',
@@ -120,7 +148,12 @@ export function SecurityEventsPanel() {
         sortable: false,
         valueGetter: (_value, row) => row.result || '—',
         renderCell: ({ row }) => (
-          <Chip size="small" variant="soft" color={resultColor(row.result)} label={row.result || '—'} />
+          <Chip
+            size="small"
+            variant="soft"
+            color={resultColor(row.result)}
+            label={row.result ? getSecurityEventResultLabel(t, row.result) : '—'}
+          />
         ),
       },
       {
@@ -133,8 +166,28 @@ export function SecurityEventsPanel() {
     ],
     [t],
   );
+  const eventTypeOptions = useMemo(
+    () =>
+      SECURITY_EVENT_TYPES.map((value) => ({ value, label: getSecurityEventLabel(t, value) })).sort((left, right) =>
+        left.label.localeCompare(right.label, currentLang.numberFormat.code),
+      ),
+    [currentLang.numberFormat.code, t],
+  );
+  const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
   const filters = useMemo(
     () => [
+      {
+        id: 'eventType',
+        label: t('events.eventFilter'),
+        value: eventType ? [eventType] : [],
+        options: eventTypeOptions,
+        onApply: (values: string[]) => {
+          setEventType(values[values.length - 1] ?? '');
+          setPaginationModel((previous) => ({ ...previous, page: 0 }));
+        },
+        testId: 'security-events-event-type-filter',
+        emptyLabel: t('common.all'),
+      },
       {
         id: 'severity',
         label: t('events.severity'),
@@ -163,7 +216,7 @@ export function SecurityEventsPanel() {
         emptyLabel: t('common.all'),
       },
     ],
-    [acknowledged, severity, t],
+    [acknowledged, eventType, eventTypeOptions, severity, t],
   );
 
   return (
@@ -191,6 +244,7 @@ export function SecurityEventsPanel() {
           onPaginationModelChange={setPaginationModel}
           pageSizeOptions={[10, 20, 50]}
           loading={query.isLoading || query.isFetching}
+          localeText={localeText}
           onRefresh={() => query.refetch()}
           refreshing={query.isFetching}
           autoRefreshIntervalMs={false}
@@ -201,7 +255,7 @@ export function SecurityEventsPanel() {
           slots={{
             noRowsOverlay: () => (
               <DataGridEmptyState
-                hasActiveFilters={Boolean(search || severity || acknowledged !== '')}
+                hasActiveFilters={Boolean(search || eventType || severity || acknowledged !== '' || dateRange)}
                 noData={{ title: t('events.empty') }}
                 noResults={{ title: t('events.empty') }}
               />
@@ -225,6 +279,7 @@ export function SecurityEventsPanel() {
                 columnVisibilityModel={columnVisibilityModel}
                 defaultColumnVisibilityModel={DEFAULT_COLUMN_VISIBILITY_MODEL}
                 onSaveColumns={setColumnVisibilityModel}
+                rightActions={<SecurityEventsDateRangeFilter value={dateRange} onChange={setDateRange} />}
               />
             ),
           }}
@@ -251,13 +306,16 @@ export function SecurityEventsPanel() {
           {selected && (
             <Stack spacing={3}>
               <Grid container spacing={2.5}>
-                <EventDetailField label={t('events.event')} value={eventLabel(t, selected.eventType)} />
+                <EventDetailField label={t('events.event')} value={getSecurityEventLabel(t, selected.eventType)} />
                 <EventDetailField label={t('events.createdAt')} value={formatDateTime(selected.createdAt)} />
                 <EventDetailField
                   label={t('devices.restaurant')}
                   value={selected.restaurantName || t('devices.platform')}
                 />
-                <EventDetailField label={t('events.result')} value={selected.result} />
+                <EventDetailField
+                  label={t('events.result')}
+                  value={selected.result ? getSecurityEventResultLabel(t, selected.result) : '—'}
+                />
                 <EventDetailField label={t('events.actor')} value={selected.actorName} />
                 <EventDetailField label={t('events.ip')} value={selected.clientIp} />
                 <EventDetailField label={t('events.requestId')} value={selected.requestId} />

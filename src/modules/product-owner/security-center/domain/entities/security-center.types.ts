@@ -2,6 +2,87 @@ export type DeviceType = 'POS_TERMINAL' | 'LOCAL_AGENT' | 'TV_MONITOR' | 'CONTRO
 export type DeviceStatus = 'ACTIVE' | 'REVOKED';
 export type SecuritySeverity = 'INFO' | 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 
+export type MonitoringOverview = {
+  generatedAt: string;
+  summary: MonitoringOverviewSummary;
+  insights: MonitoringOverviewInsights;
+  branches: MonitoringBranch[];
+};
+
+export type MonitoringSecurityActivity = {
+  date: string;
+  high: number;
+  critical: number;
+};
+
+export type MonitoringAgentVersion = {
+  version: string;
+  total: number;
+  online: number;
+  offline: number;
+};
+
+export type MonitoringDeviceTypeCounts = {
+  localAgent: number;
+  pos: number;
+  tv: number;
+  control: number;
+};
+
+export type MonitoringOverviewInsights = {
+  securityActivity: MonitoringSecurityActivity[];
+  agentVersions: MonitoringAgentVersion[];
+  deviceTypes: MonitoringDeviceTypeCounts;
+};
+
+export type MonitoringOverviewSummary = {
+  totalBranches: number;
+  agentOnline: number;
+  agentOffline: number;
+  agentMissing: number;
+  activeDevices: number;
+  revokedDevices: number;
+  activePOSTerminals: number;
+  pendingPairings: number;
+  unacknowledgedHigh: number;
+  unacknowledgedCritical: number;
+};
+
+export type MonitoringAgent = {
+  id: string;
+  version: string;
+  lastSeenAt: string | null;
+  online: boolean;
+  protocolVersion: number;
+  deviceStatus: DeviceStatus | null;
+};
+
+export type MonitoringDeviceCounts = {
+  active: number;
+  online: number;
+  revoked: number;
+  activeLocalAgent: number;
+  activePOS: number;
+  activeTV: number;
+  activeControl: number;
+  telegramSubscriptions: number;
+  lastSeenAt: string | null;
+};
+
+export type MonitoringSecurityCounts = {
+  unacknowledgedHigh: number;
+  unacknowledgedCritical: number;
+  lastEventAt: string | null;
+};
+
+export type MonitoringBranch = {
+  restaurantId: string;
+  restaurantName: string;
+  agent: MonitoringAgent | null;
+  devices: MonitoringDeviceCounts;
+  security: MonitoringSecurityCounts;
+};
+
 export type PageResult<T> = {
   items: T[];
   total: number;

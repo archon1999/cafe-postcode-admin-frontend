@@ -11,6 +11,32 @@ import { securityCenterRepository } from './security-center.repository.impl';
 beforeEach(() => getMock.mockReset());
 
 describe('securityCenterRepository query contracts', () => {
+  it('loads the operational monitoring overview from its read-only endpoint', async () => {
+    getMock.mockResolvedValue({
+      data: {
+        generatedAt: '2026-08-22T10:00:00.000Z',
+        summary: {
+          totalBranches: 0,
+          agentOnline: 0,
+          agentOffline: 0,
+          agentMissing: 0,
+          activeDevices: 0,
+          revokedDevices: 0,
+          activePOSTerminals: 0,
+          pendingPairings: 0,
+          unacknowledgedHigh: 0,
+          unacknowledgedCritical: 0,
+        },
+        branches: [],
+      },
+    });
+
+    const result = await securityCenterRepository.getMonitoringOverview();
+
+    expect(getMock).toHaveBeenCalledWith('/api/v1/admin/monitoring/overview/');
+    expect(result.generatedAt).toBe('2026-08-22T10:00:00.000Z');
+  });
+
   it('maps security event filters to the backend snake-case API contract', async () => {
     getMock.mockResolvedValue({
       data: { page: 2, pageSize: 20, count: 0, total: 0, pagesCount: 0, data: [] },

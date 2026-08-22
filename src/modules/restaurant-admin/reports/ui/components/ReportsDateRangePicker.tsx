@@ -35,6 +35,7 @@ type ReportsDateRangePickerProps = {
   activePreset: ReportsDatePreset;
   startDate: string;
   endDate: string;
+  empty?: boolean;
   onPresetChange: (value: ReportsFixedDatePreset) => void;
   onRangeChange: (startDate: string, endDate: string) => void;
 };
@@ -63,6 +64,7 @@ export function ReportsDateRangePicker({
   activePreset,
   startDate,
   endDate,
+  empty = false,
   onPresetChange,
   onRangeChange,
 }: ReportsDateRangePickerProps) {
@@ -78,8 +80,8 @@ export function ReportsDateRangePicker({
 
   const open = Boolean(anchorEl);
   const displayValue = useMemo(
-    () => `${formatDisplayDate(startDate)} - ${formatDisplayDate(endDate)}`,
-    [endDate, startDate],
+    () => (empty ? '' : `${formatDisplayDate(startDate)} - ${formatDisplayDate(endDate)}`),
+    [empty, endDate, startDate],
   );
   const draftStartDate = useMemo(() => (draftRange?.from ? fromRangePickerDate(draftRange.from) : ''), [draftRange]);
   const draftEndDate = useMemo(() => (draftRange?.to ? fromRangePickerDate(draftRange.to) : ''), [draftRange]);

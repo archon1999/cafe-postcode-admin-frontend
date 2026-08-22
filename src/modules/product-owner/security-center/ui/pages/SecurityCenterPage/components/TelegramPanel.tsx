@@ -13,7 +13,7 @@ import type { GridColDef, GridColumnVisibilityModel, GridPaginationModel } from 
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
-import { useTranslate } from 'app/providers/locales';
+import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { useAdminScopeStore } from 'modules/auth';
 import { DEFAULT_COLUMN_VISIBILITY_MODEL } from 'shared/constants';
 import {
@@ -41,7 +41,7 @@ function subscriptionName(subscription: TelegramSubscription) {
 }
 
 export function TelegramPanel() {
-  const { t } = useTranslate('security-center');
+  const { t, currentLang } = useTranslate('security-center');
   const restaurantId = useAdminScopeStore((state) => state.selectedRestaurantId);
   const [link, setLink] = useState<TelegramLink | null>(null);
   const [revokeTarget, setRevokeTarget] = useState<TelegramSubscription | null>(null);
@@ -162,6 +162,7 @@ export function TelegramPanel() {
     ],
     [t],
   );
+  const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
 
   return (
     <>
@@ -176,6 +177,7 @@ export function TelegramPanel() {
           autoHeight
           rows={rows}
           columns={columns}
+          localeText={localeText}
           pagination
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
@@ -232,6 +234,7 @@ export function TelegramPanel() {
             ),
           }}
           sx={{
+            '--DataGrid-overlayHeight': { xs: '280px', sm: '360px' },
             border: 'none',
             flex: 'none',
             '& .MuiDataGrid-cell': { display: 'flex', alignItems: 'center' },

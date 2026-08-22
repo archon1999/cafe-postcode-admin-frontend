@@ -1,0 +1,58 @@
+/* stylelint-disable custom-property-pattern -- MUI derives these CSS variable names from camelCase theme tokens. */
+
+.apexcharts-canvas {
+  .apexcharts-tooltip {
+    min-width: 80px;
+    border-radius: 10px;
+    backdrop-filter: blur(6px);
+    color: var(--palette-text-primary);
+    box-shadow: var(--customShadows-dropdown);
+    background-color: rgb(var(--palette-background-defaultChannel) / 90%);
+  }
+
+  .apexcharts-xaxistooltip {
+    border-radius: 10px;
+    border-color: transparent;
+    backdrop-filter: blur(6px);
+    color: var(--palette-text-primary);
+    box-shadow: var(--customShadows-dropdown);
+    background-color: rgb(var(--palette-background-defaultChannel) / 90%);
+
+    &::before {
+      border-bottom-color: rgb(var(--palette-grey-500Channel) / 16%);
+    }
+
+    &::after {
+      border-bottom-color: rgb(var(--palette-background-defaultChannel) / 90%);
+    }
+  }
+
+  .apexcharts-tooltip-title {
+    font-weight: 700;
+    text-align: center;
+    color: var(--palette-text-secondary);
+    background-color: var(--palette-background-neutral);
+  }
+
+  .apexcharts-tooltip-series-group {
+    padding: 4px 12px;
+  }
+
+  .apexcharts-tooltip-marker {
+    margin-right: 8px;
+  }
+
+  .apexcharts-legend {
+    padding: 0;
+  }
+
+  .apexcharts-legend-marker {
+    margin-right: 6px;
+  }
+
+  .apexcharts-legend-text {
+    margin-left: 0;
+    padding-left: 0;
+    line-height: 18px;
+  }
+}

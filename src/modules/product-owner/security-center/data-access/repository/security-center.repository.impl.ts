@@ -8,7 +8,12 @@ import type {
   TelegramLink,
   TelegramSubscription,
 } from '../../domain';
-import { mapDeviceMigrationSummary, type DeviceMigrationSummaryDto } from '../mappers';
+import {
+  mapDeviceMigrationSummary,
+  mapMonitoringOverview,
+  type DeviceMigrationSummaryDto,
+  type MonitoringOverviewDto,
+} from '../mappers';
 
 type ApiPage<T> = {
   page: number;
@@ -28,6 +33,11 @@ function pageParams(query: { page: number; pageSize: number }) {
 }
 
 export const securityCenterRepository: SecurityCenterRepository = {
+  async getMonitoringOverview() {
+    const response = await instance.get<MonitoringOverviewDto>('/api/v1/admin/monitoring/overview/');
+    return mapMonitoringOverview(response.data);
+  },
+
   async getMigrationSummary() {
     const response = await instance.get<DeviceMigrationSummaryDto>('/api/v1/admin/devices/migration-summary/');
     return mapDeviceMigrationSummary(response.data);

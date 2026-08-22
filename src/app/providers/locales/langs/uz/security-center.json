@@ -1,10 +1,10 @@
 {
-  "title": "Qurilmalar va xavfsizlik",
+  "title": "Shahobchalar nazorati",
   "controlCenter": {
     "title": "Xavfsizlik boshqaruv markazi",
     "openControl": "Control PWA'ni ochish",
     "tabsLabel": "Control-center bo‘limlari",
-    "description": "Migratsiya tayyorligi, xavfsizlik hodisalari va Telegram ulanishlarini bitta operatsion ko‘rinishda nazorat qiling.",
+    "description": "Shahobchalar, Local Agentlar, POS qurilmalari va xavfsizlik hodisalarini bitta operatsion ko‘rinishda nazorat qiling.",
     "refresh": "Yangilash",
     "status": {
       "critical": "Zudlik bilan tekshirish kerak",
@@ -76,11 +76,152 @@
     }
   },
   "tabs": {
+    "monitoring": "Monitoring",
+    "notifications": "Bildirishnomalar",
     "migration": "Migratsiya",
     "devices": "Qurilmalar",
     "pairings": "QR ulash",
     "telegram": "Telegram",
     "events": "Xavfsizlik hodisalari"
+  },
+  "monitoring": {
+    "refresh": "Yangilash",
+    "autoRefresh": "Har 30 soniyada avtomatik yangilanadi",
+    "generatedAt": "Holat vaqti",
+    "loading": "Shahobchalar holati yuklanmoqda…",
+    "loadError": "Monitoring ma’lumotlarini yuklab bo‘lmadi.",
+    "loadErrorDescription": "Server aloqasini tekshiring va qayta urinib ko‘ring.",
+    "retry": "Qayta urinish",
+    "refreshError": "Ma’lumotlar yangilanmadi. Oxirgi muvaffaqiyatli holat ko‘rsatilmoqda.",
+    "status": {
+      "healthy": "Asosiy tizimlar barqaror ishlayapti",
+      "attention": "Ayrim shahobchalar e’tibor talab qiladi",
+      "critical": "Zudlik bilan tekshiriladigan shahobchalar bor"
+    },
+    "health": {
+      "healthy": "Sog‘lom",
+      "attention": "E’tibor kerak",
+      "critical": "Kritik"
+    },
+    "metrics": {
+      "totalBranches": "Jami shahobchalar",
+      "healthyBranches": "Sog‘lom",
+      "attentionBranches": "E’tibor kerak",
+      "criticalBranches": "Kritik",
+      "onlineAgents": "Online agentlar",
+      "risks": "Ko‘rib chiqilmagan xavflar"
+    },
+    "operationalHealth": {
+      "title": "Operatsion holat",
+      "description": "Shahobchalar sog‘lomligi va qurilmalar holatining jamlanmasi."
+    },
+    "securityActivity": {
+      "title": "7 kunlik xavfsizlik faolligi",
+      "description": "Yuqori va kritik xavfsizlik hodisalari kunlar kesimida.",
+      "chartLabel": "Oxirgi 7 kundagi yuqori va kritik xavfsizlik hodisalari diagrammasi",
+      "noEvents": "Hodisa yo‘q",
+      "noData": "Xavfsizlik faolligi tarixi hali mavjud emas."
+    },
+    "agentVersions": {
+      "title": "Agent versiyalari",
+      "description": "O‘rnatilgan versiyalar bo‘yicha online va offline agentlar.",
+      "total": "{{count}} ta agent",
+      "unknown": "Noma’lum versiya",
+      "empty": "Agent versiyalari haqida ma’lumot yo‘q.",
+      "missing": "Agent o‘rnatilmagan shahobchalar",
+      "more": "Yana {{count}} ta versiya"
+    },
+    "deviceInventory": {
+      "title": "Faol qurilmalar tarkibi",
+      "description": "Platformaga ulangan qurilmalar turi bo‘yicha."
+    },
+    "registry": {
+      "title": "Shahobchalar reyestri",
+      "description": "Holat, Local Agent, qurilmalar va oxirgi faollik"
+    },
+    "filters": {
+      "searchPlaceholder": "Shahobcha nomi bo‘yicha qidirish",
+      "clearSearch": "Qidiruvni tozalash",
+      "agentVersion": "Agent versiyasi",
+      "clearAgentVersion": "Agent versiyasi filtrini tozalash",
+      "health": "Holat",
+      "all": "Barchasi",
+      "results": "{{count}} ta shahobcha ko‘rsatilmoqda"
+    },
+    "pagination": {
+      "rowsPerPage": "Sahifadagi qatorlar:",
+      "displayed": "{{from}}–{{to}} / {{count}}"
+    },
+    "table": {
+      "branch": "Shahobcha",
+      "health": "Umumiy holat",
+      "agent": "Local Agent",
+      "devices": "Qurilmalar",
+      "activity": "Oxirgi faollik",
+      "security": "Xavfsizlik"
+    },
+    "agent": {
+      "online": "Online",
+      "offline": "Offline",
+      "missing": "Agent yo‘q",
+      "version": "Versiya",
+      "lastSeen": "Oxirgi aloqa",
+      "protocol": "Protokol",
+      "deviceStatus": "Qurilma holati"
+    },
+    "devices": {
+      "active": "Faol qurilmalar",
+      "localAgent": "Local Agentlar",
+      "pos": "POS terminallar",
+      "tv": "TV monitorlar",
+      "telegram": "Telegram",
+      "control": "Control qurilmalari",
+      "revoked": "Bekor qilingan",
+      "lastSeen": "Oxirgi qurilma faolligi",
+      "onlineCount": "qurilma online (5 daqiqa)",
+      "none": "Qurilma ulanmagan"
+    },
+    "security": {
+      "unreviewed": "Ko‘rib chiqilmagan",
+      "high": "Yuqori",
+      "critical": "Kritik",
+      "lastEvent": "Oxirgi hodisa"
+    },
+    "actions": {
+      "agents": "Local Agentlar",
+      "openControl": "Control PWA’ni ochish",
+      "details": "Batafsil"
+    },
+    "details": {
+      "title": "Shahobcha holati",
+      "agent": "Local Agent",
+      "devices": "Qurilmalar",
+      "security": "Xavfsizlik"
+    },
+    "empty": {
+      "title": "Faol shahobcha topilmadi",
+      "description": "Monitoring uchun faol shahobchalar mavjud emas.",
+      "noResults": "Tanlangan filtrga mos shahobcha topilmadi."
+    },
+    "issues": {
+      "critical_security_event": "Ko‘rib chiqilmagan kritik xavfsizlik hodisasi bor.",
+      "agent_missing": "Local Agent o‘rnatilmagan.",
+      "agent_revoked": "Local Agent qurilmasi bekor qilingan.",
+      "agent_inactive": "Local Agent qurilmasi faol emas.",
+      "agent_offline": "Local Agent server bilan aloqada emas.",
+      "high_security_event": "Ko‘rib chiqilmagan yuqori xavfli hodisa bor.",
+      "pos_terminal_missing": "Faol POS terminal topilmadi.",
+      "device_activity_missing": "Qurilmalardan faollik hali qayd etilmagan.",
+      "device_activity_stale": "Qurilmalarning oxirgi faolligi 24 soatdan eski."
+    },
+    "pendingPairings": "Kutilayotgan QR ulashlar: {{count}}",
+    "pendingPairingsLabel": "Kutilayotgan QR ulashlar",
+    "noIssues": "Amal talab qiladigan muammo topilmadi.",
+    "attention": {
+      "title": "E’tibor navbati",
+      "description": "Kritik holatlar va aloqasi uzilgan shahobchalar birinchi ko‘rsatiladi.",
+      "more": "Yana {{count}} ta shahobcha"
+    }
   },
   "migration": {
     "refresh": "Yangilash",
@@ -318,6 +459,16 @@
   "events": {
     "searchPlaceholder": "Hodisa, IP, foydalanuvchi yoki request ID",
     "event": "Hodisa",
+    "eventFilter": "Hodisa bo‘yicha",
+    "dateRange": {
+      "filter": "Davr bo‘yicha",
+      "title": "Hodisa davri",
+      "start": "Boshlanish sanasi",
+      "end": "Tugash sanasi",
+      "apply": "Qo‘llash",
+      "clear": "Davrni tozalash",
+      "invalid": "Tugash sanasi boshlanish sanasidan oldin bo‘lishi mumkin emas."
+    },
     "createdAt": "Vaqt",
     "details": "Batafsil",
     "detailsTitle": "Hodisa tafsilotlari",
@@ -340,19 +491,86 @@
     }
   },
   "eventTypes": {
-    "device_pairing_created": "Yangi qurilma pairing so‘rovi",
-    "device_pairing_approved": "Qurilma pairing tasdiqlandi",
-    "device_pairing_rejected": "Qurilma pairing rad etildi",
+    "admin_auth_origin_rejected": "Admin kirish manbasi rad etildi",
+    "admin_login_failed": "Admin login xatosi",
+    "admin_login_locked_out": "Admin login vaqtincha bloklandi",
+    "admin_login_succeeded": "Admin tizimga kirdi",
+    "admin_logout": "Admin tizimdan chiqdi",
+    "admin_mfa_challenge_failed": "Admin MFA tasdiqlashi muvaffaqiyatsiz",
+    "admin_mfa_challenge_issued": "Admin MFA tasdiqlashi yaratildi",
+    "admin_mfa_challenge_succeeded": "Admin MFA tasdiqlashi muvaffaqiyatli",
+    "admin_mfa_enrolled": "Admin MFA’ni uladi",
+    "admin_mfa_enrollment_failed": "Admin MFA’ni ulay olmadi",
+    "admin_mfa_locked_out": "Admin MFA vaqtincha bloklandi",
+    "admin_mfa_recovery_code_used": "Admin MFA tiklash kodidan foydalandi",
+    "admin_mfa_step_up_failed": "Qo‘shimcha MFA tasdiqlashi muvaffaqiyatsiz",
+    "admin_mfa_step_up_locked_out": "Qo‘shimcha MFA tasdiqlashi bloklandi",
+    "admin_mfa_step_up_succeeded": "Qo‘shimcha MFA tasdiqlashi muvaffaqiyatli",
+    "admin_refresh_reuse_detected": "Admin refresh tokeni qayta ishlatilgani aniqlandi",
+    "admin_session_locked": "Admin sessiyasi bloklandi",
+    "admin_session_unlocked": "Admin sessiyasi blokdan chiqarildi",
+    "admin_unlock_failed": "Admin sessiyasini ochish muvaffaqiyatsiz",
+    "admin_unlock_locked_out": "Admin sessiyasini ochish vaqtincha bloklandi",
+    "control_pairing_attempts_exceeded": "Control ulash urinishlari chegaradan oshdi",
+    "control_pairing_verification_failed": "Control ulash tasdig‘i xato",
+    "device_lease_recovered": "Qurilma ruxsati tiklandi",
+    "device_lease_renewed": "Qurilma ruxsati yangilandi",
+    "device_pairing_created": "Yangi qurilma ulash so‘rovi",
+    "device_pairing_requested": "Yangi qurilma ulash so‘rovi",
+    "device_pairing_approved": "Qurilma ulanishi tasdiqlandi",
+    "device_pairing_rejected": "Qurilma ulanishi rad etildi",
+    "device_pairing_replay_detected": "Qurilma ulash so‘rovi qayta ishlatilgani aniqlandi",
+    "device_proof_failed": "Qurilma xavfsizlik tasdig‘i xato",
+    "device_proof_replay_detected": "Qurilma tasdig‘i qayta ishlatilgani aniqlandi",
     "device_revoked": "Qurilma bekor qilindi",
     "device_signature_invalid": "Qurilma imzosi noto‘g‘ri",
     "device_replay_detected": "Takroriy imzoli so‘rov aniqlandi",
     "device_scope_denied": "Qurilma scope so‘rovi rad etildi",
+    "legacy_local_agent_migrated": "Eski Local Agent yangi tizimga o‘tkazildi",
+    "legacy_pos_device_migrated": "Eski POS qurilmasi yangi tizimga o‘tkazildi",
+    "legacy_pos_session_rejected": "Eski POS sessiyasi rad etildi",
+    "legacy_pos_terminal_bind_failed": "Eski POS terminalini ulash amalga oshmadi",
+    "legacy_pos_terminal_conflict": "Eski POS terminali bilan ziddiyat aniqlandi",
+    "legacy_tv_device_migrated": "Eski TV qurilmasi yangi tizimga o‘tkazildi",
+    "local_agent_auth_denied": "Local Agent autentifikatsiyasi rad etildi",
+    "local_agent_target_denied": "Local Agent manzilga murojaati rad etildi",
+    "local_auth_throttled": "Lokal autentifikatsiya urinishlari cheklandi",
+    "local_device_proof_denied": "Lokal qurilma tasdig‘i rad etildi",
+    "local_legacy_pos_bridge_denied": "Eski POS lokal ko‘prigi rad etildi",
+    "local_network_denied": "Lokal tarmoq so‘rovi rad etildi",
+    "local_origin_denied": "Lokal so‘rov manbasi rad etildi",
+    "local_pin_failed": "Lokal PIN tekshiruvi xato",
+    "local_rbac_denied": "Lokal ruxsat tekshiruvi rad etildi",
+    "local_scope_denied": "Lokal scope so‘rovi rad etildi",
+    "local_secure_channel_denied": "Lokal xavfsiz kanal rad etildi",
+    "local_session_denied": "Lokal sessiya rad etildi",
+    "pairing_replay_detected": "Ulash so‘rovi qayta ishlatilgani aniqlandi",
+    "pin_failed": "Noto‘g‘ri PIN kiritildi",
     "pin_login_failed": "Noto‘g‘ri PIN kiritildi",
     "pin_login_locked": "PIN kirish vaqtincha bloklandi",
-    "admin_login_failed": "Admin login xatosi",
+    "pos_login_succeeded": "POS tizimiga kirildi",
+    "pos_session_locked": "POS sessiyasi bloklandi",
+    "pos_session_unlocked": "POS sessiyasi blokdan chiqarildi",
+    "telegram_link_token_issued": "Bir martalik Telegram havolasi yaratildi",
+    "telegram_link_token_rejected": "Telegram havolasi rad etildi",
+    "telegram_subscription_linked": "Telegram ulanishi yaratildi",
     "tenant_scope_denied": "Boshqa shahobcha ma’lumotiga urinish",
     "telegram_link_issued": "Telegram bir martalik link yaratildi",
     "telegram_link_consumed": "Telegram link ishlatildi",
-    "telegram_subscription_revoked": "Telegram ulanishi uzildi"
+    "telegram_subscription_revoked": "Telegram ulanishi uzildi",
+    "tenant_platform_scope_denied": "Platforma doirasidan tashqari so‘rov rad etildi",
+    "tenant_system_scope_denied": "Tizim doirasidan tashqari so‘rov rad etildi"
+  },
+  "eventResults": {
+    "success": "Muvaffaqiyatli",
+    "succeeded": "Muvaffaqiyatli",
+    "ok": "Muvaffaqiyatli",
+    "approved": "Tasdiqlandi",
+    "pending": "Kutilmoqda",
+    "denied": "Rad etildi",
+    "rejected": "Rad etildi",
+    "failed": "Muvaffaqiyatsiz",
+    "failure": "Muvaffaqiyatsiz",
+    "error": "Xatolik"
   }
 }
