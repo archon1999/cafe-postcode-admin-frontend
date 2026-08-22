@@ -20,7 +20,7 @@ export const CONFIG: ConfigValue = {
   appVersion: packageJson.version,
   serverUrl: import.meta.env.VITE_SERVER_URL ?? '',
   assetsDir: import.meta.env.VITE_ASSETS_DIR ?? '',
-  controlAppUrl: import.meta.env.VITE_CONTROL_APP_URL?.trim() || '/control/',
+  controlAppUrl: import.meta.env.VITE_CONTROL_APP_URL?.trim() || 'https://control.cafe-postcode.uz/',
   auth: {
     method: 'token',
     skip: false,

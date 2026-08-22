@@ -6,11 +6,11 @@ import { LoadingScreen } from 'shared/ui/LoadingScreen';
 export function buildControlPairingRedirect(controlAppUrl: string, hash: string, origin: string) {
   let base: URL;
   try {
-    base = new URL(controlAppUrl, origin);
+    base = new URL(controlAppUrl || 'https://control.cafe-postcode.uz/', origin);
   } catch {
-    base = new URL('/control/', origin);
+    base = new URL('https://control.cafe-postcode.uz/');
   }
-  base.pathname = `${base.pathname.replace(/\/+$/, '')}/pair`;
+  base.pathname = '/pair';
   base.search = '';
   base.hash = hash.startsWith('#') ? hash : '';
   return base.toString();

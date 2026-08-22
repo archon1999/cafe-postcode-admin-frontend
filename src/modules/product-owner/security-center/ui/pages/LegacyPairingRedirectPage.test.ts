@@ -5,13 +5,13 @@ import { buildControlPairingRedirect } from './LegacyPairingRedirectPage';
 describe('buildControlPairingRedirect', () => {
   it('moves a legacy fragment claim to the control PWA without putting the secret in the query', () => {
     const target = buildControlPairingRedirect(
-      '/control/',
+      'https://control.cafe-postcode.uz/',
       '#v=1&pairingId=11111111-1111-4111-8111-111111111111&claimToken=one-time-secret',
       'https://admin.cafe-postcode.uz',
     );
 
     expect(target).toBe(
-      'https://admin.cafe-postcode.uz/control/pair#v=1&pairingId=11111111-1111-4111-8111-111111111111&claimToken=one-time-secret',
+      'https://control.cafe-postcode.uz/pair#v=1&pairingId=11111111-1111-4111-8111-111111111111&claimToken=one-time-secret',
     );
     expect(new URL(target).search).toBe('');
   });
@@ -23,6 +23,6 @@ describe('buildControlPairingRedirect', () => {
         '#v=1&claimToken=secret',
         'http://localhost:4200',
       ),
-    ).toBe('http://127.0.0.1:4500/control/pair#v=1&claimToken=secret');
+    ).toBe('http://127.0.0.1:4500/pair#v=1&claimToken=secret');
   });
 });

@@ -8,7 +8,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import SecurityCenterPage from './SecurityCenterPage';
 
-vi.mock('app/config/globalConfig', () => ({ CONFIG: { controlAppUrl: '/control/' } }));
+vi.mock('app/config/globalConfig', () => ({ CONFIG: { controlAppUrl: 'https://control.cafe-postcode.uz/' } }));
 
 vi.mock('app/layouts/Dashboard', () => ({
   ListPageContent: ({ children }: PropsWithChildren) => <main>{children}</main>,
@@ -61,7 +61,7 @@ describe('SecurityCenterPage scope', () => {
     expect(within(tabs).queryByRole('tab', { name: 'tabs.devices' })).not.toBeInTheDocument();
     expect(within(tabs).queryByRole('tab', { name: 'tabs.pairings' })).not.toBeInTheDocument();
 
-    expect(screen.getByRole('link', { name: 'controlCenter.openControl' })).toHaveAttribute('href', '/control/');
+    expect(screen.getByRole('link', { name: 'controlCenter.openControl' })).toHaveAttribute('href', 'https://control.cafe-postcode.uz/');
     expect(screen.getByText('migration-panel')).toBeVisible();
   });
 });
