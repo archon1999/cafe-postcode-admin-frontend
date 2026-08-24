@@ -164,7 +164,7 @@ function SecurityActivityChart({
   const { t } = useTranslate('security-center');
   const theme = useTheme();
   const chartOptions = useChart({
-    colors: [theme.vars.palette.warning.main, theme.vars.palette.error.main],
+    colors: [theme.vars.palette.info.main, theme.vars.palette.warning.main, theme.vars.palette.error.main],
     chart: {
       stacked: true,
       events: {
@@ -195,10 +195,11 @@ function SecurityActivityChart({
     },
   });
   const series = [
+    { name: t('monitoring.security.medium'), data: activity.map((item) => item.medium) },
     { name: t('monitoring.security.high'), data: activity.map((item) => item.high) },
     { name: t('monitoring.security.critical'), data: activity.map((item) => item.critical) },
   ];
-  const eventCount = activity.reduce((total, item) => total + item.high + item.critical, 0);
+  const eventCount = activity.reduce((total, item) => total + item.medium + item.high + item.critical, 0);
 
   return (
     <Card sx={{ height: 1 }}>
@@ -241,6 +242,16 @@ function AgentVersionsList({
 }) {
   const { t } = useTranslate('security-center');
   const theme = useTheme();
+  const sortedVersions = useMemo(
+    () =>
+      [...versions].sort((left, right) => {
+        if (left.version === right.version) return 0;
+        if (left.version === 'unknown') return 1;
+        if (right.version === 'unknown') return -1;
+        return right.version.localeCompare(left.version, undefined, { numeric: true, sensitivity: 'base' });
+      }),
+    [versions],
+  );
 
   return (
     <Card sx={{ height: 1 }}>
@@ -249,7 +260,7 @@ function AgentVersionsList({
       {versions.length ? (
         <Scrollbar sx={{ maxHeight: 320 }}>
           <Stack divider={<Divider sx={{ borderStyle: 'dashed' }} />} sx={{ px: 0, pt: 0.5 }}>
-            {versions.map((item) => {
+            {sortedVersions.map((item) => {
               const selected = selectedVersion === item.version;
 
               return (
@@ -356,7 +367,7 @@ function OperationalHealth({
       />
 
       <Stack spacing={2.75} sx={{ px: 3, pt: 2.5, pb: 3 }}>
-        {(['critical', 'attention', 'healthy'] as const).map((status) => {
+        {(['healthy', 'attention', 'critical'] as const).map((status) => {
           const count = counts[status];
           const value = total ? (count / total) * 100 : 0;
           const selected = selectedStatus === status;
@@ -403,7 +414,7 @@ function DeviceInventory({ counts, pendingPairings }: { counts: MonitoringDevice
     { key: 'localAgent', label: t('monitoring.devices.localAgent'), icon: 'solar:monitor-bold' },
     { key: 'pos', label: t('monitoring.devices.pos'), icon: 'solar:monitor-bold' },
     { key: 'tv', label: t('monitoring.devices.tv'), icon: 'solar:tv-bold' },
-    { key: 'control', label: t('monitoring.devices.control'), icon: 'solar:smartphone-2-bold' },
+    { key: 'telegram', label: t('monitoring.devices.telegram'), icon: 'solar:chat-round-dots-bold' },
   ];
 
   return (
@@ -863,7 +874,7 @@ export function MonitoringPanel({ businessPartnerId, onSecurityDateSelect }: Mon
         </Grid>
         <Grid size={{ xs: 12, lg: 4 }}>
           <DeviceInventory
-            counts={query.data?.insights?.deviceTypes ?? { localAgent: 0, pos: 0, tv: 0, control: 0 }}
+            counts={query.data?.insights?.deviceTypes ?? { localAgent: 0, pos: 0, tv: 0, telegram: 0 }}
             pendingPairings={query.data?.summary.pendingPairings ?? 0}
           />
         </Grid>
@@ -887,10 +898,10 @@ export function MonitoringPanel({ businessPartnerId, onSecurityDateSelect }: Mon
             [
               { value: 'all', label: t('monitoring.filters.all'), count: rows.length, color: 'default' },
               {
-                value: 'critical',
-                label: t('monitoring.health.critical'),
-                count: healthCounts.critical,
-                color: 'error',
+                value: 'healthy',
+                label: t('monitoring.health.healthy'),
+                count: healthCounts.healthy,
+                color: 'success',
               },
               {
                 value: 'attention',
@@ -899,10 +910,10 @@ export function MonitoringPanel({ businessPartnerId, onSecurityDateSelect }: Mon
                 color: 'warning',
               },
               {
-                value: 'healthy',
-                label: t('monitoring.health.healthy'),
-                count: healthCounts.healthy,
-                color: 'success',
+                value: 'critical',
+                label: t('monitoring.health.critical'),
+                count: healthCounts.critical,
+                color: 'error',
               },
             ] as const
           ).map((item) => (

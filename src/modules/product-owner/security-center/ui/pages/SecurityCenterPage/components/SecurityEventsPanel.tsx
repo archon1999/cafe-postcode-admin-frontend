@@ -14,6 +14,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
+import { useAdminScopeStore } from 'modules/auth';
 import { DEFAULT_COLUMN_VISIBILITY_MODEL } from 'shared/constants';
 import { DataGrid, DataGridEmptyState, DataGridFiltersToolbar } from 'shared/ui/CustomDataGrid';
 import { formatDateTime } from 'shared/utils/format-time';
@@ -64,6 +65,7 @@ export function SecurityEventsPanel({
   onDateRangeChange,
 }: SecurityEventsPanelProps = {}) {
   const { t, currentLang } = useTranslate('security-center');
+  const restaurantId = useAdminScopeStore((state) => state.selectedRestaurantId);
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_PAGINATION_MODEL);
   const [search, setSearch] = useState('');
   const [eventType, setEventType] = useState('');
@@ -87,12 +89,13 @@ export function SecurityEventsPanel({
 
   useEffect(() => {
     setPaginationModel((previous) => (previous.page === 0 ? previous : { ...previous, page: 0 }));
-  }, [businessPartnerId, dateRange?.endDate, dateRange?.startDate]);
+  }, [businessPartnerId, dateRange?.endDate, dateRange?.startDate, restaurantId]);
 
   const query = useSecurityEventsQuery({
     page: paginationModel.page + 1,
     pageSize: paginationModel.pageSize,
     businessPartnerId: businessPartnerId || undefined,
+    restaurantId: restaurantId || undefined,
     search: search.trim() || undefined,
     eventType: eventType || undefined,
     severity: severity || undefined,
@@ -258,7 +261,9 @@ export function SecurityEventsPanel({
           slots={{
             noRowsOverlay: () => (
               <DataGridEmptyState
-                hasActiveFilters={Boolean(search || eventType || severity || acknowledged !== '' || dateRange)}
+                hasActiveFilters={Boolean(
+                  search || restaurantId || eventType || severity || acknowledged !== '' || dateRange,
+                )}
                 noData={{ title: t('events.empty') }}
                 noResults={{ title: t('events.empty') }}
               />

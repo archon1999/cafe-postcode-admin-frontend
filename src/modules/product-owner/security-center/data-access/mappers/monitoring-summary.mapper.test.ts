@@ -23,11 +23,11 @@ describe('mapMonitoringOverview', () => {
       },
       insights: {
         securityActivity: [
-          { date: '2026-08-21', high: 2, critical: 1 },
-          { date: '2026-08-22', high: 1, critical: 0 },
+          { date: '2026-08-21', medium: 3, high: 2, critical: 1 },
+          { date: '2026-08-22', medium: 1, high: 1, critical: 0 },
         ],
         agentVersions: [{ version: '1.1.0', total: 1, online: 1, offline: 0 }],
-        deviceTypes: { localAgent: 1, pos: 1, tv: 0, control: 1 },
+        deviceTypes: { localAgent: 1, pos: 1, tv: 0, telegram: 2 },
       },
       branches: [
         {
@@ -77,11 +77,11 @@ describe('mapMonitoringOverview', () => {
     expect(mapped.summary.agentAttentionRequired).toBe(0);
     expect(mapped.insights).toEqual({
       securityActivity: [
-        { date: '2026-08-21', high: 2, critical: 1 },
-        { date: '2026-08-22', high: 1, critical: 0 },
+        { date: '2026-08-21', medium: 3, high: 2, critical: 1 },
+        { date: '2026-08-22', medium: 1, high: 1, critical: 0 },
       ],
       agentVersions: [{ version: '1.1.0', total: 1, online: 1, offline: 0 }],
-      deviceTypes: { localAgent: 1, pos: 1, tv: 0, control: 1 },
+      deviceTypes: { localAgent: 1, pos: 1, tv: 0, telegram: 2 },
     });
     expect(mapped.branches[0]).toEqual({
       restaurantId: 'restaurant-1',
@@ -163,7 +163,7 @@ describe('mapMonitoringOverview', () => {
     expect(mapped.insights).toEqual({
       securityActivity: [],
       agentVersions: [],
-      deviceTypes: { localAgent: 0, pos: 0, tv: 0, control: 0 },
+      deviceTypes: { localAgent: 0, pos: 0, tv: 0, telegram: 0 },
     });
   });
 });

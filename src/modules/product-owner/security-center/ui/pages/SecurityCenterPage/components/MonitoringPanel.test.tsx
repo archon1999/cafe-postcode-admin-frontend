@@ -175,19 +175,19 @@ beforeEach(() => {
       },
       insights: {
         securityActivity: [
-          { date: '2026-08-16', high: 0, critical: 0 },
-          { date: '2026-08-17', high: 1, critical: 0 },
-          { date: '2026-08-18', high: 0, critical: 1 },
-          { date: '2026-08-19', high: 2, critical: 0 },
-          { date: '2026-08-20', high: 0, critical: 0 },
-          { date: '2026-08-21', high: 1, critical: 1 },
-          { date: '2026-08-22', high: 1, critical: 0 },
+          { date: '2026-08-16', medium: 0, high: 0, critical: 0 },
+          { date: '2026-08-17', medium: 2, high: 1, critical: 0 },
+          { date: '2026-08-18', medium: 0, high: 0, critical: 1 },
+          { date: '2026-08-19', medium: 1, high: 2, critical: 0 },
+          { date: '2026-08-20', medium: 0, high: 0, critical: 0 },
+          { date: '2026-08-21', medium: 3, high: 1, critical: 1 },
+          { date: '2026-08-22', medium: 1, high: 1, critical: 0 },
         ],
         agentVersions: [
           { version: '1.0.9', total: 1, online: 0, offline: 1 },
           { version: '1.1.0', total: 2, online: 2, offline: 0 },
         ],
-        deviceTypes: { localAgent: 3, pos: 3, tv: 2, control: 1 },
+        deviceTypes: { localAgent: 3, pos: 3, tv: 2, telegram: 3 },
       },
       branches,
     },
@@ -207,7 +207,7 @@ describe('MonitoringPanel', () => {
     expect(mocks.monitoringScope).toHaveBeenCalledWith('partner-1');
   });
 
-  it('renders real monitoring insights and prioritizes risk status tabs', () => {
+  it('renders real monitoring insights in the requested health and version order', () => {
     renderPanel();
 
     expect(screen.getAllByText('monitoring.metrics.totalBranches').length).toBeGreaterThan(0);
@@ -215,13 +215,23 @@ describe('MonitoringPanel', () => {
     expect(screen.getByText('monitoring.metrics.risks')).toBeVisible();
     expect(screen.getByText('monitoring.security.riskWindow:24', { exact: false })).toBeVisible();
     expect(screen.getByRole('img', { name: 'monitoring.securityActivity.chartLabel' })).toBeVisible();
+    expect(screen.getByTestId('security-activity-chart')).toHaveTextContent('monitoring.security.medium:0,2,0,1,0,3,1');
     expect(screen.getByTestId('security-activity-chart')).toHaveTextContent('monitoring.security.high:0,1,0,2,0,1,1');
     expect(screen.getByTestId('security-activity-chart')).toHaveTextContent(
       'monitoring.security.critical:0,0,1,0,0,1,0',
     );
     expect(screen.getAllByText('1.0.9').length).toBeGreaterThan(0);
     expect(screen.getAllByText('1.1.0').length).toBeGreaterThan(0);
+    expect(
+      screen
+        .getAllByRole('button')
+        .map((button) => button.textContent)
+        .filter((text) => text?.startsWith('1.'))
+        .map((text) => text?.split('monitoring.agentVersions.total')[0]),
+    ).toEqual(['1.1.0', '1.0.9']);
     expect(screen.getByText('monitoring.agentVersions.missing')).toBeVisible();
+    expect(screen.getAllByText('monitoring.devices.telegram').length).toBeGreaterThan(0);
+    expect(screen.queryByText('monitoring.devices.control')).not.toBeInTheDocument();
     expect(screen.getByText('3/3')).toBeVisible();
     expect(screen.queryByText('monitoring.devices.onlineCount')).not.toBeInTheDocument();
     expect(screen.queryByText('monitoring.devices.none')).not.toBeInTheDocument();
@@ -248,11 +258,22 @@ describe('MonitoringPanel', () => {
       expect(row).toHaveStyle({ height: '72px' });
     }
 
+    expect(
+      screen
+        .getAllByRole('button')
+        .map((button) => button.textContent)
+        .filter((text) => text?.includes('/ 3') && text.startsWith('monitoring.health.')),
+    ).toEqual([
+      'monitoring.health.healthy1 / 3',
+      'monitoring.health.attention1 / 3',
+      'monitoring.health.critical1 / 3',
+    ]);
+
     expect(screen.getAllByRole('tab').map((tab) => tab.textContent)).toEqual([
       'monitoring.filters.all3',
-      'monitoring.health.critical1',
-      'monitoring.health.attention1',
       'monitoring.health.healthy1',
+      'monitoring.health.attention1',
+      'monitoring.health.critical1',
     ]);
 
     fireEvent.click(screen.getByRole('tab', { name: /monitoring.health.critical/i }));

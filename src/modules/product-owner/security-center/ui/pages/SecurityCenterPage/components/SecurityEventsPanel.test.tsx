@@ -6,7 +6,10 @@ import { cleanup, render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-const { queryMock } = vi.hoisted(() => ({ queryMock: vi.fn() }));
+const { queryMock, adminScope } = vi.hoisted(() => ({
+  queryMock: vi.fn(),
+  adminScope: { selectedRestaurantId: null as string | null },
+}));
 
 vi.mock('app/providers/locales', () => ({
   getDataGridLocaleText: () => ({}),
@@ -17,6 +20,9 @@ vi.mock('app/providers/locales', () => ({
 }));
 
 vi.mock('shared/ui/Iconify', () => ({ Iconify: () => null }));
+vi.mock('modules/auth', () => ({
+  useAdminScopeStore: (selector: (state: { selectedRestaurantId: string | null }) => unknown) => selector(adminScope),
+}));
 
 vi.mock('shared/ui/CustomDataGrid', () => ({
   DataGrid: ({ slots }: { slots: { toolbar: () => ReactNode } }) => <div>{slots.toolbar()}</div>,
@@ -35,6 +41,7 @@ import { SecurityEventsPanel } from './SecurityEventsPanel';
 
 beforeEach(() => {
   queryMock.mockReset();
+  adminScope.selectedRestaurantId = null;
   queryMock.mockReturnValue({
     data: { items: [], total: 0 },
     isError: false,
@@ -74,5 +81,13 @@ describe('SecurityEventsPanel date range integration', () => {
         to: expect.anything(),
       }),
     );
+  });
+
+  it('filters server-side by the branch selected in the grid header', () => {
+    adminScope.selectedRestaurantId = 'restaurant-2';
+
+    render(<SecurityEventsPanel />);
+
+    expect(queryMock).toHaveBeenCalledWith(expect.objectContaining({ restaurantId: 'restaurant-2' }));
   });
 });

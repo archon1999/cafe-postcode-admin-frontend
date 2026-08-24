@@ -54,6 +54,7 @@ export type MonitoringOverviewDto = {
   insights?: {
     securityActivity?: Array<{
       date: string;
+      medium?: number;
       high: number;
       critical: number;
     }>;
@@ -67,7 +68,8 @@ export type MonitoringOverviewDto = {
       localAgent: number;
       pos: number;
       tv: number;
-      control: number;
+      telegram?: number;
+      control?: number;
     };
   };
   branches: MonitoringBranchDto[];
@@ -117,13 +119,18 @@ export function mapMonitoringOverview(dto: MonitoringOverviewDto): MonitoringOve
       agentAttentionRequired: dto.summary.agentAttentionRequired ?? dto.summary.agentOffline,
     },
     insights: {
-      securityActivity: (dto.insights?.securityActivity ?? []).map((activity) => ({ ...activity })),
+      securityActivity: (dto.insights?.securityActivity ?? []).map((activity) => ({
+        ...activity,
+        medium: activity.medium ?? 0,
+      })),
       agentVersions: (dto.insights?.agentVersions ?? []).map((version) => ({ ...version })),
       deviceTypes: {
         localAgent: dto.insights?.deviceTypes?.localAgent ?? 0,
         pos: dto.insights?.deviceTypes?.pos ?? 0,
         tv: dto.insights?.deviceTypes?.tv ?? 0,
-        control: dto.insights?.deviceTypes?.control ?? 0,
+        telegram:
+          dto.insights?.deviceTypes?.telegram ??
+          dto.branches.reduce((total, branch) => total + (branch.devices.telegramSubscriptions ?? 0), 0),
       },
     },
     branches: dto.branches.map(mapBranch),

@@ -119,8 +119,8 @@
     },
     "securityActivity": {
       "title": "7 kunlik xavfsizlik faolligi",
-      "description": "Yuqori va kritik xavfsizlik hodisalari kunlar kesimida.",
-      "chartLabel": "Oxirgi 7 kundagi yuqori va kritik xavfsizlik hodisalari diagrammasi",
+      "description": "O‘rta, yuqori va kritik xavfsizlik hodisalari kunlar kesimida.",
+      "chartLabel": "Oxirgi 7 kundagi o‘rta, yuqori va kritik xavfsizlik hodisalari diagrammasi",
       "noEvents": "Hodisa yo‘q",
       "noData": "Xavfsizlik faolligi tarixi hali mavjud emas."
     },
@@ -186,6 +186,7 @@
     },
     "security": {
       "unreviewed": "Ko‘rib chiqilmagan",
+      "medium": "O‘rta",
       "high": "Yuqori",
       "critical": "Kritik",
       "riskWindow": "Oxirgi {{count}} soat",

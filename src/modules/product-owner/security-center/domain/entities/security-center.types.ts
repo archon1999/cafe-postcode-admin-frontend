@@ -11,6 +11,7 @@ export type MonitoringOverview = {
 
 export type MonitoringSecurityActivity = {
   date: string;
+  medium: number;
   high: number;
   critical: number;
 };
@@ -26,7 +27,7 @@ export type MonitoringDeviceTypeCounts = {
   localAgent: number;
   pos: number;
   tv: number;
-  control: number;
+  telegram: number;
 };
 
 export type MonitoringOverviewInsights = {
