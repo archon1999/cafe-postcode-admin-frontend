@@ -32,6 +32,8 @@ import {
   integrationConfigToFormValues,
   PAPER_WIDTH_VALUES,
   PRINTER_CONNECTION_TYPE_VALUES,
+  PRINT_MODE_VALUES,
+  QR_MODE_VALUES,
   type IntegrationConfigFormValues,
 } from './integration-config.mapper';
 import { INTEGRATION_KIND_VALUES, integrationConfigSchema } from './integration-config.schema';
@@ -240,6 +242,28 @@ export function RestaurantIntegrationDialog({
                     ))}
                   </RHFSelect>
                   <RHFTextField<Values> name="encoding" label={t('integrations.fields.encoding')} />
+                </Stack>
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                  <RHFSelect<Values>
+                    name="printMode"
+                    label={t('integrations.fields.printMode')}
+                    helperText={t('integrations.fields.printModeHint')}>
+                    {PRINT_MODE_VALUES.map((mode) => (
+                      <MenuItem key={mode} value={mode}>
+                        {t(`integrations.options.printMode.${mode}`)}
+                      </MenuItem>
+                    ))}
+                  </RHFSelect>
+                  <RHFSelect<Values>
+                    name="qrMode"
+                    label={t('integrations.fields.qrMode')}
+                    helperText={t('integrations.fields.qrModeHint')}>
+                    {QR_MODE_VALUES.map((mode) => (
+                      <MenuItem key={mode} value={mode}>
+                        {t(`integrations.options.qrMode.${mode}`)}
+                      </MenuItem>
+                    ))}
+                  </RHFSelect>
                 </Stack>
                 <RHFSwitch<Values> name="cutAfterPrint" label={t('integrations.fields.cutAfterPrint')} />
               </>

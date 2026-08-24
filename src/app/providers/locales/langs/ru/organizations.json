@@ -642,6 +642,10 @@
       "hmacSecretHint": "Stored for the future activate flow.",
       "merchantId": "Merchant ID",
       "paperWidthMm": "Ширина бумаги",
+      "printMode": "Режим печати чека",
+      "printModeHint": "Text быстрее; raster печатает весь чек как изображение.",
+      "qrMode": "Режим печати QR",
+      "qrModeHint": "Выберите raster для принтеров без совместимой native QR-команды.",
       "paymentQrUrl": "URL QR-оплаты",
       "paymentQrUrlHint": "На следующем этапе QR для кассового чека будет браться из этого источника.",
       "timeoutSeconds": "Timeout seconds",
@@ -654,6 +658,10 @@
       "printerPortHint": "Если оставить пустым, будет использован 9100.",
       "provider": "Провайдер",
       "settings": "Настройки"
+    },
+    "options": {
+      "printMode": { "text": "Text (native)", "raster": "Raster (весь чек)" },
+      "qrMode": { "native": "Native QR", "raster": "Raster QR" }
     },
     "actions": {
       "checkPrinterConnection": "Проверить подключение принтера"

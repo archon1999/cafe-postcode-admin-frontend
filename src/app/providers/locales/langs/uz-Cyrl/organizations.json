@@ -643,6 +643,10 @@
       "hmacSecretHint": "Stored for the future activate flow.",
       "merchantId": "Merchant ID",
       "paperWidthMm": "Қоғоз кенглиги",
+      "printMode": "Чек чоп этиш режими",
+      "printModeHint": "Text тезроқ; raster бутун чекни расм қилиб чиқаради.",
+      "qrMode": "QR чоп этиш режими",
+      "qrModeHint": "Native ишламайдиган принтерлар учун raster танланг.",
       "paymentQrUrl": "Тўлов QR URL",
       "paymentQrUrlHint": "Кейинги босқичда кассир чеки учун ҚР шу манбадан олинади.",
       "timeoutSeconds": "Timeout seconds",
@@ -655,6 +659,10 @@
       "printerPortHint": "Бўш қолдирилса 9100 ишлатилади.",
       "provider": "Провайдер",
       "settings": "Созламалар"
+    },
+    "options": {
+      "printMode": { "text": "Text (native)", "raster": "Raster (бутун чек)" },
+      "qrMode": { "native": "Native QR", "raster": "Raster QR" }
     },
     "actions": {
       "checkPrinterConnection": "Принтер уланишини текшириш"

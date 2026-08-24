@@ -643,6 +643,10 @@
       "hmacSecretHint": "Kelajakdagi activate flow uchun saqlanadi.",
       "merchantId": "Merchant ID",
       "paperWidthMm": "Qog'oz kengligi",
+      "printMode": "Chek chop etish rejimi",
+      "printModeHint": "Text tezroq; raster butun chekni rasm qilib chiqaradi.",
+      "qrMode": "QR chop etish rejimi",
+      "qrModeHint": "Native ishlamaydigan printerlar uchun raster tanlang.",
       "paymentQrUrl": "To'lov QR URL",
       "paymentQrUrlHint": "Keyingi bosqichda kassir cheki uchun QR shu manbadan olinadi.",
       "timeoutSeconds": "Timeout (sekund)",
@@ -655,6 +659,10 @@
       "printerPortHint": "Bo'sh qoldirilsa 9100 ishlatiladi.",
       "provider": "Provayder",
       "settings": "Sozlamalar"
+    },
+    "options": {
+      "printMode": { "text": "Text (native)", "raster": "Raster (butun chek)" },
+      "qrMode": { "native": "Native QR", "raster": "Raster QR" }
     },
     "actions": {
       "checkPrinterConnection": "Printer ulanishini tekshirish"

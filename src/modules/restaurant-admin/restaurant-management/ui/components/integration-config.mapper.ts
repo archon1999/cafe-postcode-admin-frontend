@@ -2,6 +2,8 @@ import type { AdminIntegrationConfig, AdminIntegrationConfigKind } from 'shared/
 
 export const PAPER_WIDTH_VALUES = ['80'] as const;
 export const PRINTER_CONNECTION_TYPE_VALUES = ['system_printer', 'socket'] as const;
+export const PRINT_MODE_VALUES = ['text', 'raster'] as const;
+export const QR_MODE_VALUES = ['native', 'raster'] as const;
 
 export type IntegrationConfigFormValues = {
   kind: AdminIntegrationConfigKind;
@@ -13,6 +15,8 @@ export type IntegrationConfigFormValues = {
   printerPort: string;
   paperWidthMm: (typeof PAPER_WIDTH_VALUES)[number];
   encoding: string;
+  printMode: (typeof PRINT_MODE_VALUES)[number];
+  qrMode: (typeof QR_MODE_VALUES)[number];
   cutAfterPrint: boolean;
   terminalId: string;
   merchantId: string;
@@ -37,6 +41,8 @@ export const integrationConfigDefaultValues: IntegrationConfigFormValues = {
   printerPort: '',
   paperWidthMm: '80',
   encoding: 'cp1251',
+  printMode: 'text',
+  qrMode: 'native',
   cutAfterPrint: true,
   terminalId: '',
   merchantId: '',
@@ -59,6 +65,10 @@ const MANAGED_SETTING_KEYS = new Set([
   'cut_after_print',
   'cutAfterPrint',
   'encoding',
+  'print_mode',
+  'printMode',
+  'qr_mode',
+  'qrMode',
   'connection_type',
   'connectionType',
   'transport',
@@ -128,6 +138,16 @@ function readPrinterConnectionType(settings: Record<string, unknown> | undefined
   return readString(settings, ['host']) ? 'socket' : 'system_printer';
 }
 
+function readEnumSetting<T extends readonly string[]>(
+  settings: Record<string, unknown> | undefined,
+  keys: string[],
+  values: T,
+  fallback: T[number],
+): T[number] {
+  const value = readString(settings, keys).trim().toLowerCase();
+  return values.includes(value as T[number]) ? (value as T[number]) : fallback;
+}
+
 export function integrationConfigToFormValues(item: AdminIntegrationConfig | null): IntegrationConfigFormValues {
   if (!item) {
     return { ...integrationConfigDefaultValues };
@@ -145,6 +165,8 @@ export function integrationConfigToFormValues(item: AdminIntegrationConfig | nul
     printerPort: String(readSetting(settings, ['port']) ?? ''),
     paperWidthMm: readPaperWidth(settings),
     encoding: readString(settings, ['encoding'], 'cp1251'),
+    printMode: readEnumSetting(settings, ['print_mode', 'printMode'], PRINT_MODE_VALUES, 'text'),
+    qrMode: readEnumSetting(settings, ['qr_mode', 'qrMode'], QR_MODE_VALUES, 'native'),
     cutAfterPrint: readBoolean(settings, ['cut_after_print', 'cutAfterPrint'], true),
     terminalId: readString(settings, ['terminal_id', 'terminalId']),
     merchantId: readString(settings, ['merchant_id', 'merchantId']),
@@ -180,6 +202,8 @@ export function buildIntegrationConfigSettings(
       paper_width_mm: Number(values.paperWidthMm),
       cut_after_print: values.cutAfterPrint,
       encoding: values.encoding.trim() || 'cp1251',
+      print_mode: values.printMode,
+      qr_mode: values.qrMode,
     };
 
     if (values.provider === 'windows-raw' && values.connectionType === 'socket') {
@@ -243,14 +267,17 @@ export function getIntegrationSettingsSummary(row: AdminIntegrationConfig) {
     const connectionType = readPrinterConnectionType(settings);
     const paperWidth = readSetting(settings, ['paper_width_mm', 'paperWidthMm']) ?? '-';
     const encoding = readString(settings, ['encoding'], 'cp1251');
+    const printMode = readEnumSetting(settings, ['print_mode', 'printMode'], PRINT_MODE_VALUES, 'text');
+    const qrMode = readEnumSetting(settings, ['qr_mode', 'qrMode'], QR_MODE_VALUES, 'native');
+    const modes = `${printMode}/${qrMode}`;
     if (connectionType === 'socket') {
       const host = readString(settings, ['host'], '-');
       const port = readSetting(settings, ['port']);
       const endpoint = port ? `${host}:${port}` : host;
-      return `${getPrinterConnectionLabel(connectionType)}: ${endpoint} | ${paperWidth}mm | ${encoding}`;
+      return `${getPrinterConnectionLabel(connectionType)}: ${endpoint} | ${paperWidth}mm | ${encoding} | ${modes}`;
     }
     const printerName = readString(settings, ['printer_name', 'printerName'], '-');
-    return `${getPrinterConnectionLabel(connectionType)}: ${printerName} | ${paperWidth}mm | ${encoding}`;
+    return `${getPrinterConnectionLabel(connectionType)}: ${printerName} | ${paperWidth}mm | ${encoding} | ${modes}`;
   }
 
   if (row.kind === 'payment') {

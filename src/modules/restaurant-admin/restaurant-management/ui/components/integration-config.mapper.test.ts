@@ -39,6 +39,8 @@ describe('integration config form mapper', () => {
         host: '192.168.1.50',
         port: 9100,
         encoding: 'cp866',
+        printMode: 'raster',
+        qrMode: 'raster',
         printerName: 'obsolete',
         vendor_extension: 'keep-me',
       },
@@ -52,6 +54,8 @@ describe('integration config form mapper', () => {
       printerPort: '9100',
       paperWidthMm: '80',
       encoding: 'cp866',
+      printMode: 'raster',
+      qrMode: 'raster',
       cutAfterPrint: false,
     });
     expect(buildIntegrationConfigSettings(values, item)).toEqual({
@@ -60,12 +64,14 @@ describe('integration config form mapper', () => {
       paper_width_mm: 80,
       cut_after_print: false,
       encoding: 'cp866',
+      print_mode: 'raster',
+      qr_mode: 'raster',
       host: '192.168.1.50',
       port: 9100,
       transport: 'local-agent',
       code_page: 46,
     });
-    expect(getIntegrationSettingsSummary(item)).toBe('LAN TCP/IP: 192.168.1.50:9100 | 80mm | cp866');
+    expect(getIntegrationSettingsSummary(item)).toBe('LAN TCP/IP: 192.168.1.50:9100 | 80mm | cp866 | raster/raster');
   });
 
   it('keeps system-printer defaults and emits the exact Windows raw settings', () => {
@@ -82,10 +88,25 @@ describe('integration config form mapper', () => {
       paper_width_mm: 80,
       cut_after_print: true,
       encoding: 'cp1251',
+      print_mode: 'text',
+      qr_mode: 'native',
       printer_name: 'POS-80',
       transport: 'local-agent',
       code_page: 46,
     });
+  });
+
+  it('falls back to safe output modes for legacy and malformed settings', () => {
+    const item = integration({
+      kind: 'printer',
+      provider: 'windows-raw',
+      settings: { printer_name: 'POS-80', print_mode: 'pdf', qr_mode: 'unknown' },
+    });
+
+    const values = integrationConfigToFormValues(item);
+
+    expect(values.printMode).toBe('text');
+    expect(values.qrMode).toBe('native');
   });
 
   it('canonicalizes MARTA aliases while retaining managed hidden values and unmanaged keys', () => {
