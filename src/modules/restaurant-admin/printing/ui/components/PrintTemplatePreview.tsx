@@ -43,6 +43,15 @@ function formatValue(value: string, format?: 'money') {
   return Number.isFinite(amount) ? new Intl.NumberFormat('uz-UZ').format(amount) : value;
 }
 
+function itemDetails(item: Record<string, unknown>) {
+  const modifierText = String(item.modifierText ?? item.modifier_text ?? '').trim();
+  let note = String(item.note ?? '').trim();
+  if (modifierText && note.startsWith(modifierText)) {
+    note = note.slice(modifierText.length).replace(/^[·\s]+/, '').trim();
+  }
+  return { modifierText, note };
+}
+
 function RowBlock({ block, data }: { block: PrintTemplateBlock; data: Record<string, unknown> }) {
   return (
     <Stack spacing={0.35}>
@@ -122,7 +131,9 @@ function PreviewBlock({ block, data }: { block: PrintTemplateBlock; data: Record
             ))}
           </Stack>
         ) : null}
-        {items.map((item, itemIndex) => (
+        {items.map((item, itemIndex) => {
+          const { modifierText, note } = itemDetails(item);
+          return (
           <Box key={`${block.id}-item-${itemIndex}`}>
             <Stack direction="row" spacing={1}>
               {(block.columns ?? []).map((column, columnIndex) => (
@@ -133,7 +144,21 @@ function PreviewBlock({ block, data }: { block: PrintTemplateBlock; data: Record
                 </Box>
               ))}
             </Stack>
-            {block.showNotes && item.note ? <Box sx={{ pl: 1, opacity: 0.75 }}>{String(item.note)}</Box> : null}
+            {block.showNotes && modifierText ? (
+              <Stack sx={{ pl: 1.25, opacity: 0.75 }}>
+                {modifierText.split('\n').map((line, modifierIndex) => (
+                  <Box key={`${block.id}-${itemIndex}-modifier-${modifierIndex}`}>{line}</Box>
+                ))}
+              </Stack>
+            ) : null}
+            {block.showNotes && note ? (
+              <Box sx={{ pl: 1.25, opacity: 0.75, display: 'flex', alignItems: 'flex-start', gap: 0.75 }}>
+                <Box component="span" aria-hidden="true">
+                  •
+                </Box>
+                <Box component="span">{note}</Box>
+              </Box>
+            ) : null}
             {block.showVat && Number(item.vat ?? 0) > 0 ? (
               <Stack direction="row" justifyContent="space-between" spacing={1} sx={{ pl: 1 }}>
                 <Box>{resolveText(block.vatLabel ?? 'QQS ({{item.vatPercent}}%)', data, item)}</Box>
@@ -142,7 +167,8 @@ function PreviewBlock({ block, data }: { block: PrintTemplateBlock; data: Record
             ) : null}
             {block.separatorAfterEach ? <Box sx={{ borderTop: '1px dashed currentColor', mt: 0.65 }} /> : null}
           </Box>
-        ))}
+          );
+        })}
       </Stack>
     );
   }
@@ -177,13 +203,14 @@ export function PrintTemplatePreview({ layout, sampleData, showTitle = true }: P
           maxWidth: '100%',
           minHeight: 420,
           mx: 'auto',
-          p: 2.5,
+          px: 1.5,
+          py: 2.5,
           color: '#101010',
           bgcolor: '#fff',
           border: '1px solid',
           borderColor: 'divider',
           boxShadow: '0 12px 30px rgba(0,0,0,0.12)',
-          fontFamily: 'Consolas, "Courier New", monospace',
+          fontFamily: '"Cafe Receipt Go Mono", "Courier New", monospace',
           fontSize: 12,
           lineHeight: 1.35,
         }}>

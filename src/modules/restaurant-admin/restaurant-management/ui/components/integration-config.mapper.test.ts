@@ -41,6 +41,7 @@ describe('integration config form mapper', () => {
         encoding: 'cp866',
         printMode: 'raster',
         qrMode: 'raster',
+        rasterFont: 'noto_sans',
         printerName: 'obsolete',
         vendor_extension: 'keep-me',
       },
@@ -56,6 +57,7 @@ describe('integration config form mapper', () => {
       encoding: 'cp866',
       printMode: 'raster',
       qrMode: 'raster',
+      rasterFont: 'noto_sans',
       cutAfterPrint: false,
     });
     expect(buildIntegrationConfigSettings(values, item)).toEqual({
@@ -66,12 +68,15 @@ describe('integration config form mapper', () => {
       encoding: 'cp866',
       print_mode: 'raster',
       qr_mode: 'raster',
+      raster_font: 'noto_sans',
       host: '192.168.1.50',
       port: 9100,
       transport: 'local-agent',
       code_page: 46,
     });
-    expect(getIntegrationSettingsSummary(item)).toBe('LAN TCP/IP: 192.168.1.50:9100 | 80mm | cp866 | raster/raster');
+    expect(getIntegrationSettingsSummary(item)).toBe(
+      'LAN TCP/IP: 192.168.1.50:9100 | 80mm | cp866 | raster/raster/noto_sans',
+    );
   });
 
   it('keeps system-printer defaults and emits the exact Windows raw settings', () => {
@@ -90,6 +95,7 @@ describe('integration config form mapper', () => {
       encoding: 'cp1251',
       print_mode: 'text',
       qr_mode: 'native',
+      raster_font: 'go_mono',
       printer_name: 'POS-80',
       transport: 'local-agent',
       code_page: 46,
@@ -107,6 +113,7 @@ describe('integration config form mapper', () => {
 
     expect(values.printMode).toBe('text');
     expect(values.qrMode).toBe('native');
+    expect(values.rasterFont).toBe('go_mono');
   });
 
   it('canonicalizes MARTA aliases while retaining managed hidden values and unmanaged keys', () => {

@@ -34,6 +34,7 @@ import {
   PRINTER_CONNECTION_TYPE_VALUES,
   PRINT_MODE_VALUES,
   QR_MODE_VALUES,
+  RASTER_FONT_VALUES,
   type IntegrationConfigFormValues,
 } from './integration-config.mapper';
 import { INTEGRATION_KIND_VALUES, integrationConfigSchema } from './integration-config.schema';
@@ -79,6 +80,7 @@ export function RestaurantIntegrationDialog({
   });
   const selectedKind = methods.watch('kind');
   const selectedProvider = methods.watch('provider');
+  const selectedPrintMode = methods.watch('printMode');
   const providerOptions = useMemo(() => {
     const options = PROVIDER_OPTIONS[selectedKind];
     if (item?.kind === selectedKind && item.provider && !options.some((option) => option.value === item.provider)) {
@@ -244,20 +246,14 @@ export function RestaurantIntegrationDialog({
                   <RHFTextField<Values> name="encoding" label={t('integrations.fields.encoding')} />
                 </Stack>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                  <RHFSelect<Values>
-                    name="printMode"
-                    label={t('integrations.fields.printMode')}
-                    helperText={t('integrations.fields.printModeHint')}>
+                  <RHFSelect<Values> name="printMode" label={t('integrations.fields.printMode')}>
                     {PRINT_MODE_VALUES.map((mode) => (
                       <MenuItem key={mode} value={mode}>
                         {t(`integrations.options.printMode.${mode}`)}
                       </MenuItem>
                     ))}
                   </RHFSelect>
-                  <RHFSelect<Values>
-                    name="qrMode"
-                    label={t('integrations.fields.qrMode')}
-                    helperText={t('integrations.fields.qrModeHint')}>
+                  <RHFSelect<Values> name="qrMode" label={t('integrations.fields.qrMode')}>
                     {QR_MODE_VALUES.map((mode) => (
                       <MenuItem key={mode} value={mode}>
                         {t(`integrations.options.qrMode.${mode}`)}
@@ -265,6 +261,15 @@ export function RestaurantIntegrationDialog({
                     ))}
                   </RHFSelect>
                 </Stack>
+                {selectedPrintMode === 'raster' ? (
+                  <RHFSelect<Values> name="rasterFont" label={t('integrations.fields.rasterFont')}>
+                    {RASTER_FONT_VALUES.map((fontName) => (
+                      <MenuItem key={fontName} value={fontName}>
+                        {t(`integrations.options.rasterFont.${fontName}`)}
+                      </MenuItem>
+                    ))}
+                  </RHFSelect>
+                ) : null}
                 <RHFSwitch<Values> name="cutAfterPrint" label={t('integrations.fields.cutAfterPrint')} />
               </>
             ) : null}

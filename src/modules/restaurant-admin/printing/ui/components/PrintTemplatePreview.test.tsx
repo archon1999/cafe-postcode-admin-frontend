@@ -56,6 +56,7 @@ describe('PrintTemplatePreview schema-1 semantics', () => {
           name: 'Osh',
           quantity: 2,
           lineTotal: 60000,
+          modifierText: 'Shakar miqdori: Shakarsiz',
           note: 'Piyozsiz',
           vat: 6428,
           vatPercent: 12,
@@ -77,7 +78,11 @@ describe('PrintTemplatePreview schema-1 semantics', () => {
     expect(screen.getByText('Soni')).toBeInTheDocument();
     expect(screen.getByText('Summa')).toBeInTheDocument();
     expect(screen.getByText('x2')).toBeInTheDocument();
+    const modifier = screen.getByText('Shakar miqdori: Shakarsiz');
+    const note = screen.getByText('Piyozsiz');
+    expect(modifier.compareDocumentPosition(note) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(screen.getByText('Piyozsiz')).toBeInTheDocument();
+    expect(screen.getByText('•')).toBeInTheDocument();
     expect(screen.getByText('QQS (12%)')).toBeInTheDocument();
     expect(screen.getByText('preview.qr')).toBeInTheDocument();
     expect(screen.getByText('https://ofd.soliq.uz/check?q=704')).toBeInTheDocument();

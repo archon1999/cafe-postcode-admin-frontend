@@ -10,6 +10,22 @@
 @import '../../shared/ui/Chart/styles.css';
 @import '../../shared/ui/Scrollbar/styles.css';
 
+@font-face {
+  font-family: 'Cafe Receipt Go Mono';
+  src: url('/fonts/receipt/Go-Mono.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cafe Receipt Go Mono';
+  src: url('/fonts/receipt/Go-Mono-Bold.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 700 900;
+  font-display: swap;
+}
+
 html {
   height: 100%;
   -webkit-overflow-scrolling: touch;

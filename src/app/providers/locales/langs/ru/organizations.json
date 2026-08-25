@@ -643,9 +643,8 @@
       "merchantId": "Merchant ID",
       "paperWidthMm": "Ширина бумаги",
       "printMode": "Режим печати чека",
-      "printModeHint": "Text быстрее; raster печатает весь чек как изображение.",
       "qrMode": "Режим печати QR",
-      "qrModeHint": "Выберите raster для принтеров без совместимой native QR-команды.",
+      "rasterFont": "Шрифт raster-печати",
       "paymentQrUrl": "URL QR-оплаты",
       "paymentQrUrlHint": "На следующем этапе QR для кассового чека будет браться из этого источника.",
       "timeoutSeconds": "Timeout seconds",
@@ -661,7 +660,13 @@
     },
     "options": {
       "printMode": { "text": "Text (native)", "raster": "Raster (весь чек)" },
-      "qrMode": { "native": "Native QR", "raster": "Raster QR" }
+      "qrMode": { "native": "Native QR", "raster": "Raster QR" },
+      "rasterFont": {
+        "go_mono": "Go Mono (по умолчанию)",
+        "inter": "Inter",
+        "noto_sans": "Noto Sans",
+        "roboto_mono": "Roboto Mono"
+      }
     },
     "actions": {
       "checkPrinterConnection": "Проверить подключение принтера"

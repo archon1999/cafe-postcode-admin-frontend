@@ -644,9 +644,8 @@
       "merchantId": "Merchant ID",
       "paperWidthMm": "Qog'oz kengligi",
       "printMode": "Chek chop etish rejimi",
-      "printModeHint": "Text tezroq; raster butun chekni rasm qilib chiqaradi.",
       "qrMode": "QR chop etish rejimi",
-      "qrModeHint": "Native ishlamaydigan printerlar uchun raster tanlang.",
+      "rasterFont": "Raster shrift",
       "paymentQrUrl": "To'lov QR URL",
       "paymentQrUrlHint": "Keyingi bosqichda kassir cheki uchun QR shu manbadan olinadi.",
       "timeoutSeconds": "Timeout (sekund)",
@@ -662,7 +661,13 @@
     },
     "options": {
       "printMode": { "text": "Text (native)", "raster": "Raster (butun chek)" },
-      "qrMode": { "native": "Native QR", "raster": "Raster QR" }
+      "qrMode": { "native": "Native QR", "raster": "Raster QR" },
+      "rasterFont": {
+        "go_mono": "Go Mono (standart)",
+        "inter": "Inter",
+        "noto_sans": "Noto Sans",
+        "roboto_mono": "Roboto Mono"
+      }
     },
     "actions": {
       "checkPrinterConnection": "Printer ulanishini tekshirish"

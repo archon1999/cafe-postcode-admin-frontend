@@ -5,6 +5,7 @@ import {
   PRINTER_CONNECTION_TYPE_VALUES,
   PRINT_MODE_VALUES,
   QR_MODE_VALUES,
+  RASTER_FONT_VALUES,
 } from './integration-config.mapper';
 
 export const INTEGRATION_KIND_VALUES = ['printer', 'payment', 'fiscal'] as const;
@@ -24,6 +25,7 @@ export const integrationConfigSchema = z
     encoding: z.string(),
     printMode: z.enum(PRINT_MODE_VALUES),
     qrMode: z.enum(QR_MODE_VALUES),
+    rasterFont: z.enum(RASTER_FONT_VALUES),
     cutAfterPrint: z.boolean(),
     terminalId: z.string(),
     merchantId: z.string(),

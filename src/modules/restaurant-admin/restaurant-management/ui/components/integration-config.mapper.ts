@@ -4,6 +4,7 @@ export const PAPER_WIDTH_VALUES = ['80'] as const;
 export const PRINTER_CONNECTION_TYPE_VALUES = ['system_printer', 'socket'] as const;
 export const PRINT_MODE_VALUES = ['text', 'raster'] as const;
 export const QR_MODE_VALUES = ['native', 'raster'] as const;
+export const RASTER_FONT_VALUES = ['go_mono', 'inter', 'noto_sans', 'roboto_mono'] as const;
 
 export type IntegrationConfigFormValues = {
   kind: AdminIntegrationConfigKind;
@@ -17,6 +18,7 @@ export type IntegrationConfigFormValues = {
   encoding: string;
   printMode: (typeof PRINT_MODE_VALUES)[number];
   qrMode: (typeof QR_MODE_VALUES)[number];
+  rasterFont: (typeof RASTER_FONT_VALUES)[number];
   cutAfterPrint: boolean;
   terminalId: string;
   merchantId: string;
@@ -43,6 +45,7 @@ export const integrationConfigDefaultValues: IntegrationConfigFormValues = {
   encoding: 'cp1251',
   printMode: 'text',
   qrMode: 'native',
+  rasterFont: 'go_mono',
   cutAfterPrint: true,
   terminalId: '',
   merchantId: '',
@@ -69,6 +72,8 @@ const MANAGED_SETTING_KEYS = new Set([
   'printMode',
   'qr_mode',
   'qrMode',
+  'raster_font',
+  'rasterFont',
   'connection_type',
   'connectionType',
   'transport',
@@ -167,6 +172,7 @@ export function integrationConfigToFormValues(item: AdminIntegrationConfig | nul
     encoding: readString(settings, ['encoding'], 'cp1251'),
     printMode: readEnumSetting(settings, ['print_mode', 'printMode'], PRINT_MODE_VALUES, 'text'),
     qrMode: readEnumSetting(settings, ['qr_mode', 'qrMode'], QR_MODE_VALUES, 'native'),
+    rasterFont: readEnumSetting(settings, ['raster_font', 'rasterFont'], RASTER_FONT_VALUES, 'go_mono'),
     cutAfterPrint: readBoolean(settings, ['cut_after_print', 'cutAfterPrint'], true),
     terminalId: readString(settings, ['terminal_id', 'terminalId']),
     merchantId: readString(settings, ['merchant_id', 'merchantId']),
@@ -204,6 +210,7 @@ export function buildIntegrationConfigSettings(
       encoding: values.encoding.trim() || 'cp1251',
       print_mode: values.printMode,
       qr_mode: values.qrMode,
+      raster_font: values.rasterFont,
     };
 
     if (values.provider === 'windows-raw' && values.connectionType === 'socket') {
@@ -269,7 +276,8 @@ export function getIntegrationSettingsSummary(row: AdminIntegrationConfig) {
     const encoding = readString(settings, ['encoding'], 'cp1251');
     const printMode = readEnumSetting(settings, ['print_mode', 'printMode'], PRINT_MODE_VALUES, 'text');
     const qrMode = readEnumSetting(settings, ['qr_mode', 'qrMode'], QR_MODE_VALUES, 'native');
-    const modes = `${printMode}/${qrMode}`;
+    const rasterFont = readEnumSetting(settings, ['raster_font', 'rasterFont'], RASTER_FONT_VALUES, 'go_mono');
+    const modes = printMode === 'raster' ? `${printMode}/${qrMode}/${rasterFont}` : `${printMode}/${qrMode}`;
     if (connectionType === 'socket') {
       const host = readString(settings, ['host'], '-');
       const port = readSetting(settings, ['port']);
