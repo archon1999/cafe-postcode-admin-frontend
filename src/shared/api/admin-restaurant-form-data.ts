@@ -7,7 +7,9 @@ type RestaurantSelfServicePayload = Pick<
   | 'social'
   | 'address'
   | 'serviceFeeEnabled'
+  | 'serviceFeeMode'
   | 'serviceFeePercent'
+  | 'serviceFeeHourlyRate'
   | 'vatEnabled'
   | 'vatPercent'
   | 'markingCheckEnabled'
@@ -50,7 +52,9 @@ export function buildAdminRestaurantRequestPayload(payload: AdminRestaurantPaylo
   appendText(formData, 'address', payload.address);
   appendJson(formData, 'fakturaPayload', payload.fakturaPayload);
   appendText(formData, 'serviceFeeEnabled', payload.serviceFeeEnabled);
+  appendText(formData, 'serviceFeeMode', payload.serviceFeeMode);
   appendText(formData, 'serviceFeePercent', payload.serviceFeePercent);
+  appendText(formData, 'serviceFeeHourlyRate', payload.serviceFeeHourlyRate);
   appendText(formData, 'vatEnabled', payload.vatEnabled);
   appendText(formData, 'vatPercent', payload.vatPercent);
   appendText(formData, 'markingCheckEnabled', payload.markingCheckEnabled);
@@ -94,7 +98,9 @@ export function buildRestaurantSelfServiceRequestPayload(
     social: payload.social,
     address: payload.address,
     serviceFeeEnabled: payload.serviceFeeEnabled,
+    serviceFeeMode: payload.serviceFeeMode,
     serviceFeePercent: payload.serviceFeePercent,
+    serviceFeeHourlyRate: payload.serviceFeeHourlyRate,
     vatEnabled: payload.vatEnabled,
     vatPercent: payload.vatPercent,
     markingCheckEnabled: payload.markingCheckEnabled,

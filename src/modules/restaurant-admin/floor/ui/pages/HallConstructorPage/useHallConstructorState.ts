@@ -41,7 +41,9 @@ export function useHallConstructorState(id?: string) {
     const nextDraft: HallConstructorDraft = {
       gridColumns: query.data.gridColumns,
       serviceFeeEnabled: Boolean(query.data.serviceFeeEnabled),
+      serviceFeeMode: query.data.serviceFeeMode ?? 'percentage',
       serviceFeePercent: query.data.serviceFeePercent ?? 0,
+      serviceFeeHourlyRate: query.data.serviceFeeHourlyRate ?? 0,
       tables: query.data.tables.map(toDraftTable),
       deletedTableIds: [],
     };
@@ -105,7 +107,9 @@ export function useHallConstructorState(id?: string) {
   };
 
   const updateHallServiceFee = (
-    values: Partial<Pick<HallConstructorDraft, 'serviceFeeEnabled' | 'serviceFeePercent'>>,
+    values: Partial<
+      Pick<HallConstructorDraft, 'serviceFeeEnabled' | 'serviceFeeMode' | 'serviceFeePercent' | 'serviceFeeHourlyRate'>
+    >,
   ) => {
     setDraft((currentDraft) => (currentDraft ? { ...currentDraft, ...values } : currentDraft));
   };
@@ -146,7 +150,9 @@ export function useHallConstructorState(id?: string) {
         width: 1,
         height: 1,
         serviceFeeEnabled: false,
+        serviceFeeMode: 'percentage',
         serviceFeePercent: 0,
+        serviceFeeHourlyRate: 0,
         isActive: true,
       };
       setSelectedTableId(nextTable.localId);
@@ -213,7 +219,9 @@ export function useHallConstructorState(id?: string) {
     const payload: AdminHallConstructorPayload = {
       gridColumns: draft.gridColumns,
       serviceFeeEnabled: draft.serviceFeeEnabled,
+      serviceFeeMode: draft.serviceFeeMode,
       serviceFeePercent: draft.serviceFeePercent,
+      serviceFeeHourlyRate: draft.serviceFeeHourlyRate,
       tables: draft.tables.map((table) => ({
         ...(table.id ? { id: table.id } : {}),
         name: table.name.trim(),
@@ -225,7 +233,9 @@ export function useHallConstructorState(id?: string) {
         width: table.width,
         height: table.height,
         serviceFeeEnabled: table.serviceFeeEnabled,
+        serviceFeeMode: table.serviceFeeMode,
         serviceFeePercent: table.serviceFeePercent,
+        serviceFeeHourlyRate: table.serviceFeeHourlyRate,
         isActive: table.isActive,
       })),
       deletedTableIds: draft.deletedTableIds,
@@ -234,7 +244,9 @@ export function useHallConstructorState(id?: string) {
     const nextDraft: HallConstructorDraft = {
       gridColumns: response.gridColumns,
       serviceFeeEnabled: Boolean(response.serviceFeeEnabled),
+      serviceFeeMode: response.serviceFeeMode ?? 'percentage',
       serviceFeePercent: response.serviceFeePercent ?? 0,
+      serviceFeeHourlyRate: response.serviceFeeHourlyRate ?? 0,
       tables: response.tables.map(toDraftTable),
       deletedTableIds: [],
     };

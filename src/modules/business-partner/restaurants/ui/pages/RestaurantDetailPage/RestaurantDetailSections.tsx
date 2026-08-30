@@ -455,7 +455,11 @@ function ServiceSettingsSection({ restaurant }: { restaurant: AdminRestaurantDet
   const rows = [
     {
       label: t('fields.serviceFeeEnabled'),
-      value: restaurant.serviceFeeEnabled ? `${enabled} · ${restaurant.serviceFeePercent}%` : disabled,
+      value: restaurant.serviceFeeEnabled
+        ? restaurant.serviceFeeMode === 'hourly'
+          ? `${enabled} · ${Number(restaurant.serviceFeeHourlyRate ?? 0).toLocaleString()} UZS/soat`
+          : `${enabled} · ${restaurant.serviceFeePercent}%`
+        : disabled,
       icon: 'solar:bill-list-bold-duotone',
     },
     {

@@ -95,6 +95,7 @@ export type AdminCashExpensesResponse = AdminPaginatedResponse<AdminCashExpense>
 export type AdminReportKey = 'summary' | 'sales' | 'receipts' | 'topItems' | 'topStaff' | 'paymentBreakdown' | 'shifts';
 export type AdminReportPeriodType = 'day' | 'month' | 'year';
 export type AdminBusinessPartnerStatus = 'draft' | 'active' | 'inactive';
+export type AdminServiceFeeMode = 'percentage' | 'hourly';
 export type AdminBusinessPartnerRestaurant = {
   id: string;
   name: string;
@@ -114,7 +115,9 @@ export type AdminHall = {
   description?: string;
   gridColumns?: number;
   serviceFeeEnabled?: boolean;
+  serviceFeeMode?: AdminServiceFeeMode;
   serviceFeePercent?: number | string;
+  serviceFeeHourlyRate?: number | string;
   sortOrder?: number;
   isActive: boolean;
   zoneOrCabinId: string;
@@ -126,7 +129,9 @@ export type AdminHallPayload = {
   description: string;
   gridColumns?: number;
   serviceFeeEnabled?: boolean;
+  serviceFeeMode?: AdminServiceFeeMode;
   serviceFeePercent?: number | string;
+  serviceFeeHourlyRate?: number | string;
   sortOrder?: number;
   isActive: boolean;
   zoneOrCabinId: string;
@@ -172,7 +177,9 @@ export type AdminDiningTable = {
   height: number;
   rotation: number;
   serviceFeeEnabled: boolean;
+  serviceFeeMode: AdminServiceFeeMode;
   serviceFeePercent: number | string;
+  serviceFeeHourlyRate: number | string;
   isActive: boolean;
   activeSession?: AdminActiveTableSessionSummary | null;
 };
@@ -191,7 +198,9 @@ export type AdminDiningTablePayload = {
   height: number;
   rotation: number;
   serviceFeeEnabled?: boolean;
+  serviceFeeMode?: AdminServiceFeeMode;
   serviceFeePercent?: number | string;
+  serviceFeeHourlyRate?: number | string;
   isActive: boolean;
 };
 
@@ -206,7 +215,9 @@ export type AdminHallConstructorTable = {
   width: number;
   height: number;
   serviceFeeEnabled?: boolean;
+  serviceFeeMode?: AdminServiceFeeMode;
   serviceFeePercent?: number | string;
+  serviceFeeHourlyRate?: number | string;
   isActive: boolean;
 };
 
@@ -215,14 +226,18 @@ export type AdminHallConstructor = {
   hallName: string;
   gridColumns: number;
   serviceFeeEnabled?: boolean;
+  serviceFeeMode?: AdminServiceFeeMode;
   serviceFeePercent?: number | string;
+  serviceFeeHourlyRate?: number | string;
   tables: AdminHallConstructorTable[];
 };
 
 export type AdminHallConstructorPayload = {
   gridColumns: number;
   serviceFeeEnabled?: boolean;
+  serviceFeeMode?: AdminServiceFeeMode;
   serviceFeePercent?: number | string;
+  serviceFeeHourlyRate?: number | string;
   tables: Array<{
     id?: string;
     name: string;
@@ -234,7 +249,9 @@ export type AdminHallConstructorPayload = {
     width: number;
     height: number;
     serviceFeeEnabled?: boolean;
+    serviceFeeMode?: AdminServiceFeeMode;
     serviceFeePercent?: number | string;
+    serviceFeeHourlyRate?: number | string;
     isActive?: boolean;
   }>;
   deletedTableIds?: string[];
@@ -519,7 +536,9 @@ export type AdminRestaurant = {
   currency: string;
   posAuthBackgroundImageUrl?: string | null;
   serviceFeeEnabled: boolean;
+  serviceFeeMode: AdminServiceFeeMode;
   serviceFeePercent: number | string;
+  serviceFeeHourlyRate: number | string;
   vatEnabled: boolean;
   vatPercent: number | string;
   markingCheckEnabled: boolean;
@@ -555,7 +574,9 @@ export type AdminRestaurantPayload = {
   posAuthBackgroundImage?: File | null;
   clearPosAuthBackgroundImage?: boolean;
   serviceFeeEnabled: boolean;
+  serviceFeeMode: AdminServiceFeeMode;
   serviceFeePercent: number | string;
+  serviceFeeHourlyRate: number | string;
   vatEnabled: boolean;
   vatPercent: number | string;
   markingCheckEnabled: boolean;

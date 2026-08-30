@@ -21,7 +21,7 @@ import { Iconify } from 'shared/ui/Iconify';
 import { getDefaultShapeVariant, getShapeVariantsForSeatCount } from '../../../domain';
 
 import type { DraftTable } from './ConstructorTableCard';
-import { normalizeServiceFeePercent } from './hallConstructorDraft';
+import { normalizeServiceFeeHourlyRate, normalizeServiceFeePercent } from './hallConstructorDraft';
 
 type HallConstructorInspectorProps = {
   onDelete: () => void;
@@ -122,17 +122,47 @@ export function HallConstructorInspector({
               label={t('fields.tableServiceFeeEnabled', { defaultValue: 'Stol xizmat haqi' })}
             />
             <TextField
-              label={t('fields.serviceFeePercent', { defaultValue: 'Xizmat haqi, %' })}
-              type="number"
+              select
+              label={t('fields.serviceFeeMode', { defaultValue: 'Hisoblash usuli' })}
               disabled={!selectedTable.serviceFeeEnabled}
-              value={selectedTable.serviceFeePercent}
+              value={selectedTable.serviceFeeMode}
               onChange={(event) =>
                 updateSelectedTable((table) => ({
                   ...table,
-                  serviceFeePercent: normalizeServiceFeePercent(event.target.value),
+                  serviceFeeMode: event.target.value as 'percentage' | 'hourly',
+                }))
+              }>
+              <MenuItem value="percentage">{t('fields.serviceFeeModePercentage', { defaultValue: 'Foizli' })}</MenuItem>
+              <MenuItem value="hourly">{t('fields.serviceFeeModeHourly', { defaultValue: 'Soatlik' })}</MenuItem>
+            </TextField>
+            <TextField
+              label={
+                selectedTable.serviceFeeMode === 'hourly'
+                  ? t('fields.serviceFeeHourlyRate', { defaultValue: 'Xizmat haqi (UZS/soat)' })
+                  : t('fields.serviceFeePercent', { defaultValue: 'Xizmat haqi, %' })
+              }
+              type="number"
+              disabled={!selectedTable.serviceFeeEnabled}
+              value={
+                selectedTable.serviceFeeMode === 'hourly'
+                  ? selectedTable.serviceFeeHourlyRate
+                  : selectedTable.serviceFeePercent
+              }
+              onChange={(event) =>
+                updateSelectedTable((table) => ({
+                  ...table,
+                  ...(table.serviceFeeMode === 'hourly'
+                    ? { serviceFeeHourlyRate: normalizeServiceFeeHourlyRate(event.target.value) }
+                    : { serviceFeePercent: normalizeServiceFeePercent(event.target.value) }),
                 }))
               }
-              slotProps={{ htmlInput: { min: 0, max: 99, step: 1 } }}
+              slotProps={{
+                htmlInput: {
+                  min: 0,
+                  ...(selectedTable.serviceFeeMode === 'percentage' ? { max: 99 } : {}),
+                  step: 1,
+                },
+              }}
             />
 
             <Accordion

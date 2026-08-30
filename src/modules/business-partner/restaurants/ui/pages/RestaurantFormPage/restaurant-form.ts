@@ -2,25 +2,41 @@ import { z } from 'zod';
 
 import type { AdminRestaurant, AdminRestaurantPayload } from 'shared/api/admin-types';
 
-export const restaurantFormSchema = z.object({
-  name: z.string().min(1),
-  legalName: z.string(),
-  taxNumber: z.string(),
-  phone: z.string(),
-  social: z.string(),
-  address: z.string(),
-  fakturaPayload: z.record(z.string(), z.unknown()).optional(),
-  posAuthBackgroundImage: z.custom<File | string | null | undefined>().optional(),
-  clearPosAuthBackgroundImage: z.boolean().optional(),
-  serviceFeeEnabled: z.boolean(),
-  serviceFeePercent: z.coerce.number().min(0).max(99),
-  vatEnabled: z.boolean(),
-  vatPercent: z.coerce.number().min(0).max(99),
-  markingCheckEnabled: z.boolean(),
-  posMonitorVariant: z.enum(['default', 'light_compact']),
-  paymentTotalMode: z.enum(['fixed', 'cashier_editable']).default('fixed'),
-  isActive: z.boolean(),
-});
+export const restaurantFormSchema = z
+  .object({
+    name: z.string().min(1),
+    legalName: z.string(),
+    taxNumber: z.string(),
+    phone: z.string(),
+    social: z.string(),
+    address: z.string(),
+    fakturaPayload: z.record(z.string(), z.unknown()).optional(),
+    posAuthBackgroundImage: z.custom<File | string | null | undefined>().optional(),
+    clearPosAuthBackgroundImage: z.boolean().optional(),
+    serviceFeeEnabled: z.boolean(),
+    serviceFeeMode: z.enum(['percentage', 'hourly']).default('percentage'),
+    serviceFeePercent: z.coerce.number().min(0).max(99),
+    serviceFeeHourlyRate: z.coerce.number().int().min(0).default(0),
+    vatEnabled: z.boolean(),
+    vatPercent: z.coerce.number().min(0).max(99),
+    markingCheckEnabled: z.boolean(),
+    posMonitorVariant: z.enum(['default', 'light_compact']),
+    paymentTotalMode: z.enum(['fixed', 'cashier_editable']).default('fixed'),
+    isActive: z.boolean(),
+  })
+  .superRefine((values, context) => {
+    if (!values.serviceFeeEnabled) return;
+    if (values.serviceFeeMode === 'percentage' && values.serviceFeePercent < 1) {
+      context.addIssue({ code: 'custom', path: ['serviceFeePercent'], message: 'Foiz 1 dan 99 gacha bo‘lishi kerak' });
+    }
+    if (values.serviceFeeMode === 'hourly' && values.serviceFeeHourlyRate < 1) {
+      context.addIssue({
+        code: 'custom',
+        path: ['serviceFeeHourlyRate'],
+        message: 'Soatlik tarif 0 dan katta bo‘lishi kerak',
+      });
+    }
+  });
 
 export type RestaurantFormInput = z.input<typeof restaurantFormSchema>;
 export type RestaurantFormValues = z.output<typeof restaurantFormSchema>;
@@ -36,7 +52,9 @@ export const restaurantFormDefaultValues: RestaurantFormInput = {
   posAuthBackgroundImage: null,
   clearPosAuthBackgroundImage: false,
   serviceFeeEnabled: false,
+  serviceFeeMode: 'percentage',
   serviceFeePercent: 0,
+  serviceFeeHourlyRate: 0,
   vatEnabled: true,
   vatPercent: 12,
   markingCheckEnabled: false,
@@ -57,7 +75,9 @@ export function restaurantToFormValues(restaurant: AdminRestaurant): RestaurantF
     posAuthBackgroundImage: restaurant.posAuthBackgroundImageUrl ?? null,
     clearPosAuthBackgroundImage: false,
     serviceFeeEnabled: restaurant.serviceFeeEnabled,
+    serviceFeeMode: restaurant.serviceFeeMode ?? 'percentage',
     serviceFeePercent: Number(restaurant.serviceFeePercent ?? 0),
+    serviceFeeHourlyRate: Number(restaurant.serviceFeeHourlyRate ?? 0),
     vatEnabled: restaurant.vatEnabled,
     vatPercent: Number(restaurant.vatPercent ?? 12),
     markingCheckEnabled: Boolean(restaurant.markingCheckEnabled),
@@ -80,7 +100,9 @@ export function restaurantFormValuesToPayload(
     address: values.address.trim(),
     fakturaPayload: values.fakturaPayload,
     serviceFeeEnabled: values.serviceFeeEnabled,
+    serviceFeeMode: values.serviceFeeMode,
     serviceFeePercent: values.serviceFeePercent,
+    serviceFeeHourlyRate: values.serviceFeeHourlyRate,
     vatEnabled: values.vatEnabled,
     vatPercent: values.vatPercent,
     markingCheckEnabled: values.markingCheckEnabled,

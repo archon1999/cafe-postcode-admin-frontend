@@ -32,6 +32,8 @@ export const RestaurantFormFields = ({
 }: RestaurantFormFieldsProps) => {
   const { setValue, watch } = useFormContext<RestaurantFormValues>();
   const backgroundImage = watch('posAuthBackgroundImage');
+  const serviceFeeEnabled = watch('serviceFeeEnabled');
+  const serviceFeeMode = watch('serviceFeeMode');
 
   const clearBackgroundImage = () => {
     setValue('posAuthBackgroundImage', null, { shouldDirty: true, shouldValidate: true });
@@ -82,11 +84,28 @@ export const RestaurantFormFields = ({
           sx={{ gridColumn: { lg: '1 / -1' } }}
         />
         <RHFSwitch<RestaurantFormValues> name="serviceFeeEnabled" label={t('fields.serviceFeeEnabled')} />
-        <RHFTextField<RestaurantFormValues>
-          name="serviceFeePercent"
-          label={t('fields.serviceFeePercent')}
-          type="number"
-        />
+        <RHFSelect<RestaurantFormValues>
+          name="serviceFeeMode"
+          label={t('fields.serviceFeeMode', { defaultValue: 'Hisoblash usuli' })}
+          disabled={!serviceFeeEnabled}>
+          <MenuItem value="percentage">{t('fields.serviceFeeModePercentage', { defaultValue: 'Foizli' })}</MenuItem>
+          <MenuItem value="hourly">{t('fields.serviceFeeModeHourly', { defaultValue: 'Soatlik' })}</MenuItem>
+        </RHFSelect>
+        {serviceFeeMode === 'hourly' ? (
+          <RHFTextField<RestaurantFormValues>
+            name="serviceFeeHourlyRate"
+            label={t('fields.serviceFeeHourlyRate', { defaultValue: 'Xizmat haqi (UZS/soat)' })}
+            type="number"
+            disabled={!serviceFeeEnabled}
+          />
+        ) : (
+          <RHFTextField<RestaurantFormValues>
+            name="serviceFeePercent"
+            label={t('fields.serviceFeePercent')}
+            type="number"
+            disabled={!serviceFeeEnabled}
+          />
+        )}
         <RHFSwitch<RestaurantFormValues> name="vatEnabled" label={t('fields.vatEnabled')} />
         <RHFTextField<RestaurantFormValues> name="vatPercent" label={t('fields.vatPercent')} type="number" />
         <RHFSwitch<RestaurantFormValues> name="markingCheckEnabled" label={t('fields.markingCheckEnabled')} />

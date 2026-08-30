@@ -5,6 +5,7 @@ import {
   Chip,
   FormControlLabel,
   IconButton,
+  MenuItem,
   Stack,
   Switch,
   TextField,
@@ -28,7 +29,7 @@ import { formatHallDisplayName } from 'shared/utils/format-hall-display';
 import { GRID_CELL_SIZE, GRID_GAP_SIZE, GRID_PADDING_SIZE } from '../../../domain';
 
 import { ConstructorTableCard, getConstructorPreviewPalette } from './ConstructorTableCard';
-import { normalizeServiceFeePercent } from './hallConstructorDraft';
+import { normalizeServiceFeeHourlyRate, normalizeServiceFeePercent } from './hallConstructorDraft';
 import { HallConstructorInspector } from './HallConstructorInspector';
 import { useHallConstructorState } from './useHallConstructorState';
 
@@ -120,17 +121,44 @@ export const HallConstructorPageContent = ({ id }: HallConstructorPageContentPro
                 label={t('fields.hallServiceFeeEnabled', { defaultValue: 'Zal xizmat haqi' })}
               />
               <TextField
+                select
                 size="small"
-                label={t('fields.serviceFeePercent', { defaultValue: 'Xizmat haqi, %' })}
+                label={t('fields.serviceFeeMode', { defaultValue: 'Hisoblash usuli' })}
+                disabled={!draft.serviceFeeEnabled}
+                value={draft.serviceFeeMode}
+                onChange={(event) =>
+                  updateHallServiceFee({ serviceFeeMode: event.target.value as 'percentage' | 'hourly' })
+                }
+                sx={{ width: { xs: '100%', sm: 148 } }}>
+                <MenuItem value="percentage">
+                  {t('fields.serviceFeeModePercentage', { defaultValue: 'Foizli' })}
+                </MenuItem>
+                <MenuItem value="hourly">{t('fields.serviceFeeModeHourly', { defaultValue: 'Soatlik' })}</MenuItem>
+              </TextField>
+              <TextField
+                size="small"
+                label={
+                  draft.serviceFeeMode === 'hourly'
+                    ? t('fields.serviceFeeHourlyRate', { defaultValue: 'UZS/soat' })
+                    : t('fields.serviceFeePercent', { defaultValue: 'Xizmat haqi, %' })
+                }
                 type="number"
                 disabled={!draft.serviceFeeEnabled}
-                value={draft.serviceFeePercent}
+                value={draft.serviceFeeMode === 'hourly' ? draft.serviceFeeHourlyRate : draft.serviceFeePercent}
                 onChange={(event) =>
-                  updateHallServiceFee({
-                    serviceFeePercent: normalizeServiceFeePercent(event.target.value),
-                  })
+                  updateHallServiceFee(
+                    draft.serviceFeeMode === 'hourly'
+                      ? { serviceFeeHourlyRate: normalizeServiceFeeHourlyRate(event.target.value) }
+                      : { serviceFeePercent: normalizeServiceFeePercent(event.target.value) },
+                  )
                 }
-                slotProps={{ htmlInput: { min: 0, max: 99, step: 1 } }}
+                slotProps={{
+                  htmlInput: {
+                    min: 0,
+                    ...(draft.serviceFeeMode === 'percentage' ? { max: 99 } : {}),
+                    step: 1,
+                  },
+                }}
                 sx={{ ...nativeNumberInputSx, width: { xs: '100%', sm: 148 } }}
               />
               <TextField
