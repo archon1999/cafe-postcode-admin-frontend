@@ -2,7 +2,7 @@
 
 import '@testing-library/jest-dom/vitest';
 
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 const testState = vi.hoisted(() => ({
@@ -102,6 +102,29 @@ function getTablePaletteElements() {
 }
 
 describe('HallConstructorPageContent render mode', () => {
+  it('controls the hall service fee with disabled, percentage, and hourly options', async () => {
+    render(<HallConstructorPageContent id="hall-1" />);
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('loading-screen')).not.toBeInTheDocument();
+    });
+
+    const modeSelect = screen.getByLabelText('fields.hallServiceFeeEnabled');
+    fireEvent.mouseDown(modeSelect);
+
+    expect(screen.getByRole('option', { name: 'fields.serviceFeeModeDisabled' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'fields.serviceFeeModePercentage' })).toBeInTheDocument();
+    const hourlyOption = screen.getByRole('option', { name: 'fields.serviceFeeModeHourly' });
+    expect(hourlyOption).toBeInTheDocument();
+
+    fireEvent.click(hourlyOption);
+    expect(screen.getByLabelText('fields.serviceFeeHourlyRate')).toBeInTheDocument();
+
+    fireEvent.mouseDown(modeSelect);
+    fireEvent.click(screen.getByRole('option', { name: 'fields.serviceFeeModeDisabled' }));
+    expect(screen.queryByLabelText('fields.serviceFeeHourlyRate')).not.toBeInTheDocument();
+  });
+
   it('uses the dark palette only for the exact dark mode', async () => {
     testState.mode = 'dark';
     render(<HallConstructorPageContent id="hall-1" />);

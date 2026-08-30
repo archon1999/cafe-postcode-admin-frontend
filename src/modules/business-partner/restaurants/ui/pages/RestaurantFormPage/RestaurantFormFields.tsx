@@ -2,6 +2,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useFormContext } from 'react-hook-form';
 
@@ -83,29 +84,39 @@ export const RestaurantFormFields = ({
           rows={3}
           sx={{ gridColumn: { lg: '1 / -1' } }}
         />
-        <RHFSwitch<RestaurantFormValues> name="serviceFeeEnabled" label={t('fields.serviceFeeEnabled')} />
-        <RHFSelect<RestaurantFormValues>
-          name="serviceFeeMode"
-          label={t('fields.serviceFeeMode', { defaultValue: 'Hisoblash usuli' })}
-          disabled={!serviceFeeEnabled}>
+        <TextField
+          select
+          label={t('fields.serviceFeeEnabled')}
+          value={serviceFeeEnabled ? serviceFeeMode : 'disabled'}
+          onChange={(event) => {
+            const selection = event.target.value as 'disabled' | 'percentage' | 'hourly';
+
+            setValue('serviceFeeEnabled', selection !== 'disabled', {
+              shouldDirty: true,
+              shouldValidate: true,
+            });
+            if (selection !== 'disabled') {
+              setValue('serviceFeeMode', selection, { shouldDirty: true, shouldValidate: true });
+            }
+          }}>
+          <MenuItem value="disabled">{t('fields.serviceFeeModeDisabled', { defaultValue: "O'chirilgan" })}</MenuItem>
           <MenuItem value="percentage">{t('fields.serviceFeeModePercentage', { defaultValue: 'Foizli' })}</MenuItem>
           <MenuItem value="hourly">{t('fields.serviceFeeModeHourly', { defaultValue: 'Soatlik' })}</MenuItem>
-        </RHFSelect>
-        {serviceFeeMode === 'hourly' ? (
+        </TextField>
+        {serviceFeeEnabled && serviceFeeMode === 'hourly' ? (
           <RHFTextField<RestaurantFormValues>
             name="serviceFeeHourlyRate"
             label={t('fields.serviceFeeHourlyRate', { defaultValue: 'Xizmat haqi (UZS/soat)' })}
             type="number"
-            disabled={!serviceFeeEnabled}
           />
-        ) : (
+        ) : null}
+        {serviceFeeEnabled && serviceFeeMode === 'percentage' ? (
           <RHFTextField<RestaurantFormValues>
             name="serviceFeePercent"
             label={t('fields.serviceFeePercent')}
             type="number"
-            disabled={!serviceFeeEnabled}
           />
-        )}
+        ) : null}
         <RHFSwitch<RestaurantFormValues> name="vatEnabled" label={t('fields.vatEnabled')} />
         <RHFTextField<RestaurantFormValues> name="vatPercent" label={t('fields.vatPercent')} type="number" />
         <RHFSwitch<RestaurantFormValues> name="markingCheckEnabled" label={t('fields.markingCheckEnabled')} />
