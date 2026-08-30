@@ -35,7 +35,10 @@ export type AdminOrderChannel = 'hall' | 'takeaway' | 'online' | 'delivery';
 export type AdminServiceFeeComponent = {
   scope: 'restaurant' | 'hall' | 'table';
   sourceName: string;
-  percent: number | string;
+  mode?: AdminServiceFeeMode;
+  percent?: number | string;
+  hourlyRate?: number | string;
+  durationMinutes?: number;
   amount: number;
 };
 export type AdminOrderItemStatus = 'new' | 'cooking' | 'done' | 'served' | 'cancelled';

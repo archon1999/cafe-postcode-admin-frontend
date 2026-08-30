@@ -37,6 +37,7 @@ import {
 } from '../../lib/presenters';
 
 import { hasReceiptPrintPreview, OrderReceiptPreviewDialog } from './OrderReceiptPreviewDialog';
+import { formatServiceFeeRateLabel } from './service-fee-label';
 
 type InfoTileProps = {
   label: string;
@@ -335,10 +336,14 @@ const OrderDetailPage = () => {
                           const scopeLabel = t(`serviceFeeScopes.${component.scope}`, {
                             defaultValue: fallbackLabels[component.scope],
                           });
+                          const rateLabel = formatServiceFeeRateLabel(
+                            component,
+                            t('fields.serviceFeeModeHourly', { defaultValue: 'Soatlik' }),
+                          );
                           return (
                             <Stack key={component.scope} direction="row" justifyContent="space-between" spacing={2}>
                               <Typography variant="body2" color="text.secondary">
-                                {scopeLabel} ({Number(component.percent)}%)
+                                {scopeLabel} ({rateLabel})
                               </Typography>
                               <Typography variant="subtitle2" sx={{ fontVariantNumeric: 'tabular-nums' }}>
                                 {formatMoney(component.amount)}
