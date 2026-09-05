@@ -19,6 +19,7 @@ import type {
 } from '../admin-types';
 
 import { instance } from './axiosInstance.ts';
+import { durableFiscalRetry } from './durableFiscalRetry';
 
 export const adminOperationsGateway = {
   getAdminExpenseCategories(params?: { isActive?: boolean }) {
@@ -147,14 +148,14 @@ export const adminOperationsGateway = {
     return instance.get<AdminPayment>(`/api/v1/admin/billing/payments/${id}/`).then((response) => response.data);
   },
 
-  retryAdminPaymentFiscal(id: string) {
-    return instance
-      .post<{
-        payment: AdminPayment;
-        receipt: AdminReceipt;
-        result: Record<string, unknown>;
-      }>(`/api/v1/admin/billing/payments/${id}/retry-fiscal/`)
-      .then((response) => response.data);
+  retryAdminPaymentFiscal(id: string, recoverOnly = false) {
+    return durableFiscalRetry<{
+      payment: AdminPayment;
+      receipt: AdminReceipt;
+      result: Record<string, unknown>;
+      results?: Record<string, unknown>[];
+      receipts?: AdminReceipt[];
+    }>(id, recoverOnly);
   },
 
   getAdminReceipts(params: AdminReceiptsQueryParams) {

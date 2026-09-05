@@ -34,8 +34,8 @@ export const ordersRepository: OrdersRepository = {
   getPaymentById(id: string) {
     return apiClient.getAdminPaymentById(id);
   },
-  retryPaymentFiscal(id: string) {
-    return apiClient.retryAdminPaymentFiscal(id);
+  retryPaymentFiscal(id: string, recoverOnly = false) {
+    return apiClient.retryAdminPaymentFiscal(id, recoverOnly);
   },
   getReceipts(params: AdminReceiptsQueryParams) {
     return apiClient.getAdminReceipts(params);

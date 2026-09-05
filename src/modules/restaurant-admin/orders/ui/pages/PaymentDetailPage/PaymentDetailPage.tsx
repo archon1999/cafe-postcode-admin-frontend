@@ -1,9 +1,10 @@
+import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 import { Content } from 'app/layouts/Dashboard';
@@ -32,6 +33,22 @@ const PaymentDetailPage = () => {
   const query = useGetPaymentByIdQuery(id ?? '');
   const retryFiscalMutation = useRetryPaymentFiscalMutation(id ?? '');
   const [retryConfirmOpen, setRetryConfirmOpen] = useState(false);
+  const [financialError, setFinancialError] = useState('');
+  const [financialUnknown, setFinancialUnknown] = useState(false);
+  const recoveredId = useRef('');
+  const { mutateAsync: recoverFiscal } = retryFiscalMutation;
+  const showFinancialError = (error: unknown) => {
+    const response = (error as { response?: { data?: { detail?: string; state?: string } } })?.response?.data;
+    setFinancialUnknown(response?.state !== 'failed');
+    setFinancialError(response?.detail ?? (error instanceof Error ? error.message : t('messages.fiscalRetryFailed')));
+  };
+  useEffect(() => {
+    if (!id || recoveredId.current === id) return;
+    recoveredId.current = id;
+    void recoverFiscal(true).catch(showFinancialError);
+    // Only recover when the payment changes; mutation state must not trigger another lookup.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, recoverFiscal]);
   usePageTitle(
     query.data
       ? [t('pages.payments.title'), t('pages.paymentDetail.title', { orderNumber: query.data.orderNumber })]
@@ -120,6 +137,9 @@ const PaymentDetailPage = () => {
           <Stack spacing={2}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={1.5}>
+                {financialError ? (
+                  <Alert severity={financialUnknown ? 'warning' : 'error'}>{financialError}</Alert>
+                ) : null}
                 <Typography variant="subtitle2" color="text.secondary">
                   {t('fields.status')}
                 </Typography>
@@ -132,7 +152,9 @@ const PaymentDetailPage = () => {
                     color="black"
                     loading={retryFiscalMutation.isPending}
                     onClick={() => setRetryConfirmOpen(true)}>
-                    {t('actions.retryFiscal')}
+                    {financialUnknown
+                      ? t('actions.checkFinancialResult', { defaultValue: 'Amal holatini tekshirish' })
+                      : t('actions.retryFiscal')}
                   </Button>
                 ) : null}
               </Stack>
@@ -156,30 +178,42 @@ const PaymentDetailPage = () => {
         open={retryConfirmOpen}
         onClose={() => setRetryConfirmOpen(false)}
         title={t('dialogs.retryFiscal.title', { defaultValue: 'Fiscalga qayta yuborish' })}
-        content={t('dialogs.retryFiscal.description', {
-          defaultValue: "To'lov ma'lumotlari fiscal xizmatga yana yuboriladi. Davom etasizmi?",
-        })}
+        content={
+          financialUnknown
+            ? financialError
+            : t('dialogs.retryFiscal.description', {
+                defaultValue:
+                  'Asl Local Agent shu to‘lovga tegishli fiskal chekni tekshiradi va zarur bo‘lsa davom ettiradi.',
+              })
+        }
         action={
           <Button
             variant="contained"
             loading={retryFiscalMutation.isPending}
             onClick={() => {
               retryFiscalMutation
-                .mutateAsync()
+                .mutateAsync(false)
                 .then((result) => {
                   setRetryConfirmOpen(false);
-                  if (result.result?.ok) {
+                  setFinancialError('');
+                  setFinancialUnknown(false);
+                  const results = result?.results ?? (result?.result ? [result.result] : []);
+                  if (results.length > 0 && results.every((item) => item.ok === true)) {
                     toast.success(t('messages.fiscalRetrySent'));
                   } else {
-                    toast.error(String(result.result?.detail ?? t('messages.fiscalRetryFailed')));
+                    toast.error(
+                      String(results.find((item) => item.ok !== true)?.detail ?? t('messages.fiscalRetryFailed')),
+                    );
                   }
                 })
                 .catch((error: unknown) => {
-                  const detail = (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
-                  toast.error(detail ?? t('messages.fiscalRetryFailed'));
+                  showFinancialError(error);
+                  setRetryConfirmOpen(false);
                 });
             }}>
-            {t('actions.retryFiscal')}
+            {financialUnknown
+              ? t('actions.checkFinancialResult', { defaultValue: 'Amal holatini tekshirish' })
+              : t('actions.retryFiscal')}
           </Button>
         }
       />

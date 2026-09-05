@@ -23,7 +23,14 @@ export interface OrdersRepository {
   getPaymentById(id: string): Promise<AdminPayment>;
   retryPaymentFiscal(
     id: string,
-  ): Promise<{ payment: AdminPayment; receipt: AdminReceipt; result: Record<string, unknown> }>;
+    recoverOnly?: boolean,
+  ): Promise<{
+    payment: AdminPayment;
+    receipt: AdminReceipt;
+    result: Record<string, unknown>;
+    results?: Record<string, unknown>[];
+    receipts?: AdminReceipt[];
+  } | null>;
   getReceipts(params: AdminReceiptsQueryParams): Promise<AdminPaginatedResponse<AdminReceipt>>;
   getReceiptById(id: string): Promise<AdminReceipt>;
 }

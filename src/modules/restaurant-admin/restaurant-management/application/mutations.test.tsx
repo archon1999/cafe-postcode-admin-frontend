@@ -39,6 +39,8 @@ const restaurantPayload: AdminRestaurantPayload = {
   social: '@qamish-refresh',
   address: "Refresh ko'chasi 15",
   serviceFeeEnabled: true,
+  serviceFeeMode: 'percentage' as const,
+  serviceFeeHourlyRate: 0,
   serviceFeePercent: 15,
   vatEnabled: true,
   vatPercent: 12,
