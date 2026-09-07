@@ -57,7 +57,7 @@ describe('integration config form mapper', () => {
       encoding: 'cp866',
       printMode: 'raster',
       qrMode: 'raster',
-      rasterFont: 'noto_sans',
+      rasterFont: 'go_mono',
       cutAfterPrint: false,
     });
     expect(buildIntegrationConfigSettings(values, item)).toEqual({
@@ -68,14 +68,14 @@ describe('integration config form mapper', () => {
       encoding: 'cp866',
       print_mode: 'raster',
       qr_mode: 'raster',
-      raster_font: 'noto_sans',
+      raster_font: 'go_mono',
       host: '192.168.1.50',
       port: 9100,
       transport: 'local-agent',
       code_page: 46,
     });
     expect(getIntegrationSettingsSummary(item)).toBe(
-      'LAN TCP/IP: 192.168.1.50:9100 | 80mm | cp866 | raster/raster/noto_sans',
+      'LAN TCP/IP: 192.168.1.50:9100 | 80mm | cp866 | raster/raster/go_mono',
     );
   });
 

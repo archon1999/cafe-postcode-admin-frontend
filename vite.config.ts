@@ -1,7 +1,8 @@
+import fs from 'node:fs';
 import path from 'path';
 
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
+import { defineConfig, searchForWorkspaceRoot } from 'vite';
 
 const backendUrl = process.env.VITE_DEV_PROXY_TARGET || 'http://127.0.0.1:8000';
 
@@ -10,6 +11,7 @@ export default defineConfig({
     sourcemap: false,
   },
   server: {
+    fs: { allow: [searchForWorkspaceRoot(process.cwd()), fs.realpathSync(path.resolve(__dirname, 'node_modules'))] },
     port: 4200,
     proxy: {
       '/api': {

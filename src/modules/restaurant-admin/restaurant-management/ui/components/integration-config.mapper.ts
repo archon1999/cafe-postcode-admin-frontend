@@ -4,7 +4,7 @@ export const PAPER_WIDTH_VALUES = ['80'] as const;
 export const PRINTER_CONNECTION_TYPE_VALUES = ['system_printer', 'socket'] as const;
 export const PRINT_MODE_VALUES = ['text', 'raster'] as const;
 export const QR_MODE_VALUES = ['native', 'raster'] as const;
-export const RASTER_FONT_VALUES = ['go_mono', 'inter', 'noto_sans', 'roboto_mono'] as const;
+export const RASTER_FONT_VALUES = ['go_mono'] as const;
 
 export type IntegrationConfigFormValues = {
   kind: AdminIntegrationConfigKind;

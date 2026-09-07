@@ -1,11 +1,23 @@
 {
   "pages": {
-    "businessPartners": { "title": "Biznes hamkorlar" },
-    "businessPartnerCreate": { "title": "Yangi biznes hamkor" },
-    "businessPartnerEdit": { "title": "Biznes hamkorni tahrirlash" },
-    "tariffs": { "title": "Tariflar" },
-    "tariffCreate": { "title": "Yangi tarif" },
-    "tariffEdit": { "title": "Tarifni tahrirlash" }
+    "businessPartners": {
+      "title": "Biznes hamkorlar"
+    },
+    "businessPartnerCreate": {
+      "title": "Yangi biznes hamkor"
+    },
+    "businessPartnerEdit": {
+      "title": "Biznes hamkorni tahrirlash"
+    },
+    "tariffs": {
+      "title": "Tariflar"
+    },
+    "tariffCreate": {
+      "title": "Yangi tarif"
+    },
+    "tariffEdit": {
+      "title": "Tarifni tahrirlash"
+    }
   },
   "fields": {
     "inn": "INN",
@@ -175,6 +187,34 @@
       "noDataDescription": "Restoranga agent o'rnatilgach shu yerda ko'rinadi.",
       "noResultsTitle": "Local Agent topilmadi",
       "noResultsDescription": "Qidiruv yoki status filtrini o'zgartirib ko'ring."
+    },
+    "commands": {
+      "printerSettings": "Printer va integratsiya sozlamalari",
+      "printTemplates": "Chop etish shablonlari",
+      "states": {
+        "pending": "Navbatda",
+        "sent": "Agentga yuborildi",
+        "running": "Bajarilmoqda",
+        "succeeded": "Bajarildi",
+        "failed": "Xato",
+        "unknown": "Natija noma’lum",
+        "timed_out": "Javob kutilmoqda"
+      },
+      "title": "Agent komandalari",
+      "offline": "Komandalarni bajarish uchun Agent 2.0.0 tarmoqqa ulangan bo‘lishi kerak. Tarixni ko‘rish mumkin.",
+      "catalogError": "Komandalar ro‘yxati yuklanmadi.",
+      "action": "Amal",
+      "requestId": "Amal ID: {{id}}",
+      "sending": "Yuborilmoqda…",
+      "retry": "Shu amalni qayta tekshirish",
+      "execute": "Bajarish",
+      "status": "Holatini olish",
+      "new": "Yangi amal",
+      "requestError": "Ulanish yoki ruxsat xatosi. Amal ID saqlandi; qayta yuborish yangi amal yaratmaydi.",
+      "history": "Oxirgi amallar",
+      "historyError": "Amallar tarixi yuklanmadi.",
+      "unknown": "Buyruq natijasi olinmadi. Shu amal ID bilan holatini tekshiring yoki qayta yuboring.",
+      "rejected": "Buyruq bajarishga qabul qilinmadi. Parametrlar, ruxsat yoki Agent ulanishini tekshiring."
     }
   },
   "validation": {

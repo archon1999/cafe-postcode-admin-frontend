@@ -8,4 +8,8 @@ export const localAgentFleetKeys = {
   detail: localAgentsKeys.detail,
   diagnostics: (id: string) => [...localAgentsKeys.detail(id), 'diagnostics'] as const,
   logs: (id: string) => [...localAgentsKeys.detail(id), 'logs'] as const,
+  supportCatalog: [...localAgentsKeys.all, 'supportCatalog'] as const,
+  supportHistory: (id: string) => [...localAgentsKeys.detail(id), 'supportHistory'] as const,
+  supportStatus: (id: string, requestId: string) =>
+    [...localAgentsKeys.detail(id), 'supportStatus', requestId] as const,
 } as const;

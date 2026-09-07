@@ -11,7 +11,7 @@ import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 
 import { useTranslate } from 'app/providers/locales';
 import { formatDateTime } from 'shared/utils/format-time';
@@ -68,6 +68,7 @@ export type LocalAgentDiagnosticsLogs = {
 };
 
 type LocalAgentDiagnosticsDialogProps = {
+  commandsSlot?: ReactNode;
   open: boolean;
   onClose: () => void;
   diagnostics?: LocalAgentDiagnosticsData;
@@ -124,6 +125,7 @@ function componentStatus(
 }
 
 export function LocalAgentDiagnosticsDialog({
+  commandsSlot,
   open,
   onClose,
   diagnostics,
@@ -358,6 +360,7 @@ export function LocalAgentDiagnosticsDialog({
             </Stack>
           </Stack>
         )}
+        {commandsSlot}
       </DialogContent>
       <DialogActions>
         {update?.status === 'pending' && onUpdate ? (
