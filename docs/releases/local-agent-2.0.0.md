@@ -4,7 +4,9 @@ POS business shifts now close and reopen independently of fiscal Z reports. A fi
 
 The existing Admin diagnostics and local CLI expose 55 typed commands for runtime, storage, autostart, services, readers, fiscal receipts/Z/OFD, printers, sync, original-operation recovery, pairing, support and updates. Commands preserve their request ID, original financial evidence and operator audit; arbitrary shell/SQL execution is not exposed.
 
-Go Mono is the only print font. The accepted EXE is 17,079,296 bytes; the signed gzip download is 7,147,923 bytes (58.15% less transfer), and the installer is 7,262,387 bytes. Nginx serves the same precompressed bytes to legacy clients that negotiate HTTP gzip; identity requests and signed gzip Range downloads remain available. Versioned old files and the previous canary remain immutable.
+Go Mono is the only print font. The accepted EXE is 17,079,296 bytes; the signed gzip download is 7,147,923 bytes (58.15% less transfer), and the installer is 7,262,387 bytes. Agents 2.0.0 use the signed gzip transport with resumable Range downloads. Legacy clients use the smaller raw EXE on their first upgrade. Versioned old files and the previous canary remain immutable.
+
+EXE and gzip are hosted as separate byte representations. Automatic HTTP gzip was removed after public CDN testing exposed invalid raw Range offsets despite correct origin behavior. The raw URL includes its content hash to separate it from that cached representation; the underlying EXE, gzip and accepted installer bytes are unchanged. The published manifest re-signs this URL. The installer's embedded manifest remains a valid local signature for the identical EXE.
 
 The final package also restores the established kiosk user's ownership when an elevated Windows process created database or support files with Administrators ownership. Personal ownership, protected user/SYSTEM access and existing data remain preserved.
 
