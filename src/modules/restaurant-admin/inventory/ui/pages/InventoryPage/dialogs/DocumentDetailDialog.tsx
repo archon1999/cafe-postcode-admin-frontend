@@ -281,7 +281,7 @@ export function DocumentDetailDialog({
           )}
         </QueryState>
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={{ flexWrap: 'wrap', gap: 1 }}>
         <Button onClick={onClose}>{t('close')}</Button>
         <Button
           disabled={!document || commands.exportDocument.isPending}

@@ -113,7 +113,14 @@ export function InsightsPanel({ warehouse }: { warehouse: string }) {
             <Box
               key={insight.id}
               id={`inventory-insight-${insight.id}`}
-              sx={{ border: 1, borderColor: 'divider', borderRadius: 2, p: 2.5, scrollMarginTop: 100 }}>
+              sx={{
+                border: 1,
+                borderColor: 'divider',
+                borderRadius: 2,
+                p: { xs: 2, md: 2.5 },
+                scrollMarginTop: 16,
+                overflowWrap: 'anywhere',
+              }}>
               <Stack direction="row" gap={1.5} alignItems="center" sx={{ mb: 1 }}>
                 <Chip
                   size="small"
@@ -130,7 +137,17 @@ export function InsightsPanel({ warehouse }: { warehouse: string }) {
               <Typography variant="body2" sx={{ mt: 1.5 }}>
                 {localize(insight, 'recommendation')}
               </Typography>
-              <Accordion elevation={0} disableGutters sx={{ mt: 1 }}>
+              <Accordion
+                elevation={0}
+                disableGutters
+                sx={{
+                  mt: 2,
+                  bgcolor: 'background.neutral',
+                  borderRadius: '8px !important',
+                  '& .MuiAccordionSummary-root': { px: 2, minHeight: 48 },
+                  '& .MuiAccordionSummary-content': { my: 1.5, mr: 1 },
+                  '& .MuiAccordionDetails-root': { px: 2, pt: 0.5, pb: 2 },
+                }}>
                 <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
                   <Typography variant="caption">{t('insights.evidence')}</Typography>
                 </AccordionSummary>

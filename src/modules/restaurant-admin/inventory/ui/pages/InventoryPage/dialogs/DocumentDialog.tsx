@@ -117,6 +117,7 @@ export function DocumentDialog({
   return (
     <Dialog open fullWidth maxWidth="lg" onClose={pending ? undefined : onClose}>
       <Box
+        sx={{ display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}
         component="form"
         onSubmit={(event) => {
           event.preventDefault();
@@ -246,7 +247,7 @@ export function DocumentDialog({
             </Typography>
           </Stack>
         </DialogContent>
-        <DialogActions>
+        <DialogActions sx={{ flexWrap: 'wrap', gap: 1 }}>
           <Button onClick={onClose} disabled={pending}>
             {t('cancel')}
           </Button>

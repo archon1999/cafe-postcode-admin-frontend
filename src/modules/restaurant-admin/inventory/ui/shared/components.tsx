@@ -68,7 +68,7 @@ export function QueryState({
 export function InventoryTable({ headers, children }: { headers: string[]; children: ReactNode }) {
   return (
     <TableContainer>
-      <Table sx={{ minWidth: 800, '& .MuiTableCell-root': { whiteSpace: 'nowrap' } }}>
+      <Table sx={{ minWidth: headers.length > 3 ? 800 : 480, '& .MuiTableCell-root': { whiteSpace: 'nowrap' } }}>
         <TableHead>
           <TableRow>
             {headers.map((header, index) => (
@@ -107,6 +107,7 @@ export function FormDialog({
   return (
     <Dialog open onClose={pending ? undefined : onClose} fullWidth maxWidth={wide ? 'lg' : 'sm'}>
       <Box
+        sx={{ display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}
         component="form"
         onSubmit={(event) => {
           event.preventDefault();
@@ -119,7 +120,7 @@ export function FormDialog({
             {children}
           </Stack>
         </DialogContent>
-        <DialogActions>
+        <DialogActions sx={{ flexWrap: 'wrap', gap: 1 }}>
           <Button disabled={pending} onClick={onClose}>
             {t('cancel')}
           </Button>

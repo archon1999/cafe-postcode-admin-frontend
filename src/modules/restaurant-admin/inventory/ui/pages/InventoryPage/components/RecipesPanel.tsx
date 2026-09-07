@@ -83,7 +83,14 @@ export function RecipesPanel() {
               key={recipe.id}
               disableGutters
               elevation={0}
-              sx={{ borderBottom: 1, borderColor: 'divider', borderRadius: '0 !important' }}>
+              sx={{
+                borderBottom: 1,
+                borderColor: 'divider',
+                borderRadius: '0 !important',
+                '& .MuiAccordionSummary-root': { px: { xs: 2, md: 2.5 }, minHeight: 72 },
+                '& .MuiAccordionSummary-content': { my: 2, mr: 2, minWidth: 0 },
+                '& .MuiAccordionDetails-root': { px: { xs: 2, md: 2.5 }, pt: 1, pb: 2.5 },
+              }}>
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
                 <Stack direction="row" alignItems="center" gap={2} flexWrap="wrap" sx={{ width: 1 }}>
                   <Typography variant="subtitle1">{recipe.catalogItemName}</Typography>
@@ -119,7 +126,7 @@ export function RecipesPanel() {
                   ))}
                 </InventoryTable>
                 {canManage && (
-                  <Stack direction="row" gap={1} sx={{ mt: 2 }}>
+                  <Stack direction="row" flexWrap="wrap" gap={1} sx={{ mt: 2 }}>
                     <Button onClick={() => setEditing({ initial: recipe })}>{t('recipes.newVersion')}</Button>
                     {recipe.isActive && (
                       <Button

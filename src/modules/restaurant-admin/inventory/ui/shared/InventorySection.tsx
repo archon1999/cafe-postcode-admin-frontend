@@ -3,6 +3,7 @@ import { createContext, useContext, type ReactNode } from 'react';
 
 import { ListPageBody, ListPageContent } from 'app/layouts/Dashboard/content';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
+import { Scrollbar } from 'shared/ui/Scrollbar';
 
 export const InventoryPageToolsContext = createContext<ReactNode>(null);
 
@@ -27,9 +28,10 @@ export function InventorySection({
   return (
     <ListPageContent>
       <CustomBreadcrumbs heading={title} action={action} />
-      <ListPageBody>
+      <ListPageBody sx={{ overflow: 'auto' }}>
         {summary}
-        <Card sx={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'hidden' }}>
+        <Card
+          sx={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: { xs: 420, md: 0 }, overflow: 'hidden' }}>
           {(toolbar || tools) && (
             <Stack
               direction={{ xs: 'column', md: 'row' }}
@@ -40,7 +42,14 @@ export function InventorySection({
               {tools && <Box sx={{ ml: { md: 'auto' }, flexShrink: 0, width: { xs: 1, md: 220 } }}>{tools}</Box>}
             </Stack>
           )}
-          <Box sx={{ flex: 1, minHeight: 0, overflow: 'auto', ...(plain && { px: 2.5, pb: 2 }) }}>{children}</Box>
+          <Scrollbar
+            autoHide={false}
+            fillContent={false}
+            ariaLabel={title}
+            tabIndex={0}
+            sx={{ flex: '1 1 0', height: 0 }}>
+            {plain ? <Box sx={{ px: { xs: 2, md: 2.5 }, pb: 2.5 }}>{children}</Box> : children}
+          </Scrollbar>
           {footer && <Box sx={{ borderTop: 1, borderColor: 'divider', px: 2, py: 1.5, flexShrink: 0 }}>{footer}</Box>}
         </Card>
       </ListPageBody>
