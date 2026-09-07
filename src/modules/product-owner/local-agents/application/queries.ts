@@ -23,11 +23,11 @@ export function useAgentSupportHistory(agentId: string) {
   });
 }
 
-export function useAgentSupportStatus(agentId: string, requestId: string | null) {
+export function useAgentSupportStatus(agentId: string, requestId: string | null, submitting = false) {
   return useQuery({
     queryKey: localAgentFleetKeys.supportStatus(agentId, requestId ?? ''),
     queryFn: () => agentSupportRepository.status(agentId, requestId ?? ''),
-    enabled: Boolean(requestId),
+    enabled: Boolean(requestId) && !submitting,
     retry: false,
     refetchInterval: (query) => (!query.state.data || isSupportCommandPending(query.state.data.status) ? 2_000 : false),
   });

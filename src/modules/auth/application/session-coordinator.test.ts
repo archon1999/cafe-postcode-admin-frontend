@@ -1,13 +1,16 @@
 // @vitest-environment jsdom
 
+import { QueryObserver } from '@tanstack/react-query';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { AdminSessionUser } from 'shared/api/admin-types';
+import { queryClient } from 'shared/api/query/query.config';
 import { sessionService } from 'shared/lib/auth/session.service';
 
 import type { AdminCredentialResponse } from '../domain/entities/admin-auth.types';
 import { getLastAdminActivityAt, resetAdminActivityClock } from '../domain/services/admin-activity.service';
 import { authStore } from '../domain/stores/authentication.store';
+import { currentUserStore } from '../domain/stores/current-user.store';
 
 import { bootstrapAdminSession, refreshAdminSession } from './session-coordinator';
 
@@ -70,6 +73,8 @@ beforeEach(() => {
     value: { request: vi.fn((_name, _options, callback) => callback()) },
   });
   authStore.getState().logout();
+  currentUserStore.getState().clearCurrentUser();
+  queryClient.clear();
   sessionService.clearSession();
   window.localStorage.clear();
   window.sessionStorage.clear();
@@ -80,6 +85,33 @@ afterEach(() => {
 });
 
 describe('admin refresh coordination', () => {
+  it('keeps the mounted list observing results when a pending request refreshes its token', async () => {
+    currentUserStore.getState().setCurrentUser(credentials().user);
+    refreshRequestMock.mockResolvedValue(credentials('rotated-list-access'));
+    let calls = 0;
+    const observer = new QueryObserver(queryClient, {
+      queryKey: ['refresh-observed-agent-list'],
+      retry: false,
+      queryFn: async () => {
+        if (++calls === 1) await refreshAdminSession();
+        return ['online-agent'];
+      },
+    });
+    const observed = vi.fn();
+    const unsubscribe = observer.subscribe(observed);
+    try {
+      await vi.waitFor(() => {
+        expect(observer.getCurrentResult().status).toBe('success');
+        expect(observer.getCurrentResult().data).toEqual(['online-agent']);
+        expect(queryClient.getQueryData(['refresh-observed-agent-list'])).toEqual(['online-agent']);
+      });
+      expect(refreshRequestMock).toHaveBeenCalledTimes(1);
+    } finally {
+      unsubscribe();
+      observer.destroy();
+    }
+  });
+
   it('uses one Web Lock guarded refresh for concurrent callers and keeps the token in memory', async () => {
     let resolveRefresh!: (value: AdminCredentialResponse) => void;
     refreshRequestMock.mockReturnValue(

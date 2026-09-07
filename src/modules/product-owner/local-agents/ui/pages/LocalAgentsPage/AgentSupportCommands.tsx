@@ -19,7 +19,7 @@ export function AgentSupportCommands({ agentId, available }: { agentId: string; 
   const history = useAgentSupportHistory(agentId);
   const execution = useExecuteAgentSupportCommand(agentId);
   const saved = useAgentSupportRequest(agentId);
-  const status = useAgentSupportStatus(agentId, saved.request?.requestId ?? null);
+  const status = useAgentSupportStatus(agentId, saved.request?.requestId ?? null, execution.isPending);
   const [name, setName] = useState(saved.request?.name ?? 'runtime.inspect');
   const [parameters, setParameters] = useState<Record<string, string>>(saved.request?.parameters ?? {});
   const [selected, setSelected] = useState<SupportRecord | null>(null);
@@ -62,6 +62,11 @@ export function AgentSupportCommands({ agentId, available }: { agentId: string; 
           setName(event.target.value);
           setParameters({});
         }}>
+        {!catalog.data && (
+          <MenuItem value="" disabled>
+            {t('localAgents.commands.action')}
+          </MenuItem>
+        )}
         {catalog.data?.commands.map((item) => (
           <MenuItem key={item.name} value={item.name}>
             {item.label}

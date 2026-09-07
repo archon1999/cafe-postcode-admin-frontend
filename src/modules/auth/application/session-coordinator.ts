@@ -1,3 +1,5 @@
+import { queryClient } from 'shared/api/query/query.config';
+
 import { getAdminAuthErrorCode, refreshRequest } from '../data-access/api/auth.api';
 import type { AdminCredentialResponse } from '../domain/entities/admin-auth.types';
 import { resetAdminActivityClock } from '../domain/services/admin-activity.service';
@@ -19,7 +21,7 @@ let latestCredentials: AdminCredentialResponse | null = null;
 let credentialRevision = 0;
 
 function clearQueryCache(): void {
-  void import('shared/api/query/query.config').then(({ queryClient }) => queryClient.clear());
+  queryClient.clear();
 }
 
 function clearLocalAuthentication(): void {
@@ -67,6 +69,8 @@ export function applyAdminCredentials(
   credentials: AdminCredentialResponse,
   options: { broadcast?: boolean; resetActivity?: boolean } = {},
 ): void {
+  const sameUser = currentUserStore.getState().currentUser?.id === credentials.user.id;
+  if (!sameUser) clearQueryCache();
   latestCredentials = credentials;
   credentialRevision += 1;
   authStore.getState().setCredentials(credentials);
@@ -78,7 +82,11 @@ export function applyAdminCredentials(
   if (!credentials.user.isSuperuser) {
     adminScopeStore.getState().clearScope();
   }
-  clearQueryCache();
+  if (sameUser) {
+    // Keep mounted observers attached when access credentials rotate. Clearing
+    // the cache here strands requests that are currently retrying after 401.
+    void queryClient.resetQueries();
+  }
   if (options.broadcast !== false) {
     postMessage({ type: 'credentials', credentials, resetActivity });
   }
