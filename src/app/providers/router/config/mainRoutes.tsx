@@ -71,6 +71,7 @@ const ReceiptDetailPage = lazy(
   () => import('modules/restaurant-admin/orders/ui/pages/ReceiptDetailPage/ReceiptDetailPage'),
 );
 const ReportsPage = lazy(() => import('modules/restaurant-admin/reports/ui/pages/ReportsPage/ReportsPage'));
+const InventoryPage = lazy(() => import('modules/restaurant-admin/inventory/ui/pages/InventoryPage/InventoryPage'));
 const ExpensesPage = lazy(() => import('modules/restaurant-admin/expenses/ui/pages/ExpensesPage'));
 const KitchenTicketsListPage = lazy(
   () => import('modules/restaurant-admin/kitchen/ui/pages/KitchenTicketsListPage/KitchenTicketsListPage'),
@@ -279,6 +280,18 @@ const mainChildren: RouteObject[] = [
     path: RoutePath.reports,
     element: <ReportsPage />,
   },
+  {
+    path: RoutePath.inventory,
+    element: <Navigate replace to={RoutePath.inventoryBalances} />,
+  },
+  { path: RoutePath.inventoryBalances, element: <InventoryPage section="balances" /> },
+  { path: RoutePath.inventoryDocuments, element: <InventoryPage section="documents" /> },
+  { path: RoutePath.inventoryRecipes, element: <InventoryPage section="recipes" /> },
+  { path: RoutePath.inventoryReports, element: <InventoryPage section="reports" /> },
+  { path: RoutePath.inventoryInsights, element: <InventoryPage section="insights" /> },
+  { path: RoutePath.inventoryItems, element: <InventoryPage section="items" /> },
+  { path: RoutePath.inventorySuppliers, element: <InventoryPage section="suppliers" /> },
+  { path: RoutePath.inventoryWarehouses, element: <InventoryPage section="warehouses" /> },
   {
     path: RoutePath.expenses,
     element: <ExpensesPage />,

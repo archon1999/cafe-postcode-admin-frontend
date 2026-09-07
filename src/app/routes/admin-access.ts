@@ -95,6 +95,7 @@ const ADMIN_LANDING_CANDIDATES = [
   RoutePath.organizationMyRestaurant,
   RoutePath.reports,
   RoutePath.expenses,
+  RoutePath.inventory,
   RoutePath.orderList,
   RoutePath.paymentList,
   RoutePath.kitchenTicketList,
@@ -149,6 +150,10 @@ export function canAccessRestaurants(snapshot?: AdminAccessSnapshot | null) {
 
 export function canAccessReports(snapshot?: AdminAccessSnapshot | null) {
   return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, REPORT_PERMISSION_CODES);
+}
+
+export function canAccessInventory(snapshot?: AdminAccessSnapshot | null) {
+  return hasActiveRestaurantAccess(snapshot) && hasAnyPermission(snapshot, ['admin.inventory.view']);
 }
 
 export function canAccessExpenses(snapshot?: AdminAccessSnapshot | null) {
@@ -323,6 +328,10 @@ export function canAccessAdminPath(pathname: string, snapshot?: AdminAccessSnaps
 
   if (matchesPrefix(pathname, RoutePath.reports)) {
     return canAccessReports(snapshot);
+  }
+
+  if (matchesPrefix(pathname, RoutePath.inventory)) {
+    return canAccessInventory(snapshot);
   }
 
   if (matchesPrefix(pathname, RoutePath.expenses)) {

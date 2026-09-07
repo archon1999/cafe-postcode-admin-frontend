@@ -46,5 +46,14 @@
   "restaurants": "Shahobchalar",
   "printTemplates": "Chek shablonlari",
   "setup": "Ishga tayyorlash",
-  "restaurantSettings": "Umumiy va sozlash"
+  "restaurantSettings": "Umumiy va sozlash",
+  "inventory": "Ombor",
+  "inventoryBalances": "Qoldiqlar",
+  "inventoryDocuments": "Kirim-chiqim",
+  "inventoryRecipes": "Retseptlar",
+  "inventoryReports": "Hisobotlar",
+  "inventoryInsights": "Tahlil",
+  "inventoryItems": "Mahsulotlar",
+  "inventorySuppliers": "Yetkazib beruvchilar",
+  "inventoryWarehouses": "Omborlar"
 }

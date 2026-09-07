@@ -46,5 +46,14 @@
   "restaurants": "Филиалы",
   "printTemplates": "Шаблоны чеков",
   "setup": "Настройка ресторана",
-  "restaurantSettings": "Общее и настройка"
+  "restaurantSettings": "Общее и настройка",
+  "inventory": "Склад",
+  "inventoryBalances": "Остатки",
+  "inventoryDocuments": "Приход и расход",
+  "inventoryRecipes": "Рецепты",
+  "inventoryReports": "Отчёты",
+  "inventoryInsights": "Анализ",
+  "inventoryItems": "Продукты",
+  "inventorySuppliers": "Поставщики",
+  "inventoryWarehouses": "Склады"
 }

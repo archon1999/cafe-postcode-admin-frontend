@@ -127,6 +127,47 @@ const TITLE_RULES: TitleRule[] = [
     namespaces: ['reports'],
     resolve: ({ reportKey }, t) => [t('reports:workspace.title'), getReportTitle(t, reportKey)],
   },
+  { route: AppRoutes.INVENTORY, namespaces: ['inventory'], resolve: (_params, t) => [t('inventory:title')] },
+  {
+    route: AppRoutes.INVENTORY_BALANCES,
+    namespaces: ['inventory'],
+    resolve: (_params, t) => [t('inventory:sections.balances'), t('inventory:title')],
+  },
+  {
+    route: AppRoutes.INVENTORY_DOCUMENTS,
+    namespaces: ['inventory'],
+    resolve: (_params, t) => [t('inventory:sections.documents'), t('inventory:title')],
+  },
+  {
+    route: AppRoutes.INVENTORY_RECIPES,
+    namespaces: ['inventory'],
+    resolve: (_params, t) => [t('inventory:sections.recipes'), t('inventory:title')],
+  },
+  {
+    route: AppRoutes.INVENTORY_REPORTS,
+    namespaces: ['inventory'],
+    resolve: (_params, t) => [t('inventory:sections.reports'), t('inventory:title')],
+  },
+  {
+    route: AppRoutes.INVENTORY_INSIGHTS,
+    namespaces: ['inventory'],
+    resolve: (_params, t) => [t('inventory:sections.insights'), t('inventory:title')],
+  },
+  {
+    route: AppRoutes.INVENTORY_ITEMS,
+    namespaces: ['inventory'],
+    resolve: (_params, t) => [t('inventory:sections.items'), t('inventory:title')],
+  },
+  {
+    route: AppRoutes.INVENTORY_SUPPLIERS,
+    namespaces: ['inventory'],
+    resolve: (_params, t) => [t('inventory:sections.suppliers'), t('inventory:title')],
+  },
+  {
+    route: AppRoutes.INVENTORY_WAREHOUSES,
+    namespaces: ['inventory'],
+    resolve: (_params, t) => [t('inventory:sections.warehouses'), t('inventory:title')],
+  },
   { route: AppRoutes.EXPENSES, namespaces: ['expenses'], resolve: (_params, t) => [t('expenses:title')] },
   {
     route: AppRoutes.ORDER_ITEM_NOTE_VIEW,

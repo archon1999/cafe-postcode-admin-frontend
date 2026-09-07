@@ -1,0 +1,208 @@
+export type Decimal = string;
+export type BaseUnit = 'g' | 'ml' | 'piece';
+export type AvailabilityMode = 'off' | 'warn' | 'block';
+export type Warehouse = { id: string; name: string; isActive: boolean; isDefault: boolean };
+export type StockItem = {
+  id: string;
+  name: string;
+  sku: string;
+  baseUnit: BaseUnit;
+  purchaseUnit: string;
+  purchaseFactor: Decimal;
+  minQuantity: Decimal;
+  tolerancePercent: Decimal;
+  toleranceQuantity: Decimal;
+  toleranceValue: Decimal | null;
+  availabilityMode: AvailabilityMode;
+  isActive: boolean;
+};
+export type Supplier = {
+  id: string;
+  name: string;
+  taxNumber: string;
+  phone: string;
+  address: string;
+  isActive: boolean;
+};
+export type RecipeLine = {
+  id?: string;
+  item: string;
+  itemName?: string;
+  baseUnit?: BaseUnit;
+  quantity: Decimal;
+  modifierOption: string | null;
+  modifierOptionName?: string;
+};
+export type Recipe = {
+  id: string;
+  catalogItem: string;
+  catalogItemName: string;
+  name: string;
+  version: number;
+  yieldQuantity: Decimal;
+  trigger: 'dispatch' | 'sale';
+  isActive: boolean;
+  estimatedCost: Decimal | null;
+  lines: RecipeLine[];
+};
+export type RecipeInput = Pick<Recipe, 'catalogItem' | 'name' | 'yieldQuantity' | 'trigger' | 'lines'>;
+export type ManualDocumentKind = 'opening' | 'receipt' | 'issue' | 'supplier_return' | 'customer_return' | 'stocktake';
+export type DocumentKind = ManualDocumentKind | 'sale' | 'sale_return' | 'reversal';
+export type DocumentLineInput = {
+  item: string;
+  quantity: Decimal | null;
+  unitCost?: Decimal;
+  inputUnit: 'base' | 'purchase';
+  lotNumber: string;
+  expiresOn: string | null;
+};
+export type DocumentLine = Omit<DocumentLineInput, 'unitCost'> & {
+  id: string;
+  itemName: string;
+  baseUnit: BaseUnit;
+  baseQuantity: Decimal | null;
+  expectedQuantity: Decimal | null;
+  varianceQuantity: Decimal | null;
+  varianceValue: Decimal | null;
+  unitCost?: Decimal | null;
+};
+export type DocumentInput = {
+  kind: ManualDocumentKind;
+  warehouse: string;
+  supplier: string | null;
+  reference: string;
+  reason: string;
+  occurredAt: string;
+  attachmentUrl: string;
+  responsibleName: string;
+  notes: string;
+  idempotencyKey?: string;
+  lines: DocumentLineInput[];
+};
+export type InventoryDocument = Omit<DocumentInput, 'kind' | 'lines' | 'attachmentUrl'> & {
+  id: string;
+  number: string;
+  attachmentUrl: string | null;
+  kind: DocumentKind;
+  status: 'draft' | 'posted' | 'reversed';
+  warehouseName: string;
+  supplierName: string;
+  postedAt: string | null;
+  createdAt: string;
+  createdByName: string;
+  postedByName: string;
+  reversalOf: string | null;
+  totalValue: Decimal | null;
+  purchaseValue?: Decimal | null;
+  valuationAdjustment?: Decimal | null;
+  consumptions?: {
+    orderItem: string;
+    recipe: string;
+    recipeVersion: number;
+    quantity: Decimal;
+    resolvedQuantity: Decimal;
+    resolutions: { disposition: 'restore' | 'waste'; quantity: Decimal; createdAt: string; createdByName: string }[];
+  }[];
+  lines: DocumentLine[];
+};
+export type Balance = {
+  item: string;
+  itemName: string;
+  sku: string;
+  baseUnit: BaseUnit;
+  warehouse: string;
+  warehouseName: string;
+  quantity: Decimal;
+  averageCost: Decimal | null;
+  value: Decimal | null;
+  minQuantity: Decimal;
+  availabilityMode: AvailabilityMode;
+  isLow: boolean;
+  isNegative: boolean;
+  lastCountedAt: string | null;
+  updatedAt: string;
+};
+export type Movement = {
+  id: string;
+  document: string;
+  documentNumber: string;
+  kind: DocumentKind;
+  item: string;
+  itemName: string;
+  baseUnit: BaseUnit;
+  warehouse: string;
+  quantity: Decimal;
+  unitCost: Decimal | null;
+  value: Decimal | null;
+  balanceAfter: Decimal;
+  occurredAt: string;
+  orderItem: string | null;
+};
+export type Overview = {
+  stockValue: Decimal | null;
+  itemCount: number;
+  lowStockCount: number;
+  negativeStockCount: number;
+  receiptValue: Decimal | null;
+  issueValue: Decimal | null;
+  saleCost: Decimal | null;
+  varianceValue: Decimal | null;
+  varianceQuantityCount: number;
+  lastCountedAt: string | null;
+};
+export type Variance = {
+  document: string;
+  documentNumber: string;
+  occurredAt: string;
+  item: string;
+  itemName: string;
+  baseUnit: BaseUnit;
+  expectedQuantity: Decimal;
+  actualQuantity: Decimal;
+  varianceQuantity: Decimal;
+  varianceValue: Decimal | null;
+  consumptionQuantity: Decimal;
+  variancePercent: Decimal | null;
+  tolerancePercent: Decimal;
+  toleranceQuantity: Decimal;
+  toleranceValue: Decimal | null;
+  requiresAttention: boolean;
+};
+export type Insight = {
+  id: string;
+  severity: 'info' | 'warning' | 'critical';
+  title: string;
+  detail: string;
+  item: string | null;
+  evidence: Record<string, unknown>;
+  recommendation: string;
+};
+export type Insights = { mode: 'rules'; aiAvailable: boolean; generatedAt: string; items: Insight[] };
+export type CatalogOption = {
+  id: string;
+  name: string;
+  saleUnit: string;
+  modifierOptions: { id: string; name: string; groupName: string }[];
+};
+export type AiAnalysis = {
+  mode: 'ai';
+  generatedAt: string;
+  summary: string;
+  recommendations: { title: string; detail: string; evidenceIds: string[] }[];
+};
+export type InventoryFilters = {
+  warehouse?: string;
+  item?: string;
+  kind?: string;
+  status?: string;
+  search?: string;
+  from?: string;
+  to?: string;
+  limit?: number;
+  offset?: number;
+};
+export type ReferenceKind = 'warehouses' | 'items' | 'suppliers';
+export type ReferenceInput =
+  | Omit<Warehouse, 'id'>
+  | (Omit<StockItem, 'id' | 'toleranceValue'> & { toleranceValue?: Decimal | null })
+  | Omit<Supplier, 'id'>;

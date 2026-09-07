@@ -15,6 +15,7 @@ const ICONS = {
   payments: <Iconify icon="solar:card-bold-duotone" width={20} />,
   receipts: <Iconify icon="solar:document-text-bold-duotone" width={20} />,
   reports: <Iconify icon="solar:chart-square-bold-duotone" width={24} />,
+  inventory: <Iconify icon="solar:box-minimalistic-bold" width={24} />,
   expenses: <Iconify icon="solar:wallet-money-bold-duotone" width={24} />,
   kitchen: <Iconify icon="solar:chef-hat-bold-duotone" width={24} />,
   kitchenTickets: <Iconify icon="solar:ticket-bold-duotone" width={20} />,
@@ -228,6 +229,17 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
       : null,
   ].filter(Boolean) as NavSectionProps['data'][number]['items'];
 
+  const inventoryChildren = [
+    { title: t('inventoryBalances'), path: RoutePath.inventoryBalances, icon: ICONS.inventory },
+    { title: t('inventoryDocuments'), path: RoutePath.inventoryDocuments, icon: ICONS.orders },
+    { title: t('inventoryRecipes'), path: RoutePath.inventoryRecipes, icon: ICONS.kitchen },
+    { title: t('inventoryReports'), path: RoutePath.inventoryReports, icon: ICONS.reports },
+    { title: t('inventoryInsights'), path: RoutePath.inventoryInsights, icon: ICONS.browser },
+    { title: t('inventoryItems'), path: RoutePath.inventoryItems, icon: ICONS.items },
+    { title: t('inventorySuppliers'), path: RoutePath.inventorySuppliers, icon: ICONS.businessPartners },
+    { title: t('inventoryWarehouses'), path: RoutePath.inventoryWarehouses, icon: ICONS.halls },
+  ].filter((item) => canAccess(item.path));
+
   const restaurantAdminItems = [
     myRestaurantSettingsItem,
     canAccess(RoutePath.reports)
@@ -236,6 +248,9 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
           path: RoutePath.reports,
           icon: ICONS.reports,
         }
+      : null,
+    inventoryChildren.length
+      ? { title: t('inventory'), path: inventoryChildren[0].path, icon: ICONS.inventory, children: inventoryChildren }
       : null,
     canAccess(RoutePath.expenses)
       ? {

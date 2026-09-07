@@ -1,0 +1,326 @@
+{
+  "title": "Ombor",
+  "subtitle": "Mahsulot harakati, retsept bo‘yicha sarf va haqiqiy qoldiq o‘rtasidagi farqni kuzating.",
+  "warehouse": "Ombor",
+  "selectRestaurant": "Ombor bilan ishlash uchun yuqoridagi filial tanlovidan restoranni tanlang.",
+  "loading": "Yuklanmoqda",
+  "retry": "Qayta urinish",
+  "loadFailed": "Ma’lumotlarni yuklab bo‘lmadi. Qayta urinib ko‘ring.",
+  "saveFailed": "Saqlab bo‘lmadi. Ma’lumotlarni tekshiring va qayta urinib ko‘ring.",
+  "save": "Saqlash",
+  "cancel": "Bekor qilish",
+  "close": "Yopish",
+  "export": "CSV yuklash",
+  "search": "Qidirish",
+  "all": "Barchasi",
+  "status": "Holat",
+  "active": "Faol",
+  "inactive": "Arxivda",
+  "yes": "Ha",
+  "deactivate": "Faolsizlantirish",
+  "base": "Asosiy birlik",
+  "purchase": "Xarid birligi",
+  "notSelected": "Tanlanmagan",
+  "previous": "Oldingi",
+  "next": "Keyingi",
+  "from": "Boshlanish sanasi",
+  "to": "Tugash sanasi",
+  "document": "Hujjat",
+  "attachment": "Biriktirilgan hujjat",
+  "uploadAttachment": "Fayl biriktirish",
+  "addLine": "+ Mahsulot qo‘shish",
+  "removeLine": "Qatorni olib tashlash",
+  "saveDraft": "Qoralama saqlash",
+  "savePost": "Saqlash va tasdiqlash",
+  "createdBy": "Yaratgan",
+  "postedBy": "Tasdiqlagan",
+  "reverse": "Teskari yozuv yaratish",
+  "reverseConfirm": "Teskari yozuvni tasdiqlash",
+  "reverseHelp": "Teskari yozuv avvalgi harakatni qoldiqda qaytaradi. Asl hujjat va uning tarixi saqlanadi. Sababni kiriting.",
+  "neverCounted": "Hali sanalmagan",
+  "noConsumption": "Sarf yo‘q",
+  "attention": "E’tibor kerak",
+  "withinTolerance": "Chegara ichida",
+  "purchaseHelp": "1 {{purchaseUnit}} = {{factor}} {{unit}}. Kirimdagi miqdor va birlik narxi shu koeffitsiyent bilan aylantiriladi.",
+  "availabilityHelp": "Bloklash bitta porsiyaga ingredient yetmasa amal qiladi. Oshpazning qo‘lda qo‘ygan stop-listi alohida saqlanadi.",
+  "toleranceHelp": "Chegaralar katta og‘ishlarni ajratish uchun ishlatiladi. Ular qonuniy yo‘qotish normasi emas; barcha farqlar hisobotda saqlanadi.",
+  "costRestrictedReceipt": "Sizda tannarxni ko‘rish huquqi yo‘q. Kirim narxini vakolatli xodim tasdiqlashdan oldin kiritsin.",
+  "documentPostingHelp": "Qoralama qoldiqni o‘zgartirmaydi. Tasdiqlash uchun hujjat raqami va mas’ul shaxs, tegishli kirim-chiqimlarda yetkazib beruvchi yoki sabab kerak.",
+  "units": {
+    "g": "g",
+    "ml": "ml",
+    "piece": "dona"
+  },
+  "modes": {
+    "off": "Nazorat o‘chiq",
+    "warn": "Ogohlantirish",
+    "block": "Menyuni bloklash"
+  },
+  "statuses": {
+    "draft": "Qoralama",
+    "posted": "Tasdiqlangan",
+    "reversed": "Qaytarilgan"
+  },
+  "kinds": {
+    "opening": "Boshlang‘ich qoldiq",
+    "receipt": "Kirim",
+    "issue": "Hisobdan chiqarish",
+    "supplier_return": "Yetkazib beruvchiga qaytarish",
+    "customer_return": "Mijozdan qaytish",
+    "stocktake": "Inventarizatsiya",
+    "sale": "Retsept sarfi",
+    "sale_return": "Sarfni qaytarish",
+    "reversal": "Teskari yozuv"
+  },
+  "triggers": {
+    "dispatch": "Oshxonaga yuborilganda",
+    "sale": "Sotuv yakunlanganda"
+  },
+  "add": {
+    "items": "Mahsulot qo‘shish",
+    "suppliers": "Yetkazib beruvchi qo‘shish",
+    "warehouses": "Ombor qo‘shish",
+    "document": "Kirim yoki chiqim",
+    "recipe": "Retsept qo‘shish"
+  },
+  "edit": {
+    "action": "Tahrirlash",
+    "items": "Mahsulotni tahrirlash",
+    "suppliers": "Yetkazib beruvchini tahrirlash",
+    "warehouses": "Omborni tahrirlash",
+    "document": "Hujjatni tahrirlash"
+  },
+  "references": {
+    "items": "Mahsulotlar",
+    "suppliers": "Yetkazib beruvchilar",
+    "warehouses": "Omborlar"
+  },
+  "fields": {
+    "name": "Nomi",
+    "sku": "Artikul",
+    "baseUnit": "Asosiy birlik",
+    "purchaseUnit": "Xarid birligi nomi",
+    "purchaseFactor": "Xarid birligi koeffitsiyenti",
+    "minQuantity": "Minimal qoldiq",
+    "tolerancePercent": "Og‘ish chegarasi (%)",
+    "toleranceQuantity": "Og‘ish chegarasi (asosiy birlik)",
+    "toleranceValue": "Og‘ish chegarasi (so‘m)",
+    "availabilityMode": "Menyu mavjudligi",
+    "isDefault": "POS uchun asosiy ombor",
+    "taxNumber": "STIR",
+    "phone": "Telefon",
+    "address": "Manzil",
+    "item": "Mahsulot",
+    "quantity": "Miqdor",
+    "actualQuantity": "Haqiqiy qoldiq",
+    "inputUnit": "Kiritish birligi",
+    "unitCost": "Birlik narxi (so‘m)",
+    "lotNumber": "Partiya",
+    "expiresOn": "Yaroqlilik sanasi",
+    "kind": "Harakat turi",
+    "occurredAt": "Harakat vaqti",
+    "supplier": "Yetkazib beruvchi",
+    "reference": "Asos hujjat raqami",
+    "responsibleName": "Mas’ul shaxs",
+    "reason": "Sabab",
+    "attachmentUrl": "Hujjat havolasi",
+    "notes": "Izoh",
+    "baseQuantity": "Asosiy birlikdagi miqdor",
+    "expectedQuantity": "Hisobdagi qoldiq",
+    "varianceQuantity": "Farq",
+    "varianceValue": "Farq qiymati",
+    "totalValue": "Jami qiymat",
+    "catalogItem": "Menyudagi mahsulot",
+    "yieldQuantity": "Retsept chiqishi (porsiya / sotuv birligi)",
+    "trigger": "Sarf yoziladigan vaqt",
+    "grossQuantity": "Ombordan olinadigan miqdor",
+    "modifierOption": "Qo‘shimcha sharti",
+    "averageCost": "O‘rtacha birlik tannarxi",
+    "value": "Qiymat",
+    "balanceAfter": "Harakatdan keyin",
+    "variancePercent": "Sarfga nisbatan farq (%)"
+  },
+  "summary": {
+    "itemCount": "Mahsulot turi",
+    "lowStockCount": "Kam qolgan",
+    "negativeStockCount": "Manfiy qoldiq",
+    "stockValue": "Qoldiq qiymati",
+    "lastCountedAt": "Oxirgi sanash",
+    "receiptValue": "Kirim qiymati",
+    "issueValue": "Hisobdan chiqarilgan",
+    "saleCost": "Retsept sarfi qiymati",
+    "varianceValue": "Sanashdagi farq"
+  },
+  "empty": {
+    "title": "Hozircha ma’lumot yo‘q",
+    "description": "Yangi yozuv qo‘shing yoki tanlangan filtrlarni o‘zgartiring."
+  },
+  "validation": {
+    "name": "Nomini kiriting.",
+    "warehouseLines": "Ombor va kamida bitta mahsulotni tanlang.",
+    "date": "To‘g‘ri sana va vaqt kiriting.",
+    "dateRange": "Boshlanish sanasi tugash sanasidan keyin bo‘lmasligi kerak.",
+    "quantity": "Miqdorlarni tekshiring. Musbat son kiriting; sanash va tannarxda nol mumkin. Barcha sanash qatorlari to‘ldirilishi kerak.",
+    "duplicateItem": "Bir hujjatda mahsulot takrorlanmasin. Miqdorlarni bitta qatorda birlashtiring.",
+    "referenceResponsible": "Hujjat raqami va mas’ul shaxsni kiriting.",
+    "supplier": "Yetkazib beruvchini tanlang.",
+    "reason": "Harakat sababini kiriting.",
+    "recipe": "Menyu mahsuloti va kamida bitta ingredientni tanlang.",
+    "duplicateRecipe": "Bir ingredient va qo‘shimcha sharti takrorlanmasin.",
+    "attachment": "HTTPS havola kiriting yoki hujjatni fayl sifatida yuklang."
+  },
+  "settings": {
+    "title": "Ombor ma’lumotnomalari",
+    "description": "Mahsulotlar, xarid birliklari, nazorat chegaralari va yetkazib beruvchilarni sozlang."
+  },
+  "balances": {
+    "title": "Joriy qoldiq",
+    "description": "Tasdiqlangan kirim, chiqim va retseptlar asosidagi taxminiy qoldiq.",
+    "onlyAlerts": "Faqat e’tibor talab qiladiganlar",
+    "negative": "Manfiy",
+    "low": "Kam qolgan",
+    "normal": "Yetarli",
+    "estimateHelp": "Bu hisobdagi qoldiq. Haqiqiy kamomadni aniqlash uchun davriy sanash yoki tortish kerak. Qoldiq qiymati sof foyda emas."
+  },
+  "documents": {
+    "title": "Kirim va chiqim hujjatlari",
+    "description": "Xarid, qaytarish, buzilish va inventarizatsiya hujjatlari. Mahsulot kirimi uchun to‘lov alohida hisoblanadi."
+  },
+  "stocktake": {
+    "start": "Sanashni boshlash",
+    "approve": "Sanashni tasdiqlash",
+    "uncounted": "Sanalmagan",
+    "noItems": "Avval ombor mahsulotlarini qo‘shing.",
+    "help": "Sanash boshida hisobdagi qoldiq saqlandi. Har bir mahsulotni tortib yoki sanab haqiqiy miqdorni kiriting; bo‘lmasa 0 yozing. Sanash davomida mahsulot harakati bo‘lsa, tasdiqlash rad etiladi va yangi sanash kerak bo‘ladi."
+  },
+  "recipes": {
+    "title": "Taom retseptlari",
+    "description": "Ingredientlarni taom va qo‘shimchalarga bog‘lang. Har yangi tahrir alohida versiya sifatida saqlanadi.",
+    "newVersion": "Yangi versiya",
+    "version": "{{version}}-versiya",
+    "always": "Doim sarflanadi",
+    "help": "Tozalangan miqdorni emas, ombordan olinadigan xom miqdorni kiriting. Masalan, 100 g tozalangan kartoshka uchun 20% chiqindi bo‘lsa 125 g yoziladi. Eski sotuvlar retsept tahririda o‘zgarmaydi.",
+    "triggerHelp": "Taomlar oshxonaga yuborilganda sarflanadi. Tayyor ichimlik yoki qadoqlangan mahsulot uchun sotuv yakunini tanlang.",
+    "deactivateHelp": "«{{name}}» retsepti o‘chirilsa, keyingi sotuvlarda uning sarfi avtomatik hisoblanmaydi. Oldingi harakatlar saqlanadi."
+  },
+  "reports": {
+    "title": "Harakat va farq hisoboti",
+    "description": "Davrdagi harakatlar va inventarizatsiya natijalarini hujjatgacha ochib tekshiring.",
+    "movements": "Harakatlar tarixi",
+    "variance": "Sanashdagi farqlar",
+    "varianceHelp": "Farq = haqiqiy qoldiq − hisobdagi qoldiq. Foiz oldingi sanash/boshlang‘ich qoldiqdan beri retsept sarfiga nisbatan hisoblanadi. Sarf bo‘lmasa foiz chiqarilmaydi."
+  },
+  "insights": {
+    "title": "Tahlil va tavsiyalar",
+    "description": "Qoldiq, retsept sarfi va sanashdagi farqlarga asoslangan tavsiyalar. Har tavsiyaning dalillarini ochish mumkin.",
+    "analyze": "AI bilan tahlil qilish",
+    "analyzing": "AI tahlil qilmoqda…",
+    "aiUnavailable": "AI xizmati hali sozlanmagan. Quyida tizimning aniq hisob-qoidalarga asoslangan tavsiyalari ko‘rsatiladi.",
+    "aiAnalysis": "AI tahlili",
+    "aiFailed": "AI tahlili olinmadi. Birozdan keyin qayta urinib ko‘ring.",
+    "evidence": "Asos bo‘lgan ma’lumotlar",
+    "generatedAt": "Yangilangan"
+  },
+  "severity": {
+    "info": "Ma’lumot",
+    "warning": "E’tibor",
+    "critical": "Muhim"
+  },
+  "evidence": {
+    "quantity": "Qoldiq",
+    "minQuantity": "Minimal qoldiq",
+    "baseUnit": "Birlik",
+    "averageDailyConsumption": "Kunlik o‘rtacha sarf",
+    "daysRemaining": "Taxminan yetadigan kun",
+    "varianceQuantity": "Farq miqdori",
+    "variancePercent": "Farq foizi",
+    "varianceValue": "Farq qiymati",
+    "document": "Hujjat",
+    "documentNumber": "Hujjat raqami",
+    "expiresOn": "Yaroqlilik sanasi",
+    "lotNumber": "Partiya",
+    "receivedQuantity": "Kirim miqdori",
+    "consumptionQuantity": "Retsept sarfi",
+    "periodDays": "Davr (kun)",
+    "tolerancePercent": "Foiz chegarasi",
+    "lastCountedAt": "Oxirgi sanash",
+    "warehouse": "Ombor",
+    "item": "Mahsulot",
+    "countCount": "Sanashlar soni",
+    "previousCost": "Oldingi birlik tannarxi",
+    "latestCost": "Oxirgi birlik tannarxi",
+    "costIncreasePercent": "Tannarx o‘sishi (%)",
+    "affectedDishes": "Ta’sirlangan taomlar",
+    "occurredAt": "Harakat vaqti",
+    "postedAt": "Tasdiqlangan vaqt",
+    "actualQuantity": "Haqiqiy qoldiq",
+    "expectedQuantity": "Hisobdagi qoldiq",
+    "requiresAttention": "Nazorat holati"
+  },
+  "valuationAdjustmentHelp": "Xarid qiymati: {{purchaseValue}}. Oldingi manfiy qoldiqning taxminiy tannarxiga tuzatish: {{value}}. Jami ombor qiymati shu tuzatishni hisobga oladi.",
+  "consumption": {
+    "title": "{{version}}-retsept versiyasi bo‘yicha {{quantity}} sotuv birligi sarflandi",
+    "restore": "Ingredientlar omborga qaytarildi",
+    "waste": "Tayyorlangan mahsulot bekor qilindi — ingredientlar qaytarilmadi"
+  },
+  "rules": {
+    "negative": {
+      "title": "{{name}}: manfiy qoldiq",
+      "detail": "Nazariy sarf kiritilgan zaxiradan oshgan. Bu o‘zi o‘g‘irlik dalili emas.",
+      "recommendation": "Kiritilmagan kirim, retsept normasi va oxirgi sanashni tekshiring."
+    },
+    "low": {
+      "title": "{{name}}: zaxira kamaygan",
+      "detail": "Qoldiq sozlangan minimumdan oshmaydi.",
+      "recommendation": "Mavjud mahsulotni tekshirib, xaridni rejalashtiring."
+    },
+    "runway": {
+      "title": "{{name}}: yaqin kunlarda tugashi mumkin",
+      "detail": "Oxirgi 14 kundagi retsept sarfi bo‘yicha taxmin; kelajakdagi talab o‘zgarishi mumkin.",
+      "recommendation": "Yetkazib berish muddatini hisobga olib xarid buyurtmasini tayyorlang."
+    },
+    "variance": {
+      "title": "{{name}}: sanashda og‘ish",
+      "detail": "Haqiqiy qoldiq hisobdagi qoldiqdan farq qiladi. Sabab hali tasdiqlanmagan.",
+      "recommendation": "Retsept, o‘lchov birligi, buzilish va boshqa chiqim hujjatlarini solishtiring."
+    },
+    "monthly-variance": {
+      "title": "{{name}}: takroriy kamomadlar yig‘ilgan",
+      "detail": "Oxirgi 30 kundagi sanash kamomadlari yig‘indisi. Alohida kichik farqlar ham jamlanadi.",
+      "recommendation": "Muntazam kichik og‘ish sababini retsept va chiqim qaydlari bilan tekshiring."
+    },
+    "price": {
+      "title": "{{name}}: xarid tannarxi oshgan",
+      "detail": "Oxirgi ikki tasdiqlangan kirim asosiy birlik tannarxlari solishtirildi.",
+      "recommendation": "Ta’sirlangan taomlar ingredient tannarxini va keyingi xarid narxini ko‘rib chiqing."
+    },
+    "expiry": {
+      "title": "{{name}}: partiya muddatini tekshiring",
+      "detail": "Kirim partiyasida muddati yaqin yoki o‘tgan sana bor. Partiya bo‘yicha aniq qoldiq hisoblanmagan.",
+      "recommendation": "Shu partiyadan mahsulot qolganini tekshiring; muddati o‘tgan mahsulotni ishlatmang."
+    },
+    "late": {
+      "title": "Offline sarf sanashdan keyin kelgan",
+      "detail": "Oldingi sanashdagi qoldiq bilan kech kelgan sarf o‘zaro tekshirilishi kerak.",
+      "recommendation": "Ta’sirlangan mahsulotlarni qayta sanab, yangi inventarizatsiya tasdiqlang."
+    }
+  },
+  "post": "Tasdiqlash",
+  "postHelp": "Tasdiqlash qoldiq va qiymatni o‘zgartiradi. Miqdorlar, asos hujjati va mas’ul shaxsni tekshiring.",
+  "sections": {
+    "balances": "Qoldiqlar",
+    "documents": "Kirim-chiqim",
+    "recipes": "Retseptlar",
+    "reports": "Hisobotlar",
+    "insights": "Tahlil",
+    "items": "Mahsulotlar",
+    "suppliers": "Yetkazib beruvchilar",
+    "warehouses": "Omborlar"
+  },
+  "clearSearch": "Qidiruvni tozalash",
+  "referenceDescriptions": {
+    "items": "Ingredientlar, o‘lchov birliklari va qoldiq nazorati.",
+    "suppliers": "Mahsulot yetkazib beruvchilar va ularning aloqa ma’lumotlari.",
+    "warehouses": "Omborlar ro‘yxati, faol holati va asosiy ombor."
+  }
+}

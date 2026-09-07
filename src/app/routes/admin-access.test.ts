@@ -24,6 +24,35 @@ function createSnapshot(permissionCodes: string[], overrides: Partial<AdminAcces
 }
 
 describe('admin access', () => {
+  it('requires inventory read permission and active restaurant access, including direct links', () => {
+    for (const path of [
+      RoutePath.inventoryBalances,
+      RoutePath.inventoryDocuments,
+      RoutePath.inventoryRecipes,
+      RoutePath.inventoryReports,
+      RoutePath.inventoryInsights,
+      RoutePath.inventoryItems,
+      RoutePath.inventorySuppliers,
+      RoutePath.inventoryWarehouses,
+    ]) {
+      expect(canAccessAdminPath(path, createSnapshot(['admin.inventory.view']))).toBe(true);
+      expect(canAccessAdminPath(path, createSnapshot(['admin.inventory.manage']))).toBe(false);
+      expect(
+        canAccessAdminPath(path, createSnapshot(['admin.inventory.view'], { restaurantAccessActive: false })),
+      ).toBe(false);
+    }
+    expect(canAccessAdminPath(RoutePath.inventory, createSnapshot(['admin.inventory.view']))).toBe(true);
+    expect(canAccessAdminPath(`${RoutePath.inventory}/documents`, createSnapshot(['admin.inventory.manage']))).toBe(
+      false,
+    );
+    expect(
+      canAccessAdminPath(
+        RoutePath.inventory,
+        createSnapshot(['admin.inventory.view'], { restaurantAccessActive: false }),
+      ),
+    ).toBe(false);
+    expect(getDefaultAdminPath(createSnapshot(['admin.inventory.view']))).toBe(RoutePath.inventory);
+  });
   it('allows reports routes for consolidated report permissions', () => {
     const snapshot = createSnapshot(['reports.view']);
     expect(canAccessReports(snapshot)).toBe(true);

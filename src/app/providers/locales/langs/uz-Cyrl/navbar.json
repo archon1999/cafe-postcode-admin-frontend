@@ -46,5 +46,14 @@
   "restaurants": "Шахобчалар",
   "printTemplates": "Чек шаблонлари",
   "setup": "Ишга тайёрлаш",
-  "restaurantSettings": "Умумий ва созлаш"
+  "restaurantSettings": "Умумий ва созлаш",
+  "inventory": "Омбор",
+  "inventoryBalances": "Қолдиқлар",
+  "inventoryDocuments": "Кирим-чиқим",
+  "inventoryRecipes": "Рецептлар",
+  "inventoryReports": "Ҳисоботлар",
+  "inventoryInsights": "Таҳлил",
+  "inventoryItems": "Маҳсулотлар",
+  "inventorySuppliers": "Етказиб берувчилар",
+  "inventoryWarehouses": "Омборлар"
 }
