@@ -11,6 +11,13 @@ export function validateDocument(input: DocumentInput, posting = false): string 
   if (
     input.lines.some(
       (line) =>
+        line.expiresOn && (!/^\d{4}-\d{2}-\d{2}$/.test(line.expiresOn) || !Number.isFinite(Date.parse(line.expiresOn))),
+    )
+  )
+    return 'validation.date';
+  if (
+    input.lines.some(
+      (line) =>
         !line.item ||
         (!(input.kind === 'stocktake' && !posting && line.quantity === null) &&
           (line.quantity === null || !isDecimal(line.quantity, input.kind === 'stocktake'))) ||

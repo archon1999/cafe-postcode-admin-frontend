@@ -5,11 +5,14 @@ import { ListPageBody, ListPageContent } from 'app/layouts/Dashboard/content';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { Scrollbar } from 'shared/ui/Scrollbar';
 
+import { InventoryHelp } from './InventoryHelp';
+
 export const InventoryPageToolsContext = createContext<ReactNode>(null);
 
 export function InventorySection({
   title,
   action,
+  help,
   toolbar,
   summary,
   footer,
@@ -18,6 +21,7 @@ export function InventorySection({
 }: {
   title: string;
   action?: ReactNode;
+  help?: ReactNode;
   toolbar?: ReactNode;
   summary?: ReactNode;
   footer?: ReactNode;
@@ -27,7 +31,15 @@ export function InventorySection({
   const tools = useContext(InventoryPageToolsContext);
   return (
     <ListPageContent>
-      <CustomBreadcrumbs heading={title} action={action} />
+      <CustomBreadcrumbs
+        heading={title}
+        action={
+          <Stack direction="row" alignItems="center" gap={1}>
+            <InventoryHelp>{help}</InventoryHelp>
+            {action}
+          </Stack>
+        }
+      />
       <ListPageBody sx={{ overflow: 'auto', m: -3, p: 3 }}>
         {summary}
         <Card

@@ -61,7 +61,7 @@ function InventoryWorkspace({ section, scope }: { section: InventorySectionKey; 
     <TextField
       select
       fullWidth
-      size="small"
+      size="medium"
       label={t('warehouse')}
       value={warehouse}
       onChange={(event) => {

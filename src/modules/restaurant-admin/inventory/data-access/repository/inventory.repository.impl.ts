@@ -33,7 +33,10 @@ export const inventoryRepository: InventoryRepository = {
   overview: (filters) => get('overview', mapInventoryFilters(filters)),
   variance: (filters) => get('variance', mapInventoryFilters(filters)),
   insights: (filters) => get('insights', mapInventoryFilters(filters)),
-  analyze: (warehouse) => post('insights/analyze', warehouse ? { warehouse } : {}),
+  analyze: (warehouse) =>
+    instance
+      .post(`${base}insights/analyze/`, warehouse ? { warehouse } : {}, { timeout: 60_000 })
+      .then((response) => response.data),
   uploadAttachment: (file) => {
     const data = new FormData();
     data.append('file', file);
@@ -41,10 +44,4 @@ export const inventoryRepository: InventoryRepository = {
   },
   downloadAttachment: (id) =>
     instance.get(`${base}attachments/${id}/download/`, { responseType: 'blob' }).then((response) => response.data),
-  exportReport: (report, filters) =>
-    instance
-      .get(`${base}export/`, { params: { report, ...mapInventoryFilters(filters) }, responseType: 'blob' })
-      .then((response) => response.data),
-  exportDocument: (id) =>
-    instance.get(`${base}documents/${id}/export/`, { responseType: 'blob' }).then((response) => response.data),
 };

@@ -4,7 +4,7 @@ import { useTranslate } from 'app/providers/locales';
 import { Iconify } from 'shared/ui/Iconify';
 
 import type { DocumentLineInput, ManualDocumentKind, StockItem } from '../../../../domain';
-import { InventoryTable, inventoryNumber } from '../../../shared';
+import { InventoryDatePicker, InventoryTable, inventoryNumber } from '../../../shared';
 
 export function DocumentLinesEditor({
   lines,
@@ -46,7 +46,7 @@ export function DocumentLinesEditor({
             <TableRow key={index}>
               <TableCell sx={{ minWidth: 200 }}>
                 <TextField
-                  size="small"
+                  size="medium"
                   select
                   fullWidth
                   label={t('fields.item')}
@@ -69,7 +69,7 @@ export function DocumentLinesEditor({
               )}
               <TableCell sx={{ minWidth: 125 }}>
                 <TextField
-                  size="small"
+                  size="medium"
                   type="number"
                   label={t(counted ? 'fields.actualQuantity' : 'fields.quantity')}
                   value={line.quantity ?? ''}
@@ -79,7 +79,7 @@ export function DocumentLinesEditor({
               </TableCell>
               <TableCell sx={{ minWidth: 150 }}>
                 <TextField
-                  size="small"
+                  size="medium"
                   select
                   fullWidth
                   label={t('fields.inputUnit')}
@@ -97,7 +97,7 @@ export function DocumentLinesEditor({
               {inbound && showCosts && (
                 <TableCell sx={{ minWidth: 140 }}>
                   <TextField
-                    size="small"
+                    size="medium"
                     type="number"
                     label={t('fields.unitCost')}
                     value={line.unitCost ?? '0'}
@@ -110,20 +110,17 @@ export function DocumentLinesEditor({
                 <>
                   <TableCell sx={{ minWidth: 130 }}>
                     <TextField
-                      size="small"
+                      size="medium"
                       label={t('fields.lotNumber')}
                       value={line.lotNumber}
                       onChange={(event) => update(index, { lotNumber: event.target.value })}
                     />
                   </TableCell>
                   <TableCell sx={{ minWidth: 165 }}>
-                    <TextField
-                      size="small"
-                      type="date"
+                    <InventoryDatePicker
                       label={t('fields.expiresOn')}
                       value={line.expiresOn ?? ''}
-                      onChange={(event) => update(index, { expiresOn: event.target.value || null })}
-                      slotProps={{ inputLabel: { shrink: true } }}
+                      onChange={(value) => update(index, { expiresOn: value || null })}
                     />
                   </TableCell>
                 </>

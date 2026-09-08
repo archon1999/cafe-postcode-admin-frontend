@@ -1,10 +1,16 @@
 // @vitest-environment jsdom
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { cleanup, fireEvent, render as rtlRender, screen, waitFor } from '@testing-library/react';
+import type { ReactElement } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { InventoryDocument } from '../../../../domain';
 
 import { DocumentDialog } from './DocumentDialog';
+
+const render = (ui: ReactElement) =>
+  rtlRender(<LocalizationProvider dateAdapter={AdapterDayjs}>{ui}</LocalizationProvider>);
 
 const mocks = vi.hoisted(() => ({ save: vi.fn(), post: vi.fn(), canPost: true, canViewCost: true }));
 vi.mock('../../../shared/InventorySection', () => ({}));
@@ -86,12 +92,13 @@ describe('stocktake editor', () => {
     expect(screen.queryByRole('button', { name: 'stocktake.approve' })).toBeNull();
     expect(screen.getByRole('button', { name: 'saveDraft' })).toBeTruthy();
   });
-  it('does not expose a receipt cost input to staff without cost permission', () => {
+  it('does not expose a receipt cost input to staff without cost permission', async () => {
     mocks.canViewCost = false;
     render(<DocumentDialog warehouse="warehouse-1" onClose={vi.fn()} onSaved={vi.fn()} />);
     expect(screen.queryByLabelText('fields.unitCost')).toBeNull();
     expect(screen.queryByLabelText('fields.attachmentUrl')).toBeNull();
-    expect(screen.getByText('costRestrictedReceipt')).toBeTruthy();
+    fireEvent.mouseOver(screen.getByRole('button', { name: 'help' }));
+    expect(await screen.findByText('costRestrictedReceipt')).toBeTruthy();
   });
   it('preserves an existing attachment while costless staff edit other draft fields', async () => {
     mocks.canViewCost = false;

@@ -10,12 +10,15 @@ import {
   MenuItem,
   Stack,
   TextField,
-  Typography,
 } from '@mui/material';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import type { Dayjs } from 'dayjs';
 import { useState } from 'react';
 
 import { useTranslate } from 'app/providers/locales';
 import { useCurrentUser } from 'modules/auth/domain/services/current-user';
+import { TASHKENT_TIMEZONE, toTashkentDayjs } from 'shared/utils/dayjs';
+import { FORMAT_PATTERNS } from 'shared/utils/format-time';
 
 import { useInventoryAccess, useInventoryCommands, useInventoryReference } from '../../../../application';
 import {
@@ -24,7 +27,7 @@ import {
   type InventoryDocument,
   type ManualDocumentKind,
 } from '../../../../domain';
-import { QueryState, inventoryError, localDateTime } from '../../../shared';
+import { InventoryHelp, QueryState, inventoryError } from '../../../shared';
 
 import { DocumentLinesEditor } from './DocumentLinesEditor';
 
@@ -77,14 +80,14 @@ export function DocumentDialog({
       },
     ],
   }));
-  const [date, setDate] = useState(() => localDateTime(initial ? new Date(initial.occurredAt) : undefined));
+  const [date, setDate] = useState<Dayjs | null>(() => toTashkentDayjs(initial?.occurredAt || new Date()));
   const [error, setError] = useState('');
   const pending =
     commands.saveDocument.isPending || commands.postDocument.isPending || commands.uploadAttachment.isPending;
   const save = async (posting: boolean) => {
     const input = {
       ...form,
-      occurredAt: date && Number.isFinite(Date.parse(date)) ? new Date(date).toISOString() : '',
+      occurredAt: date?.isValid() ? date.toISOString() : '',
       lines: form.lines.map((line) => ({
         ...line,
         quantity: form.kind === 'stocktake' && line.quantity === '' ? null : line.quantity,
@@ -123,13 +126,24 @@ export function DocumentDialog({
           event.preventDefault();
           void save(false);
         }}>
-        <DialogTitle>{initial ? `${t('edit.document')} · ${initial.number}` : t('add.document')}</DialogTitle>
+        <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
+          {initial ? `${t('edit.document')} · ${initial.number}` : t('add.document')}
+          <InventoryHelp>
+            <Stack spacing={1}>
+              {form.kind === 'stocktake' && <span>{t('stocktake.help')}</span>}
+              {!canViewCost && ['receipt', 'opening', 'customer_return'].includes(form.kind) && (
+                <span>{t('costRestrictedReceipt')}</span>
+              )}
+              <span>{t('documentPostingHelp')}</span>
+            </Stack>
+          </InventoryHelp>
+        </DialogTitle>
         <DialogContent>
           <Stack spacing={2} sx={{ pt: 1 }}>
             {error && <Alert severity="error">{error}</Alert>}
-            {form.kind === 'stocktake' && <Alert severity="info">{t('stocktake.help')}</Alert>}
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
               <TextField
+                size="medium"
                 select
                 fullWidth
                 label={t('fields.kind')}
@@ -149,17 +163,18 @@ export function DocumentDialog({
                   </MenuItem>
                 ))}
               </TextField>
-              <TextField
-                type="datetime-local"
-                fullWidth
+              <DateTimePicker
                 label={t('fields.occurredAt')}
                 value={date}
-                required
-                onChange={(event) => setDate(event.target.value)}
-                slotProps={{ inputLabel: { shrink: true } }}
+                onChange={setDate}
+                timezone={TASHKENT_TIMEZONE}
+                format={FORMAT_PATTERNS.dateTime}
+                ampm={false}
+                slotProps={{ textField: { size: 'medium', fullWidth: true, required: true } }}
               />
               {['receipt', 'supplier_return'].includes(form.kind) && (
                 <TextField
+                  size="medium"
                   select
                   fullWidth
                   label={t('fields.supplier')}
@@ -178,18 +193,21 @@ export function DocumentDialog({
             </Stack>
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
               <TextField
+                size="medium"
                 fullWidth
                 label={t('fields.reference')}
                 value={form.reference}
                 onChange={(event) => setForm({ ...form, reference: event.target.value })}
               />
               <TextField
+                size="medium"
                 fullWidth
                 label={t('fields.responsibleName')}
                 value={form.responsibleName}
                 onChange={(event) => setForm({ ...form, responsibleName: event.target.value })}
               />
               <TextField
+                size="medium"
                 fullWidth
                 label={t('fields.reason')}
                 value={form.reason}
@@ -209,12 +227,10 @@ export function DocumentDialog({
                 onChange={(lines) => setForm({ ...form, lines })}
               />
             </QueryState>
-            {!canViewCost && ['receipt', 'opening', 'customer_return'].includes(form.kind) && (
-              <Alert severity="info">{t('costRestrictedReceipt')}</Alert>
-            )}
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
               {canViewCost && (
                 <TextField
+                  size="medium"
                   fullWidth
                   label={t('fields.attachmentUrl')}
                   value={form.attachmentUrl}
@@ -235,6 +251,7 @@ export function DocumentDialog({
               </Button>
             </Stack>
             <TextField
+              size="medium"
               fullWidth
               multiline
               minRows={2}
@@ -242,9 +259,6 @@ export function DocumentDialog({
               value={form.notes}
               onChange={(event) => setForm({ ...form, notes: event.target.value })}
             />
-            <Typography variant="caption" color="text.secondary">
-              {t('documentPostingHelp')}
-            </Typography>
           </Stack>
         </DialogContent>
         <DialogActions sx={{ flexWrap: 'wrap', gap: 1 }}>

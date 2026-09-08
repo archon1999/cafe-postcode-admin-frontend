@@ -76,7 +76,7 @@ export function DocumentsPanel({ warehouse }: { warehouse: string }) {
       toolbar={
         <>
           <TableSearchInput
-            size="small"
+            size="medium"
             placeholder={t('search')}
             inputProps={{ 'aria-label': t('search') }}
             clearAriaLabel={t('clearSearch')}
@@ -88,7 +88,7 @@ export function DocumentsPanel({ warehouse }: { warehouse: string }) {
             }}
           />
           <TextField
-            size="small"
+            size="medium"
             select
             label={t('fields.kind')}
             value={kind}
@@ -115,7 +115,7 @@ export function DocumentsPanel({ warehouse }: { warehouse: string }) {
             ))}
           </TextField>
           <TextField
-            size="small"
+            size="medium"
             select
             label={t('status')}
             value={status}

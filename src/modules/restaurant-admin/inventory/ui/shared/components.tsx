@@ -22,6 +22,7 @@ import { useTranslate } from 'app/providers/locales';
 import { Iconify } from 'shared/ui/Iconify';
 
 import { inventoryError } from './helpers';
+import { InventoryHelp } from './InventoryHelp';
 
 export function QueryState({
   query,
@@ -86,6 +87,7 @@ export function InventoryTable({ headers, children }: { headers: string[]; child
 
 export function FormDialog({
   title,
+  help,
   children,
   onClose,
   onSubmit,
@@ -95,6 +97,7 @@ export function FormDialog({
   wide = false,
 }: {
   title: string;
+  help?: ReactNode;
   children: ReactNode;
   onClose: () => void;
   onSubmit: () => void;
@@ -113,7 +116,10 @@ export function FormDialog({
           event.preventDefault();
           onSubmit();
         }}>
-        <DialogTitle>{title}</DialogTitle>
+        <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
+          {title}
+          <InventoryHelp>{help}</InventoryHelp>
+        </DialogTitle>
         <DialogContent>
           <Stack spacing={2} sx={{ pt: 1 }}>
             {error && <Alert severity="error">{error}</Alert>}

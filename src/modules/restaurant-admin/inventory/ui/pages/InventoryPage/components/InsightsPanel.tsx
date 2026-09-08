@@ -50,6 +50,7 @@ export function InsightsPanel({ warehouse }: { warehouse: string }) {
   return (
     <InventorySection
       title={t('insights.title')}
+      help={query.data && !query.data.aiAvailable ? t('insights.aiUnavailable') : undefined}
       plain
       action={
         canAnalyze && (
@@ -68,11 +69,6 @@ export function InsightsPanel({ warehouse }: { warehouse: string }) {
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
-        </Alert>
-      )}
-      {query.data && !query.data.aiAvailable && (
-        <Alert severity="info" sx={{ mb: 2 }}>
-          {t('insights.aiUnavailable')}
         </Alert>
       )}
       {analyze.data && (

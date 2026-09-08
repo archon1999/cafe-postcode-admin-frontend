@@ -322,5 +322,7 @@
     "items": "Ingredientlar, o‘lchov birliklari va qoldiq nazorati.",
     "suppliers": "Mahsulot yetkazib beruvchilar va ularning aloqa ma’lumotlari.",
     "warehouses": "Omborlar ro‘yxati, faol holati va asosiy ombor."
-  }
+  },
+  "help": "Ma’lumot",
+  "uncategorized": "Kategoriyasiz"
 }

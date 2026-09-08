@@ -23,7 +23,7 @@ export function ReferencesPanel({ kind }: { kind: ReferenceKind }) {
       toolbar={
         <>
           <TableSearchInput
-            size="small"
+            size="medium"
             placeholder={t('search')}
             inputProps={{ 'aria-label': t('search') }}
             clearAriaLabel={t('clearSearch')}

@@ -1,11 +1,21 @@
-import { Alert, Button, IconButton, MenuItem, Stack, TableCell, TableRow, TextField } from '@mui/material';
+import {
+  Autocomplete,
+  createFilterOptions,
+  Button,
+  IconButton,
+  MenuItem,
+  Stack,
+  TableCell,
+  TableRow,
+  TextField,
+} from '@mui/material';
 import { useState } from 'react';
 
 import { useTranslate } from 'app/providers/locales';
 import { Iconify } from 'shared/ui/Iconify';
 
 import { useInventoryCommands, useInventoryReference } from '../../../../application';
-import { validateRecipe, type Recipe, type RecipeInput } from '../../../../domain';
+import { validateRecipe, type CatalogOption, type Recipe, type RecipeInput } from '../../../../domain';
 import { FormDialog, InventoryTable, QueryState, inventoryError } from '../../../shared';
 
 export function RecipeDialog({ initial, onClose }: { initial?: Recipe; onClose: () => void }) {
@@ -25,6 +35,11 @@ export function RecipeDialog({ initial, onClose }: { initial?: Recipe; onClose: 
       modifierOption: line.modifierOption,
     })) || [{ item: '', quantity: '', modifierOption: null }],
   }));
+  const options = [...(catalog.data || [])].sort(
+    (a, b) =>
+      (a.categoryName || t('uncategorized')).localeCompare(b.categoryName || t('uncategorized')) ||
+      a.name.localeCompare(b.name),
+  );
   const selected = catalog.data?.find((item) => item.id === form.catalogItem);
   const save = async () => {
     const invalid = validateRecipe(form);
@@ -42,6 +57,7 @@ export function RecipeDialog({ initial, onClose }: { initial?: Recipe; onClose: 
   return (
     <FormDialog
       title={t(initial ? 'recipes.newVersion' : 'add.recipe')}
+      help={t('recipes.help')}
       wide
       onClose={onClose}
       onSubmit={() => {
@@ -49,35 +65,40 @@ export function RecipeDialog({ initial, onClose }: { initial?: Recipe; onClose: 
       }}
       pending={saveRecipe.isPending || catalog.isLoading || items.isLoading}
       error={error}>
-      <Alert severity="info">{t('recipes.help')}</Alert>
       <QueryState query={catalog}>
         <Stack direction={{ xs: 'column', sm: 'row' }} gap={2}>
-          <TextField
+          <Autocomplete
             fullWidth
-            select
-            label={t('fields.catalogItem')}
-            value={form.catalogItem}
+            size="medium"
+            options={options}
+            value={selected || null}
             disabled={Boolean(initial)}
-            onChange={(event) =>
+            getOptionKey={(option) => option.id}
+            getOptionLabel={(option) => option.name}
+            isOptionEqualToValue={(option, value) => option.id === value.id}
+            groupBy={(option) => option.categoryName || t('uncategorized')}
+            filterOptions={createFilterOptions<CatalogOption>({
+              stringify: (option) => `${option.name} ${option.categoryName || t('uncategorized')}`,
+            })}
+            noOptionsText={t('empty.title')}
+            onChange={(_, option) =>
               setForm({
                 ...form,
-                catalogItem: event.target.value,
+                catalogItem: option?.id || '',
                 lines: form.lines.map((line) => ({ ...line, modifierOption: null })),
               })
-            }>
-            {catalog.data?.map((item) => (
-              <MenuItem key={item.id} value={item.id}>
-                {item.name}
-              </MenuItem>
-            ))}
-          </TextField>
+            }
+            renderInput={(params) => <TextField {...params} size="medium" required label={t('fields.catalogItem')} />}
+          />
           <TextField
+            size="medium"
             fullWidth
             label={t('fields.name')}
             value={form.name}
             onChange={(event) => setForm({ ...form, name: event.target.value })}
           />
           <TextField
+            size="medium"
             type="number"
             required
             fullWidth
@@ -89,6 +110,7 @@ export function RecipeDialog({ initial, onClose }: { initial?: Recipe; onClose: 
         </Stack>
       </QueryState>
       <TextField
+        size="medium"
         select
         label={t('fields.trigger')}
         value={form.trigger}
@@ -105,7 +127,7 @@ export function RecipeDialog({ initial, onClose }: { initial?: Recipe; onClose: 
               <TableCell sx={{ minWidth: 200 }}>
                 <TextField
                   select
-                  size="small"
+                  size="medium"
                   fullWidth
                   label={t('fields.item')}
                   value={line.item}
@@ -128,7 +150,7 @@ export function RecipeDialog({ initial, onClose }: { initial?: Recipe; onClose: 
               </TableCell>
               <TableCell sx={{ minWidth: 150 }}>
                 <TextField
-                  size="small"
+                  size="medium"
                   type="number"
                   required
                   label={t('fields.grossQuantity')}
@@ -149,7 +171,7 @@ export function RecipeDialog({ initial, onClose }: { initial?: Recipe; onClose: 
                 <TextField
                   select
                   fullWidth
-                  size="small"
+                  size="medium"
                   label={t('fields.modifierOption')}
                   value={line.modifierOption || ''}
                   onChange={(event) =>

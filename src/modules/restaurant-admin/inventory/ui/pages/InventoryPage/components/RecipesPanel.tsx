@@ -56,7 +56,7 @@ export function RecipesPanel() {
       title={t('recipes.title')}
       toolbar={
         <TableSearchInput
-          size="small"
+          size="medium"
           placeholder={t('search')}
           inputProps={{ 'aria-label': t('search') }}
           clearAriaLabel={t('clearSearch')}

@@ -1,4 +1,4 @@
-import { Alert, FormControlLabel, MenuItem, Stack, Switch, TextField } from '@mui/material';
+import { FormControlLabel, MenuItem, Stack, Switch, TextField } from '@mui/material';
 import { useState } from 'react';
 
 import { useTranslate } from 'app/providers/locales';
@@ -47,6 +47,7 @@ export function ReferenceDialog({ kind, initial, onClose }: Props) {
     numeric = false,
   ) => (
     <TextField
+      size="medium"
       fullWidth
       label={t(`fields.${key}`)}
       value={form[key] ?? ''}
@@ -99,6 +100,20 @@ export function ReferenceDialog({ kind, initial, onClose }: Props) {
   return (
     <FormDialog
       title={t(`${initial ? 'edit' : 'add'}.${kind}`)}
+      help={
+        kind === 'items' ? (
+          <Stack spacing={1}>
+            <span>
+              {t('purchaseHelp', {
+                factor: form.purchaseFactor,
+                unit: t(`units.${form.baseUnit}`),
+                purchaseUnit: form.purchaseUnit,
+              })}
+            </span>
+            <span>{t('toleranceHelp')}</span>
+          </Stack>
+        ) : undefined
+      }
       onClose={onClose}
       onSubmit={() => {
         void save();
@@ -111,6 +126,7 @@ export function ReferenceDialog({ kind, initial, onClose }: Props) {
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
             {field('sku')}
             <TextField
+              size="medium"
               select
               fullWidth
               label={t('fields.baseUnit')}
@@ -139,15 +155,9 @@ export function ReferenceDialog({ kind, initial, onClose }: Props) {
             {field('purchaseUnit')}
             {field('purchaseFactor', true)}
           </Stack>
-          <Alert severity="info">
-            {t('purchaseHelp', {
-              factor: form.purchaseFactor,
-              unit: t(`units.${form.baseUnit}`),
-              purchaseUnit: form.purchaseUnit,
-            })}
-          </Alert>
           {field('minQuantity', true)}
           <TextField
+            size="medium"
             select
             label={t('fields.availabilityMode')}
             value={form.availabilityMode}
@@ -166,7 +176,6 @@ export function ReferenceDialog({ kind, initial, onClose }: Props) {
             {field('toleranceQuantity', true)}
             {canViewCost && field('toleranceValue', true)}
           </Stack>
-          <Alert severity="info">{t('toleranceHelp')}</Alert>
         </>
       )}
       {kind === 'suppliers' && (

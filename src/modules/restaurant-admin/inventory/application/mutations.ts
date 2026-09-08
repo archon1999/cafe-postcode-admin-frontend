@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { inventoryRepository } from '../data-access';
-import type { DocumentInput, InventoryFilters, RecipeInput, ReferenceInput, ReferenceKind } from '../domain';
+import type { DocumentInput, RecipeInput, ReferenceInput, ReferenceKind } from '../domain';
 
 import { inventoryKeys } from './keys';
 
@@ -34,11 +34,6 @@ export function useInventoryCommands() {
     mutationFn: ({ id, reason }: { id: string; reason: string }) => inventoryRepository.reverseDocument(id, reason),
     onSuccess: invalidate,
   });
-  const exportReport = useMutation({
-    mutationFn: ({ report, filters }: { report: 'balances' | 'movements' | 'variance'; filters: InventoryFilters }) =>
-      inventoryRepository.exportReport(report, filters),
-  });
-  const exportDocument = useMutation({ mutationFn: (id: string) => inventoryRepository.exportDocument(id) });
   const analyze = useMutation({ mutationFn: (warehouse?: string) => inventoryRepository.analyze(warehouse) });
   const uploadAttachment = useMutation({ mutationFn: (file: File) => inventoryRepository.uploadAttachment(file) });
   const downloadAttachment = useMutation({ mutationFn: (id: string) => inventoryRepository.downloadAttachment(id) });
@@ -49,8 +44,6 @@ export function useInventoryCommands() {
     saveDocument,
     postDocument,
     reverseDocument,
-    exportReport,
-    exportDocument,
     analyze,
     uploadAttachment,
     downloadAttachment,

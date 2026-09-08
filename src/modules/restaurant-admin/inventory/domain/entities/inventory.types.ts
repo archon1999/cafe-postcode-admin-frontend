@@ -179,6 +179,8 @@ export type Insight = {
 };
 export type Insights = { mode: 'rules'; aiAvailable: boolean; generatedAt: string; items: Insight[] };
 export type CatalogOption = {
+  categoryId: string | null;
+  categoryName: string;
   id: string;
   name: string;
   saleUnit: string;

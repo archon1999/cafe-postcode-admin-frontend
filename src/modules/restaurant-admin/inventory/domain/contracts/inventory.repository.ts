@@ -40,6 +40,4 @@ export interface InventoryRepository {
   analyze(warehouse?: string): Promise<AiAnalysis>;
   uploadAttachment(file: File): Promise<{ url: string; name: string }>;
   downloadAttachment(id: string): Promise<Blob>;
-  exportReport(report: 'balances' | 'movements' | 'variance', filters: InventoryFilters): Promise<Blob>;
-  exportDocument(id: string): Promise<Blob>;
 }

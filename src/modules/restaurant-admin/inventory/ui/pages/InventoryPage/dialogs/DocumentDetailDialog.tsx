@@ -22,7 +22,14 @@ import { formatDateTime } from 'shared/utils/format-time';
 
 import { useInventoryAccess, useInventoryCommands, useInventoryDocument } from '../../../../application';
 import { inventoryAttachmentId, type InventoryDocument } from '../../../../domain';
-import { InventoryTable, QueryState, inventoryError, inventoryNumber, inventoryUnitCost } from '../../../shared';
+import {
+  InventoryHelp,
+  InventoryTable,
+  QueryState,
+  inventoryError,
+  inventoryNumber,
+  inventoryUnitCost,
+} from '../../../shared';
 
 export function DocumentDetailDialog({
   id,
@@ -45,14 +52,6 @@ export function DocumentDetailDialog({
   const manual =
     document &&
     ['opening', 'receipt', 'issue', 'supplier_return', 'customer_return', 'stocktake'].includes(document.kind);
-  const exportFile = async () => {
-    try {
-      const blob = await commands.exportDocument.mutateAsync(id);
-      downloadBlob(blob, `${document?.number || 'inventory'}.csv`);
-    } catch (cause) {
-      setError(inventoryError(cause) || t('loadFailed'));
-    }
-  };
   const reverse = async () => {
     if (!reason.trim()) return;
     try {
@@ -85,7 +84,17 @@ export function DocumentDetailDialog({
   };
   return (
     <Dialog open onClose={commands.reverseDocument.isPending ? undefined : onClose} fullWidth maxWidth="lg">
-      <DialogTitle>{document?.number || t('document')}</DialogTitle>
+      <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
+        {document?.number || t('document')}
+        {canViewCost && document?.valuationAdjustment && Number(document.valuationAdjustment) !== 0 && (
+          <InventoryHelp>
+            {t('valuationAdjustmentHelp', {
+              value: formatMoney(Number(document.valuationAdjustment)),
+              purchaseValue: formatMoney(Number(document.purchaseValue)),
+            })}
+          </InventoryHelp>
+        )}
+      </DialogTitle>
       <DialogContent>
         <QueryState query={query}>
           {document && (
@@ -206,14 +215,6 @@ export function DocumentDetailDialog({
                     {t('attachment')}
                   </Link>
                 ))}
-              {canViewCost && document.valuationAdjustment && Number(document.valuationAdjustment) !== 0 && (
-                <Alert severity="info">
-                  {t('valuationAdjustmentHelp', {
-                    value: formatMoney(Number(document.valuationAdjustment)),
-                    purchaseValue: formatMoney(Number(document.purchaseValue)),
-                  })}
-                </Alert>
-              )}
               {document.consumptions?.map((consumption) => (
                 <Stack key={consumption.orderItem} spacing={1}>
                   <Typography variant="subtitle2">
@@ -256,6 +257,7 @@ export function DocumentDetailDialog({
                 <Stack spacing={2}>
                   <Alert severity="warning">{t('reverseHelp')}</Alert>
                   <TextField
+                    size="medium"
                     multiline
                     minRows={2}
                     required
@@ -283,13 +285,6 @@ export function DocumentDetailDialog({
       </DialogContent>
       <DialogActions sx={{ flexWrap: 'wrap', gap: 1 }}>
         <Button onClick={onClose}>{t('close')}</Button>
-        <Button
-          disabled={!document || commands.exportDocument.isPending}
-          onClick={() => {
-            void exportFile();
-          }}>
-          {t('export')}
-        </Button>
         {document && manual && document.status === 'draft' && canManage && onEdit && (
           <Button variant="contained" onClick={() => onEdit(document)}>
             {t('edit.action')}

@@ -1,52 +1,34 @@
-import { Alert, Box, Button, Chip, Grid, TableCell, TableRow, Typography } from '@mui/material';
+import { Box, Chip, Grid, TableCell, TableRow, Typography } from '@mui/material';
 import { useState } from 'react';
 
 import { useTranslate } from 'app/providers/locales';
 import { TableSearchInput } from 'shared/ui/TableSearchInput';
-import { downloadBlob } from 'shared/utils/download';
 import { formatMoney } from 'shared/utils/format-money';
 import { formatDateTime } from 'shared/utils/format-time';
 
-import { useInventoryAccess, useInventoryCommands, useInventoryReport } from '../../../../application';
-import {
-  InventoryTable,
-  QueryState,
-  InventorySection,
-  inventoryError,
-  inventoryNumber,
-  inventoryUnitCost,
-} from '../../../shared';
+import { useInventoryAccess, useInventoryReport } from '../../../../application';
+import { InventoryTable, QueryState, InventorySection, inventoryNumber, inventoryUnitCost } from '../../../shared';
 
 export function BalancesPanel({ warehouse }: { warehouse: string }) {
   const { t } = useTranslate('inventory');
   const { canViewCost } = useInventoryAccess();
   const query = useInventoryReport('balances', { warehouse });
   const overview = useInventoryReport('overview', { warehouse });
-  const { exportReport } = useInventoryCommands();
   const [search, setSearch] = useState('');
   const [onlyAlerts, setOnlyAlerts] = useState(false);
-  const [error, setError] = useState('');
   const balances =
     query.data?.filter(
       (row) =>
         (!onlyAlerts || row.isLow || row.isNegative) &&
         `${row.itemName} ${row.sku}`.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
     ) || [];
-  const exportFile = async () => {
-    try {
-      const blob = await exportReport.mutateAsync({ report: 'balances', filters: { warehouse } });
-      downloadBlob(blob, 'inventory-balances.csv');
-    } catch (cause) {
-      setError(inventoryError(cause) || t('loadFailed'));
-    }
-  };
   return (
     <InventorySection
       title={t('balances.title')}
       toolbar={
         <>
           <TableSearchInput
-            size="small"
+            size="medium"
             placeholder={t('search')}
             inputProps={{ 'aria-label': t('search') }}
             clearAriaLabel={t('clearSearch')}
@@ -99,23 +81,7 @@ export function BalancesPanel({ warehouse }: { warehouse: string }) {
           </Grid>
         </QueryState>
       }
-      footer={<Alert severity="info">{t('balances.estimateHelp')}</Alert>}
-      action={
-        <Button
-          variant="outlined"
-          disabled={exportReport.isPending}
-          onClick={() => {
-            void exportFile();
-          }}>
-          {t('export')}
-        </Button>
-      }>
-      {error && (
-        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError('')}>
-          {error}
-        </Alert>
-      )}
-
+      help={t('balances.estimateHelp')}>
       <QueryState query={query} empty={!balances.length}>
         <InventoryTable
           headers={[

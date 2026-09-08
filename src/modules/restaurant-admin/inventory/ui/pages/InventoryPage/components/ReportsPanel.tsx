@@ -15,17 +15,12 @@ import {
 import { useState } from 'react';
 
 import { useTranslate } from 'app/providers/locales';
-import { downloadBlob } from 'shared/utils/download';
+import dayjs, { getCurrentTashkentTime } from 'shared/utils/dayjs';
 import { formatMoney } from 'shared/utils/format-money';
 import { formatDateTime } from 'shared/utils/format-time';
 
-import {
-  useInventoryAccess,
-  useInventoryCommands,
-  useInventoryReference,
-  useInventoryReport,
-} from '../../../../application';
-import { InventoryTable, QueryState, InventorySection, inventoryError, inventoryNumber } from '../../../shared';
+import { useInventoryAccess, useInventoryReference, useInventoryReport } from '../../../../application';
+import { InventoryDatePicker, InventoryTable, QueryState, InventorySection, inventoryNumber } from '../../../shared';
 import { DocumentDetailDialog } from '../dialogs/DocumentDetailDialog';
 
 const PAGE_SIZE = 25;
@@ -33,14 +28,13 @@ export function ReportsPanel({ warehouse }: { warehouse: string }) {
   const { t } = useTranslate('inventory');
   const { canViewCost } = useInventoryAccess();
   const [tab, setTab] = useState<'movements' | 'variance'>('movements');
-  const [from, setFrom] = useState(() => `${new Date().toISOString().slice(0, 7)}-01`);
-  const [to, setTo] = useState(() => new Date().toISOString().slice(0, 10));
+  const [from, setFrom] = useState(() => getCurrentTashkentTime().startOf('month').format('YYYY-MM-DD'));
+  const [to, setTo] = useState(() => getCurrentTashkentTime().format('YYYY-MM-DD'));
   const [item, setItem] = useState('');
   const [page, setPage] = useState(0);
   const [document, setDocument] = useState<string | null>(null);
-  const [error, setError] = useState('');
   const filters = { warehouse, from, to, item };
-  const dateValid = !from || !to || from <= to;
+  const dateValid = (!from || dayjs(from).isValid()) && (!to || dayjs(to).isValid()) && (!from || !to || from <= to);
   const movements = useInventoryReport(
     'movements',
     { ...filters, offset: page * PAGE_SIZE, limit: PAGE_SIZE + 1 },
@@ -49,49 +43,32 @@ export function ReportsPanel({ warehouse }: { warehouse: string }) {
   const variance = useInventoryReport('variance', { warehouse, from, to }, tab === 'variance' && dateValid);
   const overview = useInventoryReport('overview', { warehouse, from, to }, dateValid);
   const items = useInventoryReference('items');
-  const { exportReport } = useInventoryCommands();
-  const exportFile = async () => {
-    try {
-      const blob = await exportReport.mutateAsync({
-        report: tab,
-        filters: tab === 'variance' ? { warehouse, from, to } : filters,
-      });
-      downloadBlob(blob, `inventory-${tab}.csv`);
-    } catch (cause) {
-      setError(inventoryError(cause) || t('loadFailed'));
-    }
-  };
   return (
     <InventorySection
       title={t('reports.title')}
+      help={tab === 'variance' ? t('reports.varianceHelp') : undefined}
       toolbar={
         <>
-          <TextField
-            size="small"
-            type="date"
+          <InventoryDatePicker
             label={t('from')}
             value={from}
-            slotProps={{ inputLabel: { shrink: true } }}
-            onChange={(event) => {
-              setFrom(event.target.value);
+            onChange={(value) => {
+              setFrom(value);
               setPage(0);
             }}
           />
-          <TextField
-            size="small"
-            type="date"
+          <InventoryDatePicker
             label={t('to')}
             value={to}
             error={!dateValid}
-            slotProps={{ inputLabel: { shrink: true } }}
-            onChange={(event) => {
-              setTo(event.target.value);
+            onChange={(value) => {
+              setTo(value);
               setPage(0);
             }}
           />
           {tab === 'movements' && (
             <TextField
-              size="small"
+              size="medium"
               select
               label={t('fields.item')}
               value={item}
@@ -124,23 +101,7 @@ export function ReportsPanel({ warehouse }: { warehouse: string }) {
             </Button>
           </Stack>
         )
-      }
-      action={
-        <Button
-          variant="outlined"
-          disabled={exportReport.isPending || !dateValid}
-          onClick={() => {
-            void exportFile();
-          }}>
-          {t('export')}
-        </Button>
       }>
-      {error && (
-        <Alert severity="error" onClose={() => setError('')}>
-          {error}
-        </Alert>
-      )}
-
       {!dateValid && <Alert severity="warning">{t('validation.dateRange')}</Alert>}
       {canViewCost && dateValid && (
         <QueryState query={overview}>
@@ -210,9 +171,6 @@ export function ReportsPanel({ warehouse }: { warehouse: string }) {
           </QueryState>
         ) : (
           <>
-            <Alert severity="info" sx={{ px: 2.5, borderBottom: 1, borderColor: 'divider' }}>
-              {t('reports.varianceHelp')}
-            </Alert>
             <QueryState query={variance} empty={!variance.data?.length}>
               <InventoryTable
                 headers={[
