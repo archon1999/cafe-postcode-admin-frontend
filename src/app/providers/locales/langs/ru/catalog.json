@@ -36,7 +36,7 @@
                    "saleUnit": "Единица продажи",
                    "saleUnitPiece": "Штука",
                    "saleUnitKilogram": "Килограмм",
-                   "saleUnitPortion": "Порция (pors)",
+                   "saleUnitPortion": "Порция",
                    "pricePerPortion": "Цена за 1 pors",
                    "pricePerPiece": "Цена за 1 шт.",
                    "pricePerKilogram": "Цена за 1 кг",
