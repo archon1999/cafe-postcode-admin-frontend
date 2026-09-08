@@ -110,7 +110,8 @@
   },
   "quantityUnits": {
     "piece": "шт.",
-    "kilogram": "кг"
+    "kilogram": "кг",
+    "portion": "pors"
   },
   "notFound": {
     "title": "Страница не найдена",

@@ -7,6 +7,7 @@ import { useFormContext } from 'react-hook-form';
 
 import { useTranslate } from 'app/providers/locales';
 import type { AdminMxikDetails, CatalogCategory, CatalogModifierGroup } from 'shared/api/admin-types';
+import { getSaleUnit, SALE_UNIT_IDS } from 'shared/domain/sale-units';
 import { RHFSelect, RHFSumCurrencyField, RHFSwitch, RHFTextField } from 'shared/ui/HookForm';
 import { LabelRow } from 'shared/ui/LabelRow/LabelRow';
 
@@ -164,13 +165,13 @@ export function CatalogItemFormFields({
         {itemType === 'product' ? (
           <>
             <RHFSelect<CatalogItemFormInput> name="saleUnit" label={t('fields.saleUnit')}>
-              <MenuItem value="piece">{t('fields.saleUnitPiece')}</MenuItem>
-              <MenuItem value="kg">{t('fields.saleUnitKilogram')}</MenuItem>
+              {SALE_UNIT_IDS.map((unit) => (
+                <MenuItem key={unit} value={unit}>
+                  {t(getSaleUnit(unit).adminLabelKey)}
+                </MenuItem>
+              ))}
             </RHFSelect>
-            <RHFSumCurrencyField<CatalogItemFormInput>
-              name="price"
-              label={saleUnit === 'kg' ? t('fields.pricePerKilogram') : t('fields.pricePerPiece')}
-            />
+            <RHFSumCurrencyField<CatalogItemFormInput> name="price" label={t(getSaleUnit(saleUnit).adminPriceKey)} />
           </>
         ) : null}
         <CatalogModifierGroupsField groups={modifierGroups} loading={modifierGroupsLoading} disabled={disabled} />

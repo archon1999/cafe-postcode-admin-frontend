@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { SALE_UNIT_IDS } from 'shared/domain/sale-units';
+
 const mxikOptionSchema = z
   .object({
     value: z.string().min(1),
@@ -32,7 +34,7 @@ export const catalogItemFormSchema = z
       (value) => (value === '' || value === null || value === undefined ? 0 : value),
       z.coerce.number().int().min(0),
     ),
-    saleUnit: z.enum(['piece', 'kg']).default('piece'),
+    saleUnit: z.enum(SALE_UNIT_IDS).default('piece'),
     modifierGroups: z.array(z.string()).default([]),
     isActive: z.boolean(),
     isStoplisted: z.boolean(),

@@ -1,3 +1,4 @@
+import type { SaleUnit } from 'shared/domain/sale-units';
 export type AdminPermission = {
   id: string;
   code: string;
@@ -737,7 +738,7 @@ export type AdminKitchenTicketItem = {
   prepStation: string;
   prepStationName: string;
   quantity: number;
-  saleUnit?: 'piece' | 'kg';
+  saleUnit?: SaleUnit;
   unitPrice: number;
   lineTotal: number;
   status: string;
@@ -792,7 +793,7 @@ export type AdminOrderItem = {
   tableName?: string | null;
   hallName?: string | null;
   quantity: number;
-  saleUnit?: 'piece' | 'kg';
+  saleUnit?: SaleUnit;
   unitPrice: number;
   lineTotal: number;
   status: AdminOrderItemStatus;
@@ -1022,7 +1023,7 @@ export type CatalogItem = {
   description: string;
   itemType?: 'product' | 'service';
   price: number;
-  saleUnit?: 'piece' | 'kg';
+  saleUnit?: SaleUnit;
   sortOrder: number;
   modifierGroups?: string[];
   isActive: boolean;
@@ -1047,7 +1048,7 @@ export type CatalogItemPayload = {
   description: string;
   itemType: 'product' | 'service';
   price: number;
-  saleUnit?: 'piece' | 'kg';
+  saleUnit?: SaleUnit;
   sortOrder?: number;
   modifierGroups?: string[];
   isActive: boolean;
@@ -1271,7 +1272,7 @@ export type AdminTopItemsReportRow = {
   categoryId?: string | null;
   categoryName?: string | null;
   quantity: number;
-  saleUnit?: 'piece' | 'kg';
+  saleUnit?: SaleUnit;
   revenue: number;
 };
 

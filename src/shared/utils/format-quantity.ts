@@ -1,6 +1,9 @@
 import i18next from 'i18next';
 
-export type SaleUnit = 'piece' | 'kg';
+import { getSaleUnit } from 'shared/domain/sale-units';
+import type { SaleUnit } from 'shared/domain/sale-units';
+
+export type { SaleUnit } from 'shared/domain/sale-units';
 
 type QuantityValue = number | string | null | undefined;
 
@@ -15,12 +18,12 @@ export function formatQuantityNumber(value: QuantityValue, saleUnit: SaleUnit = 
 
   return new Intl.NumberFormat(quantityNumberLocale, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: saleUnit === 'kg' ? 3 : 0,
+    maximumFractionDigits: getSaleUnit(saleUnit).precision,
   }).format(normalizeQuantity(value));
 }
 
 export function formatSaleQuantity(value: QuantityValue, saleUnit: SaleUnit = 'piece') {
-  const unitKey = saleUnit === 'kg' ? 'common:quantityUnits.kilogram' : 'common:quantityUnits.piece';
+  const unitKey = getSaleUnit(saleUnit).quantityKey;
 
   return `${formatQuantityNumber(value, saleUnit)} ${i18next.t(unitKey)}`;
 }

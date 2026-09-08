@@ -45,6 +45,8 @@
                    "saleUnit": "Sotish birligi",
                    "saleUnitPiece": "Dona",
                    "saleUnitKilogram": "Kilogram",
+                   "saleUnitPortion": "Porsiya (pors)",
+                   "pricePerPortion": "1 pors narxi",
                    "pricePerPiece": "1 dona narxi",
                    "pricePerKilogram": "1 kg narxi",
                    "mxikCode":  "MXIK kodi",

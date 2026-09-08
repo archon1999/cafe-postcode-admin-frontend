@@ -110,7 +110,8 @@
   },
   "quantityUnits": {
     "piece": "та",
-    "kilogram": "кг"
+    "kilogram": "кг",
+    "portion": "pors"
   },
   "notFound": {
     "title": "Саҳифа топилмади",

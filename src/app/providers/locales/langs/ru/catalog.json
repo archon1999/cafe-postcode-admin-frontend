@@ -36,6 +36,8 @@
                    "saleUnit": "Единица продажи",
                    "saleUnitPiece": "Штука",
                    "saleUnitKilogram": "Килограмм",
+                   "saleUnitPortion": "Порция (pors)",
+                   "pricePerPortion": "Цена за 1 pors",
                    "pricePerPiece": "Цена за 1 шт.",
                    "pricePerKilogram": "Цена за 1 кг",
                    "mxikCode":  "Код ИКПУ/MXИК",

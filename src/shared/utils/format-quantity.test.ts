@@ -7,6 +7,7 @@ vi.mock('i18next', () => ({
       ({
         'common:quantityUnits.piece': 'ta',
         'common:quantityUnits.kilogram': 'kg',
+        'common:quantityUnits.portion': 'pors',
       })[key] ?? key,
   },
 }));
@@ -31,4 +32,9 @@ describe('format-quantity', () => {
     expect(formatSaleQuantity('0.125', 'kg')).toBe('0,125 kg');
     expect(formatQuantityNumber('2.000', 'kg')).toBe('2');
   });
+});
+
+it('preserves half portions in reports', () => {
+  expect(formatSaleQuantity('0.500', 'pors')).toBe('0,5 pors');
+  expect(formatSaleQuantity('1.500', 'pors')).toBe('1,5 pors');
 });

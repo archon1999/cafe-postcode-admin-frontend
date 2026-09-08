@@ -111,7 +111,8 @@
   },
   "quantityUnits": {
     "piece": "ta",
-    "kilogram": "kg"
+    "kilogram": "kg",
+    "portion": "pors"
   },
   "notFound": {
     "title": "Sahifa topilmadi",
