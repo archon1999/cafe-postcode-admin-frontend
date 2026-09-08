@@ -28,7 +28,7 @@ export function InventorySection({
   return (
     <ListPageContent>
       <CustomBreadcrumbs heading={title} action={action} />
-      <ListPageBody sx={{ overflow: 'auto' }}>
+      <ListPageBody sx={{ overflow: 'auto', m: -3, p: 3 }}>
         {summary}
         <Card
           sx={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: { xs: 420, md: 0 }, overflow: 'hidden' }}>
