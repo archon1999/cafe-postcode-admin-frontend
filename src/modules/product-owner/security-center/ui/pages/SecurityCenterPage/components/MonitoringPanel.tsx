@@ -844,7 +844,7 @@ export function MonitoringPanel({ businessPartnerId, onSecurityDateSelect }: Mon
             value={query.data?.summary.agentOnline ?? 0}
             icon="solar:monitor-bold"
             color="info"
-            helper={`${query.data?.summary.agentOffline ?? 0} ${t('monitoring.agent.offline')} · ${query.data?.summary.agentMissing ?? 0} ${t('monitoring.agent.missing')}`}
+            helper={`${query.data?.summary.agentOffline ?? 0} ${t('monitoring.agent.offline')} / ${query.data?.summary.agentMissing ?? 0} ${t('monitoring.agent.missing')}`}
           />
         </Grid>
         <Grid size={{ xs: 6, lg: 3 }}>
