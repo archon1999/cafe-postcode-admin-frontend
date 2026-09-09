@@ -2,12 +2,13 @@
 
 import '@testing-library/jest-dom/vitest';
 
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-const { queryMock, adminScope } = vi.hoisted(() => ({
+const { queryMock, bulkMock, adminScope } = vi.hoisted(() => ({
   queryMock: vi.fn(),
+  bulkMock: vi.fn(),
   adminScope: { selectedRestaurantId: null as string | null },
 }));
 
@@ -25,13 +26,27 @@ vi.mock('modules/auth', () => ({
 }));
 
 vi.mock('shared/ui/CustomDataGrid', () => ({
-  DataGrid: ({ slots }: { slots: { toolbar: () => ReactNode } }) => <div>{slots.toolbar()}</div>,
+  DataGrid: ({
+    slots,
+    onRowSelectionModelChange,
+  }: {
+    slots: { toolbar: () => ReactNode };
+    onRowSelectionModelChange: (value: { type: 'include'; ids: Set<string> }) => void;
+  }) => (
+    <div>
+      <button onClick={() => onRowSelectionModelChange({ type: 'include', ids: new Set(['first', 'second']) })}>
+        Select two
+      </button>
+      {slots.toolbar()}
+    </div>
+  ),
   DataGridEmptyState: () => null,
   DataGridFiltersToolbar: ({ rightActions }: { rightActions?: ReactNode }) => <div>{rightActions}</div>,
 }));
 
 vi.mock('../../../../application', () => ({
   useSecurityEventsQuery: queryMock,
+  useAcknowledgeSecurityEventsMutation: () => ({ isPending: false, mutateAsync: bulkMock }),
   useAcknowledgeSecurityEventMutation: () => ({ isPending: false, mutateAsync: vi.fn() }),
 }));
 
@@ -41,6 +56,7 @@ import { SecurityEventsPanel } from './SecurityEventsPanel';
 
 beforeEach(() => {
   queryMock.mockReset();
+  bulkMock.mockReset();
   adminScope.selectedRestaurantId = null;
   queryMock.mockReturnValue({
     data: { items: [], total: 0 },
@@ -72,9 +88,10 @@ describe('SecurityEventsPanel date range integration', () => {
     expect(screen.getByTestId('security-events-date-range-filter')).toBeVisible();
   });
 
-  it('keeps the server query unbounded until a range is selected', () => {
+  it('defaults to a rolling last 24 hours', () => {
     render(<SecurityEventsPanel />);
 
+    expect(queryMock).toHaveBeenCalledWith(expect.objectContaining({ last24Hours: true }));
     expect(queryMock).toHaveBeenCalledWith(
       expect.not.objectContaining({
         from: expect.anything(),
@@ -89,5 +106,15 @@ describe('SecurityEventsPanel date range integration', () => {
     render(<SecurityEventsPanel />);
 
     expect(queryMock).toHaveBeenCalledWith(expect.objectContaining({ restaurantId: 'restaurant-2' }));
+  });
+  it('acknowledges selected IDs and clears the selection after success', async () => {
+    bulkMock.mockResolvedValue({ updated: 2, ids: ['first', 'second'] });
+    render(<SecurityEventsPanel />);
+    fireEvent.click(screen.getByRole('button', { name: 'Select two' }));
+    fireEvent.click(screen.getByRole('button', { name: 'events.bulkAcknowledge' }));
+    await waitFor(() => expect(bulkMock).toHaveBeenCalledWith(['first', 'second']));
+    await waitFor(() =>
+      expect(screen.queryByRole('button', { name: 'events.bulkAcknowledge' })).not.toBeInTheDocument(),
+    );
   });
 });

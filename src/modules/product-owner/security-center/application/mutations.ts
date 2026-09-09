@@ -29,3 +29,8 @@ export function useRevokeTelegramSubscriptionMutation(restaurantId: string | nul
       queryClient.invalidateQueries({ queryKey: securityCenterKeys.telegramSubscriptions(restaurantId) }),
   });
 }
+
+export function useAcknowledgeSecurityEventsMutation() {
+  const invalidate = useInvalidateSecurityCenter();
+  return useMutation({ mutationFn: securityCenterRepository.acknowledgeSecurityEvents, onSuccess: invalidate });
+}

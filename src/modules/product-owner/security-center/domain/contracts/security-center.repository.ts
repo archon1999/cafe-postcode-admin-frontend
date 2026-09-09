@@ -13,6 +13,7 @@ export interface SecurityCenterRepository {
   getMonitoringOverview(businessPartnerId?: string): Promise<MonitoringOverview>;
   getMigrationSummary(): Promise<DeviceMigrationSummary>;
   listSecurityEvents(query: SecurityEventListQuery): Promise<PageResult<SecurityEvent>>;
+  acknowledgeSecurityEvents(ids: string[]): Promise<{ updated: number; ids: string[] }>;
   acknowledgeSecurityEvent(eventId: string): Promise<SecurityEvent>;
   listRestaurants(): Promise<RestaurantOption[]>;
   issueTelegramLink(): Promise<TelegramLink>;

@@ -9,7 +9,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import type { GridColDef, GridColumnVisibilityModel, GridPaginationModel } from '@mui/x-data-grid';
+import type {
+  GridColDef,
+  GridColumnVisibilityModel,
+  GridPaginationModel,
+  GridRowSelectionModel,
+} from '@mui/x-data-grid';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -19,7 +24,11 @@ import { DEFAULT_COLUMN_VISIBILITY_MODEL } from 'shared/constants';
 import { DataGrid, DataGridEmptyState, DataGridFiltersToolbar } from 'shared/ui/CustomDataGrid';
 import { formatDateTime } from 'shared/utils/format-time';
 
-import { useAcknowledgeSecurityEventMutation, useSecurityEventsQuery } from '../../../../application';
+import {
+  useAcknowledgeSecurityEventMutation,
+  useAcknowledgeSecurityEventsMutation,
+  useSecurityEventsQuery,
+} from '../../../../application';
 import type { SecurityEvent, SecuritySeverity } from '../../../../domain';
 import { SecurityStatusChip } from '../../../shared';
 
@@ -105,6 +114,22 @@ export function SecurityEventsPanel({
     acknowledged: acknowledged === '' ? undefined : acknowledged === 'true',
     ...(dateRange?.rolling ? { last24Hours: true } : dateBounds),
   });
+  const [selection, setSelection] = useState<GridRowSelectionModel>({ type: 'include', ids: new Set() });
+  const bulkMutation = useAcknowledgeSecurityEventsMutation();
+  useEffect(() => {
+    setSelection({ type: 'include', ids: new Set() });
+  }, [businessPartnerId, restaurantId, search, eventType, severity, acknowledged, dateRange, paginationModel.page]);
+  const acknowledgeSelected = async () => {
+    const ids = [...selection.ids].map(String);
+    if (!ids.length) return;
+    try {
+      await bulkMutation.mutateAsync(ids);
+      setSelection({ type: 'include', ids: new Set() });
+      toast.success(t('events.messages.acknowledged'));
+    } catch {
+      toast.error(t('events.messages.acknowledgeFailed'));
+    }
+  };
   const acknowledgeMutation = useAcknowledgeSecurityEventMutation();
 
   const acknowledge = async (eventId: string) => {
@@ -246,6 +271,14 @@ export function SecurityEventsPanel({
 
       <Box sx={{ width: 1 }}>
         <DataGrid
+          checkboxSelection
+          disableRowSelectionOnClick
+          disableRowSelectionExcludeModel
+          rowSelectionModel={selection}
+          onRowSelectionModelChange={(next) => {
+            if (!bulkMutation.isPending) setSelection(next);
+          }}
+          isRowSelectable={({ row }) => !row.acknowledgedAt}
           autoHeight
           rows={query.data?.items ?? []}
           columns={columns}
@@ -267,7 +300,7 @@ export function SecurityEventsPanel({
             noRowsOverlay: () => (
               <DataGridEmptyState
                 hasActiveFilters={Boolean(
-                  search || restaurantId || eventType || severity || acknowledged !== '' || dateRange,
+                  search || restaurantId || eventType.length || severity.length || acknowledged !== '' || dateRange,
                 )}
                 noData={{ title: t('events.empty') }}
                 noResults={{ title: t('events.empty') }}
@@ -292,7 +325,16 @@ export function SecurityEventsPanel({
                 columnVisibilityModel={columnVisibilityModel}
                 defaultColumnVisibilityModel={DEFAULT_COLUMN_VISIBILITY_MODEL}
                 onSaveColumns={setColumnVisibilityModel}
-                rightActions={<SecurityEventsDateRangeFilter value={dateRange} onChange={setDateRange} />}
+                rightActions={
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    {selection.ids.size > 0 && (
+                      <Button variant="contained" disabled={bulkMutation.isPending} onClick={acknowledgeSelected}>
+                        {t('events.bulkAcknowledge', { count: selection.ids.size })}
+                      </Button>
+                    )}
+                    <SecurityEventsDateRangeFilter value={dateRange} onChange={setDateRange} />
+                  </Stack>
+                }
               />
             ),
           }}

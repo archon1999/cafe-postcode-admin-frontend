@@ -64,6 +64,14 @@ export const securityCenterRepository: SecurityCenterRepository = {
     return mapPage(response.data);
   },
 
+  async acknowledgeSecurityEvents(ids: string[]) {
+    const response = await instance.post<{ updated: number; ids: string[] }>(
+      '/api/v1/admin/security-events/bulk-acknowledge/',
+      { ids },
+    );
+    return response.data;
+  },
+
   async acknowledgeSecurityEvent(eventId: string) {
     const response = await instance.post<{ event: SecurityEvent }>(
       `/api/v1/admin/security-events/${encodeURIComponent(eventId)}/acknowledge/`,

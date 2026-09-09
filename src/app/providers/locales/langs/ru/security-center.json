@@ -507,7 +507,8 @@
       "acknowledged": "Событие отмечено проверенным.",
       "acknowledgeFailed": "Не удалось отметить событие."
     },
-    "lastDay": "Последние 24 часа"
+    "lastDay": "Последние 24 часа",
+    "bulkAcknowledge": "Отметить просмотренными ({{count}})"
   },
   "eventTypes": {
     "admin_auth_origin_rejected": "Источник входа администратора отклонён",

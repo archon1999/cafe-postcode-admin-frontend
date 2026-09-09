@@ -428,12 +428,14 @@ function DeviceInventory({
             key={item.key}
             component={ButtonBase}
             aria-label={item.label}
+            justifyContent="flex-start"
             onClick={() => onSelect(item.key)}
             direction="row"
             alignItems="center"
             spacing={1.5}
             sx={{
               minWidth: 0,
+              textAlign: 'left',
               p: 1.5,
               border: 1,
               borderRadius: 1.5,
