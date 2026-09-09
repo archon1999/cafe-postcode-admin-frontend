@@ -1,6 +1,6 @@
 import { queryClient } from 'shared/api/query/query.config';
 
-import { getAdminAuthErrorCode, refreshRequest } from '../data-access/api/auth.api';
+import { getAdminAuthErrorCode, getAdminAuthErrorStatus, refreshRequest } from '../data-access/api/auth.api';
 import type { AdminCredentialResponse } from '../domain/entities/admin-auth.types';
 import { resetAdminActivityClock } from '../domain/services/admin-activity.service';
 import { adminScopeStore } from '../domain/stores/admin-scope.store';
@@ -164,6 +164,7 @@ export function refreshAdminSession(): Promise<AdminCredentialResponse> {
 
 export async function bootstrapAdminSession(): Promise<void> {
   startAdminAuthCoordination();
+  authStore.setState({ bootstrapError: false });
   try {
     await refreshAdminSession();
   } catch (error) {
@@ -171,8 +172,13 @@ export async function bootstrapAdminSession(): Promise<void> {
       markAdminSessionLocked(undefined, false);
       return;
     }
-    clearAdminAuthentication({ broadcast: false });
+    if (getAdminAuthErrorStatus(error) === 401) {
+      clearAdminAuthentication({ broadcast: false });
+    } else {
+      // Keep the route gated until the cookie can be checked successfully.
+      authStore.setState({ bootstrapError: true });
+    }
   } finally {
-    authStore.getState().setBootstrapping(false);
+    if (!authStore.getState().bootstrapError) authStore.getState().setBootstrapping(false);
   }
 }

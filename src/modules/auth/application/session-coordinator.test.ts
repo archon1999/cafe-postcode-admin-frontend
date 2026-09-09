@@ -21,6 +21,7 @@ const { refreshRequestMock, getAdminAuthErrorCodeMock } = vi.hoisted(() => ({
 
 vi.mock('../data-access/api/auth.api', () => ({
   refreshRequest: refreshRequestMock,
+  getAdminAuthErrorStatus: (error: { response?: { status?: number } }) => error.response?.status,
   getAdminAuthErrorCode: getAdminAuthErrorCodeMock,
 }));
 
@@ -170,4 +171,27 @@ describe('admin refresh coordination', () => {
     expect(authStore.getState().status).toBe('locked');
     expect(authStore.getState().isAuthenticated).toBe(true);
   });
+});
+
+it.each([undefined, 429, 500, 503, 409])(
+  'keeps bootstrap gated after temporary failure %s and recovers',
+  async (status) => {
+    authStore.getState().setBootstrapping(true);
+    refreshRequestMock.mockRejectedValueOnce({ response: status ? { status } : undefined });
+    await bootstrapAdminSession();
+    expect(authStore.getState().isBootstrapping).toBe(true);
+    expect(authStore.getState().bootstrapError).toBe(true);
+    expect(FakeBroadcastChannel.messages).not.toContainEqual({ type: 'logout' });
+    refreshRequestMock.mockResolvedValueOnce(credentials());
+    await bootstrapAdminSession();
+    expect(authStore.getState().status).toBe('authenticated');
+    expect(authStore.getState().bootstrapError).toBe(false);
+  },
+);
+it('logs out when the refresh cookie is rejected with 401', async () => {
+  authStore.getState().setAccessToken('old-access');
+  refreshRequestMock.mockRejectedValueOnce({ response: { status: 401 } });
+  await bootstrapAdminSession();
+  expect(authStore.getState().status).toBe('anonymous');
+  expect(sessionService.getAccessToken()).toBeNull();
 });

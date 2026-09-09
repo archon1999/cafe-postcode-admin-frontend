@@ -1,6 +1,7 @@
 import type { AdminSessionUser } from 'shared/api/admin-types';
 
 import { getCurrentUserRequest } from '../data-access';
+import { getAdminAuthErrorStatus } from '../data-access/api/auth.api';
 import { adminScopeStore } from '../domain/stores/admin-scope.store';
 import { currentUserStore } from '../domain/stores/current-user.store';
 
@@ -36,7 +37,7 @@ export async function syncCurrentUser(options: SyncCurrentUserOptions = {}) {
           return fallbackUser;
         }
 
-        if (logoutOnError) {
+        if (logoutOnError && getAdminAuthErrorStatus(error) === 401) {
           clearAdminAuthentication();
         }
 

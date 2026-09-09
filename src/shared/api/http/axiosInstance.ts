@@ -5,6 +5,7 @@ import {
   markAdminSessionLocked,
   refreshAdminSession,
 } from 'modules/auth/application/session-coordinator';
+import { getAdminAuthErrorStatus } from 'modules/auth/data-access/api/auth.api';
 import { adminScopeStore, currentUserStore } from 'modules/auth/domain';
 import { consumeAdminActivitySignal } from 'modules/auth/domain/services/admin-activity.service';
 import { authStore } from 'modules/auth/domain/stores/authentication.store';
@@ -99,7 +100,7 @@ instance.interceptors.response.use(
         const refreshCode = (refreshError as { response?: { data?: { code?: string } } }).response?.data?.code;
         if (refreshCode === 'session_locked') {
           markAdminSessionLocked();
-        } else {
+        } else if (getAdminAuthErrorStatus(refreshError) === 401) {
           clearAdminAuthentication();
         }
         return Promise.reject(refreshError);

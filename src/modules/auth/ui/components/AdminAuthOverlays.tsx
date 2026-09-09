@@ -10,6 +10,7 @@ import { type FormEvent, useState } from 'react';
 import { useTranslate } from 'app/providers/locales';
 
 import { useLogoutMutation, useUnlockMutation } from '../../application/mutations';
+import { bootstrapAdminSession } from '../../application/session-coordinator';
 import { useAuthStore } from '../../domain/stores/authentication.store';
 
 function LockedSessionScreen() {
@@ -80,5 +81,21 @@ function LockedSessionScreen() {
 }
 
 export function AdminAuthOverlays() {
-  return <LockedSessionScreen />;
+  const { t } = useTranslate('auth');
+  const bootstrapError = useAuthStore((state) => state.bootstrapError);
+  return (
+    <>
+      <LockedSessionScreen />
+      <Dialog open={bootstrapError} disableEscapeKeyDown aria-labelledby="auth-connection-error">
+        <DialogContent>
+          <Alert severity="warning" id="auth-connection-error">
+            {t('connection.error')}
+          </Alert>
+          <Button onClick={() => void bootstrapAdminSession()} sx={{ mt: 2 }}>
+            {t('connection.retry')}
+          </Button>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
 }

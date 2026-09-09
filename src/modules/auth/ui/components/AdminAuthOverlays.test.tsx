@@ -21,6 +21,7 @@ function renderOverlays() {
 }
 
 const mocks = vi.hoisted(() => ({
+  bootstrap: vi.fn(),
   logout: vi.fn(),
   unlock: vi.fn(),
 }));
@@ -28,6 +29,8 @@ const mocks = vi.hoisted(() => ({
 vi.mock('app/providers/locales', () => ({
   useTranslate: () => ({ t: (key: string) => key }),
 }));
+
+vi.mock('../../application/session-coordinator', () => ({ bootstrapAdminSession: mocks.bootstrap }));
 
 vi.mock('../../application/mutations', () => ({
   useLogoutMutation: () => ({ mutate: mocks.logout, isPending: false }),
@@ -62,4 +65,13 @@ describe('AdminAuthOverlays', () => {
     renderOverlays();
     expect(screen.queryByTestId('admin-step-up-code')).not.toBeInTheDocument();
   });
+});
+
+it('shows a retry action when bootstrap cannot reach the server', () => {
+  authStore.setState({ isBootstrapping: true, bootstrapError: true });
+  renderOverlays();
+  expect(screen.getByText('connection.error')).toBeVisible();
+  fireEvent.click(screen.getByText('connection.retry'));
+  expect(mocks.bootstrap).toHaveBeenCalledTimes(1);
+  expect(authStore.getState().isAuthenticated).toBe(false);
 });

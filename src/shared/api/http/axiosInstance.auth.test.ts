@@ -86,3 +86,29 @@ describe('admin axios authentication recovery', () => {
     expect(mocks.refresh).not.toHaveBeenCalled();
   });
 });
+
+it.each([undefined, 429, 500, 503, 409])(
+  'preserves the session on refresh failure %s and allows a later retry',
+  async (status) => {
+    const failure = { response: status ? { status } : undefined };
+    mocks.refresh.mockRejectedValueOnce(failure);
+    instance.defaults.adapter = ((config) => rejectedRequest(config, 401, 'authentication_failed')) as AxiosAdapter;
+    await expect(instance.get('/api/v1/admin/example/')).rejects.toBe(failure);
+    expect(mocks.clear).not.toHaveBeenCalled();
+    expect(mocks.lock).not.toHaveBeenCalled();
+    expect(authStore.getState().status).toBe('authenticated');
+    let calls = 0;
+    mocks.refresh.mockResolvedValueOnce({ accessToken: 'new-access' });
+    instance.defaults.adapter = ((config) =>
+      ++calls === 1
+        ? rejectedRequest(config, 401, 'authentication_failed')
+        : successfulRequest(config)) as AxiosAdapter;
+    await expect(instance.get('/api/v1/admin/example/')).resolves.toMatchObject({ status: 200 });
+  },
+);
+it('clears authentication only when refresh rejects the session with 401', async () => {
+  mocks.refresh.mockRejectedValueOnce({ response: { status: 401 } });
+  instance.defaults.adapter = ((config) => rejectedRequest(config, 401, 'authentication_failed')) as AxiosAdapter;
+  await expect(instance.get('/api/v1/admin/example/')).rejects.toBeTruthy();
+  expect(mocks.clear).toHaveBeenCalledTimes(1);
+});

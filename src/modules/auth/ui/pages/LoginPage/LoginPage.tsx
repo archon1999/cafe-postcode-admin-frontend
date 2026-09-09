@@ -19,19 +19,20 @@ import { loginSchema, type LoginSchemaType } from '../../../domain/entities/logi
 const LoginPage = () => {
   const { t } = useTranslate('auth');
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const methods = useForm<LoginSchemaType>({
     resolver: zodResolver(loginSchema),
     defaultValues: { username: '', password: '' },
   });
   const loginMutation = useLoginMutation();
   const onSubmit = methods.handleSubmit(async (data) => {
-    setError(false);
+    setError(null);
     try {
       const response = await loginMutation.mutateAsync(data);
-      if (response.status !== 'authenticated') setError(true);
-    } catch {
-      setError(true);
+      if (response.status !== 'authenticated') setError('loginFlow.error');
+    } catch (error) {
+      const status = (error as { response?: { status?: number } })?.response?.status;
+      setError(!status || status >= 500 ? 'connection.error' : 'loginFlow.error');
     }
   });
 
@@ -46,7 +47,7 @@ const LoginPage = () => {
       </Box>
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
-          {t('loginFlow.error')}
+          {t(error)}
         </Alert>
       )}
       <Form onSubmit={onSubmit} methods={methods} autoComplete="on">

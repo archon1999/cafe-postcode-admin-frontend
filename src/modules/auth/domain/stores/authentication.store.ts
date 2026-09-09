@@ -11,6 +11,7 @@ export interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   isBootstrapping: boolean;
+  bootstrapError: boolean;
   lockedAt: string | null;
   accessExpiresAt: string | null;
 
@@ -28,6 +29,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
   isLoading: false,
   isBootstrapping: true,
+  bootstrapError: false,
   lockedAt: null,
   accessExpiresAt: null,
 
@@ -37,6 +39,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       status: 'authenticated',
       isAuthenticated: true,
       isLoading: false,
+      bootstrapError: false,
       isBootstrapping: false,
       lockedAt: null,
       accessExpiresAt: credentials.accessExpiresAt,
@@ -49,6 +52,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       status: 'authenticated',
       isAuthenticated: true,
       isLoading: false,
+      bootstrapError: false,
       isBootstrapping: options?.bootstrapping ?? false,
       lockedAt: null,
       accessExpiresAt: options?.expiresAt ?? null,
@@ -61,6 +65,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       status: 'locked',
       isAuthenticated: true,
       isLoading: false,
+      bootstrapError: false,
       isBootstrapping: false,
       lockedAt: lockedAt ?? new Date().toISOString(),
       accessExpiresAt: null,
@@ -73,6 +78,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       status: 'anonymous',
       isAuthenticated: false,
       isLoading: false,
+      bootstrapError: false,
       isBootstrapping: false,
       lockedAt: null,
       accessExpiresAt: null,
@@ -85,6 +91,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       status: active ? 'authenticated' : 'anonymous',
       isAuthenticated: active,
       isLoading: false,
+      bootstrapError: false,
       isBootstrapping: false,
     });
   },
