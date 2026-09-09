@@ -52,7 +52,13 @@ export function MonitoringDetailsDialog({
             <Label
               sx={{ alignSelf: 'flex-start' }}
               color={
-                row.health.status === 'critical' ? 'error' : row.health.status === 'attention' ? 'warning' : 'success'
+                row.health.status === 'unknown'
+                  ? 'info'
+                  : row.health.status === 'critical'
+                    ? 'error'
+                    : row.health.status === 'attention'
+                      ? 'warning'
+                      : 'success'
               }>
               {t(`monitoring.health.${row.health.status}`)}
             </Label>

@@ -360,7 +360,7 @@ function OperationalHealth({
       <CardHeader title={t('monitoring.operationalHealth.title')} />
 
       <Stack spacing={1} sx={{ px: 3, pt: 2.5, pb: 3 }}>
-        {(['healthy', 'attention', 'critical'] as const).map((status) => {
+        {(['healthy', 'attention', 'critical', 'unknown'] as const).map((status) => {
           const count = counts[status];
           const value = total ? (count / total) * 100 : 0;
           const selected = selectedStatus === status;
@@ -372,7 +372,7 @@ function OperationalHealth({
               onClick={() => onSelect(status)}
               sx={{
                 width: 1,
-                p: 1.5,
+                p: 1,
                 borderRadius: 1.5,
                 textAlign: 'left',
                 display: 'block',
@@ -924,6 +924,7 @@ export function MonitoringPanel({ businessPartnerId, onSecurityDateSelect }: Mon
                 count: healthCounts.attention,
                 color: 'warning',
               },
+              { value: 'unknown', label: t('monitoring.health.unknown'), count: healthCounts.unknown, color: 'info' },
               {
                 value: 'critical',
                 label: t('monitoring.health.critical'),

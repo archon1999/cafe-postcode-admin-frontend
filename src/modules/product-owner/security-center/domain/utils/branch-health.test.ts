@@ -18,15 +18,13 @@ describe('operational health', () => {
     expect(assessBranchHealth(branch(), { referenceTime: now }).status).toBe('healthy');
   });
   it.each(['healthy', 'attention', 'critical', 'unknown'] as const)('uses fresh diagnostic assessment %s', (status) => {
-    expect(assessBranchHealth(branch(status), { referenceTime: now }).status).toBe(
-      status === 'unknown' ? 'healthy' : status,
-    );
+    expect(assessBranchHealth(branch(status), { referenceTime: now }).status).toBe(status);
   });
-  it('marks missing, stale or invalid diagnostics healthy when no active issue is known', () => {
-    expect(assessBranchHealth({} as MonitoringBranch).status).toBe('healthy');
-    expect(assessBranchHealth(branch(), { referenceTime: '2026-09-09T17:11:00Z' }).status).toBe('healthy');
+  it('marks missing, stale or invalid diagnostics unknown', () => {
+    expect(assessBranchHealth({} as MonitoringBranch).status).toBe('unknown');
+    expect(assessBranchHealth(branch(), { referenceTime: '2026-09-09T17:11:00Z' }).status).toBe('unknown');
     const b = branch();
     b.operationalHealth!.checkedAt = 'bad';
-    expect(assessBranchHealth(b, { referenceTime: now }).status).toBe('healthy');
+    expect(assessBranchHealth(b, { referenceTime: now }).status).toBe('unknown');
   });
 });
