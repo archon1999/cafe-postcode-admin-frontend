@@ -13,7 +13,9 @@
       "attention": "E’tibor talab qilinadi",
       "stable": "Operatsion holat barqaror"
     },
-    "snapshot": { "lastUpdated": "Oxirgi yangilanish" },
+    "snapshot": {
+      "lastUpdated": "Oxirgi yangilanish"
+    },
     "metrics": {
       "label": "Xavfsizlik va rollout ko‘rsatkichlari",
       "migratedBranches": "Migratsiyasi yakunlangan shahobchalar",
@@ -103,11 +105,12 @@
     "health": {
       "healthy": "Sog‘lom",
       "attention": "E’tibor kerak",
-      "critical": "Kritik"
+      "critical": "Kritik",
+      "unknown": "Holati noma’lum"
     },
     "metrics": {
       "totalBranches": "Jami shahobchalar",
-      "healthyBranches": "Sog‘lom",
+      "healthyBranches": "Sog‘lom / holati ma’lum",
       "attentionBranches": "E’tibor kerak",
       "criticalBranches": "Kritik",
       "onlineAgents": "Online agentlar",
@@ -115,7 +118,7 @@
     },
     "operationalHealth": {
       "title": "Operatsion holat",
-      "description": "Shahobchalar sog‘lomligi va qurilmalar holatining jamlanmasi."
+      "description": "Yangi texnik diagnostika asosida. Aloqa, smena va xavfsizlik hodisalari alohida hisoblanadi."
     },
     "securityActivity": {
       "title": "7 kunlik xavfsizlik faolligi",
@@ -226,6 +229,16 @@
       "title": "E’tibor navbati",
       "description": "Kritik holatlar va aloqasi uzilgan shahobchalar birinchi ko‘rsatiladi.",
       "more": "Yana {{count}} ta shahobcha"
+    },
+    "technicalReasons": {
+      "storage": "Lokal baza xatosi",
+      "runtime": "POS ishlashga tayyor emas",
+      "pos_login": "Kirishda takroriy texnik xato",
+      "order_save": "Buyurtmani saqlash ishlamayapti",
+      "printer": "Takroriy chop etish xatosi",
+      "payment": "Takroriy to‘lov xatosi",
+      "fiscal": "Takroriy fiskal xato",
+      "sync": "Sinxronizatsiyani tuzatish kerak"
     }
   },
   "migration": {

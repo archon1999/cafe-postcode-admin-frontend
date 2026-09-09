@@ -51,16 +51,17 @@ import {
 type HealthStatus = BranchHealthStatus;
 type MonitoringRow = MonitoringBranch & { id: string; health: BranchHealthAssessment };
 
-const HEALTH_PRIORITY: Record<HealthStatus, number> = { healthy: 0, attention: 1, critical: 2 };
-const HEALTH_COLORS = { healthy: 'success', attention: 'warning', critical: 'error' } as const;
+const HEALTH_PRIORITY: Record<HealthStatus, number> = { healthy: 0, attention: 1, critical: 2, unknown: 3 };
+const HEALTH_COLORS = { healthy: 'success', attention: 'warning', critical: 'error', unknown: 'info' } as const;
 const HEALTH_ICONS: Record<HealthStatus, IconifyName> = {
+  unknown: 'solar:info-circle-bold',
   healthy: 'solar:shield-check-bold',
   attention: 'solar:danger-triangle-bold',
   critical: 'solar:danger-bold',
 };
 const STALE_AFTER_MS = 2 * 60 * 1000;
 const DEFAULT_ROWS_PER_PAGE = 10;
-const BRANCH_ROW_HEIGHT = 72;
+const BRANCH_ROW_HEIGHT = 104;
 
 function safeDateTime(value: string | null | undefined) {
   return value ? formatDateTime(value) : '—';
@@ -110,7 +111,7 @@ function SummaryCard({
   color,
 }: {
   title: string;
-  value: number;
+  value: number | string;
   helper: React.ReactNode;
   icon: IconifyName;
   color: 'primary' | 'success' | 'info' | 'error';
@@ -367,7 +368,7 @@ function OperationalHealth({
       />
 
       <Stack spacing={2.75} sx={{ px: 3, pt: 2.5, pb: 3 }}>
-        {(['healthy', 'attention', 'critical'] as const).map((status) => {
+        {(['healthy', 'attention', 'critical', 'unknown'] as const).map((status) => {
           const count = counts[status];
           const value = total ? (count / total) * 100 : 0;
           const selected = selectedStatus === status;
@@ -630,7 +631,17 @@ function BranchTable({
                   </DetailPageLink>
                 </TableCell>
                 <TableCell>
-                  <HealthLabel status={row.health.status} />
+                  <Stack spacing={0.5}>
+                    <HealthLabel status={row.health.status} />
+                    {row.health.reasons.map((reason) => (
+                      <Typography key={reason} variant="caption">
+                        {t(`monitoring.technicalReasons.${reason}`)}
+                      </Typography>
+                    ))}
+                    <Typography variant="caption" color="text.secondary">
+                      {safeDateTime(row.operationalHealth?.checkedAt)}
+                    </Typography>
+                  </Stack>
                 </TableCell>
                 <TableCell>
                   <AgentLabel row={row} />
@@ -714,6 +725,7 @@ export function MonitoringPanel({ businessPartnerId, onSecurityDateSelect }: Mon
   const healthCounts = useMemo(
     () =>
       rows.reduce((counts, row) => ({ ...counts, [row.health.status]: counts[row.health.status] + 1 }), {
+        unknown: 0,
         healthy: 0,
         attention: 0,
         critical: 0,
@@ -814,13 +826,13 @@ export function MonitoringPanel({ businessPartnerId, onSecurityDateSelect }: Mon
             value={query.data?.summary.totalBranches ?? rows.length}
             icon="solar:home-angle-bold-duotone"
             color="primary"
-            helper={`${healthCounts.healthy} ${t('monitoring.health.healthy')}`}
+            helper={`${healthCounts.unknown} ${t('monitoring.health.unknown')}`}
           />
         </Grid>
         <Grid size={{ xs: 6, lg: 3 }}>
           <SummaryCard
             title={t('monitoring.metrics.healthyBranches')}
-            value={healthCounts.healthy}
+            value={`${healthCounts.healthy} / ${rows.length - healthCounts.unknown}`}
             icon="solar:shield-check-bold"
             color="success"
             helper={`${healthCounts.attention} ${t('monitoring.health.attention')} · ${healthCounts.critical} ${t('monitoring.health.critical')}`}
@@ -909,6 +921,7 @@ export function MonitoringPanel({ businessPartnerId, onSecurityDateSelect }: Mon
                 count: healthCounts.attention,
                 color: 'warning',
               },
+              { value: 'unknown', label: t('monitoring.health.unknown'), count: healthCounts.unknown, color: 'info' },
               {
                 value: 'critical',
                 label: t('monitoring.health.critical'),

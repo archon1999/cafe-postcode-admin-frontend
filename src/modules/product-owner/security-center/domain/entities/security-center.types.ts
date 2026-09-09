@@ -89,7 +89,15 @@ export type MonitoringSecurityCounts = {
   lastEventAt: string | null;
 };
 
+export type OperationalHealth = {
+  status: 'healthy' | 'attention' | 'critical' | 'unknown';
+  checkedAt: string | null;
+  freshnessMinutes: number;
+  reasons: Array<{ component: string; resource: string; state: string; consecutiveFailures: number }>;
+};
+
 export type MonitoringBranch = {
+  operationalHealth?: OperationalHealth;
   restaurantId: string;
   restaurantName: string;
   agent: MonitoringAgent | null;

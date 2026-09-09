@@ -13,6 +13,7 @@ type MonitoringAgentDto = {
 };
 
 type MonitoringBranchDto = {
+  operationalHealth?: MonitoringBranch['operationalHealth'];
   restaurantId: string;
   restaurantName: string;
   agent: MonitoringAgentDto | null;
@@ -95,6 +96,7 @@ function mapBranch(dto: MonitoringBranchDto): MonitoringBranch {
   const agent = mapAgent(dto.agent);
 
   return {
+    operationalHealth: dto.operationalHealth,
     restaurantId: dto.restaurantId,
     restaurantName: dto.restaurantName,
     agent,

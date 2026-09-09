@@ -13,7 +13,9 @@
       "attention": "Эътибор талаб қилинади",
       "stable": "Операцион ҳолат барқарор"
     },
-    "snapshot": { "lastUpdated": "Охирги янгиланиш" },
+    "snapshot": {
+      "lastUpdated": "Охирги янгиланиш"
+    },
     "metrics": {
       "label": "Хавфсизлик ва rollout кўрсаткичлари",
       "migratedBranches": "Миграцияси якунланган шаҳобчалар",
@@ -103,11 +105,12 @@
     "health": {
       "healthy": "Соғлом",
       "attention": "Эътибор керак",
-      "critical": "Критик"
+      "critical": "Критик",
+      "unknown": "Ҳолати номаълум"
     },
     "metrics": {
       "totalBranches": "Жами шаҳобчалар",
-      "healthyBranches": "Соғлом",
+      "healthyBranches": "Соғлом / ҳолати маълум",
       "attentionBranches": "Эътибор керак",
       "criticalBranches": "Критик",
       "onlineAgents": "Online агентлар",
@@ -115,7 +118,7 @@
     },
     "operationalHealth": {
       "title": "Операцион ҳолат",
-      "description": "Шаҳобчалар соғломлиги ва қурилмалар ҳолатининг жамланмаси."
+      "description": "Янги техник диагностика асосида. Алоқа, смена ва хавфсизлик ҳодисалари алоҳида ҳисобланади."
     },
     "securityActivity": {
       "title": "7 кунлик хавфсизлик фаоллиги",
@@ -226,6 +229,16 @@
       "title": "Эътибор навбати",
       "description": "Критик ҳолатлар ва алоқаси узилган шаҳобчалар биринчи кўрсатилади.",
       "more": "Яна {{count}} та шаҳобча"
+    },
+    "technicalReasons": {
+      "storage": "Локал база хатоси",
+      "runtime": "POS ишлашга тайёр эмас",
+      "pos_login": "Киришда такрорий техник хато",
+      "order_save": "Буюртмани сақлаш ишламаяпти",
+      "printer": "Такрорий чоп этиш хатоси",
+      "payment": "Такрорий тўлов хатоси",
+      "fiscal": "Такрорий фискал хато",
+      "sync": "Синхронизацияни тузатиш керак"
     }
   },
   "migration": {
@@ -367,7 +380,13 @@
     "APPROVED": "Тасдиқланган",
     "REJECTED": "Рад этилган"
   },
-  "severities": { "INFO": "Маълумот", "LOW": "Паст", "MEDIUM": "Ўрта", "HIGH": "Юқори", "CRITICAL": "Критик" },
+  "severities": {
+    "INFO": "Маълумот",
+    "LOW": "Паст",
+    "MEDIUM": "Ўрта",
+    "HIGH": "Юқори",
+    "CRITICAL": "Критик"
+  },
   "devices": {
     "device": "Қурилма",
     "restaurant": "Шаҳобча",
@@ -383,7 +402,10 @@
     "revokeReason": "Сабаб",
     "revokeReasonMin": "Камида 5 та белги киритинг.",
     "empty": "Мос қурилма топилмади.",
-    "messages": { "revoked": "Қурилма бекор қилинди.", "revokeFailed": "Қурилмани бекор қилиб бўлмади." }
+    "messages": {
+      "revoked": "Қурилма бекор қилинди.",
+      "revokeFailed": "Қурилмани бекор қилиб бўлмади."
+    }
   },
   "pairings": {
     "pendingTitle": "Кутилаётган қурилмалар",

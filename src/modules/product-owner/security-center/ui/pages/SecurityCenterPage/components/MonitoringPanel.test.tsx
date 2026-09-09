@@ -255,7 +255,7 @@ describe('MonitoringPanel', () => {
     ).toEqual([alphaRow.textContent, charlieRow.textContent, bravoRow.textContent]);
 
     for (const row of [alphaRow, charlieRow, bravoRow]) {
-      expect(row).toHaveStyle({ height: '72px' });
+      expect(row).toHaveStyle({ height: '104px' });
     }
 
     expect(
@@ -267,12 +267,14 @@ describe('MonitoringPanel', () => {
       'monitoring.health.healthy1 / 3',
       'monitoring.health.attention1 / 3',
       'monitoring.health.critical1 / 3',
+      'monitoring.health.unknown0 / 3',
     ]);
 
     expect(screen.getAllByRole('tab').map((tab) => tab.textContent)).toEqual([
       'monitoring.filters.all3',
       'monitoring.health.healthy1',
       'monitoring.health.attention1',
+      'monitoring.health.unknown0',
       'monitoring.health.critical1',
     ]);
 
