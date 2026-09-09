@@ -36,6 +36,7 @@ type MonitoringBranchDto = {
 };
 
 export type MonitoringOverviewDto = {
+  inventory?: MonitoringOverview['inventory'];
   generatedAt: string;
   summary: {
     totalBranches: number;
@@ -113,6 +114,7 @@ function mapBranch(dto: MonitoringBranchDto): MonitoringBranch {
 export function mapMonitoringOverview(dto: MonitoringOverviewDto): MonitoringOverview {
   return {
     generatedAt: dto.generatedAt,
+    inventory: dto.inventory ?? [],
     summary: {
       ...dto.summary,
       // Keep the admin compatible during a rolling backend/frontend deploy.

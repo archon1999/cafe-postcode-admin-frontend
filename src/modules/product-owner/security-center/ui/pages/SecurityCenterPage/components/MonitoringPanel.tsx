@@ -48,6 +48,8 @@ import {
   type MonitoringSecurityActivity,
 } from '../../../../domain';
 
+import { MonitoringDetailsDialog } from './MonitoringDetailsDialog';
+
 type HealthStatus = BranchHealthStatus;
 type MonitoringRow = MonitoringBranch & { id: string; health: BranchHealthAssessment };
 
@@ -61,7 +63,7 @@ const HEALTH_ICONS: Record<HealthStatus, IconifyName> = {
 };
 const STALE_AFTER_MS = 2 * 60 * 1000;
 const DEFAULT_ROWS_PER_PAGE = 10;
-const BRANCH_ROW_HEIGHT = 104;
+const BRANCH_ROW_HEIGHT = 80;
 
 function safeDateTime(value: string | null | undefined) {
   return value ? formatDateTime(value) : '—';
@@ -87,14 +89,8 @@ function HealthLabel({ status, filled = false }: { status: HealthStatus; filled?
 
 function AgentLabel({ row, showVersion = true }: { row: MonitoringRow; showVersion?: boolean }) {
   const { t } = useTranslate('security-center');
-  const state = !row.agent
-    ? 'missing'
-    : row.agent.online
-      ? 'online'
-      : row.agent.expectedOffline
-        ? 'expectedOffline'
-        : 'offline';
-  const color = state === 'online' ? 'success' : state === 'expectedOffline' ? 'default' : 'warning';
+  const state = !row.agent ? 'missing' : row.agent.online ? 'online' : 'offline';
+  const color = state === 'online' ? 'success' : 'warning';
 
   return (
     <Label color={color} sx={{ width: 'fit-content', maxWidth: 1, whiteSpace: 'nowrap' }}>
@@ -206,7 +202,6 @@ function SecurityActivityChart({
     <Card sx={{ height: 1 }}>
       <CardHeader
         title={t('monitoring.securityActivity.title')}
-        subheader={t('monitoring.securityActivity.description')}
         action={!eventCount && activity.length ? <Label>{t('monitoring.securityActivity.noEvents')}</Label> : null}
       />
       {activity.length ? (
@@ -256,7 +251,7 @@ function AgentVersionsList({
 
   return (
     <Card sx={{ height: 1 }}>
-      <CardHeader title={t('monitoring.agentVersions.title')} subheader={t('monitoring.agentVersions.description')} />
+      <CardHeader title={t('monitoring.agentVersions.title')} />
 
       {versions.length ? (
         <Scrollbar sx={{ maxHeight: 320 }}>
@@ -362,13 +357,10 @@ function OperationalHealth({
 
   return (
     <Card sx={{ height: 1 }}>
-      <CardHeader
-        title={t('monitoring.operationalHealth.title')}
-        subheader={t('monitoring.operationalHealth.description')}
-      />
+      <CardHeader title={t('monitoring.operationalHealth.title')} />
 
-      <Stack spacing={2.75} sx={{ px: 3, pt: 2.5, pb: 3 }}>
-        {(['healthy', 'attention', 'critical', 'unknown'] as const).map((status) => {
+      <Stack spacing={1} sx={{ px: 3, pt: 2.5, pb: 3 }}>
+        {(['healthy', 'attention', 'critical'] as const).map((status) => {
           const count = counts[status];
           const value = total ? (count / total) * 100 : 0;
           const selected = selectedStatus === status;
@@ -409,7 +401,15 @@ function OperationalHealth({
   );
 }
 
-function DeviceInventory({ counts, pendingPairings }: { counts: MonitoringDeviceTypeCounts; pendingPairings: number }) {
+function DeviceInventory({
+  counts,
+  pendingPairings,
+  onSelect,
+}: {
+  counts: MonitoringDeviceTypeCounts;
+  pendingPairings: number;
+  onSelect: (type: string) => void;
+}) {
   const { t } = useTranslate('security-center');
   const items: Array<{ key: keyof MonitoringDeviceTypeCounts; label: string; icon: IconifyName }> = [
     { key: 'localAgent', label: t('monitoring.devices.localAgent'), icon: 'solar:monitor-bold' },
@@ -420,15 +420,15 @@ function DeviceInventory({ counts, pendingPairings }: { counts: MonitoringDevice
 
   return (
     <Card sx={{ height: 1 }}>
-      <CardHeader
-        title={t('monitoring.deviceInventory.title')}
-        subheader={t('monitoring.deviceInventory.description')}
-      />
+      <CardHeader title={t('monitoring.deviceInventory.title')} />
 
       <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 1.5, px: 3, pt: 2, pb: 3 }}>
         {items.map((item) => (
           <Stack
             key={item.key}
+            component={ButtonBase}
+            aria-label={item.label}
+            onClick={() => onSelect(item.key)}
             direction="row"
             alignItems="center"
             spacing={1.5}
@@ -457,7 +457,14 @@ function DeviceInventory({ counts, pendingPairings }: { counts: MonitoringDevice
       </Box>
 
       <Divider sx={{ borderStyle: 'dashed' }} />
-      <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2} sx={{ px: 3, py: 2 }}>
+      <Stack
+        component={ButtonBase}
+        onClick={() => onSelect('pairing')}
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        spacing={2}
+        sx={{ width: 1, px: 3, py: 2 }}>
         <Stack direction="row" alignItems="center" spacing={1.5} sx={{ minWidth: 0 }}>
           <Avatar
             variant="rounded"
@@ -478,11 +485,7 @@ function SecurityCounts({ row }: { row: MonitoringRow }) {
   const critical = row.security.unacknowledgedCritical;
 
   if (!high && !critical) {
-    return (
-      <Typography variant="body2" color="text.secondary">
-        —
-      </Typography>
-    );
+    return <HealthLabel status="healthy" />;
   }
 
   return (
@@ -582,12 +585,14 @@ function BranchTable({
   rowsPerPage,
   onPageChange,
   onRowsPerPageChange,
+  onDetails,
 }: {
   rows: MonitoringRow[];
   page: number;
   rowsPerPage: number;
   onPageChange: (page: number) => void;
   onRowsPerPageChange: (rowsPerPage: number) => void;
+  onDetails: (row: MonitoringRow, type: 'health' | 'devices') => void;
 }) {
   const { t } = useTranslate('security-center');
   const currentPage = Math.min(page, Math.max(0, Math.ceil(rows.length / rowsPerPage) - 1));
@@ -631,23 +636,19 @@ function BranchTable({
                   </DetailPageLink>
                 </TableCell>
                 <TableCell>
-                  <Stack spacing={0.5}>
-                    <HealthLabel status={row.health.status} />
-                    {row.health.reasons.map((reason) => (
-                      <Typography key={reason} variant="caption">
-                        {t(`monitoring.technicalReasons.${reason}`)}
-                      </Typography>
-                    ))}
-                    <Typography variant="caption" color="text.secondary">
-                      {safeDateTime(row.operationalHealth?.checkedAt)}
-                    </Typography>
-                  </Stack>
+                  <Tooltip describeChild title={safeDateTime(row.operationalHealth?.checkedAt)}>
+                    <ButtonBase onClick={() => onDetails(row, 'health')} sx={{ borderRadius: 1, width: 'fit-content' }}>
+                      <HealthLabel status={row.health.status} />
+                    </ButtonBase>
+                  </Tooltip>
                 </TableCell>
                 <TableCell>
                   <AgentLabel row={row} />
                 </TableCell>
                 <TableCell>
-                  <DeviceCounts row={row} />
+                  <ButtonBase onClick={() => onDetails(row, 'devices')} sx={{ textAlign: 'left', borderRadius: 1 }}>
+                    <DeviceCounts row={row} />
+                  </ButtonBase>
                 </TableCell>
                 <TableCell>
                   <SecurityCounts row={row} />
@@ -701,6 +702,7 @@ export function MonitoringPanel({ businessPartnerId, onSecurityDateSelect }: Mon
   const { t } = useTranslate('security-center');
   const query = useMonitoringOverviewQuery(businessPartnerId);
   const [search, setSearch] = useState('');
+  const [details, setDetails] = useState<{ type: string; row?: MonitoringRow } | null>(null);
   const [healthFilter, setHealthFilter] = useState<HealthStatus | 'all'>('all');
   const [agentVersionFilter, setAgentVersionFilter] = useState<string | null>(null);
   const [page, setPage] = useState(0);
@@ -826,13 +828,13 @@ export function MonitoringPanel({ businessPartnerId, onSecurityDateSelect }: Mon
             value={query.data?.summary.totalBranches ?? rows.length}
             icon="solar:home-angle-bold-duotone"
             color="primary"
-            helper={`${healthCounts.unknown} ${t('monitoring.health.unknown')}`}
+            helper={`${healthCounts.healthy} ${t('monitoring.health.healthy')}`}
           />
         </Grid>
         <Grid size={{ xs: 6, lg: 3 }}>
           <SummaryCard
-            title={t('monitoring.metrics.healthyBranches')}
-            value={`${healthCounts.healthy} / ${rows.length - healthCounts.unknown}`}
+            title={t('monitoring.health.healthy')}
+            value={healthCounts.healthy}
             icon="solar:shield-check-bold"
             color="success"
             helper={`${healthCounts.attention} ${t('monitoring.health.attention')} · ${healthCounts.critical} ${t('monitoring.health.critical')}`}
@@ -888,6 +890,7 @@ export function MonitoringPanel({ businessPartnerId, onSecurityDateSelect }: Mon
           <DeviceInventory
             counts={query.data?.insights?.deviceTypes ?? { localAgent: 0, pos: 0, tv: 0, telegram: 0 }}
             pendingPairings={query.data?.summary.pendingPairings ?? 0}
+            onSelect={(type) => setDetails({ type })}
           />
         </Grid>
       </Grid>
@@ -921,7 +924,6 @@ export function MonitoringPanel({ businessPartnerId, onSecurityDateSelect }: Mon
                 count: healthCounts.attention,
                 color: 'warning',
               },
-              { value: 'unknown', label: t('monitoring.health.unknown'), count: healthCounts.unknown, color: 'info' },
               {
                 value: 'critical',
                 label: t('monitoring.health.critical'),
@@ -1060,6 +1062,7 @@ export function MonitoringPanel({ businessPartnerId, onSecurityDateSelect }: Mon
         ) : (
           <BranchTable
             rows={filteredRows}
+            onDetails={(row, type) => setDetails({ row, type })}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={setPage}
@@ -1070,6 +1073,11 @@ export function MonitoringPanel({ businessPartnerId, onSecurityDateSelect }: Mon
           />
         )}
       </Card>
+      <MonitoringDetailsDialog
+        selection={details}
+        inventory={query.data?.inventory ?? []}
+        onClose={() => setDetails(null)}
+      />
     </Stack>
   );
 }

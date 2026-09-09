@@ -27,9 +27,11 @@ export function SecurityEventsDateRangeFilter({ value, onChange }: SecurityEvent
   const { t } = useTranslate('security-center');
   const fallbackRange = useMemo(() => getPresetDateRange('last7Days'), []);
   const displayedRange = value ?? fallbackRange;
-  const buttonLabel = value
-    ? `${formatDate(value.startDate)} – ${formatDate(value.endDate)}`
-    : t('events.dateRange.filter');
+  const buttonLabel = value?.rolling
+    ? t('events.lastDay')
+    : value
+      ? `${formatDate(value.startDate)} – ${formatDate(value.endDate)}`
+      : t('events.dateRange.filter');
   const activePreset = useMemo<ReportsDatePreset>(() => {
     if (!value) return 'custom';
 

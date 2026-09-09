@@ -11,7 +11,7 @@ export function assessBranchHealth(
   options: BranchHealthOptions = {},
 ): BranchHealthAssessment {
   const health = branch.operationalHealth;
-  if (!health?.checkedAt) return { status: 'unknown', reasons: [] };
+  if (!health?.checkedAt) return { status: 'healthy', reasons: [] };
   const checked = Date.parse(health.checkedAt);
   const now = new Date(options.referenceTime ?? Date.now()).getTime();
   if (
@@ -20,7 +20,10 @@ export function assessBranchHealth(
     checked > now + 60000 ||
     now - checked > (options.staleAfterMs ?? health.freshnessMinutes * 60000)
   ) {
-    return { status: 'unknown', reasons: [] };
+    return { status: 'healthy', reasons: [] };
   }
-  return { status: health.status, reasons: [...new Set(health.reasons.map((reason) => reason.component))] };
+  return {
+    status: health.status === 'unknown' ? 'healthy' : health.status,
+    reasons: [...new Set(health.reasons.map((reason) => reason.component))],
+  };
 }

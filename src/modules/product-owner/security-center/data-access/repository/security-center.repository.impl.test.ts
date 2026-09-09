@@ -76,4 +76,28 @@ describe('securityCenterRepository query contracts', () => {
       },
     });
   });
+  it('serializes multi-selects and refreshes the rolling 24-hour cutoff', async () => {
+    getMock.mockResolvedValue({ data: { data: [], total: 0 } });
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(Date.parse('2026-09-09T18:00:00Z'));
+    try {
+      const query = {
+        page: 1,
+        pageSize: 10,
+        eventType: ['FIRST', 'SECOND'],
+        severity: ['HIGH', 'MEDIUM'] as const,
+        last24Hours: true,
+      };
+      await securityCenterRepository.listSecurityEvents({ ...query, severity: [...query.severity] });
+      expect(getMock.mock.lastCall?.[1].params).toMatchObject({
+        event_type: 'FIRST,SECOND',
+        severity: 'HIGH,MEDIUM',
+        from: '2026-09-08T18:00:00.000Z',
+      });
+      clock.mockReturnValue(Date.parse('2026-09-09T19:00:00Z'));
+      await securityCenterRepository.listSecurityEvents({ ...query, severity: [...query.severity] });
+      expect(getMock.mock.lastCall?.[1].params.from).toBe('2026-09-08T19:00:00.000Z');
+    } finally {
+      clock.mockRestore();
+    }
+  });
 });

@@ -1,4 +1,15 @@
-import { type SelectChangeEvent, Box, Checkbox, Chip, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import {
+  type SelectChangeEvent,
+  Box,
+  Checkbox,
+  Chip,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  ListSubheader,
+  TextField,
+} from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 
 export type FilterOption = {
@@ -7,6 +18,7 @@ export type FilterOption = {
 };
 
 type FilterSelectProps = {
+  searchLabel?: string;
   label: string;
   value: Array<string | number>;
   options: FilterOption[];
@@ -19,6 +31,7 @@ type FilterSelectProps = {
 
 export function FilterSelect({
   label,
+  searchLabel,
   value,
   options,
   onChange,
@@ -29,6 +42,7 @@ export function FilterSelect({
 }: FilterSelectProps) {
   const id = `filter-${label.toLowerCase()}-select`;
   const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState('');
   const selectedValues = value.map((item) => item.toString());
   const latestSelectedValuesRef = useRef<string[]>(selectedValues);
 
@@ -60,7 +74,10 @@ export function FilterSelect({
         data-testid={testId}
         open={open}
         displayEmpty
-        onOpen={() => setOpen(true)}
+        onOpen={() => {
+          setSearch('');
+          setOpen(true);
+        }}
         onClose={() => {
           setOpen(false);
           onApply(latestSelectedValuesRef.current);
@@ -100,17 +117,34 @@ export function FilterSelect({
           );
         }}
         inputProps={{ id }}>
-        {options.map((option) => (
-          <MenuItem key={option.value} value={option.value?.toString()}>
-            <Checkbox
-              disableRipple
+        {searchLabel && (
+          <ListSubheader
+            onKeyDown={(event) => {
+              if (event.key !== 'Escape') event.stopPropagation();
+            }}>
+            <TextField
               size="small"
-              checked={selectedValues.includes(option.value?.toString())}
-              slotProps={{ input: { id: `${option.value}-checkbox` } }}
+              label={searchLabel}
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              onClick={(event) => event.stopPropagation()}
+              sx={{ my: 1 }}
             />
-            {option.label}
-          </MenuItem>
-        ))}
+          </ListSubheader>
+        )}
+        {options
+          .filter((option) => option.label.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+          .map((option) => (
+            <MenuItem key={option.value} value={option.value?.toString()}>
+              <Checkbox
+                disableRipple
+                size="small"
+                checked={selectedValues.includes(option.value?.toString())}
+                slotProps={{ input: { id: `${option.value}-checkbox` } }}
+              />
+              {option.label}
+            </MenuItem>
+          ))}
       </Select>
     </FormControl>
   );

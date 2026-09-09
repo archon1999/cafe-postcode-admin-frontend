@@ -2,7 +2,17 @@ export type DeviceType = 'POS_TERMINAL' | 'LOCAL_AGENT' | 'TV_MONITOR' | 'CONTRO
 export type DeviceStatus = 'ACTIVE' | 'REVOKED';
 export type SecuritySeverity = 'INFO' | 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 
+export type MonitoringInventoryItem = {
+  id: string;
+  restaurantId: string | null;
+  restaurantName: string;
+  type: string;
+  name: string;
+  version: string;
+  lastSeenAt: string | null;
+};
 export type MonitoringOverview = {
+  inventory?: MonitoringInventoryItem[];
   generatedAt: string;
   summary: MonitoringOverviewSummary;
   insights: MonitoringOverviewInsights;
@@ -220,12 +230,13 @@ export type TelegramSubscription = {
 };
 
 export type SecurityEventListQuery = {
+  last24Hours?: boolean;
   page: number;
   pageSize: number;
   businessPartnerId?: string;
   restaurantId?: string;
-  eventType?: string;
-  severity?: SecuritySeverity;
+  eventType?: string | string[];
+  severity?: SecuritySeverity | SecuritySeverity[];
   deviceId?: string;
   result?: string;
   acknowledged?: boolean;

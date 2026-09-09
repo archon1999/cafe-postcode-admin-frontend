@@ -506,7 +506,8 @@
     "messages": {
       "acknowledged": "Ҳодиса кўриб чиқилди деб белгиланди.",
       "acknowledgeFailed": "Ҳодисани белгилаб бўлмади."
-    }
+    },
+    "lastDay": "Сўнгги 24 соат"
   },
   "eventTypes": {
     "admin_auth_origin_rejected": "Админ кириш манбаси рад этилди",

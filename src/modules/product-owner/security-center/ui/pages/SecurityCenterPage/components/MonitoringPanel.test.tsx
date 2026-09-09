@@ -255,7 +255,7 @@ describe('MonitoringPanel', () => {
     ).toEqual([alphaRow.textContent, charlieRow.textContent, bravoRow.textContent]);
 
     for (const row of [alphaRow, charlieRow, bravoRow]) {
-      expect(row).toHaveStyle({ height: '104px' });
+      expect(row).toHaveStyle({ height: '80px' });
     }
 
     expect(
@@ -267,14 +267,12 @@ describe('MonitoringPanel', () => {
       'monitoring.health.healthy1 / 3',
       'monitoring.health.attention1 / 3',
       'monitoring.health.critical1 / 3',
-      'monitoring.health.unknown0 / 3',
     ]);
 
     expect(screen.getAllByRole('tab').map((tab) => tab.textContent)).toEqual([
       'monitoring.filters.all3',
       'monitoring.health.healthy1',
       'monitoring.health.attention1',
-      'monitoring.health.unknown0',
       'monitoring.health.critical1',
     ]);
 
@@ -413,5 +411,14 @@ describe('MonitoringPanel', () => {
     expect(screen.getByText('monitoring.loadError')).toBeVisible();
     fireEvent.click(screen.getByRole('button', { name: 'monitoring.retry' }));
     expect(mocks.refetch).toHaveBeenCalledOnce();
+  });
+  it('opens health details from a compact chip and device inventory from tiles', async () => {
+    renderPanel();
+    const row = screen.getByRole('row', { name: /Bravo Critical/ });
+    fireEvent.click(within(row).getByRole('button', { name: 'monitoring.health.critical' }));
+    expect(screen.getByRole('dialog')).toHaveTextContent('Bravo Critical');
+    fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'common.close' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'monitoring.devices.localAgent' }));
+    expect(screen.getByRole('dialog')).toHaveTextContent('monitoring.devices.localAgent');
   });
 });

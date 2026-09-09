@@ -506,7 +506,8 @@
     "messages": {
       "acknowledged": "Hodisa ko‘rib chiqildi deb belgilandi.",
       "acknowledgeFailed": "Hodisani belgilab bo‘lmadi."
-    }
+    },
+    "lastDay": "So‘nggi 24 soat"
   },
   "eventTypes": {
     "admin_auth_origin_rejected": "Admin kirish manbasi rad etildi",

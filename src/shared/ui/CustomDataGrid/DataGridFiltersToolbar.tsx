@@ -28,6 +28,7 @@ export type DataGridToolbarFilter = {
   onApply: (values: string[]) => void;
   testId: string;
   emptyLabel: string;
+  searchLabel?: string;
 };
 
 type DataGridFiltersToolbarProps = {
@@ -115,6 +116,7 @@ export function DataGridFiltersToolbar({
                     }));
                     filter.onApply(values);
                   }}
+                  searchLabel={filter.searchLabel}
                   emptyLabel={filter.emptyLabel}
                   testId={filter.testId}
                 />
@@ -189,6 +191,7 @@ export function DataGridFiltersToolbar({
                 setDraftValues((prev) => ({ ...prev, [filter.id]: values }));
                 filter.onApply(values);
               }}
+              searchLabel={filter.searchLabel}
               emptyLabel={filter.emptyLabel}
               testId={`${filter.testId}-mobile`}
             />

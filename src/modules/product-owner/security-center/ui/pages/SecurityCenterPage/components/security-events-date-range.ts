@@ -1,9 +1,16 @@
 import { toTashkentCalendarDayjs } from 'shared/utils/dayjs';
 
 export type SecurityEventsDateRange = {
+  rolling?: boolean;
   startDate: string;
   endDate: string;
 };
+
+export function defaultSecurityEventsDateRange(): SecurityEventsDateRange {
+  const end = new Date();
+  const start = new Date(end.getTime() - 86400000);
+  return { startDate: start.toISOString().slice(0, 10), endDate: end.toISOString().slice(0, 10), rolling: true };
+}
 
 const DATE_FORMAT = 'YYYY-MM-DD';
 const DATE_VALUE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
@@ -33,6 +40,7 @@ export function securityEventsDateRangeToQueryBounds(dateRange: SecurityEventsDa
   to?: string;
 } {
   if (!dateRange) return {};
+  if (dateRange.rolling) return { from: new Date(Date.now() - 86400000).toISOString() };
 
   const normalized = normalizeSecurityEventsDateRange(dateRange.startDate, dateRange.endDate);
   if (!normalized) return {};

@@ -24,6 +24,7 @@ import type { SecurityEvent, SecuritySeverity } from '../../../../domain';
 import { SecurityStatusChip } from '../../../shared';
 
 import { getSecurityEventLabel, getSecurityEventResultLabel, SECURITY_EVENT_TYPES } from './security-event-types';
+import { defaultSecurityEventsDateRange } from './security-events-date-range';
 import { securityEventsDateRangeToQueryBounds, type SecurityEventsDateRange } from './security-events-date-range';
 import { SecurityEventsDateRangeFilter } from './SecurityEventsDateRangeFilter';
 
@@ -68,14 +69,16 @@ export function SecurityEventsPanel({
   const restaurantId = useAdminScopeStore((state) => state.selectedRestaurantId);
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_PAGINATION_MODEL);
   const [search, setSearch] = useState('');
-  const [eventType, setEventType] = useState('');
-  const [severity, setSeverity] = useState<SecuritySeverity | ''>('');
+  const [eventType, setEventType] = useState<string[]>([]);
+  const [severity, setSeverity] = useState<SecuritySeverity[]>([]);
   const [acknowledged, setAcknowledged] = useState<'' | 'true' | 'false'>('false');
   const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(
     DEFAULT_COLUMN_VISIBILITY_MODEL,
   );
   const [selected, setSelected] = useState<SecurityEvent | null>(null);
-  const [uncontrolledDateRange, setUncontrolledDateRange] = useState<SecurityEventsDateRange | null>(null);
+  const [uncontrolledDateRange, setUncontrolledDateRange] = useState<SecurityEventsDateRange | null>(
+    defaultSecurityEventsDateRange,
+  );
   const dateRange = controlledDateRange === undefined ? uncontrolledDateRange : controlledDateRange;
   const dateBounds = useMemo(() => securityEventsDateRangeToQueryBounds(dateRange), [dateRange]);
   const setDateRange = useCallback(
@@ -97,10 +100,10 @@ export function SecurityEventsPanel({
     businessPartnerId: businessPartnerId || undefined,
     restaurantId: restaurantId || undefined,
     search: search.trim() || undefined,
-    eventType: eventType || undefined,
-    severity: severity || undefined,
+    eventType: eventType.length ? eventType : undefined,
+    severity: severity.length ? severity : undefined,
     acknowledged: acknowledged === '' ? undefined : acknowledged === 'true',
-    ...dateBounds,
+    ...(dateRange?.rolling ? { last24Hours: true } : dateBounds),
   });
   const acknowledgeMutation = useAcknowledgeSecurityEventMutation();
 
@@ -184,11 +187,12 @@ export function SecurityEventsPanel({
     () => [
       {
         id: 'eventType',
+        searchLabel: t('common.search'),
         label: t('events.eventFilter'),
-        value: eventType ? [eventType] : [],
+        value: eventType,
         options: eventTypeOptions,
         onApply: (values: string[]) => {
-          setEventType(values[values.length - 1] ?? '');
+          setEventType(values);
           setPaginationModel((previous) => ({ ...previous, page: 0 }));
         },
         testId: 'security-events-event-type-filter',
@@ -196,11 +200,12 @@ export function SecurityEventsPanel({
       },
       {
         id: 'severity',
+        searchLabel: t('common.search'),
         label: t('events.severity'),
-        value: severity ? [severity] : [],
+        value: severity,
         options: SECURITY_SEVERITIES.map((value) => ({ value, label: t(`severities.${value}`) })),
         onApply: (values: string[]) => {
-          setSeverity((values[values.length - 1] as SecuritySeverity | undefined) ?? '');
+          setSeverity(values as SecuritySeverity[]);
           setPaginationModel((previous) => ({ ...previous, page: 0 }));
         },
         testId: 'security-events-severity-filter',

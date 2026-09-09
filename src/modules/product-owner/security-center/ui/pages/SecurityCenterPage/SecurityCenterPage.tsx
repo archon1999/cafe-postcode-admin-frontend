@@ -16,6 +16,7 @@ import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { Iconify } from 'shared/ui/Iconify';
 
 import { BusinessPartnerFilter, MonitoringPanel, SecurityEventsPanel, TelegramPanel } from './components';
+import { defaultSecurityEventsDateRange } from './components/security-events-date-range';
 import type { SecurityEventsDateRange } from './components/security-events-date-range';
 
 type ControlCenterSection = 'monitoring' | 'security' | 'notifications';
@@ -26,7 +27,9 @@ function SecurityCenterPage() {
   const { replace } = useRouter();
   const [tab, setTab] = useState<ControlCenterSection>('monitoring');
   const [businessPartner, setBusinessPartner] = useState<AdminBusinessPartner | null>(null);
-  const [securityEventsDateRange, setSecurityEventsDateRange] = useState<SecurityEventsDateRange | null>(null);
+  const [securityEventsDateRange, setSecurityEventsDateRange] = useState<SecurityEventsDateRange | null>(
+    defaultSecurityEventsDateRange,
+  );
   const businessPartnerRestaurantIds = businessPartner
     ? (businessPartner.restaurants ?? []).map((restaurant) => restaurant.id)
     : null;

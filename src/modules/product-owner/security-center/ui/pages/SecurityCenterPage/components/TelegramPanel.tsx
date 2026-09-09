@@ -187,6 +187,7 @@ export function TelegramPanel({ businessPartnerRestaurantIds }: TelegramPanelPro
 
       <Box sx={{ width: 1 }}>
         <DataGrid
+          initialState={{ sorting: { sortModel: [{ field: 'linkedAt', sort: 'desc' }] } }}
           autoHeight
           rows={rows}
           columns={columns}

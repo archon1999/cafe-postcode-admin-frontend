@@ -506,7 +506,8 @@
     "messages": {
       "acknowledged": "Событие отмечено проверенным.",
       "acknowledgeFailed": "Не удалось отметить событие."
-    }
+    },
+    "lastDay": "Последние 24 часа"
   },
   "eventTypes": {
     "admin_auth_origin_rejected": "Источник входа администратора отклонён",
