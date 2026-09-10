@@ -87,7 +87,7 @@
     "fields": {
       "printerNameOrIp": "Имя принтера / IP-адрес",
       "martaTaxNumber": "ИНН MARTA",
-      "fiscalTaxNumber": "Фискальный ИНН"
+      "fiscalTaxNumber": "Фискальный ИНН / ПИНФЛ"
     },
     "steps": {
       "title": "Этапы готовности",
@@ -335,7 +335,7 @@
     "cooks": "Повара",
     "restaurant": "Ресторан",
     "legalName": "Юридическое название",
-    "taxNumber": "ИНН",
+    "taxNumber": "ИНН / ПИНФЛ",
     "vatEnabled": "НДС включен",
     "currency": "Валюта",
     "timezone": "Часовой пояс",

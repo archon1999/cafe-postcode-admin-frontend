@@ -87,7 +87,7 @@
     "fields": {
       "printerNameOrIp": "Printer nomi / IP manzili",
       "martaTaxNumber": "MARTA STIR",
-      "fiscalTaxNumber": "Fiscal STIR"
+      "fiscalTaxNumber": "Fiskal STIR / JSHSHIR"
     },
     "steps": {
       "title": "Tayyorlik qadamlari",
@@ -336,7 +336,7 @@
     "cooks": "Oshpazlar",
     "restaurant": "Shahobcha",
     "legalName": "Yuridik nom",
-    "taxNumber": "STIR",
+    "taxNumber": "STIR / JSHSHIR",
     "posAuthBackgroundImage": "POS kirish fon rasmi",
     "posMonitorVariant": "POS monitor varianti",
     "posMonitorVariantDefault": "Default",

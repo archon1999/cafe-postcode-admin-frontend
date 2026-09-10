@@ -87,7 +87,7 @@
     "fields": {
       "printerNameOrIp": "Принтер номи / IP манзили",
       "martaTaxNumber": "MARTA STIR",
-      "fiscalTaxNumber": "Fiscal STIR"
+      "fiscalTaxNumber": "Фискал СТИР / ЖШШИР"
     },
     "steps": {
       "title": "Тайёрлик қадамлари",
@@ -336,7 +336,7 @@
     "cooks": "Ошпазлар",
     "restaurant": "Ресторан",
     "legalName": "Юридик ном",
-    "taxNumber": "СТИР",
+    "taxNumber": "СТИР / ЖШШИР",
     "vatEnabled": "QQS / НДС ёқилган",
     "currency": "Валюта",
     "timezone": "Вақт зонаси",

@@ -40,6 +40,18 @@ export const integrationConfigSchema = z
     paymentQrUrl: z.string(),
   })
   .superRefine((values, ctx) => {
+    if (
+      values.kind === 'fiscal' &&
+      values.taxNumber.trim() &&
+      !/^(?:[0-9]{9}|[0-9]{14})$/.test(values.taxNumber.trim())
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['taxNumber'],
+        message: 'STIR 9 ta yoki JSHSHIR 14 ta raqamdan iborat bo‘lishi kerak',
+      });
+    }
+
     if (values.kind === 'printer' && values.provider === 'windows-raw') {
       if (values.connectionType === 'socket') {
         if (!values.printerHost.trim()) {
