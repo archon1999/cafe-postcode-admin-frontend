@@ -830,7 +830,7 @@ export function MonitoringPanel({ businessPartnerId, onSecurityDateSelect }: Mon
             value={query.data?.summary.totalBranches ?? rows.length}
             icon="solar:home-angle-bold-duotone"
             color="primary"
-            helper={`${healthCounts.healthy} ${t('monitoring.health.healthy')}`}
+            helper={`${healthCounts.unknown} ${t('monitoring.health.unknown')}`}
           />
         </Grid>
         <Grid size={{ xs: 6, lg: 3 }}>
