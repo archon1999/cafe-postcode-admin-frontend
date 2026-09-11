@@ -3,6 +3,20 @@ import { describe, expect, it } from 'vitest';
 import { buildCatalogCategoryFormData, buildCatalogItemFormData } from './catalogFormData';
 
 describe('catalogFormData', () => {
+  it('preserves leading zeroes and sends an explicit blank to clear a barcode', () => {
+    for (const barcode of ['0012345678901', '']) {
+      const formData = buildCatalogItemFormData({
+        name: 'Product',
+        description: '',
+        itemType: 'product',
+        price: 0,
+        barcode,
+        isActive: true,
+        isStoplisted: false,
+      });
+      expect(formData.get('barcode')).toBe(barcode);
+    }
+  });
   it('builds category form data with scalar, boolean, json, and file values', () => {
     const imageFile = new File(['cover'], 'cover.png', { type: 'image/png' });
     const formData = buildCatalogCategoryFormData({

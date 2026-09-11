@@ -1,4 +1,5 @@
 import type {
+  AdminMxikLookupResult,
   AdminPrepStation,
   CatalogCategory,
   CatalogCategoryPayload,
@@ -13,6 +14,7 @@ import type {
 } from 'shared/api/admin-types';
 
 export interface CatalogRepository {
+  searchMxikByBarcode(barcode: string, lang?: string, signal?: AbortSignal): Promise<AdminMxikLookupResult[]>;
   translateName(payload: CatalogNameTranslationPayload): Promise<CatalogNameTranslation>;
   getCategories(): Promise<CatalogCategory[]>;
   getCategoryById(id: string): Promise<CatalogCategory>;

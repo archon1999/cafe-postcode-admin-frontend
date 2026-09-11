@@ -2,8 +2,10 @@ import { apiClient } from 'shared/api/http/apiClient';
 
 import type { CatalogRepository } from '../../domain';
 import { buildCatalogCategoryFormData, buildCatalogItemFormData } from '../catalogFormData';
+import { searchMxikByBarcode } from '../mxikClient';
 
 export const catalogRepository: CatalogRepository = {
+  searchMxikByBarcode,
   translateName(payload) {
     return apiClient.translateAdminCatalogName(payload);
   },

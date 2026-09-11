@@ -1,4 +1,15 @@
 {
+  "barcode": {
+    "label": "Shtrix-kod",
+    "hint": "Qo‘lda kiriting yoki skanerlang. MXIK Tasnifdan topiladi.",
+    "invalid": "8, 12, 13 yoki 14 ta raqam kiriting.",
+    "loading": "Tasnifdan qidirilmoqda…",
+    "error": "Tasnifga ulanib bo‘lmadi. Qayta urinib ko‘ring.",
+    "notFound": "Mos MXIK topilmadi. MXIKni qo‘lda tanlashingiz mumkin.",
+    "choose": "Bir nechta MXIK topildi. Mos mahsulotni tanlang.",
+    "found": "MXIK topildi.",
+    "retry": "Qayta urinish"
+  },
     "pages":  {
                   "browser":  {
                                   "title":  "Menu Catalog",

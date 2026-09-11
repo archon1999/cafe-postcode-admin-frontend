@@ -25,6 +25,12 @@ export const catalogItemFormSchema = z
     category: z.string().optional(),
     description: z.string().optional(),
     mxik: mxikOptionSchema,
+    barcode: z
+      .string()
+      .trim()
+      .regex(/^(?:[0-9]{8}|[0-9]{12,14})?$/)
+      .optional()
+      .default(''),
     imageFile: imageFieldSchema.optional(),
     imageSource: z.enum(['mxik-cache', 'manual', '']),
     clearImage: z.boolean(),

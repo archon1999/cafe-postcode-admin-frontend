@@ -12,10 +12,38 @@ vi.mock('axios', () => ({
   },
 }));
 
-import { getMxikDetails, getMxikPrimaryPictureUrl, searchMxik } from './mxikClient';
+import { getMxikDetails, getMxikPrimaryPictureUrl, searchMxik, searchMxikByBarcode } from './mxikClient';
 
 afterEach(() => {
   getMock.mockReset();
+});
+
+describe('searchMxikByBarcode', () => {
+  it('uses GTIN rather than MXIK code and preserves leading zeroes', async () => {
+    const item = { mxikCode: '02208001001549004', mxikName: 'Product', internationalCode: '0012345678901' };
+    getMock.mockResolvedValueOnce({ data: { success: true, data: { content: [item, item] } } });
+    const controller = new AbortController();
+    const result = await searchMxikByBarcode(' 0012345678901 ', 'ru', controller.signal);
+    expect(getMock).toHaveBeenCalledWith('mxik/search/by-params', {
+      params: { gtin: '0012345678901', size: 100, lang: 'ru' },
+      signal: controller.signal,
+    });
+    expect(result).toHaveLength(1);
+    expect(result[0].raw).toEqual(item);
+  });
+
+  it('does not query invalid or incomplete input', async () => {
+    expect(await searchMxikByBarcode('123')).toEqual([]);
+    expect(await searchMxikByBarcode('abc')).toEqual([]);
+    expect(getMock).not.toHaveBeenCalled();
+  });
+
+  it('distinguishes no match from a provider error', async () => {
+    getMock.mockResolvedValueOnce({ data: { success: true, data: { content: [] } } });
+    expect(await searchMxikByBarcode('00123456')).toEqual([]);
+    getMock.mockResolvedValueOnce({ data: { success: false } });
+    await expect(searchMxikByBarcode('00123456')).rejects.toThrow();
+  });
 });
 
 describe('searchMxik', () => {

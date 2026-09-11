@@ -53,6 +53,10 @@ function buildCatalogFormData(payload: CatalogMutationPayload): FormData {
     appendText(formData, 'category', payload.category);
   }
 
+  if ('barcode' in payload) {
+    appendText(formData, 'barcode', payload.barcode);
+  }
+
   if ('prepStation' in payload) {
     appendText(formData, 'prepStation', payload.prepStation);
   }

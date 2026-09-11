@@ -29,4 +29,5 @@ export {
   useGetMxikDetailsQuery,
   useGetPrepStationsQuery,
   useSearchMxikQuery,
+  useSearchMxikByBarcodeQuery,
 } from './queries';

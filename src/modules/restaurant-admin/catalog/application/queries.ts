@@ -100,6 +100,15 @@ type AdminMxikSearchParams = {
   limit?: number;
 };
 
+export function useSearchMxikByBarcodeQuery(barcode: string, lang: string) {
+  return useQuery({
+    queryKey: catalogKeys.mxikBarcode(barcode, lang),
+    queryFn: ({ signal }) => catalogRepository.searchMxikByBarcode(barcode, lang, signal),
+    enabled: /^(?:[0-9]{8}|[0-9]{12,14})$/.test(barcode),
+    retry: false,
+  });
+}
+
 export function useSearchMxikQuery(
   params: AdminMxikSearchParams,
   options?: Omit<UseQueryOptions<AdminMxikLookupResult[]>, 'queryFn' | 'queryKey'>,

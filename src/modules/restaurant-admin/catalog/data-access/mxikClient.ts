@@ -163,6 +163,26 @@ export async function searchMxik(params: MxikSearchParams): Promise<AdminMxikLoo
     .filter((item) => Boolean(item.code));
 }
 
+export async function searchMxikByBarcode(
+  barcode: string,
+  lang?: string,
+  signal?: AbortSignal,
+): Promise<AdminMxikLookupResult[]> {
+  const gtin = barcode.trim();
+  if (!/^(?:[0-9]{8}|[0-9]{12,14})$/.test(gtin)) return [];
+  const response = await mxikHttp.get('mxik/search/by-params', {
+    params: { gtin, size: 100, lang: normalizeLang(lang) },
+    signal,
+  });
+  if (isRecord(response.data) && response.data.success === false) {
+    throw new Error('Tasnif barcode lookup failed');
+  }
+  const items = extractItems(response.data)
+    .map(normalizeItem)
+    .filter((item) => Boolean(item.code));
+  return [...new Map(items.map((item) => [item.code, item])).values()];
+}
+
 function normalizePackage(payload: Record<string, unknown>): AdminMxikPackage {
   const code = asString(payload.code);
   const preferredName =

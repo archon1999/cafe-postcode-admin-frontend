@@ -13,6 +13,7 @@ import { LabelRow } from 'shared/ui/LabelRow/LabelRow';
 
 import type { CatalogItemFormInput } from '../../data-access/catalogItemForm.schema';
 
+import { CatalogBarcodeField } from './CatalogBarcodeField';
 import { CatalogImageEditor } from './CatalogImageEditor';
 import {
   formatCashSaleRestriction,
@@ -39,6 +40,7 @@ type Props = {
   onClearImage: () => void;
   onRestoreMxikImage: () => void;
   onMxikNamePicked: (name: string) => void;
+  onBarcodeLookupPendingChange?: (pending: boolean) => void;
   translatingName: boolean;
   onTranslateName: () => void;
 };
@@ -57,6 +59,7 @@ export function CatalogItemFormFields({
   onClearImage,
   onRestoreMxikImage,
   onMxikNamePicked,
+  onBarcodeLookupPendingChange,
   translatingName,
   onTranslateName,
 }: Props) {
@@ -116,6 +119,11 @@ export function CatalogItemFormFields({
           onPicked={(picked) => {
             if (picked?.name) onMxikNamePicked(picked.name);
           }}
+        />
+        <CatalogBarcodeField
+          disabled={disabled}
+          onMxikNamePicked={onMxikNamePicked}
+          onLookupPendingChange={onBarcodeLookupPendingChange}
         />
         {selectedMxik?.code ? (
           <Box

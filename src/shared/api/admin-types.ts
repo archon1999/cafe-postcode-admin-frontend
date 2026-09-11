@@ -1002,6 +1002,7 @@ export type AdminMxikDetails = {
 };
 
 export type CatalogItem = {
+  barcode?: string;
   id: string;
   restaurantId?: string | null;
   restaurantName?: string | null;
@@ -1031,6 +1032,7 @@ export type CatalogItem = {
 };
 
 export type CatalogItemPayload = {
+  barcode?: string;
   category?: string | null;
   prepStation?: string | null;
   name: string;

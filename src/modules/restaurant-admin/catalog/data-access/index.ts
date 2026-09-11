@@ -1,2 +1,2 @@
 export { catalogRepository } from './repository/catalog.repository.impl';
-export { getMxikDetails, getMxikPrimaryPictureUrl, searchMxik } from './mxikClient';
+export { getMxikDetails, getMxikPrimaryPictureUrl, searchMxik, searchMxikByBarcode } from './mxikClient';

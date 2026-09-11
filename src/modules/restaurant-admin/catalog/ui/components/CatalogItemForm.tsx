@@ -47,6 +47,7 @@ const defaultValues: CatalogItemFormInput = {
   category: '',
   description: '',
   mxik: null,
+  barcode: '',
   imageFile: null,
   imageSource: '',
   clearImage: false,
@@ -69,6 +70,7 @@ function CatalogItemFormInner({
 }: CatalogItemFormProps & { isDialog: boolean }) {
   const { t, currentLang } = useTranslate('catalog');
   const isEditMode = Boolean(item?.id);
+  const [barcodeLookupPending, setBarcodeLookupPending] = useState(false);
   const [mxikImageUrl, setMxikImageUrl] = useState<string | null>(null);
   const categoriesQuery = useGetCatalogCategoriesQuery();
   const modifierGroupsQuery = useGetCatalogModifierGroupsQuery();
@@ -98,6 +100,7 @@ function CatalogItemFormInner({
       category: item?.category ?? defaultCategoryId ?? '',
       description: item?.description ?? '',
       mxik: buildMxikOption(item?.mxikCode, item?.mxikName, item?.mxikPayload),
+      barcode: item?.barcode ?? '',
       imageFile: item?.imageUrl ?? null,
       imageSource: (item?.imageSource ?? '') as CatalogImageSource | '',
       clearImage: false,
@@ -183,6 +186,7 @@ function CatalogItemFormInner({
   };
 
   const onSubmit = handleSubmit(async (values) => {
+    if (barcodeLookupPending) return;
     const resolvedMxikImageUrl = values.mxik?.code
       ? (await getMxikPrimaryPictureUrl(values.mxik.code, getMxikImageLang(currentLang.value))) || null
       : null;
@@ -207,6 +211,7 @@ function CatalogItemFormInner({
       category: values.category || null,
       description: values.description?.trim() ?? '',
       mxikCode: values.mxik?.code ?? '',
+      barcode: values.barcode,
       mxikName: values.mxik?.name ?? '',
       mxikPayload: values.mxik?.raw ?? {},
       imageUrl: resolvedMxikImageUrl,
@@ -244,6 +249,7 @@ function CatalogItemFormInner({
       translatingName={translateMutation.isPending}
       onTranslateName={() => void handleTranslateName()}
       onMxikNamePicked={(name) => setValue('nameUz', name, { shouldDirty: true, shouldValidate: true })}
+      onBarcodeLookupPendingChange={setBarcodeLookupPending}
     />
   );
 
@@ -255,7 +261,7 @@ function CatalogItemFormInner({
         <EntityFormActions
           isDialog
           isEditMode={isEditMode}
-          isSubmitting={isSubmitting}
+          isSubmitting={isSubmitting || barcodeLookupPending}
           isDeleting={deleteMutation.isPending}
           submitLabel={isEditMode ? t('actions.save') : t('actions.create')}
           deleteTitle={t('dialogs.deleteItem.title')}
@@ -278,7 +284,7 @@ function CatalogItemFormInner({
         <EntityFormActions
           isDialog={false}
           isEditMode={isEditMode}
-          isSubmitting={isSubmitting}
+          isSubmitting={isSubmitting || barcodeLookupPending}
           isDeleting={deleteMutation.isPending}
           submitLabel={isEditMode ? t('actions.save') : t('actions.create')}
           deleteTitle={t('dialogs.deleteItem.title')}

@@ -20,6 +20,7 @@ export const catalogKeys = {
   itemGroupsList: itemGroupKeys.list,
   mxik: () => mxikKeys.all,
   mxikSearch: mxikKeys.search,
+  mxikBarcode: (barcode: string, lang: string) => [...mxikKeys.all, 'barcode', barcode, lang] as const,
   mxikDetail: (code: string, lang?: string) => [...mxikKeys.detail(code), lang ?? 'uz'] as const,
   prepStations: () => prepStationKeys.all,
   modifierGroups: () => modifierGroupKeys.all,
