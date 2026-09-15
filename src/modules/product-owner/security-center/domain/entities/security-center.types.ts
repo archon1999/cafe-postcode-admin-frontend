@@ -110,6 +110,7 @@ export type MonitoringBranch = {
   operationalHealth?: OperationalHealth;
   restaurantId: string;
   restaurantName: string;
+  ordersLast7Days: number;
   agent: MonitoringAgent | null;
   devices: MonitoringDeviceCounts;
   security: MonitoringSecurityCounts;

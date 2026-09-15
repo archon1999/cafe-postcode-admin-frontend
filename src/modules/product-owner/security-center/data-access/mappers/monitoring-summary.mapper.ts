@@ -16,6 +16,7 @@ type MonitoringBranchDto = {
   operationalHealth?: MonitoringBranch['operationalHealth'];
   restaurantId: string;
   restaurantName: string;
+  ordersLast7Days?: number;
   agent: MonitoringAgentDto | null;
   devices: {
     active: number;
@@ -100,6 +101,7 @@ function mapBranch(dto: MonitoringBranchDto): MonitoringBranch {
     operationalHealth: dto.operationalHealth,
     restaurantId: dto.restaurantId,
     restaurantName: dto.restaurantName,
+    ordersLast7Days: dto.ordersLast7Days ?? 0,
     agent,
     devices: {
       ...dto.devices,

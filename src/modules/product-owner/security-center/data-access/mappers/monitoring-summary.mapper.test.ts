@@ -33,6 +33,7 @@ describe('mapMonitoringOverview', () => {
         {
           restaurantId: 'restaurant-1',
           restaurantName: 'Branch one',
+          ordersLast7Days: 12,
           agent: {
             id: 'agent-1',
             version: '1.1.0',
@@ -86,6 +87,7 @@ describe('mapMonitoringOverview', () => {
     expect(mapped.branches[0]).toEqual({
       restaurantId: 'restaurant-1',
       restaurantName: 'Branch one',
+      ordersLast7Days: 12,
       agent: {
         id: 'agent-1',
         version: '1.1.0',
@@ -155,6 +157,7 @@ describe('mapMonitoringOverview', () => {
     });
 
     expect(mapped.branches[0].agent).toBeNull();
+    expect(mapped.branches[0].ordersLast7Days).toBe(0);
     expect(mapped.branches[0].devices.activeLocalAgent).toBe(0);
     expect(mapped.branches[0].devices.telegramSubscriptions).toBe(0);
     expect(mapped.summary.riskWindowHours).toBe(24);

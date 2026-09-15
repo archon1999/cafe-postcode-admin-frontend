@@ -53,7 +53,6 @@ import { MonitoringDetailsDialog } from './MonitoringDetailsDialog';
 type HealthStatus = BranchHealthStatus;
 type MonitoringRow = MonitoringBranch & { id: string; health: BranchHealthAssessment };
 
-const HEALTH_PRIORITY: Record<HealthStatus, number> = { healthy: 0, attention: 1, critical: 2, unknown: 3 };
 const HEALTH_COLORS = { healthy: 'success', attention: 'warning', critical: 'error', unknown: 'info' } as const;
 const HEALTH_ICONS: Record<HealthStatus, IconifyName> = {
   unknown: 'solar:info-circle-bold',
@@ -62,11 +61,29 @@ const HEALTH_ICONS: Record<HealthStatus, IconifyName> = {
   critical: 'solar:danger-bold',
 };
 const STALE_AFTER_MS = 2 * 60 * 1000;
+const ACTIVITY_SUCCESS_MS = 60 * 60 * 1000;
+const ACTIVITY_WARNING_MS = 24 * 60 * 60 * 1000;
 const DEFAULT_ROWS_PER_PAGE = 10;
 const BRANCH_ROW_HEIGHT = 80;
 
 function safeDateTime(value: string | null | undefined) {
   return value ? formatDateTime(value) : '—';
+}
+
+function ActivityTimestamp({ value, referenceTime }: { value: string | null | undefined; referenceTime?: string }) {
+  const timestamp = value ? Date.parse(value) : Number.NaN;
+  const referenceTimestamp = referenceTime ? Date.parse(referenceTime) : Date.now();
+  const age =
+    Number.isFinite(timestamp) && Number.isFinite(referenceTimestamp)
+      ? Math.max(0, referenceTimestamp - timestamp)
+      : Infinity;
+  const status = age < ACTIVITY_SUCCESS_MS ? 'success' : age < ACTIVITY_WARNING_MS ? 'warning' : 'error';
+
+  return (
+    <Typography variant="body2" noWrap color={`${status}.main`} data-activity-status={status}>
+      {safeDateTime(value)}
+    </Typography>
+  );
 }
 
 function activityDateLabel(value: string) {
@@ -487,7 +504,17 @@ function SecurityCounts({ row }: { row: MonitoringRow }) {
   const critical = row.security.unacknowledgedCritical;
 
   if (!high && !critical) {
-    return <HealthLabel status="healthy" />;
+    return (
+      <Tooltip title={t('monitoring.health.healthy')}>
+        <Box
+          component="span"
+          role="img"
+          aria-label={t('monitoring.health.healthy')}
+          sx={{ display: 'inline-flex', color: 'success.main' }}>
+          <Iconify icon="solar:shield-check-bold" width={20} />
+        </Box>
+      </Tooltip>
+    );
   }
 
   return (
@@ -588,6 +615,7 @@ function BranchTable({
   onPageChange,
   onRowsPerPageChange,
   onDetails,
+  referenceTime,
 }: {
   rows: MonitoringRow[];
   page: number;
@@ -595,6 +623,7 @@ function BranchTable({
   onPageChange: (page: number) => void;
   onRowsPerPageChange: (rowsPerPage: number) => void;
   onDetails: (row: MonitoringRow, type: 'health' | 'devices') => void;
+  referenceTime?: string;
 }) {
   const { t } = useTranslate('security-center');
   const currentPage = Math.min(page, Math.max(0, Math.ceil(rows.length / rowsPerPage) - 1));
@@ -656,9 +685,10 @@ function BranchTable({
                   <SecurityCounts row={row} />
                 </TableCell>
                 <TableCell>
-                  <Typography variant="body2" noWrap>
-                    {safeDateTime(row.devices.lastSeenAt || row.agent?.lastSeenAt)}
-                  </Typography>
+                  <ActivityTimestamp
+                    value={row.devices.lastSeenAt || row.agent?.lastSeenAt}
+                    referenceTime={referenceTime}
+                  />
                 </TableCell>
                 <TableCell align="right" sx={{ pr: 1 }}>
                   <Tooltip title={t('monitoring.actions.details')}>
@@ -721,8 +751,7 @@ export function MonitoringPanel({ businessPartnerId, onSecurityDateSelect }: Mon
         }))
         .sort(
           (left, right) =>
-            HEALTH_PRIORITY[left.health.status] - HEALTH_PRIORITY[right.health.status] ||
-            left.restaurantName.localeCompare(right.restaurantName),
+            right.ordersLast7Days - left.ordersLast7Days || left.restaurantName.localeCompare(right.restaurantName),
         ),
     [query.data?.branches, query.data?.generatedAt],
   );
@@ -1066,6 +1095,7 @@ export function MonitoringPanel({ businessPartnerId, onSecurityDateSelect }: Mon
           <BranchTable
             rows={filteredRows}
             onDetails={(row, type) => setDetails({ row, type })}
+            referenceTime={generatedAt}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={setPage}

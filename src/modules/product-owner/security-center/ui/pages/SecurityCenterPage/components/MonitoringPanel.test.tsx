@@ -73,6 +73,7 @@ const branches = [
   {
     restaurantId: 'alpha',
     restaurantName: 'Alpha Healthy',
+    ordersLast7Days: 1,
     agent: {
       id: 'agent-alpha',
       version: '1.1.0',
@@ -97,6 +98,7 @@ const branches = [
   {
     restaurantId: 'bravo',
     restaurantName: 'Bravo Critical',
+    ordersLast7Days: 2,
     agent: {
       id: 'agent-bravo',
       version: '1.0.9',
@@ -121,6 +123,7 @@ const branches = [
   {
     restaurantId: 'charlie',
     restaurantName: 'Charlie Attention',
+    ordersLast7Days: 3,
     agent: {
       id: 'agent-charlie',
       version: '1.1.0',
@@ -207,7 +210,7 @@ describe('MonitoringPanel', () => {
     expect(mocks.monitoringScope).toHaveBeenCalledWith('partner-1');
   });
 
-  it('renders real monitoring insights in the requested health and version order', () => {
+  it('renders real monitoring insights and orders branches by seven-day order volume', () => {
     renderPanel();
 
     expect(screen.getAllByText('monitoring.metrics.totalBranches').length).toBeGreaterThan(0);
@@ -252,7 +255,9 @@ describe('MonitoringPanel', () => {
         .getAllByRole('row')
         .map((row) => [alphaRow, charlieRow, bravoRow].find((branchRow) => branchRow === row)?.textContent)
         .filter(Boolean),
-    ).toEqual([alphaRow.textContent, charlieRow.textContent, bravoRow.textContent]);
+    ).toEqual([charlieRow.textContent, bravoRow.textContent, alphaRow.textContent]);
+
+    expect(within(alphaRow).getByRole('img', { name: 'monitoring.health.healthy' })).toBeVisible();
 
     for (const row of [alphaRow, charlieRow, bravoRow]) {
       expect(row).toHaveStyle({ height: '80px' });
@@ -351,6 +356,66 @@ describe('MonitoringPanel', () => {
 
     const row = screen.getByRole('row', { name: /No devices/i });
     expect(within(row).queryByLabelText(/^monitoring\.devices\./i)).not.toBeInTheDocument();
+  });
+
+  it('colors last activity by one-hour and twenty-four-hour thresholds', () => {
+    mocks.query.mockReturnValue({
+      data: {
+        generatedAt: '2026-08-22T12:00:00Z',
+        summary: {
+          totalBranches: 3,
+          agentOnline: 0,
+          agentOffline: 0,
+          agentMissing: 3,
+          activeDevices: 0,
+          revokedDevices: 0,
+          activePOSTerminals: 0,
+          pendingPairings: 0,
+          riskWindowHours: 24,
+          unacknowledgedHigh: 0,
+          unacknowledgedCritical: 0,
+        },
+        insights: { securityActivity: [], agentVersions: [], deviceTypes: {} },
+        branches: [
+          {
+            ...branches[0],
+            restaurantName: 'Recent activity',
+            devices: { ...branches[0].devices, lastSeenAt: '2026-08-22T11:30:00Z' },
+          },
+          {
+            ...branches[0],
+            restaurantId: 'warning',
+            restaurantName: 'Warning activity',
+            devices: { ...branches[0].devices, lastSeenAt: '2026-08-22T02:00:00Z' },
+          },
+          {
+            ...branches[0],
+            restaurantId: 'stale',
+            restaurantName: 'Stale activity',
+            devices: { ...branches[0].devices, lastSeenAt: '2026-08-21T11:59:59Z' },
+          },
+        ],
+      },
+      isLoading: false,
+      isFetching: false,
+      isError: false,
+      refetch: mocks.refetch,
+    });
+
+    renderPanel();
+
+    expect(within(screen.getByRole('row', { name: /Recent activity/i })).getByText(/2026/)).toHaveAttribute(
+      'data-activity-status',
+      'success',
+    );
+    expect(within(screen.getByRole('row', { name: /Warning activity/i })).getByText(/2026/)).toHaveAttribute(
+      'data-activity-status',
+      'warning',
+    );
+    expect(within(screen.getByRole('row', { name: /Stale activity/i })).getByText(/2026/)).toHaveAttribute(
+      'data-activity-status',
+      'error',
+    );
   });
 
   it('filters the registry by clicking an operational health row', () => {
