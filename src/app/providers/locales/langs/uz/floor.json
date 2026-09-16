@@ -52,6 +52,7 @@
                    "isActive":  "Faol",
                    "tableNumber":  "Stol raqami",
                    "seatCount":  "O\u0027rinlar soni",
+                   "customSeatCount":  "Aniq o\u0027rinlar soni",
                    "shape":  "Shakli",
                    "shapeVariant":  "Stol varianti",
                    "positionX":  "X koordinata",
@@ -82,6 +83,8 @@
                    "notSelected":  "Tanlanmagan",
                    "inspector":  "Stol inspektori",
                    "noTableSelected":  "Parametrlarni ko\u0027rish uchun stol tanlang.",
+                   "seatCountCustom":  "10 dan ortiq",
+                   "customSeatCountHint":  "11 dan {{max}} gacha son kiriting.",
                    "dragToReorder":  "Tartibni o'zgartirish uchun sudrang"
                },
     "tableShapes":  {
@@ -100,7 +103,9 @@
                                "seat5_horizontal":  "5 o\u0027rinli gorizontal",
                                "seat5_vertical":  "5 o\u0027rinli vertikal",
                                "seat6_horizontal":  "6 o\u0027rinli gorizontal",
-                               "seat6_vertical":  "6 o\u0027rinli vertikal"
+                               "seat6_vertical":  "6 o\u0027rinli vertikal",
+                               "large_horizontal":  "Katta stol, gorizontal",
+                               "large_vertical":  "Katta stol, vertikal"
                            },
     "tableStatuses":  {
                           "available":  "Bo\u0027sh",

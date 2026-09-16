@@ -53,6 +53,7 @@
                    "isActive":  "Активный",
                    "tableNumber":  "Номер стола",
                    "seatCount":  "Количество мест",
+                   "customSeatCount":  "Точное количество мест",
                    "shape":  "Форма",
                    "shapeVariant":  "Вариант стола",
                    "positionX":  "Координата X",
@@ -83,6 +84,8 @@
                    "notSelected":  "Не выбрано",
                    "inspector":  "Инспектор стола",
                    "noTableSelected":  "Выберите стол, чтобы увидеть параметры.",
+                   "seatCountCustom":  "Более 10",
+                   "customSeatCountHint":  "Введите число от 11 до {{max}}.",
                    "dragToReorder":  "Перетащите, чтобы изменить порядок"
                },
     "tableShapes":  {
@@ -101,7 +104,9 @@
                                "seat5_horizontal":  "5 мест, горизонтально",
                                "seat5_vertical":  "5 мест, вертикально",
                                "seat6_horizontal":  "6 мест, горизонтально",
-                               "seat6_vertical":  "6 мест, вертикально"
+                               "seat6_vertical":  "6 мест, вертикально",
+                               "large_horizontal":  "Большой стол, горизонтально",
+                               "large_vertical":  "Большой стол, вертикально"
                            },
     "tableStatuses":  {
                           "available":  "Свободен",

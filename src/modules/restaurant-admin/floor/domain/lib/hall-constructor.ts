@@ -4,6 +4,9 @@ export const GRID_CELL_SIZE = 104;
 export const GRID_GAP_SIZE = 12;
 export const GRID_PADDING_SIZE = 12;
 export const MIN_GRID_ROWS = 6;
+export const MIN_TABLE_SEAT_COUNT = 2;
+export const MAX_TABLE_SEAT_COUNT = 100;
+export const MAX_PRESET_TABLE_SEAT_COUNT = 10;
 
 export const TABLE_VARIANTS_BY_SEAT_COUNT: Record<number, AdminTableShapeVariant[]> = {
   2: ['seat2_horizontal', 'seat2_vertical'],
@@ -33,10 +36,18 @@ export type ConstructorSeatMarker = {
 };
 
 export function getShapeVariantsForSeatCount(seatCount: number) {
+  if (seatCount >= 6 && seatCount <= MAX_TABLE_SEAT_COUNT) {
+    return TABLE_VARIANTS_BY_SEAT_COUNT[6];
+  }
+
   return TABLE_VARIANTS_BY_SEAT_COUNT[seatCount] ?? TABLE_VARIANTS_BY_SEAT_COUNT[4];
 }
 
 export function getDefaultShapeVariant(seatCount: number): AdminTableShapeVariant {
+  if (seatCount >= 6 && seatCount <= MAX_TABLE_SEAT_COUNT) {
+    return DEFAULT_VARIANT_BY_SEAT_COUNT[6];
+  }
+
   return DEFAULT_VARIANT_BY_SEAT_COUNT[seatCount] ?? DEFAULT_VARIANT_BY_SEAT_COUNT[4];
 }
 

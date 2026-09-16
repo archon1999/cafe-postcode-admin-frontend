@@ -16,7 +16,13 @@ import { useTranslate } from 'app/providers/locales';
 import type { AdminTableShapeVariant } from 'shared/api/admin-types';
 import { Iconify } from 'shared/ui/Iconify';
 
-import { getDefaultShapeVariant, getShapeVariantsForSeatCount } from '../../../domain';
+import {
+  MAX_PRESET_TABLE_SEAT_COUNT,
+  MAX_TABLE_SEAT_COUNT,
+  MIN_TABLE_SEAT_COUNT,
+  getDefaultShapeVariant,
+  getShapeVariantsForSeatCount,
+} from '../../../domain';
 
 import type { DraftTable } from './ConstructorTableCard';
 import { normalizeServiceFeeHourlyRate, normalizeServiceFeePercent } from './hallConstructorDraft';
@@ -27,12 +33,19 @@ type HallConstructorInspectorProps = {
   updateSelectedTable: (updater: (table: DraftTable) => DraftTable) => void;
 };
 
+const CUSTOM_SEAT_COUNT = 'custom';
+const PRESET_SEAT_COUNTS = Array.from(
+  { length: MAX_PRESET_TABLE_SEAT_COUNT - MIN_TABLE_SEAT_COUNT + 1 },
+  (_, index) => MIN_TABLE_SEAT_COUNT + index,
+);
+
 export function HallConstructorInspector({
   onDelete,
   selectedTable,
   updateSelectedTable,
 }: HallConstructorInspectorProps) {
   const { t } = useTranslate('floor');
+  const usesCustomSeatCount = Boolean(selectedTable && selectedTable.seatCount > MAX_PRESET_TABLE_SEAT_COUNT);
 
   return (
     <Card
@@ -78,21 +91,53 @@ export function HallConstructorInspector({
             <TextField
               select
               label={t('fields.seatCount')}
-              value={selectedTable.seatCount}
+              value={usesCustomSeatCount ? CUSTOM_SEAT_COUNT : selectedTable.seatCount}
               onChange={(event) => {
-                const seatCount = Number(event.target.value) || 4;
+                const seatCount =
+                  event.target.value === CUSTOM_SEAT_COUNT
+                    ? MAX_PRESET_TABLE_SEAT_COUNT + 1
+                    : Number(event.target.value) || 4;
                 updateSelectedTable((table) => ({
                   ...table,
                   seatCount,
                   shapeVariant: getDefaultShapeVariant(seatCount),
                 }));
               }}>
-              {[2, 3, 4, 5, 6].map((seatCount) => (
+              {PRESET_SEAT_COUNTS.map((seatCount) => (
                 <MenuItem key={seatCount} value={seatCount}>
                   {seatCount}
                 </MenuItem>
               ))}
+              <MenuItem value={CUSTOM_SEAT_COUNT}>{t('labels.seatCountCustom')}</MenuItem>
             </TextField>
+            {usesCustomSeatCount ? (
+              <TextField
+                label={t('fields.customSeatCount')}
+                type="number"
+                value={selectedTable.seatCount}
+                helperText={t('labels.customSeatCountHint', { max: MAX_TABLE_SEAT_COUNT })}
+                onChange={(event) => {
+                  if (event.target.value === '') return;
+
+                  const seatCount = Math.min(
+                    MAX_TABLE_SEAT_COUNT,
+                    Math.max(MAX_PRESET_TABLE_SEAT_COUNT + 1, Math.trunc(Number(event.target.value) || 0)),
+                  );
+                  updateSelectedTable((table) => ({
+                    ...table,
+                    seatCount,
+                    shapeVariant: getDefaultShapeVariant(seatCount),
+                  }));
+                }}
+                slotProps={{
+                  htmlInput: {
+                    min: MAX_PRESET_TABLE_SEAT_COUNT + 1,
+                    max: MAX_TABLE_SEAT_COUNT,
+                    step: 1,
+                  },
+                }}
+              />
+            ) : null}
             <TextField
               select
               label={t('fields.shapeVariant')}
@@ -105,7 +150,11 @@ export function HallConstructorInspector({
               }>
               {getShapeVariantsForSeatCount(selectedTable.seatCount).map((variant) => (
                 <MenuItem key={variant} value={variant}>
-                  {t(`tableShapeVariants.${variant}`)}
+                  {t(
+                    selectedTable.seatCount > 6
+                      ? `tableShapeVariants.large_${variant.endsWith('_vertical') ? 'vertical' : 'horizontal'}`
+                      : `tableShapeVariants.${variant}`,
+                  )}
                 </MenuItem>
               ))}
             </TextField>
