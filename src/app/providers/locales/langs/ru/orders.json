@@ -24,16 +24,16 @@
   "actions": {
     "viewReceipt": "Посмотреть чек",
     "closeReceiptPreview": "Закрыть просмотр чека",
-    "openFiscalQr": "Open fiscal QR",
-    "retryFiscal": "Повторить fiscal"
+    "openFiscalQr": "Открыть фискальный QR-код",
+    "retryFiscal": "Повторить фискализацию"
   },
   "messages": {
     "fiscalRetrySent": "Фискальный чек отправлен",
-    "fiscalRetryFailed": "Не удалось отправить fiscal"
+    "fiscalRetryFailed": "Не удалось повторить фискализацию"
   },
   "fields": {
     "receipt": "Чек",
-    "fiscalQrCode": "Fiscal QR",
+    "fiscalQrCode": "Фискальный QR-код",
     "amount": "Сумма",
     "cashDesk": "Касса",
     "cashier": "Кассир",
@@ -71,7 +71,12 @@
     "table": "Стол",
     "total": "Итого",
     "unitPrice": "Цена за единицу",
-    "updatedAt": "Время обновления"
+    "updatedAt": "Время обновления",
+    "cashShift": "Смена",
+    "refundsTotal": "Сумма возвратов",
+    "isRefunded": "Возврат выполнен",
+    "reprintCount": "Количество повторных печатей",
+    "lastReprintedAt": "Время последней повторной печати"
   },
   "filters": {
     "all": "Все",
@@ -115,7 +120,8 @@
   "paymentMethods": {
     "card": "Карта",
     "cash": "Наличные",
-    "mixed": "Смешанный"
+    "mixed": "Смешанный",
+    "qr": "QR"
   },
   "receiptKinds": {
     "plain": "Обычный чек",
@@ -133,7 +139,11 @@
     "noItems": "Для заказа нет товаров.",
     "noOrderItemNotes": "Для этого товара нет заметок.",
     "noPayments": "Для заказа нет платежей.",
-    "noReceipts": "Для заказа нет чеков."
+    "noReceipts": "Для заказа нет чеков.",
+    "yes": "Да",
+    "no": "Нет",
+    "refunded": "Возврат выполнен",
+    "notRefunded": "Без возврата"
   },
   "empty": {
     "orders": {

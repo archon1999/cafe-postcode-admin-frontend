@@ -66,8 +66,8 @@
     "password": "Пароль",
     "passwordCreateHint": "Необязательно. Если указать, для пользователя будет установлен пароль.",
     "passwordEditHint": "Если оставить пустым, текущий пароль не изменится.",
-    "employeePasswordCreateHint": "??????? ?????? ??? ????? ? ?????-??????.",
-    "employeePasswordEditHint": "???????? ??????, ????? ????????? ??????? ??????.",
+    "employeePasswordCreateHint": "Введите пароль для входа в админ-панель.",
+    "employeePasswordEditHint": "Оставьте пустым, чтобы сохранить текущий пароль.",
     "pin": "PIN-код",
     "pinHint": "4-значный PIN-код для POS сотрудника.",
     "permissions": "Права",
@@ -99,13 +99,13 @@
     "custom": "Пользовательский",
     "morePermissions": "Ещё права",
     "permissionsSelectedCount": "{{count}} разрешений выбрано",
-    "employeeLoginAccess": "??? ???? ?????? ? ?????-?????? ? dashboard ?? ?????? ? ??????."
+    "employeeLoginAccess": "Эта роль входит в админ-панель и панель руководителя по логину и паролю."
   },
   "filters": {
     "all": "Все",
     "search": "Поиск",
     "searchPlaceholder": "Ищите по логину, имени или телефону",
-    "employeeSearchPlaceholder": "????? ?? ??????, ????? ??? ????????",
+    "employeeSearchPlaceholder": "Ищите по логину, имени или телефону",
     "searchRolesPlaceholder": "Ищите по названию роли, описанию или праву",
     "searchPermissionsPlaceholder": "Ищите по коду, названию или описанию",
     "clearSearch": "Очистить поиск",
@@ -126,7 +126,7 @@
   "permissionScopes": {
     "admin": "Админ",
     "pos": "POS",
-    "dashboard": "Dashboard"
+    "dashboard": "Панель руководителя"
   },
   "permissionActions": {
     "list": "Просмотр списка",
@@ -141,7 +141,8 @@
     "open": "Открытие",
     "close": "Закрытие",
     "refund": "Возврат",
-    "reprint": "Повторная печать"
+    "reprint": "Повторная печать",
+    "rotateAuthCode": "Обновление кода активации"
   },
   "actions": {
     "create": "Новый пользователь",

@@ -23,7 +23,78 @@
     "label": "Название",
     "value": "Значение",
     "feedLines": "Пустые строки",
-    "publishedRevision": "Активная версия: v{{revision}}"
+    "publishedRevision": "Активная версия: v{{revision}}",
+    "selectVariable": "Выберите переменную"
+  },
+  "variableTitles": {
+    "restaurant": {
+      "name": "Название ресторана",
+      "legalName": "Юридическое название",
+      "address": "Адрес ресторана",
+      "phone": "Телефон ресторана",
+      "social": "Социальная сеть",
+      "taxNumber": "ИНН"
+    },
+    "order": {
+      "displayNumber": "Номер заказа",
+      "channel": "Код типа заказа",
+      "channelLabel": "Тип заказа",
+      "table": "Стол",
+      "hall": "Зал",
+      "guestCount": "Количество гостей",
+      "openedAt": "Время заказа",
+      "waiter": "Официант",
+      "cashier": "Кассир",
+      "note": "Примечание к заказу",
+      "deliveryPhone": "Телефон доставки",
+      "deliveryAddress": "Адрес доставки"
+    },
+    "item": {
+      "name": "Название товара",
+      "quantity": "Количество товара",
+      "unitPrice": "Цена за единицу",
+      "lineTotal": "Сумма по товару",
+      "vat": "Сумма НДС по товару",
+      "vatPercent": "Процент НДС по товару",
+      "note": "Примечание к товару"
+    },
+    "kitchen": {
+      "ticketNumber": "Номер кухонного чека",
+      "prepStation": "Станция приготовления",
+      "createdAt": "Время кухонного чека"
+    },
+    "precheck": {
+      "printedAt": "Время печати предчека"
+    },
+    "payment": {
+      "method": "Способ оплаты",
+      "amount": "Сумма оплаты",
+      "cash": "Наличные",
+      "card": "Карта",
+      "change": "Сдача",
+      "paidAt": "Время оплаты",
+      "operationType": "Платёжная операция"
+    },
+    "totals": {
+      "subtotal": "Промежуточный итог",
+      "serviceFee": "Сервисный сбор",
+      "vat": "Общая сумма НДС",
+      "vatPercent": "Процент НДС",
+      "serviceFeePercent": "Процент сервисного сбора",
+      "total": "Итого"
+    },
+    "fiscal": {
+      "receiptNumber": "Номер фискального чека",
+      "terminalId": "ID терминала",
+      "factoryId": "Номер фискального модуля",
+      "fiscalSign": "Фискальный признак",
+      "qrUrl": "Адрес фискального QR-кода",
+      "registeredAt": "Время фискализации"
+    },
+    "system": {
+      "copyNumber": "Номер копии",
+      "isReprint": "Повторная печать"
+    }
   },
   "align": { "left": "Слева", "center": "По центру", "right": "Справа" },
   "fontSizes": { "normal": "Обычный шрифт", "large": "Крупный шрифт" },

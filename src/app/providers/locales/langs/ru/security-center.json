@@ -5,7 +5,7 @@
     "openControl": "Открыть Control PWA",
     "businessPartnerFilter": "Бизнес-партнёр",
     "allBusinessPartners": "Все",
-    "tabsLabel": "Разделы control-center",
+    "tabsLabel": "Разделы центра управления",
     "description": "Контролируйте филиалы, Local Agent, POS-устройства и события безопасности из одного операционного экрана.",
     "refresh": "Обновить",
     "status": {
@@ -17,17 +17,17 @@
       "lastUpdated": "Последнее обновление"
     },
     "metrics": {
-      "label": "Показатели безопасности и rollout",
+      "label": "Показатели безопасности и развёртывания",
       "migratedBranches": "Филиалы с завершённой миграцией",
       "blockedBranches": "Филиалы с заблокированной подготовкой",
       "highRiskEvents": "Непроверенные события высокого риска"
     },
     "nextActions": {
       "title": "Следующие действия",
-      "description": "Операционная очередь, отсортированная по риску и этапу rollout.",
+      "description": "Операционная очередь, отсортированная по риску и этапу развёртывания.",
       "partialData": "Лента событий безопасности загружена не полностью. Не считайте состояние безопасным и повторите обновление.",
       "emptyTitle": "Срочных действий нет",
-      "emptyDescription": "В текущих серверных данных нет непроверенного риска или блокера rollout."
+      "emptyDescription": "В текущих серверных данных нет непроверенных рисков или препятствий для развёртывания."
     },
     "actions": {
       "count": "Количество: {{count}}",
@@ -42,20 +42,20 @@
         "description": "Сверьте QR и шестизначный контрольный код на экране устройства для {{count}} запросов."
       },
       "fixPrerequisites": {
-        "title": "Восстановите условия rollout",
-        "description": "В {{count}} филиалах есть блокер Agent, bridge или серверного подтверждения."
+        "title": "Восстановите условия развёртывания",
+        "description": "В {{count}} филиалах есть препятствия со стороны агента, моста или серверного подтверждения."
       },
       "readyForPOSUpdate": {
         "title": "Начните обновление POS",
-        "description": "В {{count}} филиалах проверки bridge пройдены и POS готов к обновлению."
+        "description": "В {{count}} филиалах проверки моста пройдены и POS готов к обновлению."
       },
       "migrationInProgress": {
         "title": "Завершите миграцию POS",
         "description": "В {{count}} филиалах осталась работа по активному POS или непривязанным сессиям."
       },
       "readyForBridgeOff": {
-        "title": "Отключите временный bridge",
-        "description": "В {{count}} филиалах проверки финализации пройдены, а bridge всё ещё включён."
+        "title": "Отключите временный мост",
+        "description": "В {{count}} филиалах проверки завершения пройдены, а мост всё ещё включён."
       }
     },
     "pending": {
@@ -276,7 +276,7 @@
   },
   "readiness": {
     "title": "Готовность филиалов к миграции",
-    "description": "Проверяйте отдельно готовность к обновлению POS и завершение миграции перед отключением временного bridge.",
+    "description": "Проверяйте отдельно готовность к обновлению POS и завершение миграции перед отключением временного моста.",
     "loading": "Загрузка готовности филиалов…",
     "retry": "Повторить",
     "loadErrorTitle": "Не удалось загрузить готовность филиалов",
@@ -289,15 +289,15 @@
     "statusAria": "{{gate}}: {{status}}",
     "branchStatusAria": "{{branch}}: {{status}}",
     "summary": {
-      "progress": "Завершение rollout",
+      "progress": "Завершение развёртывания",
       "pos": "POS",
       "unbound": "непривязано"
     },
     "agentStates": {
-      "missing": "Agent отсутствует",
-      "offline": "Agent не в сети",
+      "missing": "Агент отсутствует",
+      "offline": "Агент не в сети",
       "migrationRequired": "Нужна миграция",
-      "online": "Agent в сети"
+      "online": "Агент в сети"
     },
     "filters": {
       "label": "Фильтр филиалов",
@@ -317,10 +317,10 @@
     },
     "gates": {
       "posUpdate": "Готовность к обновлению POS",
-      "finalization": "Готовность к отключению bridge"
+      "finalization": "Готовность к отключению моста"
     },
-    "posUpdatePassed": "Bridge готов: можно начинать обновление POS. Непривязанные сессии на этом этапе допустимы.",
-    "posUpdateNotRequired": "POS уже мигрирован; состояние временного bridge больше не блокирует завершение.",
+    "posUpdatePassed": "Мост готов: можно начинать обновление POS. Непривязанные сессии на этом этапе допустимы.",
+    "posUpdateNotRequired": "POS уже мигрирован; состояние временного моста больше не блокирует завершение.",
     "finalizationPassed": "Есть активный мигрированный POS, непривязанных сессий нет, а устройство агента активно.",
     "stages": {
       "fixPrerequisites": "Подготовка заблокирована",
@@ -329,10 +329,10 @@
       "readyForBridgeOff": "Миграция завершена"
     },
     "nextActions": {
-      "fixPrerequisites": "Устраните причины ниже и дождитесь нового heartbeat агента перед обновлением POS.",
+      "fixPrerequisites": "Устраните причины ниже и дождитесь нового сигнала состояния агента перед обновлением POS.",
       "readyForPOSUpdate": "Обновите POS в этом филиале, затем дождитесь привязки активных сессий к новым устройствам.",
-      "migrationInProgress": "Завершите перенос POS и устраните блокировки финализации. Не отключайте bridge раньше времени.",
-      "readyForBridgeOff": "Филиал готов к финальному отключению временного bridge по утверждённому плану rollout."
+      "migrationInProgress": "Завершите перенос POS и устраните препятствия для завершения. Не отключайте мост раньше времени.",
+      "readyForBridgeOff": "Филиал готов к окончательному отключению временного моста по утверждённому плану развёртывания."
     },
     "details": {
       "activePOSDevices": "Активные POS-устройства",
@@ -340,28 +340,28 @@
       "agentVersion": "Версия агента",
       "agentDeviceStatus": "Устройство агента",
       "agentLastSeen": "Последняя связь агента",
-      "bridgeLastSeen": "Последний check-in bridge",
-      "bridgeDeadline": "Срок действия bridge",
-      "terminalCount": "Терминалы в check-in"
+      "bridgeLastSeen": "Последний сигнал моста",
+      "bridgeDeadline": "Срок действия моста",
+      "terminalCount": "Терминалы в последнем сигнале"
     },
     "reasons": {
       "agentMissing": "У филиала нет Local Agent.",
       "agentOffline": "Local Agent не в сети.",
       "agentDeviceNotMigrated": "Local Agent не перенесён на новую идентификацию устройства.",
       "agentDeviceNotActive": "Перенесённое устройство Local Agent не активно.",
-      "bridgeCapabilityMissing": "Agent не сообщил о поддержке ограниченного legacy POS bridge.",
-      "bridgeNotConfigured": "Legacy POS bridge не настроен.",
-      "bridgeNotEnabled": "Legacy POS bridge не включён.",
-      "bridgeCheckInMissing": "Нет check-in ни от одного POS-терминала.",
-      "bridgeCheckInInvalid": "Данные последнего check-in или количество терминалов некорректны.",
-      "bridgeHeartbeatMissing": "В heartbeat агента нет состояния bridge.",
-      "bridgeHeartbeatInvalid": "Состояние bridge в heartbeat не прошло серверную проверку.",
-      "bridgeSourceCommitInvalid": "Идентификатор исходного commit bridge отсутствует или некорректен.",
-      "bridgeBuildTimestampInvalid": "Время сборки bridge отсутствует или некорректно.",
-      "bridgeDeadlineInvalid": "Срок действия bridge отсутствует или некорректен.",
-      "bridgeExpired": "Срок действия временного bridge истёк.",
-      "bridgeFailureUnknown": "Bridge сообщил неизвестную ошибку: {{failure}}.",
-      "bridgeServerNotReady": "Сервер не подтвердил готовность bridge к обновлению POS.",
+      "bridgeCapabilityMissing": "Агент не сообщил о поддержке ограниченного моста для старой версии POS.",
+      "bridgeNotConfigured": "Мост для старой версии POS не настроен.",
+      "bridgeNotEnabled": "Мост для старой версии POS не включён.",
+      "bridgeCheckInMissing": "Нет сигнала ни от одного POS-терминала.",
+      "bridgeCheckInInvalid": "Данные последнего сигнала или количество терминалов некорректны.",
+      "bridgeHeartbeatMissing": "В сигнале состояния агента нет состояния моста.",
+      "bridgeHeartbeatInvalid": "Состояние моста в сигнале агента не прошло серверную проверку.",
+      "bridgeSourceCommitInvalid": "Идентификатор исходной версии моста отсутствует или некорректен.",
+      "bridgeBuildTimestampInvalid": "Время сборки моста отсутствует или некорректно.",
+      "bridgeDeadlineInvalid": "Срок действия моста отсутствует или некорректен.",
+      "bridgeExpired": "Срок действия временного моста истёк.",
+      "bridgeFailureUnknown": "Мост сообщил неизвестную ошибку: {{failure}}.",
+      "bridgeServerNotReady": "Сервер не подтвердил готовность моста к обновлению POS.",
       "activePOSDevicesMissing": "Нет ни одного активного мигрированного POS-устройства.",
       "unboundPOSSessions": "Остались активные POS-сессии без привязки: {{count}}.",
       "migrationCountsInvalid": "Счётчики миграции отсутствуют или некорректны."
@@ -394,11 +394,11 @@
     "type": "Тип устройства",
     "version": "Версия",
     "lastSeen": "Последняя связь",
-    "lease": "Срок lease",
-    "searchPlaceholder": "Устройство, филиал или fingerprint",
+    "lease": "Срок действия доступа",
+    "searchPlaceholder": "Устройство, филиал или отпечаток ключа",
     "revoke": "Отозвать",
     "revokeTitle": "Отозвать устройство {{name}}",
-    "revokeDescription": "Доступ POS или Agent с этого устройства прекратится немедленно. Для повторного подключения потребуется новое QR-подтверждение.",
+    "revokeDescription": "Доступ POS или агента с этого устройства прекратится немедленно. Для повторного подключения потребуется новое QR-подтверждение.",
     "revokeReason": "Причина",
     "revokeReasonMin": "Введите не менее 5 символов.",
     "empty": "Подходящие устройства не найдены.",
@@ -475,7 +475,7 @@
     }
   },
   "events": {
-    "searchPlaceholder": "Событие, IP, пользователь или request ID",
+    "searchPlaceholder": "Событие, IP, пользователь или ID запроса",
     "event": "Событие",
     "eventFilter": "По событию",
     "dateRange": {
@@ -498,7 +498,7 @@
     "result": "Результат",
     "ip": "IP",
     "actor": "Пользователь",
-    "requestId": "Request ID",
+    "requestId": "ID запроса",
     "acknowledge": "Отметить проверенным",
     "empty": "Подходящие события безопасности не найдены.",
     "loadError": "Не удалось загрузить события безопасности.",
@@ -545,7 +545,7 @@
     "device_revoked": "Устройство отозвано",
     "device_signature_invalid": "Неверная подпись устройства",
     "device_replay_detected": "Обнаружен повтор подписанного запроса",
-    "device_scope_denied": "Запрос вне scope устройства отклонён",
+    "device_scope_denied": "Запрос вне области доступа устройства отклонён",
     "legacy_local_agent_migrated": "Старый Local Agent перенесён в новую систему",
     "legacy_pos_device_migrated": "Старое POS-устройство перенесено в новую систему",
     "legacy_pos_session_rejected": "Старая POS-сессия отклонена",
@@ -561,7 +561,7 @@
     "local_origin_denied": "Источник локального запроса отклонён",
     "local_pin_failed": "Ошибка проверки локального PIN",
     "local_rbac_denied": "Локальная проверка прав отклонена",
-    "local_scope_denied": "Локальный запрос вне scope отклонён",
+    "local_scope_denied": "Локальный запрос вне области доступа отклонён",
     "local_secure_channel_denied": "Локальный защищённый канал отклонён",
     "local_session_denied": "Локальная сессия отклонена",
     "pairing_replay_detected": "Обнаружено повторное использование запроса привязки",
