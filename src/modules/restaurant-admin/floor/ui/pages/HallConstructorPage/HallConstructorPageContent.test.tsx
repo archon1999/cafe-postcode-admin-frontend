@@ -14,7 +14,7 @@ const testState = vi.hoisted(() => ({
       {
         id: 'table-1',
         name: 'Table 1',
-        tableNumber: 1,
+        tableNumber: '1',
         seatCount: 4,
         shapeVariant: 'seat4_square',
         positionX: 0,
@@ -102,6 +102,15 @@ function getTablePaletteElements() {
 }
 
 describe('HallConstructorPageContent render mode', () => {
+  it('accepts an alphanumeric table number in the inspector and displays it on the table', async () => {
+    render(<HallConstructorPageContent id="hall-1" />);
+    const input = await screen.findByLabelText('fields.tableNumber');
+    expect(input).toHaveAttribute('type', 'text');
+    fireEvent.change(input, { target: { value: 'VIP-02' } });
+    expect(input).toHaveValue('VIP-02');
+    expect(screen.getByTitle('VIP-02')).toHaveTextContent('VIP-02');
+  });
+
   it('controls the hall service fee with disabled, percentage, and hourly options', async () => {
     render(<HallConstructorPageContent id="hall-1" />);
 

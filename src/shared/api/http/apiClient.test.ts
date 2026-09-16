@@ -853,7 +853,7 @@ describe('apiClient dining-table gateway contract', () => {
     const payload: AdminDiningTablePayload = {
       hall: 'hall-1',
       name: 'Window 1',
-      tableNumber: 7,
+      tableNumber: '7',
       seatCount: 4,
       shape: 'rectangle',
       shapeVariant: 'seat4_horizontal',
@@ -951,7 +951,7 @@ describe('apiClient hall gateway contract', () => {
         {
           id: 'table-1',
           name: 'T1',
-          tableNumber: 1,
+          tableNumber: '1',
           seatCount: 4,
           shapeVariant: 'seat4_square',
           positionX: 10,

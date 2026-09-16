@@ -38,6 +38,7 @@ export function normalizeServiceFeeHourlyRate(value: number | string): number {
 export function toDraftTable(table: AdminHallConstructorTable): DraftTable {
   return {
     ...table,
+    tableNumber: String(table.tableNumber),
     serviceFeeEnabled: Boolean(table.serviceFeeEnabled),
     serviceFeeMode: table.serviceFeeMode ?? 'percentage',
     serviceFeePercent: table.serviceFeePercent ?? 0,
@@ -75,6 +76,8 @@ export function serializeHallConstructorDraft(draft: HallConstructorDraft | null
         serviceFeeHourlyRate: table.serviceFeeHourlyRate,
         isActive: table.isActive,
       }))
-      .sort((left, right) => left.tableNumber - right.tableNumber),
+      .sort((left, right) =>
+        String(left.tableNumber).localeCompare(String(right.tableNumber), 'en', { numeric: true }),
+      ),
   });
 }

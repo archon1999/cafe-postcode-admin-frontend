@@ -156,7 +156,12 @@ export function ConstructorTableCard({
             lineHeight: 1,
             boxShadow: `0 12px 20px ${alpha(selected ? palette.plate : '#596270', mode === 'dark' ? 0.18 : 0.1)}`,
           }}>
-          {table.tableNumber}
+          <Box
+            component="span"
+            title={table.tableNumber}
+            sx={{ maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {table.tableNumber}
+          </Box>
         </Box>
       </Stack>
 

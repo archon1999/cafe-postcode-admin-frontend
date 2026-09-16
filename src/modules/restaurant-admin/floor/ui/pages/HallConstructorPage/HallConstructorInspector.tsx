@@ -59,12 +59,12 @@ export function HallConstructorInspector({
           <Stack spacing={2}>
             <TextField
               label={t('fields.tableNumber')}
-              type="number"
+              slotProps={{ htmlInput: { maxLength: 255 } }}
               value={selectedTable.tableNumber}
               onChange={(event) =>
                 updateSelectedTable((table) => ({
                   ...table,
-                  tableNumber: Math.max(1, Number(event.target.value) || 1),
+                  tableNumber: event.target.value,
                 }))
               }
             />

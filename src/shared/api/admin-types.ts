@@ -170,7 +170,7 @@ export type AdminDiningTable = {
   hall: string;
   hallName?: string | null;
   name: string;
-  tableNumber: number;
+  tableNumber: string;
   seatCount: number;
   shape: AdminDiningTableShape;
   shapeVariant?: AdminTableShapeVariant;
@@ -191,7 +191,7 @@ export type AdminDiningTable = {
 export type AdminDiningTablePayload = {
   hall: string;
   name: string;
-  tableNumber: number;
+  tableNumber: string;
   seatCount: number;
   shape: AdminDiningTableShape;
   shapeVariant?: AdminTableShapeVariant;
@@ -211,7 +211,7 @@ export type AdminDiningTablePayload = {
 export type AdminHallConstructorTable = {
   id: string;
   name: string;
-  tableNumber: number;
+  tableNumber: string;
   seatCount: number;
   shapeVariant: AdminTableShapeVariant;
   positionX: number;
@@ -245,7 +245,7 @@ export type AdminHallConstructorPayload = {
   tables: Array<{
     id?: string;
     name: string;
-    tableNumber: number;
+    tableNumber: string;
     seatCount: number;
     shapeVariant: AdminTableShapeVariant;
     positionX: number;

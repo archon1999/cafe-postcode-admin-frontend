@@ -41,7 +41,15 @@ export function getDefaultShapeVariant(seatCount: number): AdminTableShapeVarian
 }
 
 export function getNextTableNumber(tables: Pick<AdminHallConstructorTable, 'tableNumber'>[]) {
-  return tables.reduce((max, table) => Math.max(max, table.tableNumber), 0) + 1;
+  const used = new Set(tables.map((table) => String(table.tableNumber).trim()));
+  const max = tables.reduce((value, table) => {
+    const label = String(table.tableNumber).trim();
+    const number = /^\d+$/.test(label) ? Number(label) : 0;
+    return Number.isSafeInteger(number) && number < Number.MAX_SAFE_INTEGER ? Math.max(value, number) : value;
+  }, 0);
+  let next = max + 1;
+  while (used.has(String(next))) next = Number.isSafeInteger(next + 1) ? next + 1 : 1;
+  return String(next);
 }
 
 export function getRequiredGridRows(tables: Pick<AdminHallConstructorTable, 'positionY' | 'height'>[]) {
