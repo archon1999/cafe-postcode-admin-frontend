@@ -232,6 +232,8 @@ export const navData = (t: TFunction, options?: NavOptions): NavSectionProps['da
   const inventoryChildren = [
     { title: t('inventoryBalances'), path: RoutePath.inventoryBalances, icon: ICONS.inventory },
     { title: t('inventoryDocuments'), path: RoutePath.inventoryDocuments, icon: ICONS.orders },
+    { title: t('inventoryTransfers'), path: RoutePath.inventoryTransfers, icon: ICONS.orders },
+    { title: t('inventoryProduction'), path: RoutePath.inventoryProduction, icon: ICONS.kitchen },
     { title: t('inventoryRecipes'), path: RoutePath.inventoryRecipes, icon: ICONS.kitchen },
     { title: t('inventoryReports'), path: RoutePath.inventoryReports, icon: ICONS.reports },
     { title: t('inventoryInsights'), path: RoutePath.inventoryInsights, icon: ICONS.browser },

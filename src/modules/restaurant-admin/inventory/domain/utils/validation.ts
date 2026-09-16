@@ -6,9 +6,21 @@ export const isDecimal = (value: string, allowZero = false) =>
   (allowZero ? Number(value) >= 0 : Number(value) > 0);
 
 export function validateDocument(input: DocumentInput, posting = false): string | null {
-  if (!input.warehouse || !input.lines.length) return 'validation.warehouseLines';
+  if (!input.warehouse || (input.kind !== 'production' && !input.lines.length)) return 'validation.warehouseLines';
+  if (input.kind === 'transfer' && (!input.destinationWarehouse || input.destinationWarehouse === input.warehouse))
+    return 'validation.destinationWarehouse';
+  if (
+    input.kind === 'production' &&
+    (!input.productionRecipe ||
+      !input.plannedQuantity ||
+      !input.actualQuantity ||
+      !isDecimal(input.plannedQuantity) ||
+      !isDecimal(input.actualQuantity))
+  )
+    return 'validation.production';
   if (!input.occurredAt || !Number.isFinite(Date.parse(input.occurredAt))) return 'validation.date';
   if (
+    input.kind !== 'production' &&
     input.lines.some(
       (line) =>
         line.expiresOn && (!/^\d{4}-\d{2}-\d{2}$/.test(line.expiresOn) || !Number.isFinite(Date.parse(line.expiresOn))),
@@ -21,7 +33,10 @@ export function validateDocument(input: DocumentInput, posting = false): string 
         !line.item ||
         (!(input.kind === 'stocktake' && !posting && line.quantity === null) &&
           (line.quantity === null || !isDecimal(line.quantity, input.kind === 'stocktake'))) ||
-        (line.unitCost !== undefined && !isDecimal(line.unitCost, true)),
+        (line.unitCost !== undefined && !isDecimal(line.unitCost, true)) ||
+        (line.discountPercent !== undefined &&
+          (!isDecimal(line.discountPercent, true) || Number(line.discountPercent) > 100)) ||
+        (line.discountAmount !== undefined && !isDecimal(line.discountAmount, true)),
     )
   )
     return 'validation.quantity';
@@ -47,10 +62,14 @@ export function inventoryAttachmentId(value: string): string | null {
 }
 
 export function validateRecipe(input: RecipeInput): string | null {
-  if (!input.catalogItem || !input.lines.length) return 'validation.recipe';
+  if (Boolean(input.catalogItem) === Boolean(input.outputItem) || !input.lines.length) return 'validation.recipe';
   if (!isDecimal(input.yieldQuantity) || input.lines.some((line) => !line.item || !isDecimal(line.quantity)))
     return 'validation.quantity';
-  if (new Set(input.lines.map((line) => `${line.item}:${line.modifierOption ?? ''}`)).size !== input.lines.length)
+  if (
+    new Set(
+      input.lines.map((line) => `${line.item}:${line.modifierOption ?? ''}:${line.modifierCondition ?? 'selected'}`),
+    ).size !== input.lines.length
+  )
     return 'validation.duplicateRecipe';
   return null;
 }

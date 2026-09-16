@@ -43,7 +43,14 @@ export function InventorySection({
       <ListPageBody sx={{ overflow: 'auto', m: -3, p: 3 }}>
         {summary}
         <Card
-          sx={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: { xs: 420, md: 0 }, overflow: 'hidden' }}>
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            flex: 1,
+            minHeight: { xs: 420, md: 0 },
+            overflow: 'hidden',
+            boxShadow: (theme) => theme.customShadows.card,
+          }}>
           {(toolbar || tools) && (
             <Stack
               direction={{ xs: 'column', md: 'row' }}

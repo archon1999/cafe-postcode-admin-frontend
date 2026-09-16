@@ -49,10 +49,16 @@ export function ReferencesPanel({ kind }: { kind: ReferenceKind }) {
           headers={[
             t('fields.name'),
             ...(kind === 'items'
-              ? [t('fields.baseUnit'), t('fields.purchaseUnit'), t('fields.minQuantity'), t('fields.availabilityMode')]
+              ? [
+                  t('fields.itemKind'),
+                  t('fields.baseUnit'),
+                  t('fields.purchaseUnit'),
+                  t('fields.minQuantity'),
+                  t('fields.availabilityMode'),
+                ]
               : kind === 'suppliers'
                 ? [t('fields.taxNumber'), t('fields.phone')]
-                : [t('fields.isDefault')]),
+                : [t('fields.warehouseKind'), t('fields.isDefault')]),
             t('status'),
             '',
           ]}>
@@ -61,6 +67,7 @@ export function ReferencesPanel({ kind }: { kind: ReferenceKind }) {
               <TableCell>{row.name}</TableCell>
               {'baseUnit' in row && (
                 <>
+                  <TableCell>{t(`itemKinds.${row.kind}`)}</TableCell>
                   <TableCell>{t(`units.${row.baseUnit}`)}</TableCell>
                   <TableCell>
                     {row.purchaseUnit} ({inventoryNumber(row.purchaseFactor)})
@@ -81,7 +88,12 @@ export function ReferencesPanel({ kind }: { kind: ReferenceKind }) {
                   <TableCell>{row.phone || '—'}</TableCell>
                 </>
               )}
-              {'isDefault' in row && <TableCell>{row.isDefault ? t('yes') : '—'}</TableCell>}
+              {'isDefault' in row && (
+                <>
+                  <TableCell>{t(`warehouseKinds.${row.kind}`)}</TableCell>
+                  <TableCell>{row.isDefault ? t('yes') : '—'}</TableCell>
+                </>
+              )}
               <TableCell>
                 <Chip
                   size="small"

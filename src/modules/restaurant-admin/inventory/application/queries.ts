@@ -29,11 +29,21 @@ export function useInventoryAccess() {
   return {
     scope: restaurantId ?? profile?.id ?? '',
     ready: Boolean(profile && (!profile.isSuperuser || restaurantId)),
+    canView: has('view'),
     canManage: has('manage'),
     canPost: has('post'),
     canViewCost: has('view_cost'),
     canAnalyze: has('analyze') && has('view') && has('view_cost'),
   };
+}
+
+export function useInventoryRecipes(catalogItem?: string, enabled = true) {
+  const { scope, ready, canView } = useInventoryAccess();
+  return useQuery<Recipe[]>({
+    queryKey: inventoryKeys.query(scope, 'recipes', { catalogItem: catalogItem ?? '' }),
+    queryFn: () => inventoryRepository.recipes(catalogItem),
+    enabled: ready && canView && enabled,
+  });
 }
 
 type ReferenceData = {

@@ -211,7 +211,7 @@ const CatalogBrowserPage = () => {
         />
       </Dialog>
 
-      <Dialog open={isProductCreateOpen} onClose={() => setProductCreateOpen(false)} maxWidth="md" fullWidth>
+      <Dialog open={isProductCreateOpen} onClose={() => setProductCreateOpen(false)} maxWidth="md" fullWidth fullScreen>
         <CatalogItemFormDialog
           defaultCategoryId={selectedCategoryId}
           onCancel={() => setProductCreateOpen(false)}
@@ -219,7 +219,7 @@ const CatalogBrowserPage = () => {
         />
       </Dialog>
 
-      <Dialog open={Boolean(editingProduct)} onClose={() => setEditingProduct(null)} maxWidth="md" fullWidth>
+      <Dialog open={Boolean(editingProduct)} onClose={() => setEditingProduct(null)} maxWidth="md" fullWidth fullScreen>
         <CatalogItemFormDialog
           item={editingProduct}
           onCancel={() => setEditingProduct(null)}

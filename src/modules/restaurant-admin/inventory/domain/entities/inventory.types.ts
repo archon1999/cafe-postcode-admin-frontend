@@ -1,10 +1,13 @@
 export type Decimal = string;
 export type BaseUnit = 'g' | 'ml' | 'piece';
 export type AvailabilityMode = 'off' | 'warn' | 'block';
-export type Warehouse = { id: string; name: string; isActive: boolean; isDefault: boolean };
+export type WarehouseKind = 'general' | 'raw' | 'production' | 'sales';
+export type InventoryItemKind = 'raw' | 'semi_finished' | 'finished' | 'packaging' | 'non_food';
+export type Warehouse = { id: string; name: string; kind: WarehouseKind; isActive: boolean; isDefault: boolean };
 export type StockItem = {
   id: string;
   name: string;
+  kind: InventoryItemKind;
   sku: string;
   baseUnit: BaseUnit;
   purchaseUnit: string;
@@ -32,11 +35,15 @@ export type RecipeLine = {
   quantity: Decimal;
   modifierOption: string | null;
   modifierOptionName?: string;
+  modifierCondition?: 'selected' | 'not_selected';
 };
 export type Recipe = {
   id: string;
-  catalogItem: string;
-  catalogItemName: string;
+  catalogItem: string | null;
+  catalogItemName: string | null;
+  outputItem: string | null;
+  outputItemName: string | null;
+  targetType: 'catalog' | 'preparation';
   name: string;
   version: number;
   yieldQuantity: Decimal;
@@ -45,13 +52,26 @@ export type Recipe = {
   estimatedCost: Decimal | null;
   lines: RecipeLine[];
 };
-export type RecipeInput = Pick<Recipe, 'catalogItem' | 'name' | 'yieldQuantity' | 'trigger' | 'lines'>;
-export type ManualDocumentKind = 'opening' | 'receipt' | 'issue' | 'supplier_return' | 'customer_return' | 'stocktake';
+export type RecipeInput = Pick<Recipe, 'name' | 'yieldQuantity' | 'trigger' | 'lines'> & {
+  catalogItem?: string | null;
+  outputItem?: string | null;
+};
+export type ManualDocumentKind =
+  | 'opening'
+  | 'receipt'
+  | 'issue'
+  | 'supplier_return'
+  | 'customer_return'
+  | 'stocktake'
+  | 'transfer'
+  | 'production';
 export type DocumentKind = ManualDocumentKind | 'sale' | 'sale_return' | 'reversal';
 export type DocumentLineInput = {
   item: string;
   quantity: Decimal | null;
   unitCost?: Decimal;
+  discountPercent?: Decimal;
+  discountAmount?: Decimal;
   inputUnit: 'base' | 'purchase';
   lotNumber: string;
   expiresOn: string | null;
@@ -59,17 +79,23 @@ export type DocumentLineInput = {
 export type DocumentLine = Omit<DocumentLineInput, 'unitCost'> & {
   id: string;
   itemName: string;
+  role: 'normal' | 'input' | 'output';
   baseUnit: BaseUnit;
   baseQuantity: Decimal | null;
   expectedQuantity: Decimal | null;
   varianceQuantity: Decimal | null;
   varianceValue: Decimal | null;
   unitCost?: Decimal | null;
+  listUnitCost?: Decimal | null;
 };
 export type DocumentInput = {
   kind: ManualDocumentKind;
   warehouse: string;
+  destinationWarehouse?: string | null;
   supplier: string | null;
+  productionRecipe?: string | null;
+  plannedQuantity?: Decimal | null;
+  actualQuantity?: Decimal | null;
   reference: string;
   reason: string;
   occurredAt: string;
@@ -86,6 +112,8 @@ export type InventoryDocument = Omit<DocumentInput, 'kind' | 'lines' | 'attachme
   kind: DocumentKind;
   status: 'draft' | 'posted' | 'reversed';
   warehouseName: string;
+  destinationWarehouseName?: string | null;
+  productionRecipeName?: string | null;
   supplierName: string;
   postedAt: string | null;
   createdAt: string;

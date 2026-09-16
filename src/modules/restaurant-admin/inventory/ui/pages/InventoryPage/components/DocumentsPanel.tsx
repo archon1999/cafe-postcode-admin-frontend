@@ -9,17 +9,23 @@ import { formatMoney } from 'shared/utils/format-money';
 import { formatDateTime } from 'shared/utils/format-time';
 
 import { useInventoryAccess, useInventoryCommands, useInventoryReport } from '../../../../application';
-import type { InventoryDocument } from '../../../../domain';
+import type { InventoryDocument, ManualDocumentKind } from '../../../../domain';
 import { InventoryTable, QueryState, InventorySection, inventoryError } from '../../../shared';
 import { DocumentDetailDialog } from '../dialogs/DocumentDetailDialog';
 import { DocumentDialog } from '../dialogs/DocumentDialog';
 
 const PAGE_SIZE = 25;
-export function DocumentsPanel({ warehouse }: { warehouse: string }) {
+export function DocumentsPanel({
+  warehouse,
+  fixedKind,
+}: {
+  warehouse: string;
+  fixedKind?: Extract<ManualDocumentKind, 'transfer' | 'production'>;
+}) {
   const { t } = useTranslate('inventory');
   const { profile } = useCurrentUser();
   const { canManage, canViewCost } = useInventoryAccess();
-  const [kind, setKind] = useState('');
+  const [kind, setKind] = useState(fixedKind || '');
   const [status, setStatus] = useState('');
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(0);
@@ -72,7 +78,7 @@ export function DocumentsPanel({ warehouse }: { warehouse: string }) {
   };
   return (
     <InventorySection
-      title={t('documents.title')}
+      title={t(fixedKind ? `${fixedKind}.title` : 'documents.title')}
       toolbar={
         <>
           <TableSearchInput
@@ -87,33 +93,37 @@ export function DocumentsPanel({ warehouse }: { warehouse: string }) {
               setPage(0);
             }}
           />
-          <TextField
-            size="medium"
-            select
-            label={t('fields.kind')}
-            value={kind}
-            sx={{ minWidth: 190 }}
-            onChange={(event) => {
-              setKind(event.target.value);
-              setPage(0);
-            }}>
-            <MenuItem value="">{t('all')}</MenuItem>
-            {[
-              'receipt',
-              'opening',
-              'issue',
-              'supplier_return',
-              'customer_return',
-              'stocktake',
-              'sale',
-              'sale_return',
-              'reversal',
-            ].map((value) => (
-              <MenuItem key={value} value={value}>
-                {t(`kinds.${value}`)}
-              </MenuItem>
-            ))}
-          </TextField>
+          {!fixedKind && (
+            <TextField
+              size="medium"
+              select
+              label={t('fields.kind')}
+              value={kind}
+              sx={{ minWidth: 190 }}
+              onChange={(event) => {
+                setKind(event.target.value);
+                setPage(0);
+              }}>
+              <MenuItem value="">{t('all')}</MenuItem>
+              {[
+                'receipt',
+                'opening',
+                'issue',
+                'supplier_return',
+                'customer_return',
+                'stocktake',
+                'transfer',
+                'production',
+                'sale',
+                'sale_return',
+                'reversal',
+              ].map((value) => (
+                <MenuItem key={value} value={value}>
+                  {t(`kinds.${value}`)}
+                </MenuItem>
+              ))}
+            </TextField>
+          )}
           <TextField
             size="medium"
             select
@@ -148,20 +158,22 @@ export function DocumentsPanel({ warehouse }: { warehouse: string }) {
       action={
         canManage && (
           <Stack direction="row" spacing={1}>
-            <Button
-              variant="outlined"
-              disabled={saveDocument.isPending || balances.isLoading || balances.isError}
-              onClick={() => {
-                void startCount();
-              }}>
-              {t('stocktake.start')}
-            </Button>
+            {!fixedKind && (
+              <Button
+                variant="outlined"
+                disabled={saveDocument.isPending || balances.isLoading || balances.isError}
+                onClick={() => {
+                  void startCount();
+                }}>
+                {t('stocktake.start')}
+              </Button>
+            )}
             <Button
               variant="contained"
               color="black"
               startIcon={<Iconify icon="mingcute:add-line" />}
               onClick={() => setEditor({})}>
-              {t('add.document')}
+              {t(fixedKind ? `${fixedKind}.add` : 'add.document')}
             </Button>
           </Stack>
         )
@@ -178,7 +190,13 @@ export function DocumentsPanel({ warehouse }: { warehouse: string }) {
             t('document'),
             t('fields.occurredAt'),
             t('fields.kind'),
-            t('fields.supplier'),
+            t(
+              fixedKind === 'transfer'
+                ? 'fields.route'
+                : fixedKind === 'production'
+                  ? 'fields.productionOutput'
+                  : 'fields.supplier',
+            ),
             t('status'),
             ...(canViewCost ? [t('fields.totalValue')] : []),
             t('fields.responsibleName'),
@@ -192,7 +210,13 @@ export function DocumentsPanel({ warehouse }: { warehouse: string }) {
               </TableCell>
               <TableCell sx={{ whiteSpace: 'nowrap' }}>{formatDateTime(document.occurredAt)}</TableCell>
               <TableCell>{t(`kinds.${document.kind}`)}</TableCell>
-              <TableCell>{document.supplierName || '—'}</TableCell>
+              <TableCell>
+                {fixedKind === 'transfer'
+                  ? `${document.warehouseName} → ${document.destinationWarehouseName || '—'}`
+                  : fixedKind === 'production'
+                    ? `${document.productionRecipeName || '—'} · ${document.plannedQuantity || '—'} → ${document.actualQuantity || '—'}`
+                    : document.supplierName || '—'}
+              </TableCell>
               <TableCell>
                 <Chip
                   size="small"
@@ -229,6 +253,7 @@ export function DocumentsPanel({ warehouse }: { warehouse: string }) {
       {editor && (
         <DocumentDialog
           warehouse={warehouse}
+          defaultKind={fixedKind}
           initial={editor.initial}
           freshCount={editor.freshCount}
           onClose={() => setEditor(null)}

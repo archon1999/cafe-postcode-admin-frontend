@@ -27,18 +27,20 @@ import {
   type InventoryDocument,
   type ManualDocumentKind,
 } from '../../../../domain';
-import { InventoryHelp, QueryState, inventoryError } from '../../../shared';
+import { InventoryHelp, QueryState, inventoryError, inventoryInputValue } from '../../../shared';
 
 import { DocumentLinesEditor } from './DocumentLinesEditor';
 
 export function DocumentDialog({
   warehouse,
+  defaultKind,
   initial,
   freshCount = false,
   onClose,
   onSaved,
 }: {
   warehouse: string;
+  defaultKind?: ManualDocumentKind;
   initial?: InventoryDocument;
   freshCount?: boolean;
   onClose: () => void;
@@ -49,12 +51,19 @@ export function DocumentDialog({
   const { canViewCost, canPost } = useInventoryAccess();
   const items = useInventoryReference('items');
   const suppliers = useInventoryReference('suppliers');
+  const warehouses = useInventoryReference('warehouses');
+  const recipes = useInventoryReference('recipes');
   const commands = useInventoryCommands();
   const [savedId, setSavedId] = useState(initial?.id);
+  const initialKind = (initial?.kind as ManualDocumentKind) || defaultKind || 'receipt';
   const [form, setForm] = useState<DocumentInput>(() => ({
-    kind: (initial?.kind as ManualDocumentKind) || 'receipt',
+    kind: initialKind,
     warehouse: initial?.warehouse || warehouse,
+    destinationWarehouse: initial?.destinationWarehouse || null,
     supplier: initial?.supplier || null,
+    productionRecipe: initial?.productionRecipe || null,
+    plannedQuantity: inventoryInputValue(initial?.plannedQuantity || '1'),
+    actualQuantity: inventoryInputValue(initial?.actualQuantity || '1'),
     reference: initial?.reference || '',
     reason: initial?.reason || '',
     occurredAt: initial?.occurredAt || new Date().toISOString(),
@@ -62,23 +71,31 @@ export function DocumentDialog({
     responsibleName: initial?.responsibleName || profile?.fullName || '',
     notes: initial?.notes || '',
     idempotencyKey: crypto.randomUUID(),
-    lines: initial?.lines.map((line) => ({
-      item: line.item,
-      quantity: freshCount ? '' : line.quantity,
-      unitCost: canViewCost ? (line.unitCost ?? '0') : undefined,
-      inputUnit: line.inputUnit,
-      lotNumber: line.lotNumber,
-      expiresOn: line.expiresOn,
-    })) || [
-      {
-        item: '',
-        quantity: '',
-        unitCost: canViewCost ? '0' : undefined,
-        inputUnit: 'base',
-        lotNumber: '',
-        expiresOn: null,
-      },
-    ],
+    lines:
+      initial?.lines.map((line) => ({
+        item: line.item,
+        quantity: freshCount ? '' : inventoryInputValue(line.quantity),
+        unitCost: canViewCost ? inventoryInputValue(line.listUnitCost ?? line.unitCost ?? '0') : undefined,
+        discountPercent: inventoryInputValue(line.discountPercent ?? '0'),
+        discountAmount: canViewCost ? inventoryInputValue(line.discountAmount ?? '0') : undefined,
+        inputUnit: line.inputUnit,
+        lotNumber: line.lotNumber,
+        expiresOn: line.expiresOn,
+      })) ||
+      (initialKind === 'production'
+        ? []
+        : [
+            {
+              item: '',
+              quantity: '',
+              unitCost: canViewCost ? '0' : undefined,
+              discountPercent: '0',
+              discountAmount: canViewCost ? '0' : undefined,
+              inputUnit: 'base',
+              lotNumber: '',
+              expiresOn: null,
+            },
+          ]),
   }));
   const [date, setDate] = useState<Dayjs | null>(() => toTashkentDayjs(initial?.occurredAt || new Date()));
   const [error, setError] = useState('');
@@ -118,15 +135,23 @@ export function DocumentDialog({
     }
   };
   return (
-    <Dialog open fullWidth maxWidth="lg" onClose={pending ? undefined : onClose}>
+    <Dialog open fullScreen fullWidth maxWidth="lg" onClose={pending ? undefined : onClose}>
       <Box
-        sx={{ display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}
+        sx={{ display: 'flex', flexDirection: 'column', height: '100dvh', minHeight: 0, overflow: 'hidden' }}
         component="form"
         onSubmit={(event) => {
           event.preventDefault();
           void save(false);
         }}>
-        <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
+        <DialogTitle
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 1,
+            borderBottom: 1,
+            borderColor: 'divider',
+          }}>
           {initial ? `${t('edit.document')} · ${initial.number}` : t('add.document')}
           <InventoryHelp>
             <Stack spacing={1}>
@@ -138,7 +163,7 @@ export function DocumentDialog({
             </Stack>
           </InventoryHelp>
         </DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
           <Stack spacing={2} sx={{ pt: 1 }}>
             {error && <Alert severity="error">{error}</Alert>}
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
@@ -148,7 +173,7 @@ export function DocumentDialog({
                 fullWidth
                 label={t('fields.kind')}
                 value={form.kind}
-                disabled={Boolean(initial)}
+                disabled={Boolean(initial || defaultKind)}
                 onChange={(event) => setForm({ ...form, kind: event.target.value as ManualDocumentKind })}>
                 {[
                   'receipt',
@@ -156,6 +181,8 @@ export function DocumentDialog({
                   'issue',
                   'supplier_return',
                   'customer_return',
+                  'transfer',
+                  'production',
                   ...(initial?.kind === 'stocktake' ? ['stocktake'] : []),
                 ].map((kind) => (
                   <MenuItem key={kind} value={kind}>
@@ -190,7 +217,67 @@ export function DocumentDialog({
                     ))}
                 </TextField>
               )}
+              {form.kind === 'transfer' && (
+                <TextField
+                  size="medium"
+                  select
+                  fullWidth
+                  required
+                  label={t('fields.destinationWarehouse')}
+                  value={form.destinationWarehouse || ''}
+                  onChange={(event) => setForm({ ...form, destinationWarehouse: event.target.value || null })}>
+                  <MenuItem value="">{t('notSelected')}</MenuItem>
+                  {warehouses.data
+                    ?.filter((value) => value.isActive && value.id !== form.warehouse)
+                    .map((value) => (
+                      <MenuItem key={value.id} value={value.id}>
+                        {value.name}
+                      </MenuItem>
+                    ))}
+                </TextField>
+              )}
             </Stack>
+            {form.kind === 'production' && (
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                <TextField
+                  size="medium"
+                  select
+                  fullWidth
+                  required
+                  label={t('fields.productionRecipe')}
+                  value={form.productionRecipe || ''}
+                  onChange={(event) => setForm({ ...form, productionRecipe: event.target.value || null })}>
+                  <MenuItem value="">{t('notSelected')}</MenuItem>
+                  {recipes.data
+                    ?.filter((recipe) => recipe.targetType === 'preparation' && recipe.isActive)
+                    .map((recipe) => (
+                      <MenuItem key={recipe.id} value={recipe.id}>
+                        {recipe.outputItemName || recipe.name}
+                      </MenuItem>
+                    ))}
+                </TextField>
+                <TextField
+                  size="medium"
+                  type="number"
+                  fullWidth
+                  required
+                  label={t('fields.plannedQuantity')}
+                  value={form.plannedQuantity || ''}
+                  slotProps={{ htmlInput: { min: 0.000001, step: 'any' } }}
+                  onChange={(event) => setForm({ ...form, plannedQuantity: event.target.value })}
+                />
+                <TextField
+                  size="medium"
+                  type="number"
+                  fullWidth
+                  required
+                  label={t('fields.actualQuantity')}
+                  value={form.actualQuantity || ''}
+                  slotProps={{ htmlInput: { min: 0.000001, step: 'any' } }}
+                  onChange={(event) => setForm({ ...form, actualQuantity: event.target.value })}
+                />
+              </Stack>
+            )}
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
               <TextField
                 size="medium"
@@ -214,19 +301,23 @@ export function DocumentDialog({
                 onChange={(event) => setForm({ ...form, reason: event.target.value })}
               />
             </Stack>
-            <QueryState query={items}>
-              <DocumentLinesEditor
-                kind={form.kind}
-                lines={form.lines}
-                items={items.data || []}
-                showCosts={canViewCost}
-                lockedItems={initial?.kind === 'stocktake'}
-                expectedQuantities={Object.fromEntries(
-                  initial?.lines.map((line) => [line.item, line.expectedQuantity]) || [],
-                )}
-                onChange={(lines) => setForm({ ...form, lines })}
-              />
-            </QueryState>
+            {form.kind === 'production' ? (
+              <Alert severity="info">{t('production.autoIngredients')}</Alert>
+            ) : (
+              <QueryState query={items}>
+                <DocumentLinesEditor
+                  kind={form.kind}
+                  lines={form.lines}
+                  items={items.data || []}
+                  showCosts={canViewCost}
+                  lockedItems={initial?.kind === 'stocktake'}
+                  expectedQuantities={Object.fromEntries(
+                    initial?.lines.map((line) => [line.item, line.expectedQuantity]) || [],
+                  )}
+                  onChange={(lines) => setForm({ ...form, lines })}
+                />
+              </QueryState>
+            )}
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
               {canViewCost && (
                 <TextField
@@ -261,7 +352,7 @@ export function DocumentDialog({
             />
           </Stack>
         </DialogContent>
-        <DialogActions sx={{ flexWrap: 'wrap', gap: 1 }}>
+        <DialogActions sx={{ flexWrap: 'wrap', gap: 1, borderTop: 1, borderColor: 'divider', px: 3, py: 2 }}>
           <Button onClick={onClose} disabled={pending}>
             {t('cancel')}
           </Button>

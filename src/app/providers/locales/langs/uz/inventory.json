@@ -1,6 +1,16 @@
 {
   "title": "Ombor",
   "subtitle": "Mahsulot harakati, retsept bo‘yicha sarf va haqiqiy qoldiq o‘rtasidagi farqni kuzating.",
+  "catalogRecipe": {
+    "title": "Mahsulot retsepti",
+    "description": "Sotuv vaqtida ombordan chiqadigan ingredientlar va ularning miqdorini boshqaring.",
+    "create": "Retsept yaratish",
+    "empty": "Bu mahsulot uchun retsept hali yaratilmagan.",
+    "estimatedCost": "Taxminiy tannarx",
+    "salePrice": "Sotuv narxi",
+    "grossMargin": "Yalpi marja",
+    "foodCostPercent": "Tannarx ulushi"
+  },
   "warehouse": "Ombor",
   "selectRestaurant": "Ombor bilan ishlash uchun yuqoridagi filial tanlovidan restoranni tanlang.",
   "loading": "Yuklanmoqda",
@@ -68,6 +78,8 @@
     "supplier_return": "Yetkazib beruvchiga qaytarish",
     "customer_return": "Mijozdan qaytish",
     "stocktake": "Inventarizatsiya",
+    "transfer": "Omborlararo transfer",
+    "production": "Ishlab chiqarish",
     "sale": "Retsept sarfi",
     "sale_return": "Sarfni qaytarish",
     "reversal": "Teskari yozuv"
@@ -75,6 +87,19 @@
   "triggers": {
     "dispatch": "Oshxonaga yuborilganda",
     "sale": "Sotuv yakunlanganda"
+  },
+  "itemKinds": {
+    "raw": "Xomashyo",
+    "semi_finished": "Yarim tayyor mahsulot",
+    "finished": "Tayyor mahsulot",
+    "packaging": "Qadoqlash",
+    "non_food": "Xo‘jalik mahsuloti"
+  },
+  "warehouseKinds": {
+    "general": "Umumiy",
+    "raw": "Xomashyo ombori",
+    "production": "Ishlab chiqarish ombori",
+    "sales": "Sotuv ombori"
   },
   "add": {
     "items": "Mahsulot qo‘shish",
@@ -98,6 +123,8 @@
   "fields": {
     "name": "Nomi",
     "sku": "Artikul",
+    "itemKind": "Mahsulot turi",
+    "warehouseKind": "Ombor turi",
     "baseUnit": "Asosiy birlik",
     "purchaseUnit": "Xarid birligi nomi",
     "purchaseFactor": "Xarid birligi koeffitsiyenti",
@@ -107,14 +134,23 @@
     "toleranceValue": "Og‘ish chegarasi (so‘m)",
     "availabilityMode": "Menyu mavjudligi",
     "isDefault": "POS uchun asosiy ombor",
+    "destinationWarehouse": "Qabul qiluvchi ombor",
+    "productionRecipe": "Yarim tayyor mahsulot retsepti",
+    "route": "Yo‘nalish",
+    "productionOutput": "Mahsulot va chiqish",
+    "plannedQuantity": "Rejalashtirilgan chiqish",
     "taxNumber": "STIR",
     "phone": "Telefon",
     "address": "Manzil",
     "item": "Mahsulot",
+    "outputItem": "Ishlab chiqarish natijasi",
     "quantity": "Miqdor",
     "actualQuantity": "Haqiqiy qoldiq",
     "inputUnit": "Kiritish birligi",
     "unitCost": "Birlik narxi (so‘m)",
+    "listUnitCost": "Chegirmagacha narx",
+    "discountPercent": "Chegirma (%)",
+    "discountAmount": "Chegirma (so‘m)",
     "lotNumber": "Partiya",
     "expiresOn": "Yaroqlilik sanasi",
     "kind": "Harakat turi",
@@ -134,7 +170,8 @@
     "yieldQuantity": "Retsept chiqishi (porsiya / sotuv birligi)",
     "trigger": "Sarf yoziladigan vaqt",
     "grossQuantity": "Ombordan olinadigan miqdor",
-    "modifierOption": "Qo‘shimcha sharti",
+    "modifierOption": "Xususiyat",
+    "modifierCondition": "Sarf qoidasi",
     "averageCost": "O‘rtacha birlik tannarxi",
     "value": "Qiymat",
     "balanceAfter": "Harakatdan keyin",
@@ -164,6 +201,8 @@
     "duplicateItem": "Bir hujjatda mahsulot takrorlanmasin. Miqdorlarni bitta qatorda birlashtiring.",
     "referenceResponsible": "Hujjat raqami va mas’ul shaxsni kiriting.",
     "supplier": "Yetkazib beruvchini tanlang.",
+    "destinationWarehouse": "Manba va undan farqli qabul qiluvchi omborni tanlang.",
+    "production": "Retsept, rejalashtirilgan va haqiqiy chiqish miqdorini kiriting.",
     "reason": "Harakat sababini kiriting.",
     "recipe": "Menyu mahsuloti va kamida bitta ingredientni tanlang.",
     "duplicateRecipe": "Bir ingredient va qo‘shimcha sharti takrorlanmasin.",
@@ -186,6 +225,15 @@
     "title": "Kirim va chiqim hujjatlari",
     "description": "Xarid, qaytarish, buzilish va inventarizatsiya hujjatlari. Mahsulot kirimi uchun to‘lov alohida hisoblanadi."
   },
+  "transfer": {
+    "title": "Omborlararo transferlar",
+    "add": "Transfer yaratish"
+  },
+  "production": {
+    "title": "Ishlab chiqarish partiyalari",
+    "add": "Ishlab chiqarish yaratish",
+    "autoIngredients": "Ingredientlar tanlangan retsept va rejalashtirilgan chiqish bo‘yicha avtomatik hisoblanadi. Tasdiqlanganda xomashyo chiqib, haqiqiy miqdordagi yarim tayyor mahsulot kirim qilinadi."
+  },
   "stocktake": {
     "start": "Sanashni boshlash",
     "approve": "Sanashni tasdiqlash",
@@ -195,10 +243,15 @@
   },
   "recipes": {
     "title": "Taom retseptlari",
-    "description": "Ingredientlarni taom va qo‘shimchalarga bog‘lang. Har yangi tahrir alohida versiya sifatida saqlanadi.",
+    "catalogTab": "Menyu retseptlari",
+    "preparationTab": "Yarim tayyor mahsulotlar",
+    "description": "Ingredientlarni taom va qo‘shimchalarga bog‘lang. Har bir tahrir tarixi audit uchun saqlanadi.",
+    "update": "Retseptni yangilash",
     "newVersion": "Yangi versiya",
     "version": "{{version}}-versiya",
     "always": "Doim sarflanadi",
+    "whenSelected": "Tanlanganda qo‘shiladi",
+    "whenNotSelected": "Tanlanganda sarflanmaydi",
     "help": "Tozalangan miqdorni emas, ombordan olinadigan xom miqdorni kiriting. Masalan, 100 g tozalangan kartoshka uchun 20% chiqindi bo‘lsa 125 g yoziladi. Eski sotuvlar retsept tahririda o‘zgarmaydi.",
     "triggerHelp": "Taomlar oshxonaga yuborilganda sarflanadi. Tayyor ichimlik yoki qadoqlangan mahsulot uchun sotuv yakunini tanlang.",
     "deactivateHelp": "«{{name}}» retsepti o‘chirilsa, keyingi sotuvlarda uning sarfi avtomatik hisoblanmaydi. Oldingi harakatlar saqlanadi."
@@ -310,6 +363,8 @@
   "sections": {
     "balances": "Qoldiqlar",
     "documents": "Kirim-chiqim",
+    "transfers": "Transferlar",
+    "production": "Ishlab chiqarish",
     "recipes": "Retseptlar",
     "reports": "Hisobotlar",
     "insights": "Tahlil",

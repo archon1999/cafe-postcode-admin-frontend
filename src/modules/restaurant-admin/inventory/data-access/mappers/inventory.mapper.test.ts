@@ -34,7 +34,9 @@ describe('inventory transport boundary', () => {
       yieldQuantity: '2',
       lines: [{ id: 'old-line', item: 'egg', itemName: 'Egg', quantity: '0.000001', modifierOption: '' }],
     });
-    expect(mapped.lines).toEqual([{ item: 'egg', quantity: '0.000001', modifierOption: null }]);
+    expect(mapped.lines).toEqual([
+      { item: 'egg', quantity: '0.000001', modifierOption: null, modifierCondition: 'selected' },
+    ]);
     expect(mapped.trigger).toBe('sale');
   });
 });

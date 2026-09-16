@@ -95,6 +95,7 @@ export function FormDialog({
   error,
   submitLabel,
   wide = false,
+  fullScreen = false,
 }: {
   title: string;
   help?: ReactNode;
@@ -105,28 +106,48 @@ export function FormDialog({
   error?: string;
   submitLabel?: string;
   wide?: boolean;
+  fullScreen?: boolean;
 }) {
   const { t } = useTranslate('inventory');
   return (
-    <Dialog open onClose={pending ? undefined : onClose} fullWidth maxWidth={wide ? 'lg' : 'sm'}>
+    <Dialog
+      open
+      onClose={pending ? undefined : onClose}
+      fullWidth
+      fullScreen={fullScreen}
+      maxWidth={wide ? 'lg' : 'sm'}>
       <Box
-        sx={{ display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: fullScreen ? '100dvh' : 'auto',
+          minHeight: 0,
+          overflow: 'hidden',
+        }}
         component="form"
         onSubmit={(event) => {
           event.preventDefault();
           onSubmit();
         }}>
-        <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
+        <DialogTitle
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 1,
+            borderBottom: 1,
+            borderColor: 'divider',
+          }}>
           {title}
           <InventoryHelp>{help}</InventoryHelp>
         </DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
           <Stack spacing={2} sx={{ pt: 1 }}>
             {error && <Alert severity="error">{error}</Alert>}
             {children}
           </Stack>
         </DialogContent>
-        <DialogActions sx={{ flexWrap: 'wrap', gap: 1 }}>
+        <DialogActions sx={{ flexWrap: 'wrap', gap: 1, borderTop: 1, borderColor: 'divider', px: 3, py: 2 }}>
           <Button disabled={pending} onClick={onClose}>
             {t('cancel')}
           </Button>

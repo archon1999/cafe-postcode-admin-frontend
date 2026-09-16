@@ -17,6 +17,8 @@ import { ReportsPanel } from './components/ReportsPanel';
 type InventorySectionKey =
   | 'balances'
   | 'documents'
+  | 'transfers'
+  | 'production'
   | 'recipes'
   | 'reports'
   | 'insights'
@@ -39,7 +41,7 @@ export default function InventoryPage({ section }: { section: InventorySectionKe
 
 function InventoryWorkspace({ section, scope }: { section: InventorySectionKey; scope: string }) {
   const { t } = useTranslate('inventory');
-  const needsWarehouse = ['balances', 'documents', 'reports', 'insights'].includes(section);
+  const needsWarehouse = ['balances', 'documents', 'transfers', 'production', 'reports', 'insights'].includes(section);
   const warehouses = useInventoryReference('warehouses', needsWarehouse);
   const storageKey = `inventory-warehouse:${scope}`;
   const [selectedWarehouse, setSelectedWarehouse] = useState(() => StorageService.getItem<string>(storageKey) || '');
@@ -82,6 +84,8 @@ function InventoryWorkspace({ section, scope }: { section: InventorySectionKey; 
       <Fragment key={`${scope}-${warehouse}`}>
         {section === 'balances' && <BalancesPanel warehouse={warehouse} />}
         {section === 'documents' && <DocumentsPanel warehouse={warehouse} />}
+        {section === 'transfers' && <DocumentsPanel warehouse={warehouse} fixedKind="transfer" />}
+        {section === 'production' && <DocumentsPanel warehouse={warehouse} fixedKind="production" />}
         {section === 'recipes' && <RecipesPanel />}
         {section === 'reports' && <ReportsPanel warehouse={warehouse} />}
         {section === 'insights' && <InsightsPanel warehouse={warehouse} />}

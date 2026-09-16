@@ -286,6 +286,8 @@ const mainChildren: RouteObject[] = [
   },
   { path: RoutePath.inventoryBalances, element: <InventoryPage section="balances" /> },
   { path: RoutePath.inventoryDocuments, element: <InventoryPage section="documents" /> },
+  { path: RoutePath.inventoryTransfers, element: <InventoryPage section="transfers" /> },
+  { path: RoutePath.inventoryProduction, element: <InventoryPage section="production" /> },
   { path: RoutePath.inventoryRecipes, element: <InventoryPage section="recipes" /> },
   { path: RoutePath.inventoryReports, element: <InventoryPage section="reports" /> },
   { path: RoutePath.inventoryInsights, element: <InventoryPage section="insights" /> },

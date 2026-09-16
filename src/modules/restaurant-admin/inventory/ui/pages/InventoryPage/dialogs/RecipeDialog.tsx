@@ -16,23 +16,36 @@ import { Iconify } from 'shared/ui/Iconify';
 
 import { useInventoryCommands, useInventoryReference } from '../../../../application';
 import { validateRecipe, type CatalogOption, type Recipe, type RecipeInput } from '../../../../domain';
-import { FormDialog, InventoryTable, QueryState, inventoryError } from '../../../shared';
+import { FormDialog, InventoryTable, QueryState, inventoryError, inventoryInputValue } from '../../../shared';
 
-export function RecipeDialog({ initial, onClose }: { initial?: Recipe; onClose: () => void }) {
+export function RecipeDialog({
+  initial,
+  catalogItem,
+  targetType,
+  onClose,
+}: {
+  initial?: Recipe;
+  catalogItem?: CatalogOption;
+  targetType?: Recipe['targetType'];
+  onClose: () => void;
+}) {
   const { t } = useTranslate('inventory');
   const items = useInventoryReference('items');
   const catalog = useInventoryReference('catalogOptions');
   const { saveRecipe } = useInventoryCommands();
+  const resolvedTargetType = initial?.targetType || (catalogItem ? 'catalog' : targetType || 'catalog');
   const [error, setError] = useState('');
   const [form, setForm] = useState<RecipeInput>(() => ({
-    catalogItem: initial?.catalogItem || '',
+    catalogItem: initial?.catalogItem || catalogItem?.id || '',
+    outputItem: initial?.outputItem || null,
     name: initial?.name || '',
-    yieldQuantity: initial?.yieldQuantity || '1',
+    yieldQuantity: inventoryInputValue(initial?.yieldQuantity || '1'),
     trigger: initial?.trigger || 'dispatch',
     lines: initial?.lines.map((line) => ({
       item: line.item,
-      quantity: line.quantity,
+      quantity: inventoryInputValue(line.quantity),
       modifierOption: line.modifierOption,
+      modifierCondition: line.modifierCondition ?? 'selected',
     })) || [{ item: '', quantity: '', modifierOption: null }],
   }));
   const options = [...(catalog.data || [])].sort(
@@ -40,7 +53,7 @@ export function RecipeDialog({ initial, onClose }: { initial?: Recipe; onClose: 
       (a.categoryName || t('uncategorized')).localeCompare(b.categoryName || t('uncategorized')) ||
       a.name.localeCompare(b.name),
   );
-  const selected = catalog.data?.find((item) => item.id === form.catalogItem);
+  const selected = catalog.data?.find((item) => item.id === form.catalogItem) || catalogItem;
   const save = async () => {
     const invalid = validateRecipe(form);
     if (invalid) {
@@ -56,40 +69,72 @@ export function RecipeDialog({ initial, onClose }: { initial?: Recipe; onClose: 
   };
   return (
     <FormDialog
-      title={t(initial ? 'recipes.newVersion' : 'add.recipe')}
+      title={t(initial ? 'recipes.update' : 'add.recipe')}
       help={t('recipes.help')}
       wide
+      fullScreen
       onClose={onClose}
       onSubmit={() => {
         void save();
       }}
       pending={saveRecipe.isPending || catalog.isLoading || items.isLoading}
       error={error}>
-      <QueryState query={catalog}>
+      <QueryState query={resolvedTargetType === 'catalog' ? catalog : items}>
         <Stack direction={{ xs: 'column', sm: 'row' }} gap={2}>
-          <Autocomplete
-            fullWidth
-            size="medium"
-            options={options}
-            value={selected || null}
-            disabled={Boolean(initial)}
-            getOptionKey={(option) => option.id}
-            getOptionLabel={(option) => option.name}
-            isOptionEqualToValue={(option, value) => option.id === value.id}
-            groupBy={(option) => option.categoryName || t('uncategorized')}
-            filterOptions={createFilterOptions<CatalogOption>({
-              stringify: (option) => `${option.name} ${option.categoryName || t('uncategorized')}`,
-            })}
-            noOptionsText={t('empty.title')}
-            onChange={(_, option) =>
-              setForm({
-                ...form,
-                catalogItem: option?.id || '',
-                lines: form.lines.map((line) => ({ ...line, modifierOption: null })),
-              })
-            }
-            renderInput={(params) => <TextField {...params} size="medium" required label={t('fields.catalogItem')} />}
-          />
+          {resolvedTargetType === 'catalog' ? (
+            <Autocomplete
+              fullWidth
+              size="medium"
+              options={catalogItem ? [catalogItem] : options}
+              value={selected || null}
+              disabled={Boolean(initial || catalogItem)}
+              getOptionKey={(option) => option.id}
+              getOptionLabel={(option) => option.name}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+              groupBy={(option) => option.categoryName || t('uncategorized')}
+              filterOptions={createFilterOptions<CatalogOption>({
+                stringify: (option) => `${option.name} ${option.categoryName || t('uncategorized')}`,
+              })}
+              noOptionsText={t('empty.title')}
+              onChange={(_, option) =>
+                setForm({
+                  ...form,
+                  catalogItem: option?.id || '',
+                  outputItem: null,
+                  lines: form.lines.map((line) => ({
+                    ...line,
+                    modifierOption: null,
+                    modifierCondition: 'selected',
+                  })),
+                })
+              }
+              renderInput={(params) => <TextField {...params} size="medium" required label={t('fields.catalogItem')} />}
+            />
+          ) : (
+            <TextField
+              select
+              fullWidth
+              required
+              size="medium"
+              disabled={Boolean(initial)}
+              label={t('fields.outputItem')}
+              value={form.outputItem || ''}
+              onChange={(event) => setForm({ ...form, catalogItem: null, outputItem: event.target.value || null })}>
+              <MenuItem value="">{t('notSelected')}</MenuItem>
+              {items.data
+                ?.filter(
+                  (item) =>
+                    item.isActive &&
+                    ['semi_finished', 'finished'].includes(item.kind) &&
+                    (item.id === form.outputItem || !form.lines.some((line) => line.item === item.id)),
+                )
+                .map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    {item.name}
+                  </MenuItem>
+                ))}
+            </TextField>
+          )}
           <TextField
             size="medium"
             fullWidth
@@ -121,7 +166,13 @@ export function RecipeDialog({ initial, onClose }: { initial?: Recipe; onClose: 
       </TextField>
       <QueryState query={items}>
         <InventoryTable
-          headers={[t('fields.item'), t('fields.grossQuantity'), t('fields.baseUnit'), t('fields.modifierOption'), '']}>
+          headers={[
+            t('fields.item'),
+            t('fields.grossQuantity'),
+            t('fields.baseUnit'),
+            ...(resolvedTargetType === 'catalog' ? [t('fields.modifierOption')] : []),
+            '',
+          ]}>
           {form.lines.map((line, index) => (
             <TableRow key={index}>
               <TableCell sx={{ minWidth: 200 }}>
@@ -167,29 +218,65 @@ export function RecipeDialog({ initial, onClose }: { initial?: Recipe; onClose: 
                 />
               </TableCell>
               <TableCell>{t(`units.${items.data?.find((item) => item.id === line.item)?.baseUnit || 'g'}`)}</TableCell>
-              <TableCell sx={{ minWidth: 210 }}>
-                <TextField
-                  select
-                  fullWidth
-                  size="medium"
-                  label={t('fields.modifierOption')}
-                  value={line.modifierOption || ''}
-                  onChange={(event) =>
-                    setForm({
-                      ...form,
-                      lines: form.lines.map((value, at) =>
-                        at === index ? { ...value, modifierOption: event.target.value || null } : value,
-                      ),
-                    })
-                  }>
-                  <MenuItem value="">{t('recipes.always')}</MenuItem>
-                  {selected?.modifierOptions.map((modifier) => (
-                    <MenuItem key={modifier.id} value={modifier.id}>
-                      {modifier.groupName} · {modifier.name}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </TableCell>
+              {resolvedTargetType === 'catalog' && (
+                <TableCell sx={{ minWidth: 210 }}>
+                  <Stack spacing={1}>
+                    <TextField
+                      select
+                      fullWidth
+                      size="medium"
+                      label={t('fields.modifierOption')}
+                      value={line.modifierOption || ''}
+                      onChange={(event) =>
+                        setForm({
+                          ...form,
+                          lines: form.lines.map((value, at) =>
+                            at === index
+                              ? {
+                                  ...value,
+                                  modifierOption: event.target.value || null,
+                                  modifierCondition: event.target.value
+                                    ? (value.modifierCondition ?? 'selected')
+                                    : 'selected',
+                                }
+                              : value,
+                          ),
+                        })
+                      }>
+                      <MenuItem value="">{t('recipes.always')}</MenuItem>
+                      {selected?.modifierOptions.map((modifier) => (
+                        <MenuItem key={modifier.id} value={modifier.id}>
+                          {modifier.groupName} · {modifier.name}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                    {line.modifierOption && (
+                      <TextField
+                        select
+                        fullWidth
+                        size="small"
+                        label={t('fields.modifierCondition')}
+                        value={line.modifierCondition ?? 'selected'}
+                        onChange={(event) =>
+                          setForm({
+                            ...form,
+                            lines: form.lines.map((value, at) =>
+                              at === index
+                                ? {
+                                    ...value,
+                                    modifierCondition: event.target.value as 'selected' | 'not_selected',
+                                  }
+                                : value,
+                            ),
+                          })
+                        }>
+                        <MenuItem value="selected">{t('recipes.whenSelected')}</MenuItem>
+                        <MenuItem value="not_selected">{t('recipes.whenNotSelected')}</MenuItem>
+                      </TextField>
+                    )}
+                  </Stack>
+                </TableCell>
+              )}
               <TableCell>
                 <IconButton
                   color="error"
@@ -203,7 +290,10 @@ export function RecipeDialog({ initial, onClose }: { initial?: Recipe; onClose: 
         </InventoryTable>
         <Button
           onClick={() =>
-            setForm({ ...form, lines: [...form.lines, { item: '', quantity: '', modifierOption: null }] })
+            setForm({
+              ...form,
+              lines: [...form.lines, { item: '', quantity: '', modifierOption: null, modifierCondition: 'selected' }],
+            })
           }>
           {t('addLine')}
         </Button>

@@ -5,13 +5,14 @@ import { useTranslate } from 'app/providers/locales';
 
 import { useInventoryAccess, useInventoryCommands } from '../../../../application';
 import { isDecimal, type ReferenceKind, type StockItem, type Supplier, type Warehouse } from '../../../../domain';
-import { FormDialog, inventoryError } from '../../../shared';
+import { FormDialog, inventoryError, inventoryInputValue } from '../../../shared';
 
 type Props = { kind: ReferenceKind; initial?: Warehouse | StockItem | Supplier; onClose: () => void };
 export function ReferenceDialog({ kind, initial, onClose }: Props) {
   const { t } = useTranslate('inventory');
   const { canViewCost } = useInventoryAccess();
   const { saveReference } = useInventoryCommands();
+  const initialEntityKind = initial && 'kind' in initial ? initial.kind : kind === 'warehouses' ? 'general' : 'raw';
   const [form, setForm] = useState(() => ({
     name: '',
     sku: '',
@@ -25,10 +26,20 @@ export function ReferenceDialog({ kind, initial, onClose }: Props) {
     availabilityMode: 'warn' as StockItem['availabilityMode'],
     isActive: true,
     isDefault: false,
+    entityKind: initialEntityKind,
     taxNumber: '',
     phone: '',
     address: '',
     ...initial,
+    ...(initial && 'purchaseFactor' in initial
+      ? {
+          purchaseFactor: inventoryInputValue(initial.purchaseFactor),
+          minQuantity: inventoryInputValue(initial.minQuantity),
+          tolerancePercent: inventoryInputValue(initial.tolerancePercent),
+          toleranceQuantity: inventoryInputValue(initial.toleranceQuantity),
+          toleranceValue: inventoryInputValue(initial.toleranceValue),
+        }
+      : {}),
   }));
   const [error, setError] = useState('');
   const field = (
@@ -75,11 +86,12 @@ export function ReferenceDialog({ kind, initial, onClose }: Props) {
     const common = { name: form.name.trim(), isActive: form.isActive };
     const payload =
       kind === 'warehouses'
-        ? { ...common, isDefault: form.isDefault }
+        ? { ...common, kind: form.entityKind as Warehouse['kind'], isDefault: form.isDefault }
         : kind === 'suppliers'
           ? { ...common, taxNumber: form.taxNumber, phone: form.phone, address: form.address }
           : {
               ...common,
+              kind: form.entityKind as StockItem['kind'],
               sku: form.sku,
               baseUnit: form.baseUnit,
               purchaseUnit: form.purchaseUnit,
@@ -123,6 +135,19 @@ export function ReferenceDialog({ kind, initial, onClose }: Props) {
       {field('name')}
       {kind === 'items' && (
         <>
+          <TextField
+            size="medium"
+            select
+            fullWidth
+            label={t('fields.itemKind')}
+            value={form.entityKind}
+            onChange={(event) => setForm({ ...form, entityKind: event.target.value as typeof form.entityKind })}>
+            {['raw', 'semi_finished', 'finished', 'packaging', 'non_food'].map((value) => (
+              <MenuItem key={value} value={value}>
+                {t(`itemKinds.${value}`)}
+              </MenuItem>
+            ))}
+          </TextField>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
             {field('sku')}
             <TextField
@@ -188,12 +213,27 @@ export function ReferenceDialog({ kind, initial, onClose }: Props) {
         </>
       )}
       {kind === 'warehouses' && (
-        <FormControlLabel
-          label={t('fields.isDefault')}
-          control={
-            <Switch checked={form.isDefault} onChange={(_, checked) => setForm({ ...form, isDefault: checked })} />
-          }
-        />
+        <>
+          <TextField
+            size="medium"
+            select
+            fullWidth
+            label={t('fields.warehouseKind')}
+            value={form.entityKind}
+            onChange={(event) => setForm({ ...form, entityKind: event.target.value as typeof form.entityKind })}>
+            {['general', 'raw', 'production', 'sales'].map((value) => (
+              <MenuItem key={value} value={value}>
+                {t(`warehouseKinds.${value}`)}
+              </MenuItem>
+            ))}
+          </TextField>
+          <FormControlLabel
+            label={t('fields.isDefault')}
+            control={
+              <Switch checked={form.isDefault} onChange={(_, checked) => setForm({ ...form, isDefault: checked })} />
+            }
+          />
+        </>
       )}
       <FormControlLabel
         label={t('active')}

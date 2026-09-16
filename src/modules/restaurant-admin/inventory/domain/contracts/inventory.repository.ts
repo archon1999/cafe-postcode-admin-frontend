@@ -23,7 +23,7 @@ export interface InventoryRepository {
   items(): Promise<StockItem[]>;
   suppliers(): Promise<Supplier[]>;
   saveReference(kind: ReferenceKind, payload: ReferenceInput, id?: string): Promise<unknown>;
-  recipes(): Promise<Recipe[]>;
+  recipes(catalogItem?: string): Promise<Recipe[]>;
   catalogOptions(): Promise<CatalogOption[]>;
   saveRecipe(payload: RecipeInput): Promise<Recipe>;
   deactivateRecipe(id: string): Promise<unknown>;

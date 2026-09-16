@@ -197,7 +197,7 @@ const ModifierGroupsPage = () => {
         ) : null}
       </ListPageBody>
 
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="md" fullWidth>
+      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="md" fullWidth fullScreen>
         <CatalogModifierGroupForm
           group={editingGroup}
           onCancel={() => setDialogOpen(false)}

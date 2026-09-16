@@ -50,6 +50,8 @@
   "inventory": "Склад",
   "inventoryBalances": "Остатки",
   "inventoryDocuments": "Приход и расход",
+  "inventoryTransfers": "Перемещения",
+  "inventoryProduction": "Производство",
   "inventoryRecipes": "Рецепты",
   "inventoryReports": "Отчёты",
   "inventoryInsights": "Анализ",

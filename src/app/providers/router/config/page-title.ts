@@ -139,6 +139,16 @@ const TITLE_RULES: TitleRule[] = [
     resolve: (_params, t) => [t('inventory:sections.documents'), t('inventory:title')],
   },
   {
+    route: AppRoutes.INVENTORY_TRANSFERS,
+    namespaces: ['inventory'],
+    resolve: (_params, t) => [t('inventory:sections.transfers'), t('inventory:title')],
+  },
+  {
+    route: AppRoutes.INVENTORY_PRODUCTION,
+    namespaces: ['inventory'],
+    resolve: (_params, t) => [t('inventory:sections.production'), t('inventory:title')],
+  },
+  {
     route: AppRoutes.INVENTORY_RECIPES,
     namespaces: ['inventory'],
     resolve: (_params, t) => [t('inventory:sections.recipes'), t('inventory:title')],

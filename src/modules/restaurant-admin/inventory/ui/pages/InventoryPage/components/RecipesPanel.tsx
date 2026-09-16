@@ -6,8 +6,10 @@ import {
   Button,
   Chip,
   Stack,
+  Tab,
   TableCell,
   TableRow,
+  Tabs,
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
@@ -38,9 +40,14 @@ export function RecipesPanel() {
   const [deactivating, setDeactivating] = useState<Recipe | null>(null);
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
+  const [targetType, setTargetType] = useState<Recipe['targetType']>('catalog');
   const rows =
-    query.data?.filter((recipe) =>
-      `${recipe.catalogItemName} ${recipe.name}`.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
+    query.data?.filter(
+      (recipe) =>
+        recipe.targetType === targetType &&
+        `${recipe.catalogItemName || recipe.outputItemName || ''} ${recipe.name}`
+          .toLocaleLowerCase()
+          .includes(search.toLocaleLowerCase()),
     ) ?? [];
   const deactivate = async () => {
     if (!deactivating) return;
@@ -76,6 +83,13 @@ export function RecipesPanel() {
           </Button>
         )
       }>
+      <Tabs
+        value={targetType}
+        onChange={(_, value: Recipe['targetType']) => setTargetType(value)}
+        sx={{ px: { xs: 2, md: 2.5 }, borderBottom: 1, borderColor: 'divider' }}>
+        <Tab value="catalog" label={t('recipes.catalogTab')} />
+        <Tab value="preparation" label={t('recipes.preparationTab')} />
+      </Tabs>
       <QueryState query={query} empty={!rows.length}>
         <Stack spacing={0}>
           {rows.map((recipe) => (
@@ -93,8 +107,7 @@ export function RecipesPanel() {
               }}>
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
                 <Stack direction="row" alignItems="center" gap={2} flexWrap="wrap" sx={{ width: 1 }}>
-                  <Typography variant="subtitle1">{recipe.catalogItemName}</Typography>
-                  <Chip size="small" label={t('recipes.version', { version: recipe.version })} />
+                  <Typography variant="subtitle1">{recipe.catalogItemName || recipe.outputItemName}</Typography>
                   <Chip
                     size="small"
                     color={recipe.isActive ? 'success' : 'default'}
@@ -121,13 +134,21 @@ export function RecipesPanel() {
                       <TableCell>
                         {inventoryNumber(line.quantity)} {t(`units.${line.baseUnit}`)}
                       </TableCell>
-                      <TableCell>{line.modifierOptionName || t('recipes.always')}</TableCell>
+                      <TableCell>
+                        {line.modifierOptionName
+                          ? `${line.modifierOptionName} · ${t(
+                              line.modifierCondition === 'not_selected'
+                                ? 'recipes.whenNotSelected'
+                                : 'recipes.whenSelected',
+                            )}`
+                          : t('recipes.always')}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </InventoryTable>
                 {canManage && (
                   <Stack direction="row" flexWrap="wrap" gap={1} sx={{ mt: 2 }}>
-                    <Button onClick={() => setEditing({ initial: recipe })}>{t('recipes.newVersion')}</Button>
+                    <Button onClick={() => setEditing({ initial: recipe })}>{t('recipes.update')}</Button>
                     {recipe.isActive && (
                       <Button
                         color="error"
@@ -145,7 +166,7 @@ export function RecipesPanel() {
           ))}
         </Stack>
       </QueryState>
-      {editing && <RecipeDialog initial={editing.initial} onClose={() => setEditing(null)} />}
+      {editing && <RecipeDialog initial={editing.initial} targetType={targetType} onClose={() => setEditing(null)} />}
       {deactivating && (
         <FormDialog
           title={t('deactivate')}
@@ -155,7 +176,9 @@ export function RecipesPanel() {
           }}
           pending={deactivateRecipe.isPending}
           error={error}>
-          <Alert severity="warning">{t('recipes.deactivateHelp', { name: deactivating.catalogItemName })}</Alert>
+          <Alert severity="warning">
+            {t('recipes.deactivateHelp', { name: deactivating.catalogItemName || deactivating.outputItemName })}
+          </Alert>
         </FormDialog>
       )}
     </InventorySection>

@@ -226,7 +226,7 @@ export function CatalogModifierGroupsField({ groups, loading, disabled }: Props)
         />
       </Stack>
 
-      <Dialog open={quickAddOpen} onClose={() => setQuickAddOpen(false)} maxWidth="md" fullWidth>
+      <Dialog open={quickAddOpen} onClose={() => setQuickAddOpen(false)} maxWidth="md" fullWidth fullScreen>
         <CatalogModifierGroupForm
           onCancel={() => setQuickAddOpen(false)}
           onSuccess={(created) => {
@@ -239,7 +239,7 @@ export function CatalogModifierGroupsField({ groups, loading, disabled }: Props)
         />
       </Dialog>
 
-      <Dialog open={Boolean(editingGroup)} onClose={() => setEditingGroup(null)} maxWidth="md" fullWidth>
+      <Dialog open={Boolean(editingGroup)} onClose={() => setEditingGroup(null)} maxWidth="md" fullWidth fullScreen>
         <CatalogModifierGroupForm
           group={editingGroup}
           onCancel={() => setEditingGroup(null)}

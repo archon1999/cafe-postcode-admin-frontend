@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -255,25 +256,32 @@ function CatalogItemFormInner({
 
   if (isDialog) {
     return (
-      <Form methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>{title}</DialogTitle>
-        <DialogContent>{fields}</DialogContent>
-        <EntityFormActions
-          isDialog
-          isEditMode={isEditMode}
-          isSubmitting={isSubmitting || barcodeLookupPending}
-          isDeleting={deleteMutation.isPending}
-          submitLabel={isEditMode ? t('actions.save') : t('actions.create')}
-          deleteTitle={t('dialogs.deleteItem.title')}
-          deleteContent={t('dialogs.deleteItem.description', { name: item?.name ?? '' })}
-          onCancel={onCancel}
-          onDelete={async () => {
-            if (!item) return;
-            await deleteMutation.mutateAsync(item.id);
-            (onDeleted ?? onCancel)?.();
-          }}
-        />
-      </Form>
+      <Box
+        sx={{
+          height: '100dvh',
+          '& form': { height: '100%', minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' },
+          '& .MuiDialogActions-root': { borderTop: 1, borderColor: 'divider', py: 2 },
+        }}>
+        <Form methods={methods} onSubmit={onSubmit}>
+          <DialogTitle sx={{ borderBottom: 1, borderColor: 'divider' }}>{title}</DialogTitle>
+          <DialogContent sx={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>{fields}</DialogContent>
+          <EntityFormActions
+            isDialog
+            isEditMode={isEditMode}
+            isSubmitting={isSubmitting || barcodeLookupPending}
+            isDeleting={deleteMutation.isPending}
+            submitLabel={isEditMode ? t('actions.save') : t('actions.create')}
+            deleteTitle={t('dialogs.deleteItem.title')}
+            deleteContent={t('dialogs.deleteItem.description', { name: item?.name ?? '' })}
+            onCancel={onCancel}
+            onDelete={async () => {
+              if (!item) return;
+              await deleteMutation.mutateAsync(item.id);
+              (onDeleted ?? onCancel)?.();
+            }}
+          />
+        </Form>
+      </Box>
     );
   }
 

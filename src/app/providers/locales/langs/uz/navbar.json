@@ -50,6 +50,8 @@
   "inventory": "Ombor",
   "inventoryBalances": "Qoldiqlar",
   "inventoryDocuments": "Kirim-chiqim",
+  "inventoryTransfers": "Transferlar",
+  "inventoryProduction": "Ishlab chiqarish",
   "inventoryRecipes": "Retseptlar",
   "inventoryReports": "Hisobotlar",
   "inventoryInsights": "Tahlil",

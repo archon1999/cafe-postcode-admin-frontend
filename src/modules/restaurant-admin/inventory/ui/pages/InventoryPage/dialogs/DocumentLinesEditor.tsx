@@ -36,7 +36,9 @@ export function DocumentLinesEditor({
           ...(counted ? [t('fields.expectedQuantity')] : []),
           t(counted ? 'fields.actualQuantity' : 'fields.quantity'),
           t('fields.inputUnit'),
-          ...(inbound && showCosts ? [t('fields.unitCost')] : []),
+          ...(inbound && showCosts
+            ? [t('fields.listUnitCost'), t('fields.discountPercent'), t('fields.discountAmount')]
+            : []),
           ...(inbound ? [t('fields.lotNumber'), t('fields.expiresOn')] : []),
           '',
         ]}>
@@ -99,9 +101,33 @@ export function DocumentLinesEditor({
                   <TextField
                     size="medium"
                     type="number"
-                    label={t('fields.unitCost')}
+                    label={t('fields.listUnitCost')}
                     value={line.unitCost ?? '0'}
                     onChange={(event) => update(index, { unitCost: event.target.value })}
+                    slotProps={{ htmlInput: { min: 0, step: 'any' } }}
+                  />
+                </TableCell>
+              )}
+              {inbound && showCosts && (
+                <TableCell sx={{ minWidth: 125 }}>
+                  <TextField
+                    size="medium"
+                    type="number"
+                    label={t('fields.discountPercent')}
+                    value={line.discountPercent ?? '0'}
+                    onChange={(event) => update(index, { discountPercent: event.target.value })}
+                    slotProps={{ htmlInput: { min: 0, max: 100, step: 'any' } }}
+                  />
+                </TableCell>
+              )}
+              {inbound && showCosts && (
+                <TableCell sx={{ minWidth: 140 }}>
+                  <TextField
+                    size="medium"
+                    type="number"
+                    label={t('fields.discountAmount')}
+                    value={line.discountAmount ?? '0'}
+                    onChange={(event) => update(index, { discountAmount: event.target.value })}
                     slotProps={{ htmlInput: { min: 0, step: 'any' } }}
                   />
                 </TableCell>
@@ -149,6 +175,8 @@ export function DocumentLinesEditor({
                 item: '',
                 quantity: '',
                 unitCost: showCosts ? '0' : undefined,
+                discountPercent: '0',
+                discountAmount: showCosts ? '0' : undefined,
                 inputUnit: 'base',
                 lotNumber: '',
                 expiresOn: null,

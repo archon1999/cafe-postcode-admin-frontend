@@ -19,6 +19,8 @@ describe('restaurant admin navigation', () => {
     expect(inventory.children?.map((item) => item.path)).toEqual([
       RoutePath.inventoryBalances,
       RoutePath.inventoryDocuments,
+      RoutePath.inventoryTransfers,
+      RoutePath.inventoryProduction,
       RoutePath.inventoryRecipes,
       RoutePath.inventoryReports,
       RoutePath.inventoryInsights,
