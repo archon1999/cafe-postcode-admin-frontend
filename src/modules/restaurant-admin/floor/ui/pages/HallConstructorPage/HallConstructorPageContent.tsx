@@ -104,9 +104,6 @@ export const HallConstructorPageContent = ({ id }: HallConstructorPageContentPro
           <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} justifyContent="space-between" sx={{ mb: 3 }}>
             <Stack spacing={0.5}>
               <Typography variant="h5">{formatHallDisplayName(hallName)}</Typography>
-              <Typography variant="body2" color="text.secondary">
-                {t('labels.constructorHint')}
-              </Typography>
             </Stack>
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5}>
               <TextField

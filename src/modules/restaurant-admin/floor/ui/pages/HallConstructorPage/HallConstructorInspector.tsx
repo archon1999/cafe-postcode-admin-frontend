@@ -48,9 +48,11 @@ export function HallConstructorInspector({
       <Stack spacing={2.5}>
         <Box>
           <Typography variant="h6">{t('labels.inspector')}</Typography>
-          <Typography variant="body2" color="text.secondary">
-            {selectedTable ? t('labels.inspectorHint') : t('labels.noTableSelected')}
-          </Typography>
+          {!selectedTable ? (
+            <Typography variant="body2" color="text.secondary">
+              {t('labels.noTableSelected')}
+            </Typography>
+          ) : null}
         </Box>
 
         <Divider />
