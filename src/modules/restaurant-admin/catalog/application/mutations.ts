@@ -9,6 +9,8 @@ import type {
 } from 'shared/api/admin-types';
 
 import { catalogRepository } from '../data-access';
+import { assistantRepository } from '../data-access/repository/assistant.repository';
+import type { CatalogDraft, CatalogDraftRow } from '../domain';
 
 import { catalogKeys } from './keys';
 
@@ -168,4 +170,23 @@ export function useDeleteCatalogModifierGroupMutation() {
     mutationFn: (id: string) => catalogRepository.deleteModifierGroup(id),
     onSuccess: async () => queryClient.invalidateQueries({ queryKey: catalogKeys.modifierGroups() }),
   });
+}
+export function useCreateCatalogDraftMutation() {
+  return useMutation({ mutationFn: assistantRepository.create });
+}
+
+export function useCommitCatalogDraftMutation() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: ({ draft, rows }: { draft: CatalogDraft; rows: CatalogDraftRow[] }) =>
+      assistantRepository.commit(draft, rows),
+    onSuccess: async () => {
+      await client.invalidateQueries({ queryKey: catalogKeys.items() });
+      await client.invalidateQueries({ queryKey: catalogKeys.categories() });
+    },
+  });
+}
+
+export function useLinkCatalogBotMutation() {
+  return useMutation({ mutationFn: assistantRepository.linkBot });
 }

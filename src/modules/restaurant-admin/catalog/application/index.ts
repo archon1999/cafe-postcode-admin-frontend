@@ -1,4 +1,7 @@
 export {
+  useCreateCatalogDraftMutation,
+  useCommitCatalogDraftMutation,
+  useLinkCatalogBotMutation,
   useCreateCatalogCategoryMutation,
   useCreateCatalogItemMutation,
   useCreateCatalogItemGroupMutation,

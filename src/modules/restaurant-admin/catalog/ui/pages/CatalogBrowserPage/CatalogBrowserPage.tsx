@@ -19,6 +19,7 @@ import {
 import { CatalogCategoryFormDialog } from '../../components/CatalogCategoryForm';
 import { CatalogItemFormDialog } from '../../components/CatalogItemForm';
 import { CatalogItemGroupDialog } from '../../components/CatalogItemGroupDialog';
+import { CatalogAssistant } from '../../components/CatalogAssistant';
 
 import { CatalogBrowserCategoriesPanel } from './CatalogBrowserCategoriesPanel';
 import { CatalogBrowserProductsPanel } from './CatalogBrowserProductsPanel';
@@ -139,6 +140,7 @@ const CatalogBrowserPage = () => {
   return (
     <ListPageContent>
       <ListPageBody>
+        <CatalogAssistant restaurantId={restaurantScopeId} categoryId={selectedCategoryId} categories={categories} />
         <Box
           sx={{
             display: 'grid',

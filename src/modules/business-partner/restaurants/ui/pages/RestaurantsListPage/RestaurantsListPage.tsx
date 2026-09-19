@@ -7,6 +7,7 @@ import { useTranslate } from 'app/providers/locales';
 import { RoutePath, canAccessRestaurants } from 'app/routes';
 import { useCurrentUser } from 'modules/auth/domain/services/current-user';
 import { useGetRestaurantPortfolioSummaryQuery } from 'modules/business-partner/restaurants/application';
+import { CatalogBotLink } from 'modules/restaurant-admin/catalog';
 import { useRouter } from 'shared/hooks/router';
 import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { Iconify } from 'shared/ui/Iconify';
@@ -57,6 +58,7 @@ const RestaurantsListPage = () => {
         }
       />
       <ListPageBody>
+        <CatalogBotLink />
         <RestaurantsGrid summaryError={summaryQuery.isError} onRetrySummary={() => void summaryQuery.refetch()} />
       </ListPageBody>
     </ListPageContent>

@@ -208,5 +208,32 @@
         "emptyTitle": "Hali xususiyat guruhi yo‘q",
         "emptyDescription": "Xamir, o‘lcham yoki qo‘shimchalar uchun birinchi guruhni yarating.",
         "emptyAction": "Birinchi guruhni yaratish"
-    }
+    },
+  "assistant": {
+    "open": "AI bilan kiritish",
+    "telegram": "Telegram orqali boshqarish",
+    "openBot": "Botni ochish",
+    "linkHint": "Bu shaxsiy havola bir marta ishlaydi va 5 daqiqada eskiradi.",
+    "title": "Menyuni AI bilan tayyorlash",
+    "input": "Manba",
+    "review": "Tekshirish",
+    "saved": "Saqlandi",
+    "hint": "Menyu rasmini yoki Excel qatorlarini Ctrl+V qiling. Oddiy matn yozish va fayl yuklash ham mumkin.",
+    "source": "Menyu matni yoki Excel qatorlari",
+    "placeholder": "Osh 35 000\nManti 8 000 / dona\nChoy 5 000",
+    "files": "Rasm yoki jadval yuklash",
+    "privacy": "AI draft tayyorlash uchun kiritilgan manba OpenAI xizmatiga yuboriladi. Katalog faqat tekshirib saqlaganingizdan keyin o‘zgaradi.",
+    "fileLimit": "5 tagacha fayl, har biri 10 MB gacha.",
+    "reviewHint": "{{count}} ta mahsulot tanlangan. Nom, narx, kategoriya va birlikni tekshiring. Saqlash yangi mahsulotlar yaratadi.",
+    "savedCount": "{{count}} ta mahsulot saqlandi. POS sinxronlashuvi so‘raldi. Texkartalar ombor bo‘limida alohida yuritiladi.",
+    "selectRow": "{{index}}-qatorni tanlash",
+    "newCategory": "Yangi kategoriya",
+    "categoryName": "Yangi kategoriya nomi",
+    "russianName": "Ruscha nom",
+    "close": "Yopish",
+    "back": "Manbaga qaytish",
+    "generate": "Draft tayyorlash",
+    "save": "{{count}} ta mahsulotni saqlash",
+    "another": "Yana kiritish"
+  }
 }
