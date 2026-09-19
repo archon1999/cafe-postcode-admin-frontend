@@ -87,7 +87,7 @@ export function CatalogAssistant({ restaurantId, categoryId, categories }: Props
 
   return (
     <>
-      <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap sx={{ mb: 2 }}>
+      <Stack direction="row" spacing={1} alignItems="flex-start" flexWrap="wrap" useFlexGap sx={{ mb: 2 }}>
         <Button
           variant="contained"
           startIcon={<Iconify icon="solar:magic-stick-3-bold" />}
@@ -110,7 +110,6 @@ export function CatalogAssistant({ restaurantId, categoryId, categories }: Props
           {busy && <LinearProgress sx={{ mb: 2 }} />}
           {!draft ? (
             <Stack spacing={2}>
-              <Typography color="text.secondary">{t('assistant.hint')}</Typography>
               <TextField
                 autoFocus
                 multiline
@@ -144,13 +143,11 @@ export function CatalogAssistant({ restaurantId, categoryId, categories }: Props
                   />
                 ))}
               </Stack>
-              <Typography variant="caption">{t('assistant.privacy')}</Typography>
             </Stack>
           ) : saved ? (
             <Alert severity="success">{t('assistant.savedCount', { count: draft.result.count })}</Alert>
           ) : (
             <Stack spacing={2}>
-              <Alert severity="info">{t('assistant.reviewHint', { count: selected.length })}</Alert>
               <Box sx={{ overflowX: 'auto' }}>
                 <Stack spacing={2}>
                   {rows.map((row, index) => (

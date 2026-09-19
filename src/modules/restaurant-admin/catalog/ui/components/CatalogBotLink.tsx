@@ -11,17 +11,13 @@ export function CatalogBotLink() {
   const bot = useLinkCatalogBotMutation();
   return (
     <Stack spacing={1} alignItems="flex-start">
-      <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-        <Button variant="outlined" loading={bot.isPending} onClick={() => bot.mutate()}>
-          {t('assistant.telegram')}
-        </Button>
-        {bot.data && (
-          <Button component="a" href={bot.data.url} target="_blank" rel="noopener noreferrer">
-            {t('assistant.openBot')}
-          </Button>
-        )}
-      </Stack>
-      {bot.data && <Alert severity="info">{t('assistant.linkHint')}</Alert>}
+      <Button
+        variant="soft"
+        color="inherit"
+        loading={bot.isPending}
+        onClick={() => bot.mutate(undefined, { onSuccess: ({ url }) => window.location.assign(url) })}>
+        {t('assistant.telegram')}
+      </Button>
       {bot.error && <Alert severity="error">{errorText(bot.error)}</Alert>}
     </Stack>
   );
