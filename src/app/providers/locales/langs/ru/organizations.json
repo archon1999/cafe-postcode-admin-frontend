@@ -77,13 +77,33 @@
       "downloadInstaller": "Скачать Local Agent для Windows",
       "downloadFiscalDriveService": "Скачать Fiscal Drive Service"
     },
-    "readiness": { "progress": "Готовность: {{value}}%", "remaining": "Обязательных задач осталось: {{count}}" },
-    "status": { "ready": "Готово", "warning": "Требует внимания", "blocked": "Обязательно" },
-    "quick": { "title": "Быстрая базовая настройка" },
-    "sections": { "cashDesks": "Кассы", "prepStations": "Станции приготовления" },
-    "cashDesk": { "title": "Касса {{number}}" },
-    "integrations": { "printer": "Принтер" },
-    "defaults": { "cashDesk": "Касса {{number}}", "kitchen": "Кухня", "prepStation": "Станция {{number}}" },
+    "readiness": {
+      "progress": "Готовность: {{value}}%",
+      "remaining": "Обязательных задач осталось: {{count}}"
+    },
+    "status": {
+      "ready": "Готово",
+      "warning": "Требует внимания",
+      "blocked": "Обязательно"
+    },
+    "quick": {
+      "title": "Быстрая базовая настройка"
+    },
+    "sections": {
+      "cashDesks": "Кассы",
+      "prepStations": "Станции приготовления"
+    },
+    "cashDesk": {
+      "title": "Касса {{number}}"
+    },
+    "integrations": {
+      "printer": "Принтер"
+    },
+    "defaults": {
+      "cashDesk": "Касса {{number}}",
+      "kitchen": "Кухня",
+      "prepStation": "Станция {{number}}"
+    },
     "fields": {
       "printerNameOrIp": "Имя принтера / IP-адрес",
       "martaTaxNumber": "ИНН MARTA",
@@ -213,7 +233,10 @@
       "devices": "Устройства онлайн",
       "devicesHint": "Из {{total}} активных устройств"
     },
-    "branchTypes": { "root": "Головная", "branch": "Филиал" },
+    "branchTypes": {
+      "root": "Головная",
+      "branch": "Филиал"
+    },
     "parentLabel": "Головная: {{name}}",
     "columns": {
       "contact": "Контакты и адрес",
@@ -265,7 +288,11 @@
       "progress": "Готово на {{value}}%",
       "moreIssues": "Ещё {{count}} проблем",
       "stepReady": "Всё в порядке",
-      "status": { "ready": "Готово", "warning": "Внимание", "blocked": "Блокирует" },
+      "status": {
+        "ready": "Готово",
+        "warning": "Внимание",
+        "blocked": "Блокирует"
+      },
       "steps": {
         "profile": "Профиль точки",
         "staff": "Сотрудники и PIN",
@@ -536,7 +563,9 @@
       "copySettings": "Скопировать безопасные настройки точки",
       "copyHint": "Копирование выполняется один раз. Последующие изменения не синхронизируются; интеграции, устройства и операционные данные не копируются."
     },
-    "profileEdit": { "title": "Редактирование профиля ресторана" },
+    "profileEdit": {
+      "title": "Редактирование профиля ресторана"
+    },
     "deleteBranch": {
       "title": "Удалить филиал",
       "description": "Удалить филиал \"{{name}}\"?"
@@ -665,8 +694,14 @@
       "settings": "Настройки"
     },
     "options": {
-      "printMode": { "text": "Текст (нативный)", "raster": "Растр (весь чек)" },
-      "qrMode": { "native": "Нативный QR", "raster": "Растровый QR" },
+      "printMode": {
+        "text": "Текст (нативный)",
+        "raster": "Растр (весь чек)"
+      },
+      "qrMode": {
+        "native": "Нативный QR",
+        "raster": "Растровый QR"
+      },
       "rasterFont": {
         "go_mono": "Go Mono (по умолчанию)",
         "inter": "Inter",
@@ -695,18 +730,18 @@
     "title": "Формулы сервисного сбора",
     "name": "Название тарифа",
     "timezone": "Часовой пояс (IANA)",
-    "technical": "Редактор формулы",
+    "technical": "Написать формулу",
     "templates": "Шаблоны",
     "builder": "Конструктор",
-    "ai": "AI-помощник",
+    "ai": "Обычным текстом (ИИ)",
     "source": "Формула",
     "sourceHint": "Введите выражение или программу let …; return …;. Результат в сумах.",
     "variables": "Вставить переменную",
     "functions": "Вставить функцию",
-    "parameters": "Параметры формулы",
-    "parameterName": "Имя параметра",
+    "parameters": "Ваши переменные",
+    "parameterName": "Имя переменной",
     "parameterValue": "Значение",
-    "addParameter": "Добавить параметр",
+    "addParameter": "Добавить переменную",
     "remove": "Удалить",
     "errorPosition": " · символ {{position}}",
     "preview": "Пробный расчёт",
@@ -775,6 +810,25 @@
     "percentageReceiptHint": "Процент отображается в чеке вместе с суммой сбора.",
     "formulaReceiptHint": "В чеке отображается только «Сервисный сбор: сумма».",
     "formulaTools": "Помощь с формулой: шаблоны, конструктор и AI",
-    "inlineFormulaHint": "Переменные: subtotal, duration_minutes, guest_count. Пример: max(60, duration_minutes) / 60 * 60000."
+    "inlineFormulaHint": "Переменные: subtotal, duration_minutes, guest_count. Пример: max(60, duration_minutes) / 60 * 60000.",
+    "viewFormula": "Посмотреть формулу",
+    "applyFormula": "Применить формулу",
+    "close": "Отмена",
+    "selectRestaurant": "Сначала выберите филиал.",
+    "shiftFrom": "Смена {{number}}: начало",
+    "shiftUntil": "Смена {{number}}: конец",
+    "shiftRate": "Смена {{number}}: цена за час",
+    "addShift": "Добавить смену",
+    "arrivalMinimum": "Первый час по тарифу входа, далее по сменам",
+    "invalidRate": "Цена и шаг округления должны быть больше нуля.",
+    "invalidShiftTime": "Укажите корректное начало и конец каждой смены.",
+    "shiftCoverage": "Смены должны покрывать все 24 часа без пересечений.",
+    "variableNames": {
+      "subtotal": "Сумма заказа",
+      "duration_minutes": "Прошедшие минуты",
+      "guest_count": "Количество гостей",
+      "session_started_at": "Время начала",
+      "calculation_at": "Время расчёта"
+    }
   }
 }

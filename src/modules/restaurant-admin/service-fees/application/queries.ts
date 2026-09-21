@@ -6,6 +6,16 @@ import { serviceFeesRepository } from '../data-access';
 
 import { feeKeys } from './keys';
 
+export function useFeeCatalog(enabled = true) {
+  const scope = useAdminRestaurantScopeId();
+  const catalog = useQuery({
+    queryKey: feeKeys.catalog(scope),
+    queryFn: serviceFeesRepository.catalog,
+    enabled,
+  });
+  return { scope, catalog };
+}
+
 export function useServiceFees() {
   const scope = useAdminRestaurantScopeId();
   const catalog = useQuery({

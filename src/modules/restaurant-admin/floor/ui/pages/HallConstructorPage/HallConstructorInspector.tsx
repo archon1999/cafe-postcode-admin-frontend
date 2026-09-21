@@ -13,9 +13,9 @@ import {
 } from '@mui/material';
 
 import { useTranslate } from 'app/providers/locales';
+import { ServiceFeeFormulaInput } from 'modules/restaurant-admin/service-fees';
 import type { AdminTableShapeVariant } from 'shared/api/admin-types';
 import { Iconify } from 'shared/ui/Iconify';
-import { ServiceFeeFormulaInput } from 'shared/ui/ServiceFeeFormulaInput';
 
 import {
   MAX_PRESET_TABLE_SEAT_COUNT,
@@ -160,25 +160,36 @@ export function HallConstructorInspector({
               ))}
             </TextField>
 
-            <TextField
-              select
-              label={t('fields.tableServiceFeeEnabled', { defaultValue: 'Stol xizmat haqi' })}
-              value={selectedTable.serviceFeeEnabled ? selectedTable.serviceFeeMode : 'disabled'}
-              onChange={(event) => {
-                const selection = event.target.value as 'disabled' | 'percentage' | 'formula';
+            <Stack direction="row" spacing={1}>
+              <TextField
+                select
+                sx={{ flex: 1, minWidth: 0 }}
+                label={t('fields.tableServiceFeeEnabled', { defaultValue: 'Stol xizmat haqi' })}
+                value={selectedTable.serviceFeeEnabled ? selectedTable.serviceFeeMode : 'disabled'}
+                onChange={(event) => {
+                  const selection = event.target.value as 'disabled' | 'percentage' | 'formula';
 
-                updateSelectedTable((table) => ({
-                  ...table,
-                  serviceFeeEnabled: selection !== 'disabled',
-                  ...(selection !== 'disabled' ? { serviceFeeMode: selection } : {}),
-                }));
-              }}>
-              <MenuItem value="disabled">
-                {t('fields.serviceFeeModeDisabled', { defaultValue: "O'chirilgan" })}
-              </MenuItem>
-              <MenuItem value="percentage">{t('fields.serviceFeeModePercentage', { defaultValue: 'Foizli' })}</MenuItem>
-              <MenuItem value="formula">{t('fields.serviceFeeModeFormula')}</MenuItem>
-            </TextField>
+                  updateSelectedTable((table) => ({
+                    ...table,
+                    serviceFeeEnabled: selection !== 'disabled',
+                    ...(selection !== 'disabled' ? { serviceFeeMode: selection } : {}),
+                  }));
+                }}>
+                <MenuItem value="disabled">
+                  {t('fields.serviceFeeModeDisabled', { defaultValue: "O'chirilgan" })}
+                </MenuItem>
+                <MenuItem value="percentage">
+                  {t('fields.serviceFeeModePercentage', { defaultValue: 'Foizli' })}
+                </MenuItem>
+                <MenuItem value="formula">{t('fields.serviceFeeModeFormula')}</MenuItem>
+              </TextField>
+              {selectedTable.serviceFeeEnabled && selectedTable.serviceFeeMode === 'formula' && (
+                <ServiceFeeFormulaInput
+                  value={selectedTable.serviceFeeFormula}
+                  onChange={(value) => updateSelectedTable((table) => ({ ...table, serviceFeeFormula: value }))}
+                />
+              )}
+            </Stack>
             {selectedTable.serviceFeeEnabled && selectedTable.serviceFeeMode === 'percentage' && (
               <TextField
                 label={t('fields.serviceFeePercent')}
@@ -191,12 +202,6 @@ export function HallConstructorInspector({
                   }))
                 }
                 slotProps={{ htmlInput: { min: 1, max: 99, step: 1 } }}
-              />
-            )}
-            {selectedTable.serviceFeeEnabled && selectedTable.serviceFeeMode === 'formula' && (
-              <ServiceFeeFormulaInput
-                value={selectedTable.serviceFeeFormula}
-                onChange={(value) => updateSelectedTable((table) => ({ ...table, serviceFeeFormula: value }))}
               />
             )}
 

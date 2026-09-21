@@ -104,7 +104,6 @@ const MyRestaurantPage = lazy(
 const RestaurantSetupPage = lazy(
   () => import('modules/restaurant-admin/restaurant-management/ui/pages/RestaurantSetupPage/RestaurantSetupPage'),
 );
-const ServiceFeesPage = lazy(() => import('modules/restaurant-admin/service-fees/ui/pages/ServiceFeesPage'));
 const MyRestaurantGeneralPage = lazy(
   () =>
     import('modules/restaurant-admin/restaurant-management/ui/pages/MyRestaurantGeneralPage/MyRestaurantGeneralPage'),
@@ -361,7 +360,7 @@ const mainChildren: RouteObject[] = [
   },
   {
     path: RoutePath.organizationServiceFees,
-    element: <ServiceFeesPage />,
+    element: <Navigate to={RoutePath.organizationMyRestaurantGeneral} replace />,
   },
   {
     path: RoutePath.organizationMyRestaurantGeneral,

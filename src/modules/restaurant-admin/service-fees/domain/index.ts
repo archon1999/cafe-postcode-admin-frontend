@@ -97,4 +97,4 @@ export class FeeAuthoringError extends Error {
   }
 }
 
-export { buildFormula, type BuilderOptions } from './builder';
+export { buildFormula, builderError, splitLastShift, type BuilderOptions, type FeeShift } from './builder';

@@ -12,11 +12,7 @@ export function MyRestaurantSettingsTabs() {
   const { t } = useTranslate('organizations');
   const { profile } = useCurrentUser();
   const pathname = usePathname();
-  const value = pathname.startsWith(RoutePath.organizationServiceFees)
-    ? 'fees'
-    : pathname.startsWith(RoutePath.organizationMyRestaurantSetup)
-      ? 'setup'
-      : 'general';
+  const value = pathname.startsWith(RoutePath.organizationMyRestaurantSetup) ? 'setup' : 'general';
 
   return (
     <Tabs value={value} variant="scrollable" scrollButtons="auto" sx={{ mb: 3, px: { xs: 1, sm: 2 } }}>
@@ -38,14 +34,6 @@ export function MyRestaurantSettingsTabs() {
           label={t('pages.myRestaurantGeneral.title')}
           component={RouterLink}
           href={RoutePath.organizationMyRestaurantGeneral}
-        />
-      ) : null}
-      {canAccessMyRestaurantGeneral(profile) ? (
-        <Tab
-          value="fees"
-          label={t('serviceFees.title')}
-          component={RouterLink}
-          href={RoutePath.organizationServiceFees}
         />
       ) : null}
     </Tabs>

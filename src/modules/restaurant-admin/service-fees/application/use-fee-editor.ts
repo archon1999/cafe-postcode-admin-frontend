@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { FeeAuthoringError, type FeeContext, type FeePolicy, type FeePreview, type FormulaDefinition } from '../domain';
 
@@ -8,14 +8,21 @@ export function useFeeEditor(
   policy: FeePolicy | undefined,
   defaultTimezone: string,
   onSaved: (policy: FeePolicy) => void,
+  initialDefinition?: FormulaDefinition,
 ) {
+  const initial = policy?.definition ?? initialDefinition;
+  const mounted = useRef(true);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
   const originalRevision = useRef(policy?.revision);
-  const [name, setName] = useState(policy?.name ?? '');
-  const [source, setSource] = useState(policy?.definition.source ?? 'duration_minutes / 60 * hourly_rate');
-  const [timezone, setTimezone] = useState(policy?.definition.timezone ?? defaultTimezone);
-  const [parameters, setParameters] = useState(
-    Object.entries(policy?.definition.parameters ?? { hourly_rate: '60000' }),
-  );
+  const [name, setName] = useState(policy?.name ?? initial?.name ?? '');
+  const [source, setSource] = useState(initial?.source ?? 'duration_minutes / 60 * hourly_rate');
+  const [timezone, setTimezone] = useState(initial?.timezone ?? defaultTimezone);
+  const [parameters, setParameters] = useState(Object.entries(initial?.parameters ?? { hourly_rate: '60000' }));
   const [isActive, setIsActive] = useState(policy?.isActive ?? true);
   const [context, setContext] = useState<FeeContext>({
     subtotal: 500000,
@@ -58,9 +65,12 @@ export function useFeeEditor(
     }
     try {
       const value = await actions.preview.mutateAsync({ definition, context });
-      if (latest.current === submitted) setResult({ fingerprint: submitted, value });
+      if (mounted.current && latest.current === submitted) {
+        setResult({ fingerprint: submitted, value });
+        return value;
+      }
     } catch (cause) {
-      if (latest.current === submitted) setError(cause as Error);
+      if (mounted.current && latest.current === submitted) setError(cause as Error);
     }
   }
 

@@ -6,8 +6,8 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useFormContext } from 'react-hook-form';
 
+import { ServiceFeeFormulaInput } from 'modules/restaurant-admin/service-fees';
 import { RHFPhoneInput, RHFSelect, RHFSwitch, RHFTextField, RHFUpload } from 'shared/ui/HookForm';
-import { ServiceFeeFormulaInput } from 'shared/ui/ServiceFeeFormulaInput';
 
 import type { RestaurantFormValues } from './restaurant-form';
 
@@ -85,33 +85,35 @@ export const RestaurantFormFields = ({
           rows={3}
           sx={{ gridColumn: { lg: '1 / -1' } }}
         />
-        <TextField
-          select
-          label={t('fields.serviceFeeEnabled')}
-          value={serviceFeeEnabled ? serviceFeeMode : 'disabled'}
-          onChange={(event) => {
-            const selection = event.target.value as 'disabled' | 'percentage' | 'formula';
+        <Stack direction="row" spacing={1.5}>
+          <TextField
+            select
+            sx={{ flex: 1, minWidth: 0 }}
+            label={t('fields.serviceFeeEnabled')}
+            value={serviceFeeEnabled ? serviceFeeMode : 'disabled'}
+            onChange={(event) => {
+              const selection = event.target.value as 'disabled' | 'percentage' | 'formula';
 
-            setValue('serviceFeeEnabled', selection !== 'disabled', {
-              shouldDirty: true,
-              shouldValidate: true,
-            });
-            if (selection !== 'disabled') {
-              setValue('serviceFeeMode', selection, { shouldDirty: true, shouldValidate: true });
-            }
-          }}>
-          <MenuItem value="disabled">{t('fields.serviceFeeModeDisabled', { defaultValue: "O'chirilgan" })}</MenuItem>
-          <MenuItem value="percentage">{t('fields.serviceFeeModePercentage', { defaultValue: 'Foizli' })}</MenuItem>
-          <MenuItem value="formula">{t('fields.serviceFeeModeFormula')}</MenuItem>
-        </TextField>
-        {serviceFeeEnabled && serviceFeeMode === 'formula' ? (
-          <Box sx={{ gridColumn: { lg: '1 / -1' } }}>
+              setValue('serviceFeeEnabled', selection !== 'disabled', {
+                shouldDirty: true,
+                shouldValidate: true,
+              });
+              if (selection !== 'disabled') {
+                setValue('serviceFeeMode', selection, { shouldDirty: true, shouldValidate: true });
+              }
+            }}>
+            <MenuItem value="disabled">{t('fields.serviceFeeModeDisabled', { defaultValue: "O'chirilgan" })}</MenuItem>
+            <MenuItem value="percentage">{t('fields.serviceFeeModePercentage', { defaultValue: 'Foizli' })}</MenuItem>
+            <MenuItem value="formula">{t('fields.serviceFeeModeFormula')}</MenuItem>
+          </TextField>
+          {serviceFeeEnabled && serviceFeeMode === 'formula' && (
             <ServiceFeeFormulaInput
               value={watch('serviceFeeFormula')}
+              disabled={isSubmitting}
               onChange={(value) => setValue('serviceFeeFormula', value, { shouldDirty: true, shouldValidate: true })}
             />
-          </Box>
-        ) : null}
+          )}
+        </Stack>
         {serviceFeeEnabled && serviceFeeMode === 'percentage' ? (
           <RHFTextField<RestaurantFormValues>
             name="serviceFeePercent"

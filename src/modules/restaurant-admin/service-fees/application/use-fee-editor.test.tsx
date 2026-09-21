@@ -54,7 +54,7 @@ describe('technical fee editor', () => {
         }),
     );
     const { result } = renderHook(() => useFeeEditor(policy, 'Asia/Tashkent', vi.fn()));
-    let pending!: Promise<void>;
+    let pending!: Promise<FeePreview | undefined>;
     act(() => {
       pending = result.current.preview();
     });

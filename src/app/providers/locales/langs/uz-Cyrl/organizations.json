@@ -77,13 +77,33 @@
       "downloadInstaller": "Windows учун Local Agentни юклаб олиш",
       "downloadFiscalDriveService": "Fiscal Drive Serviceни юклаб олиш"
     },
-    "readiness": { "progress": "Тайёрлик: {{value}}%", "remaining": "{{count}} та муҳим иш қолган" },
-    "status": { "ready": "Тайёр", "warning": "Эътибор талаб қилади", "blocked": "Бажарилиши шарт" },
-    "quick": { "title": "Тезкор базавий созлаш" },
-    "sections": { "cashDesks": "Кассалар", "prepStations": "Тайёрлаш станциялари" },
-    "cashDesk": { "title": "Касса {{number}}" },
-    "integrations": { "printer": "Принтер" },
-    "defaults": { "cashDesk": "Касса {{number}}", "kitchen": "Ошхона", "prepStation": "Станция {{number}}" },
+    "readiness": {
+      "progress": "Тайёрлик: {{value}}%",
+      "remaining": "{{count}} та муҳим иш қолган"
+    },
+    "status": {
+      "ready": "Тайёр",
+      "warning": "Эътибор талаб қилади",
+      "blocked": "Бажарилиши шарт"
+    },
+    "quick": {
+      "title": "Тезкор базавий созлаш"
+    },
+    "sections": {
+      "cashDesks": "Кассалар",
+      "prepStations": "Тайёрлаш станциялари"
+    },
+    "cashDesk": {
+      "title": "Касса {{number}}"
+    },
+    "integrations": {
+      "printer": "Принтер"
+    },
+    "defaults": {
+      "cashDesk": "Касса {{number}}",
+      "kitchen": "Ошхона",
+      "prepStation": "Станция {{number}}"
+    },
     "fields": {
       "printerNameOrIp": "Принтер номи / IP манзили",
       "martaTaxNumber": "MARTA STIR",
@@ -213,7 +233,10 @@
       "devices": "Онлайн қурилмалар",
       "devicesHint": "{{total}} та фаол қурилмадан"
     },
-    "branchTypes": { "root": "Асосий", "branch": "Филиал" },
+    "branchTypes": {
+      "root": "Асосий",
+      "branch": "Филиал"
+    },
     "parentLabel": "Асосий: {{name}}",
     "columns": {
       "contact": "Алоқа ва манзил",
@@ -265,7 +288,11 @@
       "progress": "{{value}}% тайёр",
       "moreIssues": "Яна {{count}} та масала",
       "stepReady": "Ҳаммаси жойида",
-      "status": { "ready": "Тайёр", "warning": "Эътибор", "blocked": "Блокланган" },
+      "status": {
+        "ready": "Тайёр",
+        "warning": "Эътибор",
+        "blocked": "Блокланган"
+      },
       "steps": {
         "profile": "Шахобча профили",
         "staff": "Ходимлар ва PIN",
@@ -536,7 +563,9 @@
       "copySettings": "Хавфсиз шахобча созламаларини нусхалаш",
       "copyHint": "Нусхалаш бир марталик. Кейинги ўзгаришлар автоматик синхронланмайди; интеграциялар, қурилмалар ва операцион маълумотлар кўчирилмайди."
     },
-    "profileEdit": { "title": "Ресторан профилини таҳрирлаш" },
+    "profileEdit": {
+      "title": "Ресторан профилини таҳрирлаш"
+    },
     "deleteBranch": {
       "title": "Филиални ўчириш",
       "description": "\"{{name}}\" филиалини ўчирмоқчимисиз?"
@@ -665,8 +694,14 @@
       "settings": "Созламалар"
     },
     "options": {
-      "printMode": { "text": "Text (native)", "raster": "Raster (бутун чек)" },
-      "qrMode": { "native": "Native QR", "raster": "Raster QR" },
+      "printMode": {
+        "text": "Text (native)",
+        "raster": "Raster (бутун чек)"
+      },
+      "qrMode": {
+        "native": "Native QR",
+        "raster": "Raster QR"
+      },
       "rasterFont": {
         "go_mono": "Go Mono (стандарт)",
         "inter": "Inter",
@@ -695,18 +730,18 @@
     "title": "Хизмат ҳақи формулалари",
     "name": "Тариф номи",
     "timezone": "Вақт минтақаси (IANA)",
-    "technical": "Техник едитор",
+    "technical": "Формула ёзиш",
     "templates": "Шаблонлар",
     "builder": "Конструктор",
-    "ai": "AI ёрдамчи",
+    "ai": "Оддий гап билан (AI)",
     "source": "Формула",
     "sourceHint": "Ифода ёки let …; return …; дастурини ёзинг. Ҳисоб натижаси сўмда.",
     "variables": "Ўзгарувчини киритиш",
     "functions": "Функсияни киритиш",
-    "parameters": "Формула параметрлари",
-    "parameterName": "Параметр номи",
+    "parameters": "Ўз ўзгарувчиларингиз",
+    "parameterName": "Ўзгарувчи номи",
     "parameterValue": "Қиймат",
-    "addParameter": "Параметр қўшиш",
+    "addParameter": "Ўзгарувчи қўшиш",
     "remove": "Ўчириш",
     "errorPosition": " · {{position}}-белги",
     "preview": "Синов ҳисоби",
@@ -775,6 +810,25 @@
     "percentageReceiptHint": "Оддий фоиз чекда фоизи билан кўрсатилади.",
     "formulaReceiptHint": "Чекда фақат «Хизмат ҳақи: сумма» кўрсатилади.",
     "formulaTools": "Формула ёрдамчилари: шаблонлар, конструктор ва AI",
-    "inlineFormulaHint": "Ўзгарувчилар: subtotal, duration_minutes, guest_count. Масалан: max(60, duration_minutes) / 60 * 60000."
+    "inlineFormulaHint": "Ўзгарувчилар: subtotal, duration_minutes, guest_count. Масалан: max(60, duration_minutes) / 60 * 60000.",
+    "viewFormula": "Формулани кўриш",
+    "applyFormula": "Формулани қўллаш",
+    "close": "Бекор қилиш",
+    "selectRestaurant": "Аввал шохобчани танланг.",
+    "shiftFrom": "{{number}}-смена: бошланиш",
+    "shiftUntil": "{{number}}-смена: тугаш",
+    "shiftRate": "{{number}}-смена: соат нархи",
+    "addShift": "Смена қўшиш",
+    "arrivalMinimum": "Биринчи соат кириш тарифида, кейин смена бўйича",
+    "invalidRate": "Нарх ва яхлитлаш қадами нолдан катта бўлиши керак.",
+    "invalidShiftTime": "Ҳар бир сменанинг бошланиш ва тугаш вақтини тўғри киритинг.",
+    "shiftCoverage": "Сменалар бир-бирини такрорламасдан 24 соатни тўлиқ қамраши керак.",
+    "variableNames": {
+      "subtotal": "Буюртма суммаси",
+      "duration_minutes": "Ўтган дақиқалар",
+      "guest_count": "Меҳмонлар сони",
+      "session_started_at": "Бошланган вақт",
+      "calculation_at": "Ҳисоблаш вақти"
+    }
   }
 }
