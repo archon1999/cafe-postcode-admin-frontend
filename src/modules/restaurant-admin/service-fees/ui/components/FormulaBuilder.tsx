@@ -27,6 +27,7 @@ export function FormulaBuilder({
     setOptions({ ...options, [key]: value });
   const amountField = (key: 'percent' | 'hourlyRate' | 'rounding') => (
     <TextField
+      size="medium"
       key={key}
       label={t(`serviceFees.${key}`)}
       value={options[key]}
@@ -37,6 +38,7 @@ export function FormulaBuilder({
   return (
     <Stack spacing={2}>
       <TextField
+        size="medium"
         select
         label={t('serviceFees.kind')}
         value={options.kind}
@@ -51,6 +53,7 @@ export function FormulaBuilder({
         <>
           {amountField('hourlyRate')}
           <TextField
+            size="medium"
             select
             label={t('serviceFees.hourlyRule')}
             value={options.hourlyRule}
@@ -69,6 +72,7 @@ export function FormulaBuilder({
             <Stack key={index} direction={{ xs: 'column', sm: 'row' }} spacing={1}>
               {(['from', 'until', 'rate'] as const).map((field) => (
                 <TextField
+                  size="medium"
                   key={field}
                   fullWidth
                   type={field === 'rate' ? 'number' : 'time'}
@@ -108,6 +112,7 @@ export function FormulaBuilder({
             {t('serviceFees.addShift')}
           </Button>
           <TextField
+            size="medium"
             select
             label={t('serviceFees.hourlyRule')}
             value={options.hourlyRule === 'minimum' ? 'minimum' : 'prorated'}

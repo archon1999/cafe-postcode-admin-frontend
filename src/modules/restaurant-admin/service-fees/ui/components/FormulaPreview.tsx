@@ -1,6 +1,9 @@
 import { Alert, Button, Stack, TextField, Typography } from '@mui/material';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 import { useTranslate } from 'app/providers/locales';
+import dayjs, { TASHKENT_TIMEZONE, toTashkentDayjs } from 'shared/utils/dayjs';
+import { FORMAT_PATTERNS } from 'shared/utils/format-time';
 
 import type { FeeContext, FeePreview } from '../../domain';
 
@@ -23,29 +26,39 @@ export function FormulaPreview({
       <Typography variant="h6">{t('serviceFees.preview')}</Typography>
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
         <TextField
+          size="medium"
           label={t('serviceFees.subtotal')}
           type="number"
           value={context.subtotal}
           onChange={(event) => onChange({ ...context, subtotal: Number(event.target.value) })}
         />
         <TextField
+          size="medium"
           label={t('serviceFees.guestCount')}
           type="number"
           value={context.guestCount}
           onChange={(event) => onChange({ ...context, guestCount: Number(event.target.value) })}
         />
       </Stack>
-      <TextField
-        label={t('serviceFees.startedAt')}
-        value={context.startedAt}
-        onChange={(event) => onChange({ ...context, startedAt: event.target.value })}
-        helperText={t('serviceFees.timestampHint')}
-      />
-      <TextField
-        label={t('serviceFees.calculatedAt')}
-        value={context.calculatedAt}
-        onChange={(event) => onChange({ ...context, calculatedAt: event.target.value })}
-      />
+      {(['startedAt', 'calculatedAt'] as const).map((field) => (
+        <DateTimePicker
+          key={field}
+          label={t(`serviceFees.${field}`)}
+          value={
+            context[field] ? (dayjs(context[field]).isValid() ? toTashkentDayjs(context[field]) : dayjs('')) : null
+          }
+          onChange={(date) =>
+            onChange({
+              ...context,
+              [field]: date ? (date.isValid() ? date.tz(TASHKENT_TIMEZONE).format() : 'Invalid Date') : '',
+            })
+          }
+          timezone={TASHKENT_TIMEZONE}
+          ampm={false}
+          format={FORMAT_PATTERNS.dateTime}
+          slotProps={{ textField: { size: 'medium', fullWidth: true } }}
+        />
+      ))}
       <Button variant="outlined" disabled={busy} onClick={onPreview}>
         {t('serviceFees.calculate')}
       </Button>

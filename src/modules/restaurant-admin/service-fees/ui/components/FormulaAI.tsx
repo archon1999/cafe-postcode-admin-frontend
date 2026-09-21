@@ -22,6 +22,7 @@ export function FormulaAI({
     <Stack spacing={2}>
       <Alert severity="info">{t(available ? 'serviceFees.aiHint' : 'serviceFees.aiUnavailable')}</Alert>
       <TextField
+        size="medium"
         multiline
         minRows={3}
         label={t('serviceFees.requirement')}

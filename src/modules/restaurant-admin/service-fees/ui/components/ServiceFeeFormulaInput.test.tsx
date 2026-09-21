@@ -1,8 +1,12 @@
 // @vitest-environment jsdom
-import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { act, cleanup, fireEvent, render as rtlRender, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ServiceFeeFormulaInput } from './ServiceFeeFormulaInput';
+const render = (ui: React.ReactNode) =>
+  rtlRender(<LocalizationProvider dateAdapter={AdapterDayjs}>{ui}</LocalizationProvider>);
 const actions = vi.hoisted(() => ({
   preview: { mutateAsync: vi.fn(), isPending: false },
   save: { mutateAsync: vi.fn(), isPending: false },

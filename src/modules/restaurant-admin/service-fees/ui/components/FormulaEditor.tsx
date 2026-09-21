@@ -59,6 +59,7 @@ export function FormulaEditor({
       {tab === 'templates' && (
         <Stack spacing={2}>
           <TextField
+            size="medium"
             select
             label={t('serviceFees.templates')}
             value={templateId}
@@ -110,6 +111,24 @@ export function FormulaEditor({
       {tab === 'technical' && (
         <>
           <TextField
+            size="medium"
+            multiline
+            minRows={7}
+            maxRows={22}
+            label={t('serviceFees.source')}
+            value={editor.source}
+            inputRef={input}
+            disabled={!canWrite || editor.busy}
+            onChange={(event) => editor.setSource(event.target.value)}
+            inputProps={{
+              maxLength: 8000,
+              spellCheck: false,
+              style: { fontFamily: 'monospace', fontSize: 14, lineHeight: 1.6, tabSize: 2 },
+            }}
+            helperText={t('serviceFees.sourceHint')}
+          />
+          <TextField
+            size="medium"
             select
             label={t('serviceFees.variables')}
             value=""
@@ -128,6 +147,7 @@ export function FormulaEditor({
             ))}
           </TextField>
           <TextField
+            size="medium"
             select
             label={t('serviceFees.functions')}
             value=""
@@ -147,28 +167,12 @@ export function FormulaEditor({
               </MenuItem>
             ))}
           </TextField>
-          <TextField
-            multiline
-            minRows={7}
-            maxRows={22}
-            label={t('serviceFees.source')}
-            value={editor.source}
-            inputRef={input}
-            disabled={!canWrite || editor.busy}
-            onChange={(event) => editor.setSource(event.target.value)}
-            inputProps={{
-              maxLength: 8000,
-              spellCheck: false,
-              style: { fontFamily: 'monospace', fontSize: 14, lineHeight: 1.6, tabSize: 2 },
-            }}
-            helperText={t('serviceFees.sourceHint')}
-          />
           <Stack spacing={1}>
             <Typography variant="subtitle2">{t('serviceFees.parameters')}</Typography>
             {editor.parameters.map(([key, value], index) => (
               <Stack key={index} direction="row" spacing={1}>
                 <TextField
-                  size="small"
+                  size="medium"
                   label={t('serviceFees.parameterName')}
                   value={key}
                   disabled={!canWrite || editor.busy}
@@ -181,7 +185,7 @@ export function FormulaEditor({
                   }
                 />
                 <TextField
-                  size="small"
+                  size="medium"
                   label={t('serviceFees.parameterValue')}
                   value={value}
                   disabled={!canWrite || editor.busy}
