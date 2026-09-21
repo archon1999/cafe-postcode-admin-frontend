@@ -15,6 +15,7 @@ import {
 import { useTranslate } from 'app/providers/locales';
 import type { AdminTableShapeVariant } from 'shared/api/admin-types';
 import { Iconify } from 'shared/ui/Iconify';
+import { ServiceFeeFormulaInput } from 'shared/ui/ServiceFeeFormulaInput';
 
 import {
   MAX_PRESET_TABLE_SEAT_COUNT,
@@ -25,7 +26,7 @@ import {
 } from '../../../domain';
 
 import type { DraftTable } from './ConstructorTableCard';
-import { normalizeServiceFeeHourlyRate, normalizeServiceFeePercent } from './hallConstructorDraft';
+import { normalizeServiceFeePercent } from './hallConstructorDraft';
 
 type HallConstructorInspectorProps = {
   onDelete: () => void;
@@ -164,7 +165,7 @@ export function HallConstructorInspector({
               label={t('fields.tableServiceFeeEnabled', { defaultValue: 'Stol xizmat haqi' })}
               value={selectedTable.serviceFeeEnabled ? selectedTable.serviceFeeMode : 'disabled'}
               onChange={(event) => {
-                const selection = event.target.value as 'disabled' | 'percentage' | 'hourly';
+                const selection = event.target.value as 'disabled' | 'percentage' | 'formula';
 
                 updateSelectedTable((table) => ({
                   ...table,
@@ -176,38 +177,28 @@ export function HallConstructorInspector({
                 {t('fields.serviceFeeModeDisabled', { defaultValue: "O'chirilgan" })}
               </MenuItem>
               <MenuItem value="percentage">{t('fields.serviceFeeModePercentage', { defaultValue: 'Foizli' })}</MenuItem>
-              <MenuItem value="hourly">{t('fields.serviceFeeModeHourly', { defaultValue: 'Soatlik' })}</MenuItem>
+              <MenuItem value="formula">{t('fields.serviceFeeModeFormula')}</MenuItem>
             </TextField>
-            {selectedTable.serviceFeeEnabled ? (
+            {selectedTable.serviceFeeEnabled && selectedTable.serviceFeeMode === 'percentage' && (
               <TextField
-                label={
-                  selectedTable.serviceFeeMode === 'hourly'
-                    ? t('fields.serviceFeeHourlyRate', { defaultValue: 'Xizmat haqi (UZS/soat)' })
-                    : t('fields.serviceFeePercent', { defaultValue: 'Xizmat haqi, %' })
-                }
+                label={t('fields.serviceFeePercent')}
                 type="number"
-                value={
-                  selectedTable.serviceFeeMode === 'hourly'
-                    ? selectedTable.serviceFeeHourlyRate
-                    : selectedTable.serviceFeePercent
-                }
+                value={selectedTable.serviceFeePercent}
                 onChange={(event) =>
                   updateSelectedTable((table) => ({
                     ...table,
-                    ...(table.serviceFeeMode === 'hourly'
-                      ? { serviceFeeHourlyRate: normalizeServiceFeeHourlyRate(event.target.value) }
-                      : { serviceFeePercent: normalizeServiceFeePercent(event.target.value) }),
+                    serviceFeePercent: normalizeServiceFeePercent(event.target.value),
                   }))
                 }
-                slotProps={{
-                  htmlInput: {
-                    min: 0,
-                    ...(selectedTable.serviceFeeMode === 'percentage' ? { max: 99 } : {}),
-                    step: 1,
-                  },
-                }}
+                slotProps={{ htmlInput: { min: 1, max: 99, step: 1 } }}
               />
-            ) : null}
+            )}
+            {selectedTable.serviceFeeEnabled && selectedTable.serviceFeeMode === 'formula' && (
+              <ServiceFeeFormulaInput
+                value={selectedTable.serviceFeeFormula}
+                onChange={(value) => updateSelectedTable((table) => ({ ...table, serviceFeeFormula: value }))}
+              />
+            )}
 
             <Accordion
               disableGutters

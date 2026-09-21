@@ -99,7 +99,7 @@ export type AdminCashExpensesResponse = AdminPaginatedResponse<AdminCashExpense>
 export type AdminReportKey = 'summary' | 'sales' | 'receipts' | 'topItems' | 'topStaff' | 'paymentBreakdown' | 'shifts';
 export type AdminReportPeriodType = 'day' | 'month' | 'year';
 export type AdminBusinessPartnerStatus = 'draft' | 'active' | 'inactive';
-export type AdminServiceFeeMode = 'percentage' | 'hourly';
+export type AdminServiceFeeMode = 'percentage' | 'hourly' | 'formula';
 export type AdminBusinessPartnerRestaurant = {
   id: string;
   name: string;
@@ -122,6 +122,7 @@ export type AdminHall = {
   serviceFeeMode?: AdminServiceFeeMode;
   serviceFeePercent?: number | string;
   serviceFeeHourlyRate?: number | string;
+  serviceFeeFormula?: Record<string, unknown>;
   sortOrder?: number;
   isActive: boolean;
   zoneOrCabinId: string;
@@ -136,6 +137,7 @@ export type AdminHallPayload = {
   serviceFeeMode?: AdminServiceFeeMode;
   serviceFeePercent?: number | string;
   serviceFeeHourlyRate?: number | string;
+  serviceFeeFormula?: Record<string, unknown>;
   sortOrder?: number;
   isActive: boolean;
   zoneOrCabinId: string;
@@ -184,6 +186,7 @@ export type AdminDiningTable = {
   serviceFeeMode: AdminServiceFeeMode;
   serviceFeePercent: number | string;
   serviceFeeHourlyRate: number | string;
+  serviceFeeFormula?: Record<string, unknown>;
   isActive: boolean;
   activeSession?: AdminActiveTableSessionSummary | null;
 };
@@ -205,6 +208,7 @@ export type AdminDiningTablePayload = {
   serviceFeeMode?: AdminServiceFeeMode;
   serviceFeePercent?: number | string;
   serviceFeeHourlyRate?: number | string;
+  serviceFeeFormula?: Record<string, unknown>;
   isActive: boolean;
 };
 
@@ -222,6 +226,7 @@ export type AdminHallConstructorTable = {
   serviceFeeMode?: AdminServiceFeeMode;
   serviceFeePercent?: number | string;
   serviceFeeHourlyRate?: number | string;
+  serviceFeeFormula?: Record<string, unknown>;
   isActive: boolean;
 };
 
@@ -233,6 +238,7 @@ export type AdminHallConstructor = {
   serviceFeeMode?: AdminServiceFeeMode;
   serviceFeePercent?: number | string;
   serviceFeeHourlyRate?: number | string;
+  serviceFeeFormula?: Record<string, unknown>;
   tables: AdminHallConstructorTable[];
 };
 
@@ -242,6 +248,7 @@ export type AdminHallConstructorPayload = {
   serviceFeeMode?: AdminServiceFeeMode;
   serviceFeePercent?: number | string;
   serviceFeeHourlyRate?: number | string;
+  serviceFeeFormula?: Record<string, unknown>;
   tables: Array<{
     id?: string;
     name: string;
@@ -256,6 +263,7 @@ export type AdminHallConstructorPayload = {
     serviceFeeMode?: AdminServiceFeeMode;
     serviceFeePercent?: number | string;
     serviceFeeHourlyRate?: number | string;
+    serviceFeeFormula?: Record<string, unknown>;
     isActive?: boolean;
   }>;
   deletedTableIds?: string[];
@@ -543,6 +551,7 @@ export type AdminRestaurant = {
   serviceFeeMode: AdminServiceFeeMode;
   serviceFeePercent: number | string;
   serviceFeeHourlyRate: number | string;
+  serviceFeeFormula?: Record<string, unknown>;
   vatEnabled: boolean;
   vatPercent: number | string;
   markingCheckEnabled: boolean;
@@ -581,6 +590,7 @@ export type AdminRestaurantPayload = {
   serviceFeeMode: AdminServiceFeeMode;
   serviceFeePercent: number | string;
   serviceFeeHourlyRate: number | string;
+  serviceFeeFormula?: Record<string, unknown>;
   vatEnabled: boolean;
   vatPercent: number | string;
   markingCheckEnabled: boolean;

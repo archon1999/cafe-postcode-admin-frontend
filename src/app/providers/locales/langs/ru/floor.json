@@ -41,6 +41,9 @@
                                        }
               },
     "fields":  {
+      "serviceFeeModeFormula": "Формула",
+      "serviceFeeModePercentage": "Процент",
+      "serviceFeeModeDisabled": "Не задано",
                    "name":  "Название",
                    "code":  "Код",
                    "description":  "Описание",

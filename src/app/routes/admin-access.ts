@@ -259,6 +259,7 @@ export function canAccessMyRestaurantPrintTemplates(snapshot?: AdminAccessSnapsh
 const MY_RESTAURANT_LANDING_CANDIDATES = [
   RoutePath.organizationMyRestaurantSetup,
   RoutePath.organizationMyRestaurantGeneral,
+  RoutePath.organizationServiceFees,
   RoutePath.organizationMyRestaurantCashDeskList,
   RoutePath.organizationMyRestaurantPrepStationList,
   RoutePath.organizationMyRestaurantIntegrationConfigList,
@@ -300,6 +301,10 @@ export function canAccessAdminPath(pathname: string, snapshot?: AdminAccessSnaps
 
   if (matchesPrefix(pathname, RoutePath.organizationMyRestaurantSetup)) {
     return canAccessMyRestaurantSetup(snapshot);
+  }
+
+  if (matchesPrefix(pathname, RoutePath.organizationServiceFees)) {
+    return canAccessMyRestaurantGeneral(snapshot);
   }
 
   if (matchesPrefix(pathname, RoutePath.organizationMyRestaurantGeneral)) {

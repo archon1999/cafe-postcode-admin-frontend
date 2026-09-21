@@ -1,3 +1,4 @@
+export { organizationsKeys } from './keys';
 export {
   useCreateCashDeskMutation,
   useCreateDistributionPointMutation,

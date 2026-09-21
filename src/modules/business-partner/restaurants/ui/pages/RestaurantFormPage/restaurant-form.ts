@@ -14,9 +14,10 @@ export const restaurantFormSchema = z
     posAuthBackgroundImage: z.custom<File | string | null | undefined>().optional(),
     clearPosAuthBackgroundImage: z.boolean().optional(),
     serviceFeeEnabled: z.boolean(),
-    serviceFeeMode: z.enum(['percentage', 'hourly']).default('percentage'),
+    serviceFeeMode: z.enum(['percentage', 'hourly', 'formula']).default('percentage'),
     serviceFeePercent: z.coerce.number().min(0).max(99),
     serviceFeeHourlyRate: z.coerce.number().int().min(0).default(0),
+    serviceFeeFormula: z.record(z.string(), z.unknown()).default({}),
     vatEnabled: z.boolean(),
     vatPercent: z.coerce.number().min(0).max(99),
     markingCheckEnabled: z.boolean(),
@@ -28,6 +29,9 @@ export const restaurantFormSchema = z
     if (!values.serviceFeeEnabled) return;
     if (values.serviceFeeMode === 'percentage' && values.serviceFeePercent < 1) {
       context.addIssue({ code: 'custom', path: ['serviceFeePercent'], message: 'Foiz 1 dan 99 gacha bo‘lishi kerak' });
+    }
+    if (values.serviceFeeMode === 'formula' && !String(values.serviceFeeFormula.source ?? '').trim()) {
+      context.addIssue({ code: 'custom', path: ['serviceFeeFormula'], message: 'Formulani kiriting' });
     }
     if (values.serviceFeeMode === 'hourly' && values.serviceFeeHourlyRate < 1) {
       context.addIssue({
@@ -55,6 +59,7 @@ export const restaurantFormDefaultValues: RestaurantFormInput = {
   serviceFeeMode: 'percentage',
   serviceFeePercent: 0,
   serviceFeeHourlyRate: 0,
+  serviceFeeFormula: {},
   vatEnabled: true,
   vatPercent: 12,
   markingCheckEnabled: false,
@@ -78,6 +83,7 @@ export function restaurantToFormValues(restaurant: AdminRestaurant): RestaurantF
     serviceFeeMode: restaurant.serviceFeeMode ?? 'percentage',
     serviceFeePercent: Number(restaurant.serviceFeePercent ?? 0),
     serviceFeeHourlyRate: Number(restaurant.serviceFeeHourlyRate ?? 0),
+    serviceFeeFormula: restaurant.serviceFeeFormula ?? {},
     vatEnabled: restaurant.vatEnabled,
     vatPercent: Number(restaurant.vatPercent ?? 12),
     markingCheckEnabled: Boolean(restaurant.markingCheckEnabled),
@@ -103,6 +109,7 @@ export function restaurantFormValuesToPayload(
     serviceFeeMode: values.serviceFeeMode,
     serviceFeePercent: values.serviceFeePercent,
     serviceFeeHourlyRate: values.serviceFeeHourlyRate,
+    serviceFeeFormula: values.serviceFeeEnabled && values.serviceFeeMode === 'formula' ? values.serviceFeeFormula : {},
     vatEnabled: values.vatEnabled,
     vatPercent: values.vatPercent,
     markingCheckEnabled: values.markingCheckEnabled,

@@ -5,9 +5,10 @@ import type { DraftTable } from './ConstructorTableCard';
 export type HallConstructorDraft = {
   gridColumns: number;
   serviceFeeEnabled: boolean;
-  serviceFeeMode: 'percentage' | 'hourly';
+  serviceFeeMode: 'percentage' | 'hourly' | 'formula';
   serviceFeePercent: number | string;
   serviceFeeHourlyRate: number | string;
+  serviceFeeFormula?: Record<string, unknown>;
   tables: DraftTable[];
   deletedTableIds: string[];
 };
@@ -43,6 +44,7 @@ export function toDraftTable(table: AdminHallConstructorTable): DraftTable {
     serviceFeeMode: table.serviceFeeMode ?? 'percentage',
     serviceFeePercent: table.serviceFeePercent ?? 0,
     serviceFeeHourlyRate: table.serviceFeeHourlyRate ?? 0,
+    serviceFeeFormula: table.serviceFeeFormula,
     localId: table.id,
   };
 }
@@ -58,6 +60,7 @@ export function serializeHallConstructorDraft(draft: HallConstructorDraft | null
     serviceFeeMode: draft.serviceFeeMode,
     serviceFeePercent: draft.serviceFeePercent,
     serviceFeeHourlyRate: draft.serviceFeeHourlyRate,
+    serviceFeeFormula: draft.serviceFeeFormula,
     deletedTableIds: [...draft.deletedTableIds].sort(),
     tables: [...draft.tables]
       .map((table) => ({
@@ -74,6 +77,7 @@ export function serializeHallConstructorDraft(draft: HallConstructorDraft | null
         serviceFeeMode: table.serviceFeeMode,
         serviceFeePercent: table.serviceFeePercent,
         serviceFeeHourlyRate: table.serviceFeeHourlyRate,
+        serviceFeeFormula: table.serviceFeeFormula,
         isActive: table.isActive,
       }))
       .sort((left, right) =>

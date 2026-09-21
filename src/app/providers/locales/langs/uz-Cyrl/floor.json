@@ -41,6 +41,9 @@
                                        }
               },
     "fields":  {
+      "serviceFeeModeFormula": "Формула",
+      "serviceFeeModePercentage": "Фоиз",
+      "serviceFeeModeDisabled": "Белгиланмаган",
                    "name":  "РќРѕРјРё",
                    "code":  "РљРѕРґ",
                    "description":  "РўР°РІСЃРёС„",

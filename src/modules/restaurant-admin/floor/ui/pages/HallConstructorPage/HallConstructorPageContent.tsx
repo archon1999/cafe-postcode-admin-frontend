@@ -21,13 +21,14 @@ import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 import { ConfirmDialog } from 'shared/ui/CustomDialog';
 import { Iconify } from 'shared/ui/Iconify';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
+import { ServiceFeeFormulaInput } from 'shared/ui/ServiceFeeFormulaInput';
 import { useSettingsContext } from 'shared/ui/Settings';
 import { formatHallDisplayName } from 'shared/utils/format-hall-display';
 
 import { GRID_CELL_SIZE, GRID_GAP_SIZE, GRID_PADDING_SIZE } from '../../../domain';
 
 import { ConstructorTableCard, getConstructorPreviewPalette } from './ConstructorTableCard';
-import { normalizeServiceFeeHourlyRate, normalizeServiceFeePercent } from './hallConstructorDraft';
+import { normalizeServiceFeePercent } from './hallConstructorDraft';
 import { HallConstructorInspector } from './HallConstructorInspector';
 import { useHallConstructorState } from './useHallConstructorState';
 
@@ -112,7 +113,7 @@ export const HallConstructorPageContent = ({ id }: HallConstructorPageContentPro
                 label={t('fields.hallServiceFeeEnabled', { defaultValue: 'Zal xizmat haqi' })}
                 value={draft.serviceFeeEnabled ? draft.serviceFeeMode : 'disabled'}
                 onChange={(event) => {
-                  const selection = event.target.value as 'disabled' | 'percentage' | 'hourly';
+                  const selection = event.target.value as 'disabled' | 'percentage' | 'formula';
 
                   updateHallServiceFee(
                     selection === 'disabled'
@@ -127,32 +128,18 @@ export const HallConstructorPageContent = ({ id }: HallConstructorPageContentPro
                 <MenuItem value="percentage">
                   {t('fields.serviceFeeModePercentage', { defaultValue: 'Foizli' })}
                 </MenuItem>
-                <MenuItem value="hourly">{t('fields.serviceFeeModeHourly', { defaultValue: 'Soatlik' })}</MenuItem>
+                <MenuItem value="formula">{t('fields.serviceFeeModeFormula')}</MenuItem>
               </TextField>
-              {draft.serviceFeeEnabled ? (
+              {draft.serviceFeeEnabled && draft.serviceFeeMode === 'percentage' ? (
                 <TextField
                   size="small"
-                  label={
-                    draft.serviceFeeMode === 'hourly'
-                      ? t('fields.serviceFeeHourlyRate', { defaultValue: 'UZS/soat' })
-                      : t('fields.serviceFeePercent', { defaultValue: 'Xizmat haqi, %' })
-                  }
+                  label={t('fields.serviceFeePercent')}
                   type="number"
-                  value={draft.serviceFeeMode === 'hourly' ? draft.serviceFeeHourlyRate : draft.serviceFeePercent}
+                  value={draft.serviceFeePercent}
                   onChange={(event) =>
-                    updateHallServiceFee(
-                      draft.serviceFeeMode === 'hourly'
-                        ? { serviceFeeHourlyRate: normalizeServiceFeeHourlyRate(event.target.value) }
-                        : { serviceFeePercent: normalizeServiceFeePercent(event.target.value) },
-                    )
+                    updateHallServiceFee({ serviceFeePercent: normalizeServiceFeePercent(event.target.value) })
                   }
-                  slotProps={{
-                    htmlInput: {
-                      min: 0,
-                      ...(draft.serviceFeeMode === 'percentage' ? { max: 99 } : {}),
-                      step: 1,
-                    },
-                  }}
+                  slotProps={{ htmlInput: { min: 1, max: 99, step: 1 } }}
                   sx={{ ...nativeNumberInputSx, width: { xs: '100%', sm: 148 } }}
                 />
               ) : null}
@@ -174,6 +161,15 @@ export const HallConstructorPageContent = ({ id }: HallConstructorPageContentPro
               </Button>
             </Stack>
           </Stack>
+
+          {draft.serviceFeeEnabled && draft.serviceFeeMode === 'formula' && (
+            <Box sx={{ mb: 3 }}>
+              <ServiceFeeFormulaInput
+                value={draft.serviceFeeFormula}
+                onChange={(value) => updateHallServiceFee({ serviceFeeFormula: value })}
+              />
+            </Box>
+          )}
 
           <Stack
             direction="row"

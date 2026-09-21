@@ -44,6 +44,7 @@ export function useHallConstructorState(id?: string) {
       serviceFeeMode: query.data.serviceFeeMode ?? 'percentage',
       serviceFeePercent: query.data.serviceFeePercent ?? 0,
       serviceFeeHourlyRate: query.data.serviceFeeHourlyRate ?? 0,
+      serviceFeeFormula: query.data.serviceFeeFormula,
       tables: query.data.tables.map(toDraftTable),
       deletedTableIds: [],
     };
@@ -108,7 +109,10 @@ export function useHallConstructorState(id?: string) {
 
   const updateHallServiceFee = (
     values: Partial<
-      Pick<HallConstructorDraft, 'serviceFeeEnabled' | 'serviceFeeMode' | 'serviceFeePercent' | 'serviceFeeHourlyRate'>
+      Pick<
+        HallConstructorDraft,
+        'serviceFeeEnabled' | 'serviceFeeMode' | 'serviceFeePercent' | 'serviceFeeHourlyRate' | 'serviceFeeFormula'
+      >
     >,
   ) => {
     setDraft((currentDraft) => (currentDraft ? { ...currentDraft, ...values } : currentDraft));
@@ -222,6 +226,7 @@ export function useHallConstructorState(id?: string) {
       serviceFeeMode: draft.serviceFeeMode,
       serviceFeePercent: draft.serviceFeePercent,
       serviceFeeHourlyRate: draft.serviceFeeHourlyRate,
+      serviceFeeFormula: draft.serviceFeeEnabled && draft.serviceFeeMode === 'formula' ? draft.serviceFeeFormula : {},
       tables: draft.tables.map((table) => ({
         ...(table.id ? { id: table.id } : {}),
         name: table.name.trim(),
@@ -236,6 +241,7 @@ export function useHallConstructorState(id?: string) {
         serviceFeeMode: table.serviceFeeMode,
         serviceFeePercent: table.serviceFeePercent,
         serviceFeeHourlyRate: table.serviceFeeHourlyRate,
+        serviceFeeFormula: table.serviceFeeEnabled && table.serviceFeeMode === 'formula' ? table.serviceFeeFormula : {},
         isActive: table.isActive,
       })),
       deletedTableIds: draft.deletedTableIds,
@@ -247,6 +253,7 @@ export function useHallConstructorState(id?: string) {
       serviceFeeMode: response.serviceFeeMode ?? 'percentage',
       serviceFeePercent: response.serviceFeePercent ?? 0,
       serviceFeeHourlyRate: response.serviceFeeHourlyRate ?? 0,
+      serviceFeeFormula: response.serviceFeeFormula,
       tables: response.tables.map(toDraftTable),
       deletedTableIds: [],
     };

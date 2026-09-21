@@ -10,6 +10,7 @@ type RestaurantSelfServicePayload = Pick<
   | 'serviceFeeMode'
   | 'serviceFeePercent'
   | 'serviceFeeHourlyRate'
+  | 'serviceFeeFormula'
   | 'vatEnabled'
   | 'vatPercent'
   | 'markingCheckEnabled'
@@ -55,6 +56,7 @@ export function buildAdminRestaurantRequestPayload(payload: AdminRestaurantPaylo
   appendText(formData, 'serviceFeeMode', payload.serviceFeeMode);
   appendText(formData, 'serviceFeePercent', payload.serviceFeePercent);
   appendText(formData, 'serviceFeeHourlyRate', payload.serviceFeeHourlyRate);
+  appendJson(formData, 'serviceFeeFormula', payload.serviceFeeFormula);
   appendText(formData, 'vatEnabled', payload.vatEnabled);
   appendText(formData, 'vatPercent', payload.vatPercent);
   appendText(formData, 'markingCheckEnabled', payload.markingCheckEnabled);
@@ -101,6 +103,7 @@ export function buildRestaurantSelfServiceRequestPayload(
     serviceFeeMode: payload.serviceFeeMode,
     serviceFeePercent: payload.serviceFeePercent,
     serviceFeeHourlyRate: payload.serviceFeeHourlyRate,
+    serviceFeeFormula: payload.serviceFeeFormula,
     vatEnabled: payload.vatEnabled,
     vatPercent: payload.vatPercent,
     markingCheckEnabled: payload.markingCheckEnabled,
@@ -116,7 +119,10 @@ export function buildRestaurantSelfServiceRequestPayload(
   }
 
   const formData = new FormData();
-  Object.entries(safePayload).forEach(([key, value]) => appendText(formData, key, value));
+  Object.entries(safePayload).forEach(([key, value]) => {
+    if (key === 'serviceFeeFormula') appendJson(formData, key, value as Record<string, unknown> | undefined);
+    else appendText(formData, key, value as string | number | boolean | undefined);
+  });
   if (hasImageFile) {
     formData.append('posAuthBackgroundImage', imageFile);
   }

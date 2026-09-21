@@ -32,6 +32,24 @@ describe('buildAdminRestaurantRequestPayload', () => {
     expect(buildAdminRestaurantRequestPayload(basePayload)).toBe(basePayload);
   });
 
+  it('preserves technical formulas and parameter casing in JSON and multipart self-service requests', () => {
+    const formula = {
+      version: 1,
+      name: 'Smena',
+      source: 'duration_minutes * dayRate / 60',
+      parameters: { dayRate: '60000' },
+      timezone: 'Asia/Tashkent',
+    };
+    const payload = { ...basePayload, serviceFeeMode: 'formula' as const, serviceFeeFormula: formula };
+    expect(buildRestaurantSelfServiceRequestPayload(payload)).toMatchObject({ serviceFeeFormula: formula });
+    const multipart = buildRestaurantSelfServiceRequestPayload({
+      ...payload,
+      posAuthBackgroundImage: new File(['image'], 'login.png', { type: 'image/png' }),
+    }) as FormData;
+    expect(multipart.get('serviceFeeMode')).toBe('formula');
+    expect(JSON.parse(multipart.get('serviceFeeFormula') as string)).toEqual(formula);
+  });
+
   it('builds multipart payload for background image upload', () => {
     const image = new File(['image'], 'login.png', { type: 'image/png' });
     const result = buildAdminRestaurantRequestPayload({

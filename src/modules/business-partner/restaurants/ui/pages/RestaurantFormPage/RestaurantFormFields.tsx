@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import { useFormContext } from 'react-hook-form';
 
 import { RHFPhoneInput, RHFSelect, RHFSwitch, RHFTextField, RHFUpload } from 'shared/ui/HookForm';
+import { ServiceFeeFormulaInput } from 'shared/ui/ServiceFeeFormulaInput';
 
 import type { RestaurantFormValues } from './restaurant-form';
 
@@ -89,7 +90,7 @@ export const RestaurantFormFields = ({
           label={t('fields.serviceFeeEnabled')}
           value={serviceFeeEnabled ? serviceFeeMode : 'disabled'}
           onChange={(event) => {
-            const selection = event.target.value as 'disabled' | 'percentage' | 'hourly';
+            const selection = event.target.value as 'disabled' | 'percentage' | 'formula';
 
             setValue('serviceFeeEnabled', selection !== 'disabled', {
               shouldDirty: true,
@@ -101,14 +102,15 @@ export const RestaurantFormFields = ({
           }}>
           <MenuItem value="disabled">{t('fields.serviceFeeModeDisabled', { defaultValue: "O'chirilgan" })}</MenuItem>
           <MenuItem value="percentage">{t('fields.serviceFeeModePercentage', { defaultValue: 'Foizli' })}</MenuItem>
-          <MenuItem value="hourly">{t('fields.serviceFeeModeHourly', { defaultValue: 'Soatlik' })}</MenuItem>
+          <MenuItem value="formula">{t('fields.serviceFeeModeFormula')}</MenuItem>
         </TextField>
-        {serviceFeeEnabled && serviceFeeMode === 'hourly' ? (
-          <RHFTextField<RestaurantFormValues>
-            name="serviceFeeHourlyRate"
-            label={t('fields.serviceFeeHourlyRate', { defaultValue: 'Xizmat haqi (UZS/soat)' })}
-            type="number"
-          />
+        {serviceFeeEnabled && serviceFeeMode === 'formula' ? (
+          <Box sx={{ gridColumn: { lg: '1 / -1' } }}>
+            <ServiceFeeFormulaInput
+              value={watch('serviceFeeFormula')}
+              onChange={(value) => setValue('serviceFeeFormula', value, { shouldDirty: true, shouldValidate: true })}
+            />
+          </Box>
         ) : null}
         {serviceFeeEnabled && serviceFeeMode === 'percentage' ? (
           <RHFTextField<RestaurantFormValues>

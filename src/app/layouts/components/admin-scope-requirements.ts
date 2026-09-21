@@ -15,6 +15,7 @@ const RESTAURANT_REQUIRED_PATHS = new Set([
   RoutePath.organizationMyRestaurant,
   RoutePath.organizationMyRestaurantSetup,
   RoutePath.organizationMyRestaurantGeneral,
+  RoutePath.organizationServiceFees,
   RoutePath.organizationMyRestaurantPrintTemplateList,
 ]);
 

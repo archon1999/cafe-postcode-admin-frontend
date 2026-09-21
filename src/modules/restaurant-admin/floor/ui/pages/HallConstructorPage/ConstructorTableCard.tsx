@@ -11,7 +11,7 @@ export type DraftTable = Omit<
 > & {
   localId: string;
   serviceFeeEnabled: boolean;
-  serviceFeeMode: 'percentage' | 'hourly';
+  serviceFeeMode: 'percentage' | 'hourly' | 'formula';
   serviceFeePercent: number | string;
   serviceFeeHourlyRate: number | string;
 };

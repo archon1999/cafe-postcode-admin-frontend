@@ -111,7 +111,7 @@ describe('HallConstructorPageContent render mode', () => {
     expect(screen.getByTitle('VIP-02')).toHaveTextContent('VIP-02');
   });
 
-  it('controls the hall service fee with disabled, percentage, and hourly options', async () => {
+  it('controls the hall service fee with disabled, percentage, and formula options', async () => {
     render(<HallConstructorPageContent id="hall-1" />);
 
     await waitFor(() => {
@@ -123,15 +123,15 @@ describe('HallConstructorPageContent render mode', () => {
 
     expect(screen.getByRole('option', { name: 'fields.serviceFeeModeDisabled' })).toBeInTheDocument();
     expect(screen.getByRole('option', { name: 'fields.serviceFeeModePercentage' })).toBeInTheDocument();
-    const hourlyOption = screen.getByRole('option', { name: 'fields.serviceFeeModeHourly' });
-    expect(hourlyOption).toBeInTheDocument();
+    const formulaOption = screen.getByRole('option', { name: 'fields.serviceFeeModeFormula' });
+    expect(formulaOption).toBeInTheDocument();
 
-    fireEvent.click(hourlyOption);
-    expect(screen.getByLabelText('fields.serviceFeeHourlyRate')).toBeInTheDocument();
+    fireEvent.click(formulaOption);
+    expect(screen.getByRole('textbox', { name: 'fields.serviceFeeModeFormula' })).toBeInTheDocument();
 
     fireEvent.mouseDown(modeSelect);
     fireEvent.click(screen.getByRole('option', { name: 'fields.serviceFeeModeDisabled' }));
-    expect(screen.queryByLabelText('fields.serviceFeeHourlyRate')).not.toBeInTheDocument();
+    expect(screen.queryByRole('textbox', { name: 'fields.serviceFeeModeFormula' })).not.toBeInTheDocument();
   });
 
   it('uses the dark palette only for the exact dark mode', async () => {

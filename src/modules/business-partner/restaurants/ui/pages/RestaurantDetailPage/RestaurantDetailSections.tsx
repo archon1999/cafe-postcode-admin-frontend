@@ -456,9 +456,11 @@ function ServiceSettingsSection({ restaurant }: { restaurant: AdminRestaurantDet
     {
       label: t('fields.serviceFeeEnabled'),
       value: restaurant.serviceFeeEnabled
-        ? restaurant.serviceFeeMode === 'hourly'
-          ? `${enabled} · ${Number(restaurant.serviceFeeHourlyRate ?? 0).toLocaleString()} UZS/soat`
-          : `${enabled} · ${restaurant.serviceFeePercent}%`
+        ? restaurant.serviceFeeMode === 'formula'
+          ? t('fields.serviceFeeModeFormula')
+          : restaurant.serviceFeeMode === 'hourly'
+            ? `${enabled} · ${Number(restaurant.serviceFeeHourlyRate ?? 0).toLocaleString()} UZS/soat`
+            : `${enabled} · ${restaurant.serviceFeePercent}%`
         : disabled,
       icon: 'solar:bill-list-bold-duotone',
     },

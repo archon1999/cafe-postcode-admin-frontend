@@ -41,6 +41,9 @@
                                        }
               },
     "fields":  {
+      "serviceFeeModeFormula": "Formula",
+      "serviceFeeModePercentage": "Foiz",
+      "serviceFeeModeDisabled": "Belgilanmagan",
                    "name":  "Nomi",
                    "description":  "Tavsif",
                    "branch":  "Filial",
