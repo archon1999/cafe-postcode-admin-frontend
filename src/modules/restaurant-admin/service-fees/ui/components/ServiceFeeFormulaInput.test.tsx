@@ -80,6 +80,15 @@ describe('formula dialog', () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
+  it('does not offer to apply the previous formula while a different draft is being authored', () => {
+    render(<ServiceFeeFormulaInput value={definition} onChange={vi.fn()} />);
+    fireEvent.click(screen.getByRole('button', { name: 'serviceFees.viewFormula' }));
+    for (const name of ['serviceFees.ai', 'serviceFees.builder', 'serviceFees.templates']) {
+      fireEvent.click(screen.getByRole('tab', { name }));
+      expect(screen.queryByRole('button', { name: 'serviceFees.applyFormula' })).toBeNull();
+    }
+  });
+
   it('opens the natural-language input for a new formula', () => {
     render(<ServiceFeeFormulaInput onChange={vi.fn()} />);
     fireEvent.click(screen.getByRole('button', { name: 'serviceFees.viewFormula' }));

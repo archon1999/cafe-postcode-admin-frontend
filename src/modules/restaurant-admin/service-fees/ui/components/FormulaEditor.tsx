@@ -220,28 +220,32 @@ export function FormulaEditor({
           )}
         </Alert>
       )}
-      <Accordion disableGutters>
-        <AccordionSummary>{t('serviceFees.preview')}</AccordionSummary>
-        <AccordionDetails>
-          <FormulaPreview
-            context={editor.context}
-            onChange={editor.setContext}
-            result={editor.verified}
-            busy={editor.busy || !canWrite}
-            onPreview={() => void editor.preview()}
-          />
-        </AccordionDetails>
-      </Accordion>
-      <Button
-        variant="contained"
-        disabled={!canWrite || !editor.source.trim() || editor.busy}
-        loading={editor.busy}
-        onClick={async () => {
-          const checked = await editor.preview();
-          if (checked) onApply(checked.definition);
-        }}>
-        {t('serviceFees.applyFormula')}
-      </Button>
+      {tab === 'technical' && (
+        <>
+          <Accordion disableGutters>
+            <AccordionSummary>{t('serviceFees.preview')}</AccordionSummary>
+            <AccordionDetails>
+              <FormulaPreview
+                context={editor.context}
+                onChange={editor.setContext}
+                result={editor.verified}
+                busy={editor.busy || !canWrite}
+                onPreview={() => void editor.preview()}
+              />
+            </AccordionDetails>
+          </Accordion>
+          <Button
+            variant="contained"
+            disabled={!canWrite || !editor.source.trim() || editor.busy}
+            loading={editor.busy}
+            onClick={async () => {
+              const checked = await editor.preview();
+              if (checked) onApply(checked.definition);
+            }}>
+            {t('serviceFees.applyFormula')}
+          </Button>
+        </>
+      )}
     </Stack>
   );
 }
