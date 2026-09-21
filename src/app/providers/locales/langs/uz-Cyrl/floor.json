@@ -41,6 +41,9 @@
                                        }
               },
     "fields":  {
+      "serviceFeePercent": "Хизмат ҳақи (%)",
+      "hallServiceFeeEnabled": "Зал хизмат ҳақи",
+      "tableServiceFeeEnabled": "Стол хизмат ҳақи",
       "serviceFeeModeFormula": "Формула",
       "serviceFeeModePercentage": "Фоиз",
       "serviceFeeModeDisabled": "Белгиланмаган",

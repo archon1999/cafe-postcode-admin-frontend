@@ -41,6 +41,9 @@
                                        }
               },
     "fields":  {
+      "serviceFeePercent": "Сервисный сбор (%)",
+      "hallServiceFeeEnabled": "Сервисный сбор зала",
+      "tableServiceFeeEnabled": "Сервисный сбор стола",
       "serviceFeeModeFormula": "Формула",
       "serviceFeeModePercentage": "Процент",
       "serviceFeeModeDisabled": "Не задано",

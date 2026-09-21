@@ -41,6 +41,9 @@
                                        }
               },
     "fields":  {
+      "serviceFeePercent": "Xizmat haqi (%)",
+      "hallServiceFeeEnabled": "Zal xizmat haqi",
+      "tableServiceFeeEnabled": "Stol xizmat haqi",
       "serviceFeeModeFormula": "Formula",
       "serviceFeeModePercentage": "Foiz",
       "serviceFeeModeDisabled": "Belgilanmagan",
