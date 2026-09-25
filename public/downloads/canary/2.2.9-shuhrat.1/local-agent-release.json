@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "version": "2.2.9-shuhrat.1",
+  "platform": "windows",
+  "architecture": "amd64",
+  "downloadUrl": "https://admin.cafe-postcode.uz/downloads/canary/2.2.9-shuhrat.1/CafePostcodeLocalAgent-2.2.9-shuhrat.1-windows-amd64.exe",
+  "sha256": "b3df7c8957428334ccbb70f39f084936604aa10be9e6da7a8c077cb4dc6b8c74",
+  "signature": "+WemwuWN06xhE5DPWOqWhRvPuXs8hLkXm3D3LPIuIlH4sYlF0u/ElDlwqIQ55H5S4XbPADKZIct9sWAsO39UBA==",
+  "size": 17863168,
+  "mandatory": false,
+  "transport": {
+    "encoding": "gzip",
+    "downloadUrl": "https://admin.cafe-postcode.uz/downloads/canary/2.2.9-shuhrat.1/CafePostcodeLocalAgent-2.2.9-shuhrat.1-windows-amd64.exe.gz",
+    "sha256": "f5cfc3317ba53099959027cf197ecf361daba99ba66b2d0e8220e940bd8a2d91",
+    "size": 7398198,
+    "signature": "522cax8ULM1hWf1rl1+WeNhUfCUPnuxAhyUm+PjxBaBr8Y+KCgVccXPWOePMe1TAzYzHhp3jn9uZtctYoQd+Ag=="
+  }
+}
