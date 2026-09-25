@@ -1,8 +1,8 @@
 /* @vitest-environment jsdom */
 
 import '@testing-library/jest-dom/vitest';
-
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { ReportDefinition } from '../../domain';
@@ -24,6 +24,10 @@ const mocks = vi.hoisted(() => {
     queryState,
   };
 });
+
+vi.mock('app/layouts/components/branch-scope-columns', () => ({
+  useBranchScopeColumns: (columns: unknown) => columns,
+}));
 
 vi.mock('app/providers/locales', () => ({
   getDataGridLocaleText: () => ({}),
@@ -75,14 +79,14 @@ vi.mock('shared/ui/CustomDataGrid', () => ({
   DataGridColumnsDialogButton: () => null,
 }));
 
-vi.mock('./ReportsHeaderCard', () => ({
-  ReportsHeaderCard: ({ onExport }: { onExport: () => void }) => (
+vi.mock('./ReportsToolbar', () => ({
+  ReportsToolbar: ({ onExport }: { onExport: () => void }) => (
     <button type="button" data-testid="report-export" onClick={onExport} />
   ),
 }));
 
 vi.mock('./ReportTableCard', () => ({
-  ReportTableCard: () => null,
+  ReportTableCard: ({ toolbar }: { toolbar: ReactNode }) => <>{toolbar}</>,
 }));
 
 import { ReportsTableSection } from './ReportsTableSection';

@@ -1259,12 +1259,16 @@ export type AdminReportSummary = {
 };
 
 export type AdminSalesReportRow = {
+  restaurantId?: string;
+  restaurantName?: string;
   method: AdminPaymentMethod;
   count: number;
   total: number;
 };
 
 export type AdminOpenChecksReportRow = {
+  restaurantId?: string;
+  restaurantName?: string;
   id: string;
   orderNumber: number;
   status: AdminOrderStatus;
@@ -1275,6 +1279,8 @@ export type AdminOpenChecksReportRow = {
 };
 
 export type AdminReceiptsReportRow = {
+  restaurantId?: string;
+  restaurantName?: string;
   id: string;
   orderNumber: number;
   kind: 'plain' | 'fiscal';
@@ -1287,6 +1293,8 @@ export type AdminReceiptsReportRow = {
 };
 
 export type AdminTopItemsReportRow = {
+  restaurantId?: string;
+  restaurantName?: string;
   catalogItemId?: string | null;
   catalogItemName: string;
   categoryId?: string | null;
@@ -1297,6 +1305,8 @@ export type AdminTopItemsReportRow = {
 };
 
 export type AdminTopStaffReportRow = {
+  restaurantId?: string;
+  restaurantName?: string;
   staffId?: string | null;
   staffName?: string | null;
   orderCount: number;
@@ -1306,7 +1316,7 @@ export type AdminTopStaffReportRow = {
 };
 
 export type AdminPaymentBreakdownReportRow = AdminSalesReportRow;
-export type AdminShiftReportRow = AdminCashShiftReportRow;
+export type AdminShiftReportRow = AdminCashShiftReportRow & { restaurantId?: string; restaurantName?: string };
 
 export type AdminReportExportFile = {
   blob: Blob;

@@ -17,7 +17,9 @@
     "applyRange": "Qo'llash",
     "today": "Bugungi",
     "monthly": "Oylik",
-    "yearly": "Yillik"
+    "yearly": "Yillik",
+    "clearFilters": "Filtrlarni tozalash",
+    "more": "Amallar"
   },
   "labels": {
     "summary": "KPI",
@@ -197,7 +199,6 @@
         "closedAt": "Yopilgan vaqt",
         "cashTotal": "Naqd savdo",
         "cardTotal": "Karta savdosi",
-        "qrTotal": "QR savdosi",
         "saleTotal": "Jami savdo",
         "refundTotal": "Qaytarilgan summa",
         "saleCount": "Savdo cheklari",

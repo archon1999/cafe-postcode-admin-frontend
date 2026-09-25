@@ -1,17 +1,16 @@
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import type { GridColDef, GridColumnVisibilityModel, GridPaginationModel, GridSortModel } from '@mui/x-data-grid';
-import { useMemo } from 'react';
+import { useMemo, type ReactNode } from 'react';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { DEFAULT_COLUMN_VISIBILITY_MODEL } from 'shared/constants';
-import { DataGridColumnsDialogButton } from 'shared/ui/CustomDataGrid';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 
 import type { ReportDefinition } from '../../domain';
 
 import type { ReportsDatePreset, ReportsFixedDatePreset } from './reportsDateRange';
-import { ReportsHeaderCard } from './ReportsHeaderCard';
+import { ReportsToolbar } from './ReportsToolbar';
 import { ReportTableCard } from './ReportTableCard';
 import { parseReceiptStatus, type TableReportKey } from './reportTableColumns';
 import { useReportExport } from './useReportExport';
@@ -20,6 +19,7 @@ import { useReportTablePresentation } from './useReportTablePresentation';
 import { useReportTableQuery } from './useReportTableQuery';
 
 type ReportsTableSectionProps = {
+  navigation?: ReactNode;
   report: ReportDefinition;
   startDate: string;
   endDate: string;
@@ -52,6 +52,7 @@ type ReportsTableSectionProps = {
 };
 
 export function ReportsTableSection({
+  navigation,
   report,
   startDate,
   endDate,
@@ -149,74 +150,69 @@ export function ReportsTableSection({
   };
 
   return (
-    <>
-      <ReportsHeaderCard
-        report={report}
-        title={t(report.titleKey)}
-        activePreset={activePreset}
-        startDate={startDate}
-        endDate={endDate}
-        onPresetChange={onPresetChange}
-        onRangeChange={onRangeChange}
-        search={search}
-        onSearchChange={onSearchChange}
-        onClearSearch={onClearSearch}
-        searchPlaceholder={presentation.searchPlaceholder}
-        filters={toolbarFilters}
-        onRefresh={handleRefresh}
-        refreshLoading={activeTableQuery.isFetching}
-        onExport={() => void exportReport()}
-        exportLoading={exportLoading}
-        showSearch={report.key !== 'sales' && report.key !== 'paymentBreakdown'}
-      />
-
-      <Box sx={{ display: 'flex', flex: 1, minHeight: 0, mt: 3 }}>
-        {activeTableQuery.isError ? (
-          <Alert severity="error" sx={{ width: 1, alignSelf: 'flex-start' }}>
-            {t('errors.loadFailed')}
-          </Alert>
-        ) : (
-          <ReportTableCard
-            rows={activeTableQuery.data?.data ?? []}
-            columns={presentation.columns}
-            rowCount={activeTableQuery.data?.total ?? 0}
-            loading={activeTableQuery.isLoading}
-            onRefresh={handleRefresh}
-            refreshing={activeTableQuery.isFetching}
-            localeText={localeText}
-            paginationModel={paginationModel}
-            onPaginationModelChange={onPaginationModelChange}
-            sortModel={sortModel}
-            onSortModelChange={onSortModelChange}
-            columnVisibilityModel={columnVisibilityModel}
-            onColumnVisibilityModelChange={onColumnVisibilityModelChange}
-            getRowId={presentation.getRowId}
-            autoRowHeight={report.key === 'shifts'}
-            toolbar={
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end', px: 2.5, py: 2 }}>
-                <DataGridColumnsDialogButton
-                  columns={presentation.columns as GridColDef[]}
-                  columnVisibilityModel={columnVisibilityModel}
-                  defaultColumnVisibilityModel={DEFAULT_COLUMN_VISIBILITY_MODEL}
-                  onSave={onColumnVisibilityModelChange}
-                  showLabel
-                />
-              </Box>
-            }
-            hasActiveFilters={Boolean(
-              search ||
-                paymentMethods.length ||
-                statuses.length ||
-                receiptKinds.length ||
-                categoryIds.length ||
-                cashDeskIds.length ||
-                cashierIds.length ||
-                differenceOnly.length,
+    <Box sx={{ display: 'flex', flex: 1, minHeight: 540 }}>
+      <ReportTableCard
+        navigation={
+          <>
+            {navigation}
+            {activeTableQuery.isError && (
+              <Alert severity="error" sx={{ mx: 2.5, mt: 2.5 }}>
+                {t('errors.loadFailed')}
+              </Alert>
             )}
-            emptyState={presentation.emptyState}
+          </>
+        }
+        rows={activeTableQuery.data?.data ?? []}
+        columns={presentation.columns}
+        rowCount={activeTableQuery.data?.total ?? 0}
+        loading={activeTableQuery.isLoading}
+        onRefresh={handleRefresh}
+        refreshing={activeTableQuery.isFetching}
+        localeText={localeText}
+        paginationModel={paginationModel}
+        onPaginationModelChange={onPaginationModelChange}
+        sortModel={sortModel}
+        onSortModelChange={onSortModelChange}
+        columnVisibilityModel={columnVisibilityModel}
+        onColumnVisibilityModelChange={onColumnVisibilityModelChange}
+        getRowId={presentation.getRowId}
+        autoRowHeight={report.key === 'shifts'}
+        toolbar={
+          <ReportsToolbar
+            activePreset={activePreset}
+            startDate={startDate}
+            endDate={endDate}
+            onPresetChange={onPresetChange}
+            onRangeChange={onRangeChange}
+            search={search}
+            onSearchChange={onSearchChange}
+            onClearSearch={onClearSearch}
+            searchPlaceholder={presentation.searchPlaceholder}
+            filters={toolbarFilters}
+            onRefresh={handleRefresh}
+            refreshLoading={activeTableQuery.isFetching}
+            onExport={() => void exportReport()}
+            exportLoading={exportLoading}
+            showSearch={report.key !== 'sales' && report.key !== 'paymentBreakdown'}
+            columns={presentation.columns as GridColDef[]}
+            columnVisibilityModel={columnVisibilityModel}
+            defaultColumnVisibilityModel={{ ...DEFAULT_COLUMN_VISIBILITY_MODEL, ...report.defaultColumnVisibility }}
+            onSaveColumns={onColumnVisibilityModelChange}
+            showColumns
           />
+        }
+        hasActiveFilters={Boolean(
+          search ||
+            paymentMethods.length ||
+            statuses.length ||
+            receiptKinds.length ||
+            categoryIds.length ||
+            cashDeskIds.length ||
+            cashierIds.length ||
+            differenceOnly.length,
         )}
-      </Box>
-    </>
+        emptyState={presentation.emptyState}
+      />
+    </Box>
   );
 }

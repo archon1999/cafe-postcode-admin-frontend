@@ -9,6 +9,8 @@ export type ZReportQueryParams = {
 };
 
 export type ZReportRow = {
+  restaurantId?: string;
+  restaurantName?: string;
   id: string;
   cashDeskName: string;
   cashierName: string;

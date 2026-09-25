@@ -1,7 +1,4 @@
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import type { GridSortModel } from '@mui/x-data-grid';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -15,6 +12,7 @@ import { useParams, useRouter } from 'shared/hooks/router';
 import { useDataGridPreferences } from 'shared/hooks/use-data-grid-preferences';
 import { usePageTitle } from 'shared/hooks/use-page-title';
 import { StorageService } from 'shared/lib/storage';
+import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 
 import { DEFAULT_REPORT_KEY, getReportDefinition, REPORTS_REGISTRY } from '../../../domain';
 import {
@@ -25,8 +23,7 @@ import {
   type ReportsFixedDatePreset,
   type ReportsDateRangeState,
 } from '../../components/reportsDateRange';
-import { ReportsMobileTabs } from '../../components/ReportsMobileTabs';
-import { ReportsSidebar } from '../../components/ReportsSidebar';
+import { ReportsNavigation } from '../../components/ReportsNavigation';
 import { ReportsSummarySection } from '../../components/ReportsSummarySection';
 import { ReportsTableSection } from '../../components/ReportsTableSection';
 
@@ -71,8 +68,6 @@ const ReportsPage = () => {
   const { profile } = useCurrentUser();
   const params = useParams();
   const router = useRouter();
-  const theme = useTheme();
-  const mdUp = useMediaQuery(theme.breakpoints.up('md'));
   const { t } = useTranslate('reports');
 
   const reportParam = params.reportKey;
@@ -132,7 +127,7 @@ const ReportsPage = () => {
       differenceOnly: [],
     },
     paginationModel: DEFAULT_PAGINATION_MODEL,
-    columnVisibilityModel: DEFAULT_COLUMN_VISIBILITY_MODEL,
+    columnVisibilityModel: { ...DEFAULT_COLUMN_VISIBILITY_MODEL, ...selectedReport.defaultColumnVisibility },
   });
   const { search, paymentMethods, receiptKinds, statuses, categoryIds, cashDeskIds, cashierIds, differenceOnly } =
     reportFilters;
@@ -212,7 +207,7 @@ const ReportsPage = () => {
   };
 
   const handleSearchChange = (value: string) => {
-    setSearch(value.trim());
+    setSearch(value);
     resetPage();
   };
 
@@ -221,31 +216,19 @@ const ReportsPage = () => {
     resetPage();
   };
 
+  const navigation = (
+    <ReportsNavigation reports={availableReports} selectedKey={selectedReport.key} onSelect={handleReportSelect} />
+  );
+
   return (
-    <ListPageContent>
+    <ListPageContent sx={{ overflowY: 'auto' }}>
       <ListPageBody>
-        {!mdUp ? (
-          <ReportsMobileTabs
-            reports={availableReports}
-            selectedKey={selectedReport.key}
-            onSelect={handleReportSelect}
-          />
-        ) : null}
-
-        <Box sx={{ display: 'flex', flex: 1, minHeight: 0, gap: 3 }}>
-          {mdUp ? (
-            <Card sx={{ width: 320, flexShrink: 0, borderRadius: 3, overflow: 'auto' }}>
-              <ReportsSidebar
-                reports={availableReports}
-                selectedKey={selectedReport.key}
-                onSelect={handleReportSelect}
-              />
-            </Card>
-          ) : null}
-
+        <CustomBreadcrumbs heading={t('workspace.title')} sx={{ mb: { xs: 3, md: 5 } }} />
+        <Box sx={{ display: 'flex', flex: 1, minHeight: 0, minWidth: 0 }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, minHeight: 0 }}>
             {selectedReport.kind === 'summary' ? (
               <ReportsSummarySection
+                navigation={navigation}
                 report={selectedReport}
                 startDate={startDate}
                 endDate={endDate}
@@ -255,6 +238,7 @@ const ReportsPage = () => {
               />
             ) : (
               <ReportsTableSection
+                navigation={navigation}
                 report={selectedReport}
                 startDate={startDate}
                 endDate={endDate}

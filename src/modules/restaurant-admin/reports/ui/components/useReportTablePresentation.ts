@@ -1,6 +1,7 @@
 import type { GridRowIdGetter } from '@mui/x-data-grid';
 import { useMemo } from 'react';
 
+import { useBranchScopeColumns } from 'app/layouts/components/branch-scope-columns';
 import { useTranslate } from 'app/providers/locales';
 import type {
   AdminPaymentBreakdownReportRow,
@@ -24,21 +25,21 @@ function getReportRowId(reportKey: TableReportKey): GridRowIdGetter<ReportTableR
     case 'zReports':
       return castRowIdGetter<ZReportRow>((row) => row.id);
     case 'sales':
-      return castRowIdGetter<AdminSalesReportRow>((row) => row.method);
+      return castRowIdGetter<AdminSalesReportRow>((row) => `${row.restaurantId ?? 'all'}-${row.method}`);
     case 'paymentBreakdown':
-      return castRowIdGetter<AdminPaymentBreakdownReportRow>((row) => row.method);
+      return castRowIdGetter<AdminPaymentBreakdownReportRow>((row) => `${row.restaurantId ?? 'all'}-${row.method}`);
     case 'receipts':
       return castRowIdGetter<AdminReceiptsReportRow>((row) => row.id);
     case 'shifts':
       return castRowIdGetter<AdminShiftReportRow>((row) => row.id);
     case 'topItems':
       return castRowIdGetter<AdminTopItemsReportRow>(
-        (row) => `${row.catalogItemId ?? row.catalogItemName}-${row.categoryId ?? 'none'}`,
+        (row) => `${row.restaurantId ?? 'all'}-${row.catalogItemId ?? row.catalogItemName}-${row.categoryId ?? 'none'}`,
       );
     case 'topStaff':
       return castRowIdGetter<AdminTopStaffReportRow>(
         (row) =>
-          `${row.staffId ?? row.staffName ?? 'unknown'}-${row.orderCount}-${row.itemsCount ?? row.items_count ?? 0}-${row.totalSales}`,
+          `${row.restaurantId ?? 'all'}-${row.staffId ?? row.staffName ?? 'unknown'}-${row.orderCount}-${row.itemsCount ?? row.items_count ?? 0}-${row.totalSales}`,
       );
   }
 }
@@ -46,10 +47,13 @@ function getReportRowId(reportKey: TableReportKey): GridRowIdGetter<ReportTableR
 export function useReportTablePresentation(reportKey: TableReportKey) {
   const { t } = useTranslate('reports');
 
+  const baseColumns = useMemo(() => getReportTableColumns(reportKey, t), [reportKey, t]);
+  const columns = useBranchScopeColumns(baseColumns);
+
   return useMemo(() => {
     const emptyStateKey = `empty.${reportKey}`;
     return {
-      columns: getReportTableColumns(reportKey, t),
+      columns,
       getRowId: getReportRowId(reportKey),
       searchPlaceholder: t(`filters.search${reportKey[0].toUpperCase()}${reportKey.slice(1)}Placeholder`),
       emptyState: {
@@ -63,5 +67,5 @@ export function useReportTablePresentation(reportKey: TableReportKey) {
         },
       },
     };
-  }, [reportKey, t]);
+  }, [columns, reportKey, t]);
 }

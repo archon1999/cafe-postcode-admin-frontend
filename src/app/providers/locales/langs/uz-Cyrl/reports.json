@@ -17,7 +17,9 @@
     "exportExcel": "Excel юклаб олиш",
     "today": "Бугунги",
     "monthly": "Ойлик",
-    "yearly": "Йиллик"
+    "yearly": "Йиллик",
+    "clearFilters": "Фильтрларни тозалаш",
+    "more": "Амаллар"
   },
   "labels": {
     "summary": "KPI",
@@ -197,7 +199,6 @@
         "closedAt": "Ёпилган вақт",
         "cashTotal": "Нақд савдо",
         "cardTotal": "Карта савдоси",
-        "qrTotal": "QR савдоси",
         "saleTotal": "Жами савдо",
         "refundTotal": "Қайтарилган сумма",
         "saleCount": "Савдо чеклари",

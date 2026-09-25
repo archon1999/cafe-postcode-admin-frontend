@@ -1,6 +1,7 @@
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
-import { useState } from 'react';
+import Card from '@mui/material/Card';
+import { useState, type ReactNode } from 'react';
 import { toast } from 'sonner';
 
 import { useTranslate } from 'app/providers/locales';
@@ -12,10 +13,11 @@ import { reportsRepository } from '../../data-access';
 import type { ReportDefinition } from '../../domain';
 
 import type { ReportsDatePreset, ReportsFixedDatePreset } from './reportsDateRange';
-import { ReportsHeaderCard } from './ReportsHeaderCard';
+import { ReportsToolbar } from './ReportsToolbar';
 import { ReportSummaryCards } from './ReportSummaryCards';
 
 type ReportsSummarySectionProps = {
+  navigation?: ReactNode;
   report: ReportDefinition;
   startDate: string;
   endDate: string;
@@ -25,7 +27,7 @@ type ReportsSummarySectionProps = {
 };
 
 export function ReportsSummarySection({
-  report,
+  navigation,
   startDate,
   endDate,
   activePreset,
@@ -61,19 +63,20 @@ export function ReportsSummarySection({
 
   return (
     <>
-      <ReportsHeaderCard
-        report={report}
-        title={t(report.titleKey)}
-        activePreset={activePreset}
-        startDate={startDate}
-        endDate={endDate}
-        onPresetChange={onPresetChange}
-        onRangeChange={onRangeChange}
-        onRefresh={handleRefresh}
-        refreshLoading={summaryQuery.isFetching}
-        onExport={handleExport}
-        exportLoading={exportLoading}
-      />
+      <Card sx={{ flexShrink: 0 }}>
+        {navigation}
+        <ReportsToolbar
+          activePreset={activePreset}
+          startDate={startDate}
+          endDate={endDate}
+          onPresetChange={onPresetChange}
+          onRangeChange={onRangeChange}
+          onRefresh={handleRefresh}
+          refreshLoading={summaryQuery.isFetching}
+          onExport={handleExport}
+          exportLoading={exportLoading}
+        />
+      </Card>
 
       <Box sx={{ mt: 3 }}>
         {summaryQuery.isError ? (

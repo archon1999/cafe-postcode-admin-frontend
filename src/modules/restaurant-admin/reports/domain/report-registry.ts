@@ -21,6 +21,7 @@ export type ReportDefinition = {
   exportPath: string;
   availableFilters: ReportFilterKey[];
   requiredPermissionCode?: string;
+  defaultColumnVisibility?: Record<string, boolean>;
   defaultSort?: {
     field: string;
     sort: ReportSortDirection;
@@ -89,6 +90,13 @@ export const REPORTS_REGISTRY: ReportDefinition[] = [
   },
   {
     key: 'zReports',
+    defaultColumnVisibility: {
+      openedAt: false,
+      terminalId: false,
+      cashierName: false,
+      saleCount: false,
+      refundCount: false,
+    },
     kind: 'table',
     titleKey: 'reports.zReports.title',
     descriptionKey: 'reports.zReports.description',

@@ -17,7 +17,9 @@
     "exportExcel": "Скачать Excel",
     "today": "Сегодня",
     "monthly": "За месяц",
-    "yearly": "За год"
+    "yearly": "За год",
+    "clearFilters": "Сбросить фильтры",
+    "more": "Действия"
   },
   "labels": {
     "summary": "KPI",
@@ -197,7 +199,6 @@
         "closedAt": "Закрыта",
         "cashTotal": "Продажи наличными",
         "cardTotal": "Продажи по карте",
-        "qrTotal": "Продажи QR",
         "saleTotal": "Всего продаж",
         "refundTotal": "Сумма возвратов",
         "saleCount": "Чеки продаж",
