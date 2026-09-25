@@ -87,6 +87,16 @@ export const REPORTS_REGISTRY: ReportDefinition[] = [
     availableFilters: ['status', 'cashDesk', 'cashier', 'differenceOnly'],
     defaultSort: { field: 'openedAt', sort: 'desc' },
   },
+  {
+    key: 'zReports',
+    kind: 'table',
+    titleKey: 'reports.zReports.title',
+    descriptionKey: 'reports.zReports.description',
+    icon: 'solar:bill-list-bold-duotone',
+    exportPath: '/api/v1/admin/reporting/z-reports/export/',
+    availableFilters: ['cashDesk'],
+    defaultSort: { field: 'closedAt', sort: 'desc' },
+  },
 ];
 
 export const DEFAULT_REPORT_KEY: AdminReportKey = 'summary';

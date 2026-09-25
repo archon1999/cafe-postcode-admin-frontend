@@ -21,6 +21,7 @@ import type {
 } from 'shared/api/admin-types';
 
 import { reportsRepository } from '../data-access';
+import type { ZReportRow, ZReportQueryParams } from '../domain';
 
 import { reportsKeys } from './keys';
 
@@ -108,6 +109,17 @@ export function useGetShiftReportQuery(
   return useQuery({
     queryKey: reportsKeys.shifts(params),
     queryFn: () => reportsRepository.getShifts(params),
+    ...options,
+  });
+}
+
+export function useGetZReportsQuery(
+  params: ZReportQueryParams,
+  options?: Omit<UseQueryOptions<AdminPaginatedResponse<ZReportRow>>, 'queryFn' | 'queryKey'>,
+) {
+  return useQuery({
+    queryKey: reportsKeys.zReports(params),
+    queryFn: () => reportsRepository.getZReports(params),
     ...options,
   });
 }

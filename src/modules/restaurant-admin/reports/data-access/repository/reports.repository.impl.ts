@@ -3,6 +3,12 @@ import { apiClient } from 'shared/api/http/apiClient';
 import type { ReportsRepository } from '../../domain';
 
 export const reportsRepository: ReportsRepository = {
+  getZReports(params) {
+    return apiClient.getAdminZReports(params);
+  },
+  exportZReports(params) {
+    return apiClient.exportAdminZReports(params);
+  },
   getSummary(params) {
     return apiClient.getAdminReportSummary(params);
   },

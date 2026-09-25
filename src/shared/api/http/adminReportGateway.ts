@@ -1,3 +1,5 @@
+import type { ZReportQueryParams, ZReportRow } from 'modules/restaurant-admin/reports/domain';
+
 import type {
   AdminOpenChecksReportQueryParams,
   AdminOpenChecksReportRow,
@@ -82,6 +84,12 @@ function exportReport(path: string, params: ReportQueryParams, fallbackFilename:
 }
 
 export const adminReportGateway = {
+  getAdminZReports(params: ZReportQueryParams) {
+    return getPaginatedReport<ZReportRow>('/api/v1/admin/reporting/z-reports/', params);
+  },
+  exportAdminZReports(params: ZReportQueryParams) {
+    return exportReport('/api/v1/admin/reporting/z-reports/export/', params, 'z-reports.xlsx');
+  },
   getAdminReportSummary(params: AdminSummaryReportQueryParams) {
     return instance
       .get<AdminReportSummary>('/api/v1/admin/reporting/summary/', { params: mapReportParams(params) })

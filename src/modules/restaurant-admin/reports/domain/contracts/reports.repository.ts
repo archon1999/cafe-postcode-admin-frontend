@@ -19,7 +19,11 @@ import type {
   AdminTopStaffReportRow,
 } from 'shared/api/admin-types';
 
+import type { ZReportQueryParams, ZReportRow } from '../entities';
+
 export interface ReportsRepository {
+  getZReports(params: ZReportQueryParams): Promise<AdminPaginatedResponse<ZReportRow>>;
+  exportZReports(params: ZReportQueryParams): Promise<AdminReportExportFile>;
   getSummary(params: AdminSummaryReportQueryParams): Promise<AdminReportSummary>;
   exportSummary(params: AdminSummaryReportQueryParams): Promise<AdminReportExportFile>;
   getSales(params: AdminSalesReportQueryParams): Promise<AdminPaginatedResponse<AdminSalesReportRow>>;

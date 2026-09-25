@@ -8,10 +8,12 @@ const receiptsKeys = createKeyFactory('reports', 'receipts');
 const topItemsKeys = createKeyFactory('reports', 'topItems');
 const topStaffKeys = createKeyFactory('reports', 'topStaff');
 const paymentBreakdownKeys = createKeyFactory('reports', 'paymentBreakdown');
+const zReportsKeys = createKeyFactory('reports', 'zReports');
 const shiftsKeys = createKeyFactory('reports', 'shifts');
 
 export const reportsKeys = {
   all: reportsBaseKeys.all,
+  zReports: zReportsKeys.params,
   summary: summaryKeys.params,
   sales: salesKeys.params,
   openChecks: openChecksKeys.params,

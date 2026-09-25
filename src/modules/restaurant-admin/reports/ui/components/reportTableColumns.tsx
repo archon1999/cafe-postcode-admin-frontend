@@ -19,7 +19,10 @@ import { formatMoney } from 'shared/utils/format-money';
 import { formatSaleQuantity } from 'shared/utils/format-quantity';
 import { formatDateTime } from 'shared/utils/format-time';
 
+import type { ZReportRow } from '../../domain';
+
 export type ReportTableRow =
+  | ZReportRow
   | AdminSalesReportRow
   | AdminReceiptsReportRow
   | AdminTopItemsReportRow
@@ -48,6 +51,37 @@ function castColumns<Row extends ReportTableRow>(columns: GridColDef<Row>[]) {
 
 export function getReportTableColumns(reportKey: TableReportKey, t: ReportsTranslate) {
   switch (reportKey) {
+    case 'zReports':
+      return castColumns<ZReportRow>([
+        ...(['cashDeskName', 'cashierName', 'terminalId'] as const).map((field) => ({
+          field,
+          headerName: t(`reports.zReports.fields.${field}`),
+          minWidth: 170,
+          flex: 1,
+          valueGetter: (_value: unknown, row: ZReportRow) => row[field] || '-',
+        })),
+        ...(['openedAt', 'closedAt'] as const).map((field) => ({
+          field,
+          headerName: t(`reports.zReports.fields.${field}`),
+          minWidth: 180,
+          valueGetter: (_value: unknown, row: ZReportRow) => formatDateTime(row[field]),
+        })),
+        ...(['saleTotal', 'cashTotal', 'cardTotal', 'qrTotal', 'refundTotal'] as const).map((field) => ({
+          field,
+          headerName: t(`reports.zReports.fields.${field}`),
+          minWidth: 160,
+          sortable: false,
+          valueGetter: (_value: unknown, row: ZReportRow) => (row[field] === null ? '-' : formatMoney(row[field])),
+        })),
+        ...(['saleCount', 'refundCount'] as const).map((field) => ({
+          field,
+          headerName: t(`reports.zReports.fields.${field}`),
+          minWidth: 130,
+          sortable: false,
+          valueGetter: (_value: unknown, row: ZReportRow) => row[field] ?? '-',
+        })),
+      ]);
+
     case 'sales':
       return castColumns<AdminSalesReportRow>([
         {

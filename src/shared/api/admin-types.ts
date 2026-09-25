@@ -96,7 +96,15 @@ export type AdminCashExpensesQueryParams = AdminListQueryParams & {
 export type AdminCashExpensesResponse = AdminPaginatedResponse<AdminCashExpense> & {
   postedTotal: number;
 };
-export type AdminReportKey = 'summary' | 'sales' | 'receipts' | 'topItems' | 'topStaff' | 'paymentBreakdown' | 'shifts';
+export type AdminReportKey =
+  | 'summary'
+  | 'sales'
+  | 'receipts'
+  | 'topItems'
+  | 'topStaff'
+  | 'paymentBreakdown'
+  | 'shifts'
+  | 'zReports';
 export type AdminReportPeriodType = 'day' | 'month' | 'year';
 export type AdminBusinessPartnerStatus = 'draft' | 'active' | 'inactive';
 export type AdminServiceFeeMode = 'percentage' | 'hourly' | 'formula';

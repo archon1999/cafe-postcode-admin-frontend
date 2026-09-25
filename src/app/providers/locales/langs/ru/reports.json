@@ -56,7 +56,8 @@
     "searchShiftsPlaceholder": "Ищите по кассиру или кассе",
     "startDate": "Дата начала",
     "endDate": "Дата окончания",
-    "customRange": "Произвольный диапазон"
+    "customRange": "Произвольный диапазон",
+    "searchZReportsPlaceholder": "Поиск по кассе, сотруднику или терминалу"
   },
   "dateRangePicker": {
     "quickSelect": "Быстрый выбор",
@@ -184,6 +185,24 @@
         "precheckCount": "Количество пречеков",
         "receiptCount": "Количество чеков"
       }
+    },
+    "zReports": {
+      "title": "Z-отчёты",
+      "description": "Сохранённые Z-отчёты закрытых фискальных смен. Период по дате закрытия.",
+      "fields": {
+        "cashDeskName": "Касса",
+        "cashierName": "Закрыл смену",
+        "terminalId": "ID терминала",
+        "openedAt": "Открыта",
+        "closedAt": "Закрыта",
+        "cashTotal": "Продажи наличными",
+        "cardTotal": "Продажи по карте",
+        "qrTotal": "Продажи QR",
+        "saleTotal": "Всего продаж",
+        "refundTotal": "Сумма возвратов",
+        "saleCount": "Чеки продаж",
+        "refundCount": "Чеки возвратов"
+      }
     }
   },
   "empty": {
@@ -245,6 +264,16 @@
       "noResults": {
         "title": "Смена не найдена",
         "description": "Поиск или фильтры не дали результатов."
+      }
+    },
+    "zReports": {
+      "noData": {
+        "title": "Z-отчётов нет",
+        "description": "За выбранный период нет сохранённых Z-отчётов."
+      },
+      "noResults": {
+        "title": "Ничего не найдено",
+        "description": "Измените поиск или фильтры."
       }
     }
   }

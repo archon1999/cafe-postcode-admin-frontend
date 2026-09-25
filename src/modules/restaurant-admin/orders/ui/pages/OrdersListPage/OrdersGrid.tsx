@@ -1,6 +1,8 @@
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
+import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
+import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import type { GridColDef, GridSortModel } from '@mui/x-data-grid';
 import { gridClasses } from '@mui/x-data-grid';
@@ -13,6 +15,7 @@ import type { AdminOrder } from 'shared/api/admin-types';
 import { DEFAULT_PAGINATION_MODEL, DEFAULT_COLUMN_VISIBILITY_MODEL } from 'shared/constants';
 import { useDataGridPreferences } from 'shared/hooks/use-data-grid-preferences';
 import { DataGrid, DataGridEmptyState, withDetailLink } from 'shared/ui/CustomDataGrid';
+import { Iconify } from 'shared/ui/Iconify';
 import { formatOrderNumberCellValue, OrderNumberCell } from 'shared/ui/OrderNumberCell';
 import { getOrderingFromSortModel } from 'shared/utils/data-grid-ordering';
 import { formatHallDisplayName } from 'shared/utils/format-hall-display';
@@ -21,6 +24,7 @@ import { formatDateTime } from 'shared/utils/format-time';
 
 import { useGetOrdersQuery } from '../../../application';
 import { getOrderChannelTranslationKey, getOrderStatusColor } from '../../lib/presenters';
+import { getReceiptFiscalQrUrl } from '../../lib/receipt-fiscal-qr';
 
 import { DEFAULT_ORDERS_GRID_FILTERS, type OrdersGridFilters, OrdersGridToolbar } from './OrdersGridToolbar';
 
@@ -70,16 +74,43 @@ export const OrdersGrid = () => {
       {
         field: 'status',
         headerName: t('fields.status'),
-        minWidth: 120,
+        minWidth: 160,
         flex: 0.45,
-        renderCell: ({ row }) => (
-          <Chip
-            size="small"
-            label={t(`statuses.${row.status}`)}
-            color={getOrderStatusColor(row.status)}
-            variant="soft"
-          />
-        ),
+        renderCell: ({ row, tabIndex }) => {
+          const fiscalQrUrl =
+            row.status === 'closed'
+              ? row.receipts
+                  .filter((receipt) => receipt.kind === 'fiscal')
+                  .map(getReceiptFiscalQrUrl)
+                  .find(Boolean)
+              : null;
+
+          return (
+            <Stack direction="row" spacing={0.5} alignItems="center">
+              <Chip
+                size="small"
+                label={t(`statuses.${row.status}`)}
+                color={getOrderStatusColor(row.status)}
+                variant="soft"
+              />
+              {fiscalQrUrl && (
+                <Tooltip title={t('actions.openFiscalQr')}>
+                  <IconButton
+                    component="a"
+                    href={fiscalQrUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    size="small"
+                    tabIndex={tabIndex}
+                    aria-label={t('actions.openFiscalQr')}
+                    onClick={(event) => event.stopPropagation()}>
+                    <Iconify icon="eva:external-link-fill" width={18} />
+                  </IconButton>
+                </Tooltip>
+              )}
+            </Stack>
+          );
+        },
       },
       {
         field: 'channel',

@@ -11,6 +11,8 @@ import type {
   AdminTopStaffReportRow,
 } from 'shared/api/admin-types';
 
+import type { ZReportRow } from '../../domain';
+
 import { getReportTableColumns, type ReportTableRow, type TableReportKey } from './reportTableColumns';
 
 function castRowIdGetter<Row extends ReportTableRow>(getter: GridRowIdGetter<Row>) {
@@ -19,6 +21,8 @@ function castRowIdGetter<Row extends ReportTableRow>(getter: GridRowIdGetter<Row
 
 function getReportRowId(reportKey: TableReportKey): GridRowIdGetter<ReportTableRow> {
   switch (reportKey) {
+    case 'zReports':
+      return castRowIdGetter<ZReportRow>((row) => row.id);
     case 'sales':
       return castRowIdGetter<AdminSalesReportRow>((row) => row.method);
     case 'paymentBreakdown':

@@ -56,7 +56,8 @@
     "searchShiftsPlaceholder": "Кассир ёки касса бўйича қидиринг",
     "startDate": "Бошланиш санаси",
     "endDate": "Тугаш санаси",
-    "customRange": "Ихтиёрий оралиқ"
+    "customRange": "Ихтиёрий оралиқ",
+    "searchZReportsPlaceholder": "Касса, ходим ёки терминал бўйича қидириш"
   },
   "dateRangePicker": {
     "quickSelect": "Тез танлаш",
@@ -184,6 +185,24 @@
         "precheckCount": "Пречеклар сони",
         "receiptCount": "Чеклар сони"
       }
+    },
+    "zReports": {
+      "title": "Z ҳисоботлар",
+      "description": "Ёпилган фискал сменаларнинг базада сақланган Z ҳисоботлари. Сана ёпилиш вақти бўйича.",
+      "fields": {
+        "cashDeskName": "Касса",
+        "cashierName": "Ёпган ходим",
+        "terminalId": "Терминал ID",
+        "openedAt": "Очилган вақт",
+        "closedAt": "Ёпилган вақт",
+        "cashTotal": "Нақд савдо",
+        "cardTotal": "Карта савдоси",
+        "qrTotal": "QR савдоси",
+        "saleTotal": "Жами савдо",
+        "refundTotal": "Қайтарилган сумма",
+        "saleCount": "Савдо чеклари",
+        "refundCount": "Қайтариш чеклари"
+      }
     }
   },
   "empty": {
@@ -245,6 +264,16 @@
       "noResults": {
         "title": "Смена топилмади",
         "description": "Қидирув ёки фильтр бўйича мос смена топилмади."
+      }
+    },
+    "zReports": {
+      "noData": {
+        "title": "Z ҳисоботлар топилмади",
+        "description": "Танланган даврда сақланган Z ҳисоботлар йўқ."
+      },
+      "noResults": {
+        "title": "Қидирув натижаси йўқ",
+        "description": "Қидирув ёки фильтрларни ўзгартиринг."
       }
     }
   }

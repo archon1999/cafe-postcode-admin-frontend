@@ -11,6 +11,7 @@ import {
   useGetPaymentBreakdownReportQuery,
   useGetReceiptsReportQuery,
   useGetSalesReportQuery,
+  useGetZReportsQuery,
   useGetShiftReportQuery,
   useGetTopItemsReportQuery,
   useGetTopStaffReportQuery,
@@ -120,7 +121,14 @@ export function useReportTableQuery({
     { enabled: reportKey === 'shifts' },
   );
 
+  const zReportsQuery = useGetZReportsQuery(
+    { ...period, ...pagination, search, ordering, cashDeskId },
+    { enabled: reportKey === 'zReports' },
+  );
+
   switch (reportKey) {
+    case 'zReports':
+      return zReportsQuery;
     case 'sales':
       return salesQuery;
     case 'receipts':

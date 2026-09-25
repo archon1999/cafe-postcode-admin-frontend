@@ -66,7 +66,7 @@ export function useReportsToolbarFilters({
 }: UseReportsToolbarFiltersParams) {
   const { t } = useTranslate('reports');
   const categoriesQuery = useGetCatalogCategoriesQuery({ enabled: report.key === 'topItems' });
-  const cashDesksQuery = useGetCashDesksQuery({ enabled: report.key === 'shifts' });
+  const cashDesksQuery = useGetCashDesksQuery({ enabled: report.availableFilters.includes('cashDesk') });
   const cashiersQuery = useGetUsersQuery(
     { page: 1, pageSize: 100, employmentStatusIn: 'active' },
     { enabled: report.key === 'shifts' },

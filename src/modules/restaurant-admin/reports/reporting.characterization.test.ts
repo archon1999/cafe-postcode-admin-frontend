@@ -65,6 +65,12 @@ describe('Admin reporting characterization', () => {
         exportPath: '/api/v1/admin/reporting/shifts/export/',
         availableFilters: ['status', 'cashDesk', 'cashier', 'differenceOnly'],
       },
+      {
+        key: 'zReports',
+        kind: 'table',
+        exportPath: '/api/v1/admin/reporting/z-reports/export/',
+        availableFilters: ['cashDesk'],
+      },
     ]);
     expect(getReportDefinition('unknown').key).toBe('summary');
   });

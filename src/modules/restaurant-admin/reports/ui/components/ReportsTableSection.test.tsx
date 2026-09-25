@@ -17,6 +17,8 @@ const mocks = vi.hoisted(() => {
   };
 
   return {
+    exportZReports: vi.fn(),
+    zReportsQuery: vi.fn(() => queryState),
     exportReceipts: vi.fn(),
     receiptsQuery: vi.fn(() => queryState),
     queryState,
@@ -48,6 +50,7 @@ vi.mock('../../application', () => ({
   useGetReceiptsReportQuery: mocks.receiptsQuery,
   useGetSalesReportQuery: () => mocks.queryState,
   useGetShiftReportQuery: () => mocks.queryState,
+  useGetZReportsQuery: mocks.zReportsQuery,
   useGetTopItemsReportQuery: () => mocks.queryState,
   useGetTopStaffReportQuery: () => mocks.queryState,
 }));
@@ -58,6 +61,7 @@ vi.mock('../../data-access', () => ({
     exportReceipts: mocks.exportReceipts,
     exportSales: vi.fn(),
     exportShifts: vi.fn(),
+    exportZReports: mocks.exportZReports,
     exportTopItems: vi.fn(),
     exportTopStaff: vi.fn(),
   },
@@ -112,10 +116,10 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-function renderReceipts(status?: 'created' | 'sent' | 'failed') {
+function renderReceipts(status?: 'created' | 'sent' | 'failed', report = receiptReport, cashDeskIds: string[] = []) {
   render(
     <ReportsTableSection
-      report={receiptReport}
+      report={report}
       startDate={commonRequestParams.startDate}
       endDate={commonRequestParams.endDate}
       activePreset="today"
@@ -124,7 +128,7 @@ function renderReceipts(status?: 'created' | 'sent' | 'failed') {
       receiptKinds={[]}
       statuses={status ? [status] : []}
       categoryIds={[]}
-      cashDeskIds={[]}
+      cashDeskIds={cashDeskIds}
       cashierIds={[]}
       differenceOnly={[]}
       paginationModel={{ page: 0, pageSize: 25 }}
@@ -178,4 +182,31 @@ describe('ReportsTableSection receipt status parameters', () => {
       });
     });
   });
+});
+
+it('loads and exports Z reports with the selected cash desk and period', async () => {
+  mocks.exportZReports.mockResolvedValue({ blob: new Blob(['z']), filename: 'z-reports.xlsx' });
+  renderReceipts(
+    undefined,
+    {
+      ...receiptReport,
+      key: 'zReports',
+      availableFilters: ['cashDesk'],
+    },
+    ['desk-z'],
+  );
+  expect(mocks.zReportsQuery).toHaveBeenLastCalledWith(
+    {
+      ...commonRequestParams,
+      page: 1,
+      pageSize: 25,
+      cashDeskId: 'desk-z',
+    },
+    { enabled: true },
+  );
+  expect(mocks.receiptsQuery).toHaveBeenLastCalledWith(expect.anything(), { enabled: false });
+  fireEvent.click(screen.getByTestId('report-export'));
+  await waitFor(() =>
+    expect(mocks.exportZReports).toHaveBeenCalledWith({ ...commonRequestParams, cashDeskId: 'desk-z' }),
+  );
 });

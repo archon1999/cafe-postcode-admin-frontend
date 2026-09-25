@@ -56,7 +56,8 @@
     "searchTopItemsPlaceholder": "Mahsulot yoki kategoriya bo'yicha qidiring",
     "searchTopStaffPlaceholder": "Xodim bo'yicha qidiring",
     "searchPaymentBreakdownPlaceholder": "To'lov usuli bo'yicha qidiring",
-    "searchShiftsPlaceholder": "Kassir yoki kassa bo'yicha qidiring"
+    "searchShiftsPlaceholder": "Kassir yoki kassa bo'yicha qidiring",
+    "searchZReportsPlaceholder": "Kassa, xodim yoki terminal bo‘yicha qidirish"
   },
   "dateRangePicker": {
     "quickSelect": "Tez tanlash",
@@ -184,6 +185,24 @@
         "precheckCount": "Precheklar soni",
         "receiptCount": "Cheklar soni"
       }
+    },
+    "zReports": {
+      "title": "Z hisobotlar",
+      "description": "Yopilgan fiskal smenalarning bazada saqlangan Z hisobotlari. Sana yopilish vaqti bo‘yicha.",
+      "fields": {
+        "cashDeskName": "Kassa",
+        "cashierName": "Yopgan xodim",
+        "terminalId": "Terminal ID",
+        "openedAt": "Ochilgan vaqt",
+        "closedAt": "Yopilgan vaqt",
+        "cashTotal": "Naqd savdo",
+        "cardTotal": "Karta savdosi",
+        "qrTotal": "QR savdosi",
+        "saleTotal": "Jami savdo",
+        "refundTotal": "Qaytarilgan summa",
+        "saleCount": "Savdo cheklari",
+        "refundCount": "Qaytarish cheklari"
+      }
     }
   },
   "empty": {
@@ -245,6 +264,16 @@
       "noResults": {
         "title": "Smena topilmadi",
         "description": "Qidiruv yoki filter bo'yicha mos smena topilmadi."
+      }
+    },
+    "zReports": {
+      "noData": {
+        "title": "Z hisobotlar topilmadi",
+        "description": "Tanlangan davrda saqlangan Z hisobotlar yo‘q."
+      },
+      "noResults": {
+        "title": "Qidiruv natijasi yo‘q",
+        "description": "Qidiruv yoki filtrlarni o‘zgartiring."
       }
     }
   }

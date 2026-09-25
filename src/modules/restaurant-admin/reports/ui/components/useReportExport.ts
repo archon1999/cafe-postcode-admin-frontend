@@ -40,30 +40,32 @@ export function useReportExport(options: Options) {
 
     try {
       const result =
-        options.reportKey === 'sales'
-          ? await reportsRepository.exportSales({ ...commonParams, paymentMethod: options.paymentMethod })
-          : options.reportKey === 'receipts'
-            ? await reportsRepository.exportReceipts({
-                ...commonParams,
-                status: options.receiptStatus,
-                receiptKind: options.receiptKind,
-              })
-            : options.reportKey === 'topItems'
-              ? await reportsRepository.exportTopItems({ ...commonParams, categoryId: options.categoryId })
-              : options.reportKey === 'topStaff'
-                ? await reportsRepository.exportTopStaff(commonParams)
-                : options.reportKey === 'shifts'
-                  ? await reportsRepository.exportShifts({
-                      ...commonParams,
-                      cashDeskId: options.cashDeskId,
-                      cashierId: options.cashierId,
-                      status: options.shiftStatus,
-                      differenceOnly: options.differenceOnly,
-                    })
-                  : await reportsRepository.exportPaymentBreakdown({
-                      ...commonParams,
-                      paymentMethod: options.paymentMethod,
-                    });
+        options.reportKey === 'zReports'
+          ? await reportsRepository.exportZReports({ ...commonParams, cashDeskId: options.cashDeskId })
+          : options.reportKey === 'sales'
+            ? await reportsRepository.exportSales({ ...commonParams, paymentMethod: options.paymentMethod })
+            : options.reportKey === 'receipts'
+              ? await reportsRepository.exportReceipts({
+                  ...commonParams,
+                  status: options.receiptStatus,
+                  receiptKind: options.receiptKind,
+                })
+              : options.reportKey === 'topItems'
+                ? await reportsRepository.exportTopItems({ ...commonParams, categoryId: options.categoryId })
+                : options.reportKey === 'topStaff'
+                  ? await reportsRepository.exportTopStaff(commonParams)
+                  : options.reportKey === 'shifts'
+                    ? await reportsRepository.exportShifts({
+                        ...commonParams,
+                        cashDeskId: options.cashDeskId,
+                        cashierId: options.cashierId,
+                        status: options.shiftStatus,
+                        differenceOnly: options.differenceOnly,
+                      })
+                    : await reportsRepository.exportPaymentBreakdown({
+                        ...commonParams,
+                        paymentMethod: options.paymentMethod,
+                      });
 
       downloadBlob(result.blob, result.filename);
     } catch {
