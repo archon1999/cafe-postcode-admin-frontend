@@ -12,7 +12,6 @@ import { useParams, useRouter } from 'shared/hooks/router';
 import { useDataGridPreferences } from 'shared/hooks/use-data-grid-preferences';
 import { usePageTitle } from 'shared/hooks/use-page-title';
 import { StorageService } from 'shared/lib/storage';
-import { CustomBreadcrumbs } from 'shared/ui/CustomBreadcrumbs';
 
 import { DEFAULT_REPORT_KEY, getReportDefinition, REPORTS_REGISTRY } from '../../../domain';
 import {
@@ -223,7 +222,6 @@ const ReportsPage = () => {
   return (
     <ListPageContent sx={{ overflowY: 'auto' }}>
       <ListPageBody>
-        <CustomBreadcrumbs heading={t('workspace.title')} sx={{ mb: { xs: 3, md: 5 } }} />
         <Box sx={{ display: 'flex', flex: 1, minHeight: 0, minWidth: 0 }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, minHeight: 0 }}>
             {selectedReport.kind === 'summary' ? (

@@ -11,6 +11,13 @@
     "month": "Oylik",
     "year": "Yillik"
   },
+  "charts": {
+    "salesTrend": "Tushum dinamikasi",
+    "paymentMix": "To'lov usullari",
+    "topItems": "Eng ko'p sotilgan mahsulotlar",
+    "receipts": "Cheklar tarkibi",
+    "noData": "Tanlangan davrda ma'lumot yo'q"
+  },
   "actions": {
     "refresh": "Yangilash",
     "exportExcel": "Excel yuklab olish",

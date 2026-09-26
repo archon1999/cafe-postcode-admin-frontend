@@ -15,6 +15,7 @@ import type { ReportDefinition } from '../../domain';
 import type { ReportsDatePreset, ReportsFixedDatePreset } from './reportsDateRange';
 import { ReportsToolbar } from './ReportsToolbar';
 import { ReportSummaryCards } from './ReportSummaryCards';
+import { ReportSummaryCharts } from './ReportSummaryCharts';
 
 type ReportsSummarySectionProps = {
   navigation?: ReactNode;
@@ -82,7 +83,10 @@ export function ReportsSummarySection({
         {summaryQuery.isError ? (
           <Alert severity="error">{t('errors.loadFailed')}</Alert>
         ) : (
-          <ReportSummaryCards data={summaryQuery.data} loading={summaryQuery.isLoading} />
+          <>
+            <ReportSummaryCards data={summaryQuery.data} loading={summaryQuery.isLoading} />
+            <ReportSummaryCharts data={summaryQuery.data} loading={summaryQuery.isLoading} />
+          </>
         )}
       </Box>
     </>

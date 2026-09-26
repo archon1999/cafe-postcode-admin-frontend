@@ -1256,6 +1256,22 @@ export type AdminReportSummary = {
   averageCheck: number;
   prechecksCount: number;
   receiptsCount: number;
+  salesTrendGranularity?: 'day' | 'week' | 'month';
+  salesTrend?: Array<{
+    date: string;
+    grossSalesTotal: number;
+    refundsTotal: number;
+    salesTotal: number;
+  }>;
+  paymentBreakdown?: Array<{
+    method: AdminPaymentMethod;
+    total: number;
+    count: number;
+  }>;
+  topItems?: Array<{
+    name: string;
+    revenue: number;
+  }>;
 };
 
 export type AdminSalesReportRow = {
