@@ -8,15 +8,19 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import LoginPage from './LoginPage';
 
 vi.mock('app/providers/locales', () => ({
-  useTranslate: () => ({ t: (key: string) => key }),
-}));
-
-vi.mock('shared/ui/Animate', () => ({
-  AnimateLogoRotate: () => <div data-testid="login-logo" />,
+  useTranslate: () => ({
+    t: (key: string) => key,
+    currentLang: { value: 'uz' },
+    onChangeLang: vi.fn(),
+  }),
 }));
 
 vi.mock('shared/ui/Iconify', () => ({
   Iconify: () => <span />,
+}));
+
+vi.mock('shared/ui/Settings/context/use-settings-context', () => ({
+  useSettingsContext: () => ({ setState: vi.fn() }),
 }));
 
 const mutationMocks = vi.hoisted(() => ({

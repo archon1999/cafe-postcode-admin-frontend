@@ -2,7 +2,6 @@ import { Suspense, lazy } from 'react';
 import type { RouteObject } from 'react-router';
 import { Outlet } from 'react-router';
 
-import { AuthCenteredLayout } from 'app/layouts/AuthCentered';
 import { RoutePath } from 'app/routes';
 import { SplashScreen } from 'shared/ui/LoadingScreen';
 
@@ -15,9 +14,7 @@ const authChildren = [
     path: RoutePath.login,
     element: (
       <GuestRoute>
-        <AuthCenteredLayout>
-          <LoginPage />
-        </AuthCenteredLayout>
+        <LoginPage />
       </GuestRoute>
     ),
   },
