@@ -274,6 +274,7 @@
     },
     "sections": {
       "branches": "Filiallar tarmog'i",
+      "staff": "Faol xodimlar",
       "branchesDescription": "Asosiy shahobchaga ulangan filiallarning tezkor holati.",
       "settings": "Savdo va POS sozlamalari"
     },
@@ -286,6 +287,8 @@
       "readyHint": "Shahobcha ishlashga tayyor.",
       "blockingHint": "{{count}} ta muhim ish bajarilishi kerak.",
       "progress": "{{value}}% tayyor",
+      "completedCount": "{{ready}}/{{total}} band tayyor",
+      "completedLabel": "Tayyor bandlar",
       "moreIssues": "Yana {{count}} ta masala",
       "stepReady": "Hammasi joyida",
       "status": {
@@ -324,6 +327,14 @@
         "local_agent_offline": "Lokal koordinator hozir oflayn.",
         "print_templates_missing": "Barcha chop etish shablonlarini nashr qiling."
       }
+    },
+    "glance": "Shahobcha bir qarashda",
+    "contact": "Aloqa ma'lumotlari",
+    "tabs": {
+      "overview": "Umumiy",
+      "people": "Xodimlar",
+      "branches": "Filiallar",
+      "settings": "Sozlamalar"
     }
   },
   "fields": {

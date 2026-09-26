@@ -40,7 +40,7 @@
       "description": "Xodimning holati, kirish usuli va ma'lumotlarini yangilang."
     },
     "employeeView": {
-      "title": "Xodim tafsilotlari"
+      "title": "Xodim profili"
     }
   },
   "fields": {
@@ -121,6 +121,13 @@
     "access": "Tizimga kirish va ruxsatlar",
     "assignment": "Zalga biriktirish",
     "payroll": "Mehnat va maosh"
+  },
+  "profile": {
+    "overview": "Umumiy",
+    "access": "Ruxsatlar",
+    "atGlance": "Qisqacha",
+    "contact": "Aloqa",
+    "details": "Xodim ma'lumotlari"
   },
   "permissionScopes": {
     "admin": "Admin",

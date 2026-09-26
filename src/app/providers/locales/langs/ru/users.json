@@ -40,7 +40,7 @@
       "description": "Обновите статус и данные сотрудника."
     },
     "employeeView": {
-      "title": "Детали сотрудника"
+      "title": "Профиль сотрудника"
     }
   },
   "fields": {
@@ -122,6 +122,13 @@
     "access": "Доступ к системе и права",
     "assignment": "Привязка к залу",
     "payroll": "Работа и зарплата"
+  },
+  "profile": {
+    "overview": "Обзор",
+    "access": "Доступ",
+    "atGlance": "Кратко",
+    "contact": "Контакты",
+    "details": "Данные сотрудника"
   },
   "permissionScopes": {
     "admin": "Админ",

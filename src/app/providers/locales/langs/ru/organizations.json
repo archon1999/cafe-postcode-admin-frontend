@@ -274,6 +274,7 @@
     },
     "sections": {
       "branches": "Сеть филиалов",
+      "staff": "Активные сотрудники",
       "branchesDescription": "Быстрое состояние филиалов головной точки.",
       "settings": "Торговые и POS-настройки"
     },
@@ -286,6 +287,8 @@
       "readyHint": "Точка готова к работе.",
       "blockingHint": "Нужно выполнить {{count}} важных задач.",
       "progress": "Готово на {{value}}%",
+      "completedCount": "Готово {{ready}} из {{total}}",
+      "completedLabel": "Готовые пункты",
       "moreIssues": "Ещё {{count}} проблем",
       "stepReady": "Всё в порядке",
       "status": {
@@ -324,6 +327,14 @@
         "local_agent_offline": "Локальный координатор сейчас офлайн.",
         "print_templates_missing": "Опубликуйте все шаблоны печати."
       }
+    },
+    "glance": "Точка в цифрах",
+    "contact": "Контактная информация",
+    "tabs": {
+      "overview": "Обзор",
+      "people": "Сотрудники",
+      "branches": "Филиалы",
+      "settings": "Настройки"
     }
   },
   "fields": {

@@ -26,7 +26,7 @@ import {
 import { canUseRestaurantPermission } from '../../shared/restaurant-helpers';
 
 import { RestaurantDetailActions } from './RestaurantDetailActions';
-import { RestaurantDetailHero } from './RestaurantDetailHero';
+import { RestaurantDetailHero, type RestaurantDetailTab } from './RestaurantDetailHero';
 import { RestaurantDetailSections } from './RestaurantDetailSections';
 
 type DetailDialog = 'branch' | 'activate' | 'deactivate' | 'tariff' | null;
@@ -38,6 +38,10 @@ const RestaurantDetailPage = () => {
   const id = typeof params.id === 'string' ? params.id : undefined;
   const { replace } = useRouter();
   const [dialog, setDialog] = useState<DetailDialog>(null);
+  const [tabSelection, setTabSelection] = useState<{ restaurantId?: string; tab: RestaurantDetailTab }>({
+    restaurantId: id,
+    tab: 'overview',
+  });
   const [credentialsDialogOpen, setCredentialsDialogOpen] = useState<RestaurantCredentialsDialogState>(null);
   const canViewRestaurants = canAccessRestaurants(profile) && canUseRestaurantPermission(profile, 'view');
 
@@ -69,6 +73,7 @@ const RestaurantDetailPage = () => {
       <Content>
         <CustomBreadcrumbs
           heading={t('restaurantDetail.pageTitle')}
+          sx={{ mb: { xs: 3, md: 5 } }}
           action={<BackToListButton href={RoutePath.organizationRestaurantList} />}
         />
         <Alert
@@ -87,6 +92,10 @@ const RestaurantDetailPage = () => {
   }
 
   const restaurant = detailQuery.data;
+  const selectedTab =
+    tabSelection.restaurantId === id && !(tabSelection.tab === 'branches' && restaurant.parentId)
+      ? tabSelection.tab
+      : 'overview';
 
   return (
     <Content>
@@ -94,7 +103,12 @@ const RestaurantDetailPage = () => {
         <CustomBreadcrumbs
           heading={t('restaurantDetail.pageTitle')}
           action={
-            <Stack direction="row" spacing={1}>
+            <Stack
+              direction="row"
+              spacing={1}
+              useFlexGap
+              flexWrap="wrap"
+              sx={{ '& .MuiButton-root': { whiteSpace: 'nowrap' } }}>
               <BackToListButton href={RoutePath.organizationRestaurantList} />
               <RestaurantDetailActions
                 restaurant={restaurant}
@@ -108,9 +122,13 @@ const RestaurantDetailPage = () => {
           }
         />
 
-        <Stack spacing={2.5}>
-          <RestaurantDetailHero restaurant={restaurant} />
-          <RestaurantDetailSections restaurant={restaurant} />
+        <Stack spacing={3}>
+          <RestaurantDetailHero
+            restaurant={restaurant}
+            selectedTab={selectedTab}
+            onTabChange={(tab) => setTabSelection({ restaurantId: id, tab })}
+          />
+          <RestaurantDetailSections restaurant={restaurant} selectedTab={selectedTab} />
         </Stack>
       </Box>
 

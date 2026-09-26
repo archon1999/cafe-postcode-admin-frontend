@@ -29,6 +29,7 @@ import {
 } from '../../../application';
 import { roleRequiresEmployeeCredentials, type UserManagementSurface } from '../../../domain';
 
+import { EmployeeProfileView } from './EmployeeProfileView';
 import {
   DenseRow,
   DetailField,
@@ -146,6 +147,39 @@ export const UserDetailPageContent = ({ id, surface = 'user' }: UserDetailPageCo
       icon: 'solar:shop-2-bold-duotone',
     },
   ];
+
+  if (isEmployeeSurface) {
+    const employeeDetails: UserEntry[] = [
+      { label: t('fields.role'), value: roleLabel, icon: 'solar:shield-user-bold-duotone' },
+      ...(showEmployeeUsername
+        ? [{ label: t('fields.username'), value: user.username, icon: 'solar:user-bold-duotone' as const }]
+        : []),
+      {
+        label: t('fields.employmentStatus'),
+        value: t(`status.${currentStatus}`),
+        icon: 'solar:check-circle-bold-duotone',
+      },
+      ...filledPayrollEntries,
+    ];
+
+    return (
+      <EmployeeProfileView
+        id={user.id}
+        fullName={user.fullName}
+        phone={user.phone}
+        initials={initials}
+        roleLabel={roleLabel}
+        status={currentStatus}
+        canEdit={canEditEmployee}
+        permissionCount={user.permissionCodes.length}
+        allowedHallCount={allowedHalls.length}
+        hasHallAccessPermission={hasHallAccessPermission}
+        detailEntries={employeeDetails}
+        accessEntries={overviewEntries}
+        hallEntries={hallEntries}
+      />
+    );
+  }
 
   return (
     <Content>

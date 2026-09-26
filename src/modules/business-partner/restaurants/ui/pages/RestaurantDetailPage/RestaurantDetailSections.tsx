@@ -1,25 +1,27 @@
+import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import LinearProgress from '@mui/material/LinearProgress';
 import Stack from '@mui/material/Stack';
 import { alpha } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import type { GridColDef } from '@mui/x-data-grid';
 import type { ReactNode } from 'react';
 
-import { useTranslate } from 'app/providers/locales';
+import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { RouterPathHelper } from 'app/routes';
 import type {
+  AdminRestaurantActiveUser,
   AdminRestaurantBranchSummary,
   AdminRestaurantDetail,
   AdminRestaurantReadinessStep,
 } from 'shared/api/admin-types';
+import { DataGrid } from 'shared/ui/CustomDataGrid';
 import { Iconify, type IconifyName } from 'shared/ui/Iconify';
 import { RouterLink } from 'shared/ui/RouterLink';
 import { formatDateTime } from 'shared/utils/format-time';
@@ -30,85 +32,21 @@ type SectionCardProps = {
   icon: IconifyName;
   action?: ReactNode;
   children: ReactNode;
+  flush?: boolean;
 };
 
-function SectionCard({ title, description, icon, action, children }: SectionCardProps) {
+function SectionCard({ title, description, icon, action, children, flush = false }: SectionCardProps) {
   return (
-    <Card sx={{ p: { xs: 2, md: 2.5 } }}>
-      <Stack spacing={2.25}>
-        <Stack direction="row" spacing={1.25} alignItems="flex-start" justifyContent="space-between">
-          <Stack direction="row" spacing={1.25} alignItems="center" sx={{ minWidth: 0 }}>
-            <Box
-              sx={(theme) => ({
-                width: 38,
-                height: 38,
-                borderRadius: 1.5,
-                display: 'grid',
-                placeItems: 'center',
-                color: 'primary.main',
-                bgcolor: alpha(theme.palette.primary.main, 0.1),
-                flexShrink: 0,
-              })}>
-              <Iconify icon={icon} width={19} />
-            </Box>
-            <Stack spacing={0.2} sx={{ minWidth: 0 }}>
-              <Typography variant="subtitle1">{title}</Typography>
-              {description ? (
-                <Typography variant="caption" color="text.secondary">
-                  {description}
-                </Typography>
-              ) : null}
-            </Stack>
-          </Stack>
-          {action}
-        </Stack>
-        {children}
-      </Stack>
-    </Card>
-  );
-}
-
-type MetricCardProps = {
-  label: string;
-  value: ReactNode;
-  hint: string;
-  icon: IconifyName;
-  color: 'primary' | 'success' | 'warning' | 'info';
-};
-
-function MetricCard({ label, value, hint, icon, color }: MetricCardProps) {
-  return (
-    <Card
-      sx={(theme) => ({
-        p: 2,
-        boxShadow: `0 1px 4px ${alpha(theme.palette.grey[500], 0.12)}`,
-      })}>
-      <Stack direction="row" spacing={1.5} alignItems="center">
-        <Box
-          sx={(theme) => ({
-            width: 42,
-            height: 42,
-            display: 'grid',
-            placeItems: 'center',
-            borderRadius: 1.75,
-            color: `${color}.main`,
-            bgcolor: alpha(theme.palette[color].main, 0.1),
-            flexShrink: 0,
-          })}>
-          <Iconify icon={icon} width={21} />
-        </Box>
-        <Stack spacing={0.15} sx={{ minWidth: 0 }}>
-          <Typography variant="caption" color="text.secondary" noWrap>
-            {label}
-          </Typography>
-          <Typography variant="h6" sx={{ lineHeight: 1.25 }}>
-            {value}
-          </Typography>
-          <Typography variant="caption" color="text.secondary" noWrap>
-            {hint}
-          </Typography>
-        </Stack>
-      </Stack>
+    <Card sx={{ height: '100%', minWidth: 0 }}>
+      <CardHeader
+        title={title}
+        subheader={description}
+        action={action}
+        avatar={<Iconify icon={icon} width={22} sx={{ color: 'text.secondary' }} />}
+        slotProps={{ title: { variant: 'h6' }, subheader: { variant: 'body2' } }}
+        sx={{ px: 3, pt: 3, pb: flush ? 2.5 : 0, '& .MuiCardHeader-action': { alignSelf: 'center', mt: 0 } }}
+      />
+      <Box sx={flush ? { minWidth: 0 } : { px: 3, pt: 3, pb: 3 }}>{children}</Box>
     </Card>
   );
 }
@@ -137,18 +75,19 @@ const READINESS_STEP_ICONS: Record<string, IconifyName> = {
   printing: 'solar:printer-bold-duotone',
 };
 
-function ReadinessStepCard({ step }: { step: AdminRestaurantReadinessStep }) {
+function ReadinessIssueRow({ step }: { step: AdminRestaurantReadinessStep }) {
   const { t } = useTranslate('organizations');
-  const color = step.status === 'ready' ? 'success' : step.status === 'blocked' ? 'error' : 'warning';
+  const color = step.status === 'blocked' ? 'error' : 'warning';
 
   return (
     <Stack
-      spacing={1.25}
+      spacing={1}
       sx={(theme) => ({
-        p: 1.5,
+        p: 2,
         minWidth: 0,
         borderRadius: 1.5,
-        bgcolor: alpha(theme.palette.grey[500], 0.08),
+        bgcolor: alpha(theme.palette[color].main, 0.06),
+        borderLeft: `3px solid ${theme.palette[color].main}`,
       })}>
       <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between">
         <Stack direction="row" spacing={1} alignItems="center" sx={{ minWidth: 0 }}>
@@ -188,11 +127,7 @@ function ReadinessStepCard({ step }: { step: AdminRestaurantReadinessStep }) {
             </Typography>
           ) : null}
         </Stack>
-      ) : (
-        <Typography variant="caption" color="success.main">
-          {t('restaurantDetail.readiness.stepReady')}
-        </Typography>
-      )}
+      ) : null}
     </Stack>
   );
 }
@@ -201,56 +136,53 @@ function OperationsOverview({ restaurant }: { restaurant: AdminRestaurantDetail 
   const { t } = useTranslate('organizations');
   const summary = restaurant.operationalSummary;
   const servicePointCount = summary.cashDesks + summary.prepStations + summary.distributionPoints;
+  const rows = [
+    {
+      label: t('restaurantDetail.metrics.staff'),
+      value: summary.activeUsers,
+      icon: 'solar:users-group-rounded-bold-duotone',
+    },
+    {
+      label: t('restaurantDetail.metrics.servicePoints'),
+      value: servicePointCount,
+      icon: 'solar:bill-list-bold-duotone',
+    },
+    {
+      label: t('restaurantDetail.metrics.menu'),
+      value: summary.menuItems,
+      icon: 'solar:menu-dots-square-bold-duotone',
+    },
+    {
+      label: t('restaurantDetail.metrics.devices'),
+      value: `${summary.onlineDevices}/${summary.activeDevices}`,
+      icon: 'solar:devices-bold-duotone',
+    },
+  ] as const;
 
   return (
-    <Box
-      sx={{
-        display: 'grid',
-        gridTemplateColumns: { xs: 'repeat(2, minmax(0, 1fr))', lg: 'repeat(4, minmax(0, 1fr))' },
-        gap: 1.5,
-      }}>
-      <MetricCard
-        label={t('restaurantDetail.metrics.staff')}
-        value={summary.activeUsers}
-        hint={t('restaurantDetail.metrics.staffHint')}
-        icon="solar:users-group-rounded-bold-duotone"
-        color="primary"
-      />
-      <MetricCard
-        label={t('restaurantDetail.metrics.servicePoints')}
-        value={servicePointCount}
-        hint={t('restaurantDetail.metrics.servicePointsHint', {
-          cashDesks: summary.cashDesks,
-          prepStations: summary.prepStations,
-        })}
-        icon="solar:bill-list-bold-duotone"
-        color="info"
-      />
-      <MetricCard
-        label={t('restaurantDetail.metrics.menu')}
-        value={summary.menuItems}
-        hint={t('restaurantDetail.metrics.menuHint')}
-        icon="solar:menu-dots-square-bold-duotone"
-        color="success"
-      />
-      <MetricCard
-        label={t('restaurantDetail.metrics.devices')}
-        value={`${summary.onlineDevices}/${summary.activeDevices}`}
-        hint={
-          summary.lastSeenAt
-            ? t('restaurantDetail.metrics.lastSeen', { date: formatDateTime(summary.lastSeenAt) })
-            : t('portfolio.noActivity')
-        }
-        icon="solar:devices-bold-duotone"
-        color="warning"
-      />
-    </Box>
+    <SectionCard title={t('restaurantDetail.glance')} icon="solar:chart-square-bold-duotone">
+      <Stack spacing={2} divider={<Divider flexItem sx={{ borderStyle: 'dashed' }} />}>
+        {rows.map((row) => (
+          <Stack key={row.label} direction="row" alignItems="center" spacing={1.5}>
+            <Iconify icon={row.icon} width={22} sx={{ color: 'text.secondary' }} />
+            <Typography variant="subtitle2" sx={{ flexGrow: 1 }}>
+              {row.label}
+            </Typography>
+            <Typography variant="h6" sx={{ fontVariantNumeric: 'tabular-nums' }}>
+              {row.value}
+            </Typography>
+          </Stack>
+        ))}
+      </Stack>
+    </SectionCard>
   );
 }
 
 function ReadinessSection({ restaurant }: { restaurant: AdminRestaurantDetail }) {
   const { t } = useTranslate('organizations');
   const readiness = restaurant.setupReadiness;
+  const pendingSteps = readiness.steps.filter((step) => step.status !== 'ready');
+  const readySteps = readiness.steps.filter((step) => step.status === 'ready');
 
   return (
     <SectionCard
@@ -264,16 +196,53 @@ function ReadinessSection({ restaurant }: { restaurant: AdminRestaurantDetail })
           label={t('restaurantDetail.readiness.progress', { value: readiness.progressPercent })}
         />
       }>
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, minmax(0, 1fr))' },
-          gap: 1.25,
-        }}>
-        {readiness.steps.map((step) => (
-          <ReadinessStepCard key={step.id} step={step} />
-        ))}
-      </Box>
+      <Stack spacing={1.25}>
+        <Typography variant="body2" color="text.secondary">
+          {t('restaurantDetail.readiness.completedCount', {
+            ready: readySteps.length,
+            total: readiness.steps.length,
+          })}
+        </Typography>
+        <LinearProgress
+          variant="determinate"
+          value={readiness.progressPercent}
+          color={readiness.ready ? 'success' : 'warning'}
+          sx={{ height: 8, borderRadius: 1 }}
+        />
+        <Typography variant="body2" color={readiness.ready ? 'success.main' : 'text.secondary'}>
+          {readiness.ready
+            ? t('restaurantDetail.readiness.readyHint')
+            : t('restaurantDetail.readiness.blockingHint', { count: readiness.blockingIssueCount })}
+        </Typography>
+      </Stack>
+
+      {pendingSteps.length ? (
+        <Stack spacing={1.25} sx={{ mt: 3 }}>
+          {pendingSteps.map((step) => (
+            <ReadinessIssueRow key={step.id} step={step} />
+          ))}
+        </Stack>
+      ) : null}
+
+      {readySteps.length ? (
+        <Box sx={{ mt: 3 }}>
+          <Typography variant="subtitle2" sx={{ mb: 1.25 }}>
+            {t('restaurantDetail.readiness.completedLabel')}
+          </Typography>
+          <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+            {readySteps.map((step) => (
+              <Chip
+                key={step.id}
+                size="small"
+                variant="soft"
+                color="success"
+                icon={<Iconify icon="solar:check-circle-bold" width={16} />}
+                label={t(`restaurantDetail.readiness.steps.${step.id}`, { defaultValue: step.id })}
+              />
+            ))}
+          </Stack>
+        </Box>
+      ) : null}
     </SectionCard>
   );
 }
@@ -292,13 +261,134 @@ function BranchStatus({ branch }: { branch: AdminRestaurantBranchSummary }) {
   );
 }
 
+const DETAIL_GRID_PAGE_SIZE = 5;
+const DETAIL_GRID_ROW_HEIGHT = 68;
+const DETAIL_GRID_HEADER_HEIGHT = 52;
+const DETAIL_GRID_FOOTER_HEIGHT = 52;
+
+function getNameInitials(name: string) {
+  const parts = name.match(/[\p{L}\p{N}]+/gu) ?? [];
+  return (
+    parts.length > 1 ? `${parts[0]?.[0] ?? ''}${parts[1]?.[0] ?? ''}` : parts[0]?.slice(0, 2) || '?'
+  ).toLocaleUpperCase();
+}
+
+function detailGridHeight(rowCount: number) {
+  if (rowCount === 0) return 200;
+  return (
+    DETAIL_GRID_HEADER_HEIGHT +
+    Math.min(rowCount, DETAIL_GRID_PAGE_SIZE) * DETAIL_GRID_ROW_HEIGHT +
+    (rowCount > DETAIL_GRID_PAGE_SIZE ? DETAIL_GRID_FOOTER_HEIGHT : 0)
+  );
+}
+
+const detailGridSx = {
+  border: 0,
+  borderTop: '1px solid',
+  borderColor: 'divider',
+  '& .MuiDataGrid-columnHeaders': { bgcolor: 'action.hover' },
+  '& .MuiDataGrid-columnHeaderTitle': { fontWeight: 600, color: 'text.secondary' },
+  '& .MuiDataGrid-cell': { display: 'flex', alignItems: 'center' },
+  '& .MuiDataGrid-row:hover': { bgcolor: 'action.hover' },
+  '& .MuiDataGrid-footerContainer': { borderTop: '1px solid', borderColor: 'divider' },
+};
+
+function DetailGridEmptyState({ icon, text }: { icon: IconifyName; text: string }) {
+  return (
+    <Stack
+      alignItems="center"
+      justifyContent="center"
+      spacing={1}
+      sx={{ height: 1, minHeight: 150, px: 3, textAlign: 'center' }}>
+      <Iconify icon={icon} width={32} sx={{ color: 'text.disabled' }} />
+      <Typography variant="body2" color="text.secondary">
+        {text}
+      </Typography>
+    </Stack>
+  );
+}
+
 function BranchNetworkSection({ restaurant }: { restaurant: AdminRestaurantDetail }) {
-  const { t } = useTranslate('organizations');
+  const { t, currentLang } = useTranslate('organizations');
+  const isWide = useMediaQuery('(min-width:600px)');
+  const columns: GridColDef<AdminRestaurantBranchSummary>[] = [
+    {
+      field: 'name',
+      headerName: t('fields.name'),
+      flex: 1.6,
+      minWidth: 260,
+      renderCell: ({ row }) => (
+        <Stack direction="row" spacing={1.5} alignItems="center" sx={{ minWidth: 0 }}>
+          <Avatar
+            variant="rounded"
+            sx={{ width: 36, height: 36, bgcolor: 'primary.lighter', color: 'primary.dark', fontSize: 12 }}>
+            {getNameInitials(row.name)}
+          </Avatar>
+          <Box sx={{ minWidth: 0 }}>
+            <Typography
+              component={RouterLink}
+              href={RouterPathHelper.organizationRestaurantDetail(row.id)}
+              variant="subtitle2"
+              color="text.primary"
+              noWrap
+              sx={{ display: 'block', textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>
+              {row.name}
+            </Typography>
+            <Typography variant="caption" color="text.secondary" noWrap sx={{ display: 'block' }}>
+              {row.address || t('labels.notSelected')}
+            </Typography>
+          </Box>
+        </Stack>
+      ),
+    },
+    {
+      field: 'isActive',
+      headerName: t('fields.status'),
+      minWidth: 120,
+      flex: 0.7,
+      renderCell: ({ row }) => <BranchStatus branch={row} />,
+    },
+    {
+      field: 'activeUsersCount',
+      headerName: t('portfolio.columns.staff'),
+      type: 'number',
+      minWidth: 115,
+      flex: 0.7,
+      align: 'center',
+      headerAlign: 'center',
+    },
+    {
+      field: 'onlineDeviceCount',
+      headerName: t('portfolio.columns.devices'),
+      type: 'number',
+      minWidth: 135,
+      flex: 0.75,
+      align: 'center',
+      headerAlign: 'center',
+      renderCell: ({ row }) => (
+        <Typography variant="body2" sx={{ fontVariantNumeric: 'tabular-nums' }}>
+          {row.onlineDeviceCount}/{row.activeDeviceCount}
+        </Typography>
+      ),
+    },
+    {
+      field: 'lastSeenAt',
+      headerName: t('portfolio.columns.lastSeen'),
+      minWidth: 180,
+      flex: 0.9,
+      renderCell: ({ row }) => (
+        <Typography variant="body2" color={row.lastSeenAt ? 'text.primary' : 'text.secondary'} noWrap>
+          {row.lastSeenAt ? formatDateTime(row.lastSeenAt) : t('portfolio.noActivity')}
+        </Typography>
+      ),
+    },
+  ];
 
   return (
     <SectionCard
       title={t('restaurantDetail.sections.branches')}
       icon="solar:buildings-2-bold-duotone"
+      flush
       action={
         <Chip
           size="small"
@@ -306,106 +396,196 @@ function BranchNetworkSection({ restaurant }: { restaurant: AdminRestaurantDetai
           label={t('restaurantDetail.branchCount', { count: restaurant.branches.length })}
         />
       }>
-      {restaurant.branches.length ? (
-        <TableContainer>
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell>{t('fields.name')}</TableCell>
-                <TableCell>{t('fields.status')}</TableCell>
-                <TableCell align="right">{t('portfolio.columns.staff')}</TableCell>
-                <TableCell align="right">{t('portfolio.columns.devices')}</TableCell>
-                <TableCell>{t('portfolio.columns.lastSeen')}</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
+      {!isWide && (
+        <Box sx={{ borderTop: '1px solid', borderColor: 'divider' }}>
+          {restaurant.branches.length ? (
+            <Stack divider={<Divider flexItem />}>
               {restaurant.branches.map((branch) => (
-                <TableRow key={branch.id} hover>
-                  <TableCell>
-                    <Stack spacing={0.25} sx={{ minWidth: 180 }}>
+                <Stack key={branch.id} spacing={1.25} sx={{ p: 2.5 }}>
+                  <Stack direction="row" alignItems="center" spacing={1.25}>
+                    <Avatar
+                      variant="rounded"
+                      sx={{ width: 38, height: 38, bgcolor: 'primary.lighter', color: 'primary.dark', fontSize: 12 }}>
+                      {getNameInitials(branch.name)}
+                    </Avatar>
+                    <Box sx={{ minWidth: 0, flex: 1 }}>
                       <Typography
                         component={RouterLink}
                         href={RouterPathHelper.organizationRestaurantDetail(branch.id)}
                         variant="subtitle2"
                         color="text.primary"
-                        sx={{ textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>
+                        sx={{ display: 'block', textDecoration: 'none', overflowWrap: 'anywhere' }}>
                         {branch.name}
                       </Typography>
-                      <Typography variant="caption" color="text.secondary" noWrap>
+                      <Typography variant="caption" color="text.secondary">
                         {branch.address || t('labels.notSelected')}
                       </Typography>
-                    </Stack>
-                  </TableCell>
-                  <TableCell>
+                    </Box>
                     <BranchStatus branch={branch} />
-                  </TableCell>
-                  <TableCell align="right">{branch.activeUsersCount}</TableCell>
-                  <TableCell align="right">
-                    {branch.onlineDeviceCount}/{branch.activeDeviceCount}
-                  </TableCell>
-                  <TableCell>
+                  </Stack>
+                  <Stack direction="row" spacing={2} useFlexGap flexWrap="wrap" sx={{ pl: 6.25 }}>
+                    <Typography variant="caption" color="text.secondary">
+                      {t('portfolio.columns.staff')}: {branch.activeUsersCount}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {t('portfolio.columns.devices')}: {branch.onlineDeviceCount}/{branch.activeDeviceCount}
+                    </Typography>
+                  </Stack>
+                  <Typography variant="caption" color="text.secondary" sx={{ pl: 6.25 }}>
+                    {t('portfolio.columns.lastSeen')}:{' '}
                     {branch.lastSeenAt ? formatDateTime(branch.lastSeenAt) : t('portfolio.noActivity')}
-                  </TableCell>
-                </TableRow>
+                  </Typography>
+                </Stack>
               ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      ) : (
-        <Stack alignItems="center" spacing={1} sx={{ py: 3, textAlign: 'center' }}>
-          <Iconify icon="solar:buildings-2-linear" width={32} sx={{ color: 'text.disabled' }} />
-          <Typography variant="body2" color="text.secondary">
-            {t('restaurantDetail.emptyBranches')}
-          </Typography>
-        </Stack>
+            </Stack>
+          ) : (
+            <DetailGridEmptyState icon="solar:buildings-2-linear" text={t('restaurantDetail.emptyBranches')} />
+          )}
+        </Box>
+      )}
+      {isWide && (
+        <Box sx={{ height: detailGridHeight(restaurant.branches.length), width: 1 }}>
+          <DataGrid
+            rows={restaurant.branches}
+            columns={columns}
+            localeText={getDataGridLocaleText(currentLang.value)}
+            columnHeaderHeight={DETAIL_GRID_HEADER_HEIGHT}
+            rowHeight={DETAIL_GRID_ROW_HEIGHT}
+            hideFooter={restaurant.branches.length <= DETAIL_GRID_PAGE_SIZE}
+            initialState={{ pagination: { paginationModel: { page: 0, pageSize: DETAIL_GRID_PAGE_SIZE } } }}
+            pageSizeOptions={[5, 10, 25]}
+            showToolbar={false}
+            disableColumnMenu
+            slots={{
+              noRowsOverlay: () => (
+                <DetailGridEmptyState icon="solar:buildings-2-linear" text={t('restaurantDetail.emptyBranches')} />
+              ),
+            }}
+            sx={detailGridSx}
+          />
+        </Box>
       )}
     </SectionCard>
   );
 }
 
 function ActiveUsersSection({ restaurant }: { restaurant: AdminRestaurantDetail }) {
-  const { t } = useTranslate('organizations');
+  const { t, currentLang } = useTranslate('organizations');
   const { t: tPlatform } = useTranslate('platform');
-  const visibleUsers = restaurant.activeUsers.slice(0, 8);
+  const isWide = useMediaQuery('(min-width:600px)');
+  const columns: GridColDef<AdminRestaurantActiveUser>[] = [
+    {
+      field: 'fullName',
+      headerName: t('fields.name'),
+      minWidth: 260,
+      flex: 1.4,
+      renderCell: ({ row }) => (
+        <Stack direction="row" spacing={1.5} alignItems="center" sx={{ minWidth: 0 }}>
+          <Avatar sx={{ width: 36, height: 36, bgcolor: 'primary.lighter', color: 'primary.dark', fontSize: 13 }}>
+            {getNameInitials(row.fullName)}
+          </Avatar>
+          <Typography variant="subtitle2" noWrap>
+            {row.fullName}
+          </Typography>
+        </Stack>
+      ),
+    },
+    {
+      field: 'username',
+      headerName: tPlatform('fields.username'),
+      minWidth: 180,
+      flex: 1,
+      renderCell: ({ row }) => (
+        <Typography variant="body2" color="text.secondary" noWrap>
+          {row.username}
+        </Typography>
+      ),
+    },
+    {
+      field: 'role',
+      headerName: t('fields.role'),
+      minWidth: 150,
+      flex: 0.8,
+      valueGetter: (_value, row) => row.role?.name ?? '',
+      renderCell: ({ row }) => <Chip size="small" variant="soft" label={row.role?.name ?? t('labels.notSelected')} />,
+    },
+  ];
 
   return (
     <SectionCard
-      title={t('sections.activeUsers.title')}
+      title={t('restaurantDetail.sections.staff')}
       icon="solar:users-group-rounded-bold-duotone"
-      action={<Chip size="small" variant="soft" label={restaurant.operationalSummary.activeUsers} />}>
-      {visibleUsers.length ? (
-        <>
-          <TableContainer sx={{ mx: { xs: -2, md: -2.5 }, mb: { xs: -2, md: -2.5 }, width: 'auto' }}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>{t('fields.name')}</TableCell>
-                  <TableCell>{tPlatform('fields.username')}</TableCell>
-                  <TableCell>{t('fields.role')}</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {visibleUsers.map((user) => (
-                  <TableRow key={user.id}>
-                    <TableCell>{user.fullName}</TableCell>
-                    <TableCell>{user.username}</TableCell>
-                    <TableCell>{user.role?.name ?? t('labels.notSelected')}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          {restaurant.activeUsers.length > visibleUsers.length ? (
-            <Typography variant="caption" color="text.secondary">
-              {t('restaurantDetail.moreUsers', { count: restaurant.activeUsers.length - visibleUsers.length })}
-            </Typography>
-          ) : null}
-        </>
-      ) : (
-        <Typography variant="body2" color="text.secondary">
-          {t('empty.activeUsers')}
-        </Typography>
+      flush
+      action={<Chip size="small" variant="soft" label={restaurant.activeUsers.length} />}>
+      {!isWide && (
+        <Box sx={{ borderTop: '1px solid', borderColor: 'divider' }}>
+          {restaurant.activeUsers.length ? (
+            <Stack divider={<Divider flexItem />}>
+              {restaurant.activeUsers.map((user) => (
+                <Stack key={user.id} direction="row" alignItems="center" spacing={1.5} sx={{ p: 2.5 }}>
+                  <Avatar
+                    sx={{ width: 38, height: 38, bgcolor: 'primary.lighter', color: 'primary.dark', fontSize: 13 }}>
+                    {getNameInitials(user.fullName)}
+                  </Avatar>
+                  <Box sx={{ minWidth: 0, flex: 1 }}>
+                    <Typography variant="subtitle2" sx={{ overflowWrap: 'anywhere' }}>
+                      {user.fullName}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {user.username}
+                    </Typography>
+                  </Box>
+                  <Chip size="small" variant="soft" label={user.role?.name ?? t('labels.notSelected')} />
+                </Stack>
+              ))}
+            </Stack>
+          ) : (
+            <DetailGridEmptyState icon="solar:users-group-rounded-linear" text={t('empty.activeUsers')} />
+          )}
+        </Box>
       )}
+      {isWide && (
+        <Box sx={{ height: detailGridHeight(restaurant.activeUsers.length), width: 1 }}>
+          <DataGrid
+            rows={restaurant.activeUsers}
+            columns={columns}
+            localeText={getDataGridLocaleText(currentLang.value)}
+            columnHeaderHeight={DETAIL_GRID_HEADER_HEIGHT}
+            rowHeight={DETAIL_GRID_ROW_HEIGHT}
+            hideFooter={restaurant.activeUsers.length <= DETAIL_GRID_PAGE_SIZE}
+            initialState={{ pagination: { paginationModel: { page: 0, pageSize: DETAIL_GRID_PAGE_SIZE } } }}
+            pageSizeOptions={[5, 10, 25]}
+            showToolbar={false}
+            disableColumnMenu
+            slots={{
+              noRowsOverlay: () => (
+                <DetailGridEmptyState icon="solar:users-group-rounded-linear" text={t('empty.activeUsers')} />
+              ),
+            }}
+            sx={detailGridSx}
+          />
+        </Box>
+      )}
+    </SectionCard>
+  );
+}
+
+function ContactInformationSection({ restaurant }: { restaurant: AdminRestaurantDetail }) {
+  const { t } = useTranslate('organizations');
+  const emptyValue = t('labels.notSelected');
+  const rows = [
+    { label: t('fields.phone'), value: restaurant.phone || emptyValue, icon: 'solar:phone-bold-duotone' },
+    { label: t('fields.social'), value: restaurant.social || emptyValue, icon: 'solar:chat-round-dots-bold-duotone' },
+    { label: t('fields.address'), value: restaurant.address || emptyValue, icon: 'solar:map-point-bold-duotone' },
+  ] as const;
+
+  return (
+    <SectionCard title={t('restaurantDetail.contact')} icon="solar:letter-bold-duotone">
+      <Stack spacing={2} divider={<Divider flexItem sx={{ borderStyle: 'dashed' }} />}>
+        {rows.map((row) => (
+          <InfoRow key={row.label} {...row} />
+        ))}
+      </Stack>
     </SectionCard>
   );
 }
@@ -424,9 +604,6 @@ function CustomerOverviewSection({ restaurant }: { restaurant: AdminRestaurantDe
       value: restaurant.taxNumber || emptyValue,
       icon: 'solar:document-text-bold-duotone',
     },
-    { label: t('fields.phone'), value: restaurant.phone || emptyValue, icon: 'solar:phone-bold-duotone' },
-    { label: t('fields.social'), value: restaurant.social || emptyValue, icon: 'solar:chat-round-dots-bold-duotone' },
-    { label: t('fields.address'), value: restaurant.address || emptyValue, icon: 'solar:map-point-bold-duotone' },
     { label: t('fields.tariff'), value: tariffName, icon: 'solar:tag-price-bold-duotone' },
     { label: t('fields.currency'), value: restaurant.currency, icon: 'solar:wallet-money-bold-duotone' },
     {
@@ -438,7 +615,7 @@ function CustomerOverviewSection({ restaurant }: { restaurant: AdminRestaurantDe
 
   return (
     <SectionCard title={t('sections.customerOverview.title')} icon="solar:shop-2-bold-duotone">
-      <Stack spacing={1.5} divider={<Divider flexItem sx={{ borderStyle: 'dashed' }} />}>
+      <Stack spacing={2} divider={<Divider flexItem sx={{ borderStyle: 'dashed' }} />}>
         {rows.map((row) => (
           <InfoRow key={row.label} {...row} />
         ))}
@@ -553,30 +730,35 @@ function SoliqIntegrationSection({ restaurant }: { restaurant: AdminRestaurantDe
 
 type RestaurantDetailSectionsProps = {
   restaurant: AdminRestaurantDetail;
+  selectedTab: 'overview' | 'people' | 'branches' | 'settings';
 };
 
-export function RestaurantDetailSections({ restaurant }: RestaurantDetailSectionsProps) {
-  return (
-    <Stack spacing={2.5}>
-      <OperationsOverview restaurant={restaurant} />
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: { xs: 'minmax(0, 1fr)', lg: 'minmax(0, 1.7fr) minmax(300px, 0.8fr)' },
-          gap: 2.5,
-          alignItems: 'start',
-        }}>
-        <Stack spacing={2.5} sx={{ minWidth: 0 }}>
-          <ReadinessSection restaurant={restaurant} />
-          {!restaurant.parentId ? <BranchNetworkSection restaurant={restaurant} /> : null}
-          <ActiveUsersSection restaurant={restaurant} />
-        </Stack>
-        <Stack spacing={2.5} sx={{ minWidth: 0 }}>
-          <CustomerOverviewSection restaurant={restaurant} />
+export function RestaurantDetailSections({ restaurant, selectedTab }: RestaurantDetailSectionsProps) {
+  if (selectedTab === 'people') return <ActiveUsersSection restaurant={restaurant} />;
+  if (selectedTab === 'branches') return <BranchNetworkSection restaurant={restaurant} />;
+  if (selectedTab === 'settings') {
+    return (
+      <Grid container spacing={3} alignItems="flex-start">
+        <Grid size={{ xs: 12, md: 6 }}>
           <ServiceSettingsSection restaurant={restaurant} />
+        </Grid>
+        <Grid size={{ xs: 12, md: 6 }}>
           <SoliqIntegrationSection restaurant={restaurant} />
-        </Stack>
-      </Box>
-    </Stack>
+        </Grid>
+      </Grid>
+    );
+  }
+
+  return (
+    <Grid container spacing={3} alignItems="flex-start">
+      <Grid size={{ xs: 12, md: 4 }} sx={{ display: 'grid', gap: 3 }}>
+        <OperationsOverview restaurant={restaurant} />
+        <ContactInformationSection restaurant={restaurant} />
+      </Grid>
+      <Grid size={{ xs: 12, md: 8 }} sx={{ display: 'grid', gap: 3 }}>
+        <CustomerOverviewSection restaurant={restaurant} />
+        <ReadinessSection restaurant={restaurant} />
+      </Grid>
+    </Grid>
   );
 }

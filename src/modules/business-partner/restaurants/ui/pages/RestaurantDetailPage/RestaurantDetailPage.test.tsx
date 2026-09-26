@@ -2,7 +2,7 @@
 
 import '@testing-library/jest-dom/vitest';
 
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import RestaurantDetailPage from './RestaurantDetailPage';
@@ -17,16 +17,32 @@ vi.mock('app/layouts/Dashboard', () => ({
 }));
 
 vi.mock('app/providers/locales', () => ({
+  getDataGridLocaleText: () => ({}),
   useTranslate: () => ({
+    currentLang: { value: 'uz' },
     t: (key: string) =>
       (
         ({
           'sections.customerOverview.title': "Mijoz ma'lumotlari",
-          'sections.activeUsers.title': 'Aktiv foydalanuvchilar',
+          'restaurantDetail.sections.staff': 'Faol xodimlar',
           'sections.soliqIntegration.title': 'Soliq bilan integratsiya',
+          'restaurantDetail.tabs.overview': 'Umumiy',
+          'restaurantDetail.tabs.people': 'Xodimlar',
+          'restaurantDetail.tabs.branches': 'Filiallar',
+          'restaurantDetail.tabs.settings': 'Sozlamalar',
         }) as Record<string, string>
       )[key] ?? key,
   }),
+}));
+
+vi.mock('shared/ui/CustomDataGrid', () => ({
+  DataGrid: ({ rows }: { rows: { id: string; username?: string }[] }) => (
+    <div role="grid">
+      {rows.map((row) => (
+        <div key={row.id}>{row.username}</div>
+      ))}
+    </div>
+  ),
 }));
 
 vi.mock('app/routes', () => ({
@@ -160,9 +176,11 @@ describe('RestaurantDetailPage', () => {
 
     expect(screen.getByText('Alpha Cafe')).toBeInTheDocument();
     expect(screen.getByText("Mijoz ma'lumotlari")).toBeInTheDocument();
-    expect(screen.getByText('Aktiv foydalanuvchilar')).toBeInTheDocument();
-    expect(screen.getByText('Soliq bilan integratsiya')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('tab', { name: 'Xodimlar' }));
+    expect(screen.getByText('Faol xodimlar')).toBeInTheDocument();
     expect(screen.getByText('alpha-admin')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('tab', { name: 'Sozlamalar' }));
+    expect(screen.getByText('Soliq bilan integratsiya')).toBeInTheDocument();
     expect(screen.getByText('fiscal-drive-service')).toBeInTheDocument();
   });
 });

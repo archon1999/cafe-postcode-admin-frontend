@@ -274,6 +274,7 @@
     },
     "sections": {
       "branches": "Филиаллар тармоғи",
+      "staff": "Фаол ходимлар",
       "branchesDescription": "Асосий шахобчага уланган филиалларнинг тезкор ҳолати.",
       "settings": "Савдо ва POS созламалари"
     },
@@ -286,6 +287,8 @@
       "readyHint": "Шахобча ишлашга тайёр.",
       "blockingHint": "{{count}} та муҳим иш бажарилиши керак.",
       "progress": "{{value}}% тайёр",
+      "completedCount": "{{ready}}/{{total}} банд тайёр",
+      "completedLabel": "Тайёр бандлар",
       "moreIssues": "Яна {{count}} та масала",
       "stepReady": "Ҳаммаси жойида",
       "status": {
@@ -324,6 +327,14 @@
         "local_agent_offline": "Локал координатор ҳозир офлайн.",
         "print_templates_missing": "Барча чоп этиш шаблонларини нашр қилинг."
       }
+    },
+    "glance": "Шахобча бир қарашда",
+    "contact": "Алоқа маълумотлари",
+    "tabs": {
+      "overview": "Умумий",
+      "people": "Ходимлар",
+      "branches": "Филиаллар",
+      "settings": "Созламалар"
     }
   },
   "fields": {
