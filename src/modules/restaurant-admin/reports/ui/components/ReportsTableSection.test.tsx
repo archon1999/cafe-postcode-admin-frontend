@@ -21,6 +21,8 @@ const mocks = vi.hoisted(() => {
     zReportsQuery: vi.fn(() => queryState),
     exportReceipts: vi.fn(),
     receiptsQuery: vi.fn(() => queryState),
+    topItemsQuery: vi.fn(() => queryState),
+    exportTopItems: vi.fn(),
     queryState,
   };
 });
@@ -55,7 +57,7 @@ vi.mock('../../application', () => ({
   useGetSalesReportQuery: () => mocks.queryState,
   useGetShiftReportQuery: () => mocks.queryState,
   useGetZReportsQuery: mocks.zReportsQuery,
-  useGetTopItemsReportQuery: () => mocks.queryState,
+  useGetTopItemsReportQuery: mocks.topItemsQuery,
   useGetTopStaffReportQuery: () => mocks.queryState,
 }));
 
@@ -66,7 +68,7 @@ vi.mock('../../data-access', () => ({
     exportSales: vi.fn(),
     exportShifts: vi.fn(),
     exportZReports: mocks.exportZReports,
-    exportTopItems: vi.fn(),
+    exportTopItems: mocks.exportTopItems,
     exportTopStaff: vi.fn(),
   },
 }));
@@ -80,13 +82,37 @@ vi.mock('shared/ui/CustomDataGrid', () => ({
 }));
 
 vi.mock('./ReportsToolbar', () => ({
-  ReportsToolbar: ({ onExport }: { onExport: () => void }) => (
-    <button type="button" data-testid="report-export" onClick={onExport} />
+  ReportsToolbar: ({
+    onExport,
+    onGroupByChange,
+  }: {
+    onExport: () => void;
+    onGroupByChange?: (value: 'item' | 'category') => void;
+  }) => (
+    <>
+      <button type="button" data-testid="report-export" onClick={onExport} />
+      {onGroupByChange && (
+        <button type="button" data-testid="group-categories" onClick={() => onGroupByChange('category')} />
+      )}
+    </>
   ),
 }));
 
 vi.mock('./ReportTableCard', () => ({
-  ReportTableCard: ({ toolbar }: { toolbar: ReactNode }) => <>{toolbar}</>,
+  ReportTableCard: ({
+    toolbar,
+    footerMetrics,
+  }: {
+    toolbar: ReactNode;
+    footerMetrics: Array<{ label: string; value: string }>;
+  }) => (
+    <>
+      {toolbar}
+      <div data-testid="report-footer">
+        {footerMetrics.map((metric) => `${metric.label}: ${metric.value}`).join(' | ')}
+      </div>
+    </>
+  ),
 }));
 
 import { ReportsTableSection } from './ReportsTableSection';
@@ -212,5 +238,25 @@ it('loads and exports Z reports with the selected cash desk and period', async (
   fireEvent.click(screen.getByTestId('report-export'));
   await waitFor(() =>
     expect(mocks.exportZReports).toHaveBeenCalledWith({ ...commonRequestParams, cashDeskId: 'desk-z' }),
+  );
+});
+
+it('switches the products table to category totals and exports the same grouping', async () => {
+  mocks.exportTopItems.mockResolvedValue({ blob: new Blob(['categories']), filename: 'categories.xlsx' });
+  renderReceipts(undefined, { ...receiptReport, key: 'topItems', availableFilters: ['category'] });
+
+  fireEvent.click(screen.getByTestId('group-categories'));
+  expect(mocks.topItemsQuery).toHaveBeenLastCalledWith(
+    { ...commonRequestParams, page: 1, pageSize: 25, categoryId: undefined, groupBy: 'category' },
+    { enabled: true },
+  );
+
+  fireEvent.click(screen.getByTestId('report-export'));
+  await waitFor(() =>
+    expect(mocks.exportTopItems).toHaveBeenCalledWith({
+      ...commonRequestParams,
+      categoryId: undefined,
+      groupBy: 'category',
+    }),
   );
 });

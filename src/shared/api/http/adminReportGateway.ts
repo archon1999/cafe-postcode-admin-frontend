@@ -3,7 +3,7 @@ import type { ZReportQueryParams, ZReportRow } from 'modules/restaurant-admin/re
 import type {
   AdminOpenChecksReportQueryParams,
   AdminOpenChecksReportRow,
-  AdminPaginatedResponse,
+  AdminReportPaginatedResponse,
   AdminPaymentBreakdownReportQueryParams,
   AdminPaymentBreakdownReportRow,
   AdminReceiptsReportQueryParams,
@@ -17,6 +17,7 @@ import type {
   AdminSummaryReportQueryParams,
   AdminTopItemsReportQueryParams,
   AdminTopItemsReportRow,
+  AdminTopCategoryReportRow,
   AdminTopStaffReportQueryParams,
   AdminTopStaffReportRow,
 } from '../admin-types';
@@ -35,6 +36,7 @@ type ReportQueryParams = {
   status?: string;
   hallId?: string;
   categoryId?: string;
+  groupBy?: 'item' | 'category';
   cashDeskId?: string;
   cashierId?: string;
   differenceOnly?: boolean;
@@ -53,6 +55,7 @@ function mapReportParams(params: ReportQueryParams) {
     status: params.status,
     hallId: params.hallId,
     categoryId: params.categoryId,
+    groupBy: params.groupBy,
     cashDeskId: params.cashDeskId,
     cashierId: params.cashierId,
     differenceOnly: params.differenceOnly,
@@ -70,7 +73,7 @@ function extractFilename(disposition?: string | null, fallback = 'report.xlsx') 
 
 function getPaginatedReport<Row>(path: string, params: ReportQueryParams) {
   return instance
-    .get<AdminPaginatedResponse<Row>>(path, { params: mapReportParams(params) })
+    .get<AdminReportPaginatedResponse<Row>>(path, { params: mapReportParams(params) })
     .then((response) => response.data);
 }
 
@@ -125,7 +128,10 @@ export const adminReportGateway = {
   },
 
   getAdminTopItemsReport(params: AdminTopItemsReportQueryParams) {
-    return getPaginatedReport<AdminTopItemsReportRow>('/api/v1/admin/reporting/top-items/', params);
+    return getPaginatedReport<AdminTopItemsReportRow | AdminTopCategoryReportRow>(
+      '/api/v1/admin/reporting/top-items/',
+      params,
+    );
   },
 
   exportAdminTopItemsReport(params: AdminTopItemsReportQueryParams) {

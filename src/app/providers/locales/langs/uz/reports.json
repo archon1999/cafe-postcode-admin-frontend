@@ -63,6 +63,7 @@
     "searchSalesPlaceholder": "To'lov usuli bo'yicha qidiring",
     "searchReceiptsPlaceholder": "Buyurtma, kassir yoki kassa bo'yicha qidiring",
     "searchTopItemsPlaceholder": "Mahsulot yoki kategoriya bo'yicha qidiring",
+    "searchCategoriesPlaceholder": "Kategoriya bo'yicha qidiring",
     "searchTopStaffPlaceholder": "Xodim bo'yicha qidiring",
     "searchPaymentBreakdownPlaceholder": "To'lov usuli bo'yicha qidiring",
     "searchShiftsPlaceholder": "Kassir yoki kassa bo'yicha qidiring",
@@ -147,9 +148,13 @@
     "topItems": {
       "title": "Mahsulotlar",
       "description": "Yopilgan buyurtmalardagi eng ko'p sotilgan mahsulotlar va ularning tushumi.",
+      "groupByLabel": "Guruhlash",
+      "groupByItem": "Mahsulotlar",
+      "groupByCategory": "Kategoriyalar",
       "fields": {
         "catalogItemName": "Mahsulot",
         "categoryName": "Kategoriya",
+        "itemCount": "Mahsulotlar soni",
         "quantity": "Miqdor",
         "revenue": "Tushum"
       }

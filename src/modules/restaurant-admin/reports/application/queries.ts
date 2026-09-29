@@ -3,9 +3,11 @@ import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
 import type {
   AdminOpenChecksReportQueryParams,
   AdminOpenChecksReportRow,
+  AdminTopCategoryReportRow,
   AdminReceiptsReportQueryParams,
   AdminReceiptsReportRow,
   AdminPaginatedResponse,
+  AdminReportPaginatedResponse,
   AdminPaymentBreakdownReportQueryParams,
   AdminPaymentBreakdownReportRow,
   AdminReportSummary,
@@ -38,7 +40,7 @@ export function useGetReportSummaryQuery(
 
 export function useGetSalesReportQuery(
   params: AdminSalesReportQueryParams,
-  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminSalesReportRow>>, 'queryFn' | 'queryKey'>,
+  options?: Omit<UseQueryOptions<AdminReportPaginatedResponse<AdminSalesReportRow>>, 'queryFn' | 'queryKey'>,
 ) {
   return useQuery({
     queryKey: reportsKeys.sales(params),
@@ -60,7 +62,7 @@ export function useGetOpenChecksReportQuery(
 
 export function useGetReceiptsReportQuery(
   params: AdminReceiptsReportQueryParams,
-  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminReceiptsReportRow>>, 'queryFn' | 'queryKey'>,
+  options?: Omit<UseQueryOptions<AdminReportPaginatedResponse<AdminReceiptsReportRow>>, 'queryFn' | 'queryKey'>,
 ) {
   return useQuery({
     queryKey: reportsKeys.receipts(params),
@@ -71,7 +73,10 @@ export function useGetReceiptsReportQuery(
 
 export function useGetTopItemsReportQuery(
   params: AdminTopItemsReportQueryParams,
-  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminTopItemsReportRow>>, 'queryFn' | 'queryKey'>,
+  options?: Omit<
+    UseQueryOptions<AdminReportPaginatedResponse<AdminTopItemsReportRow | AdminTopCategoryReportRow>>,
+    'queryFn' | 'queryKey'
+  >,
 ) {
   return useQuery({
     queryKey: reportsKeys.topItems(params),
@@ -82,7 +87,7 @@ export function useGetTopItemsReportQuery(
 
 export function useGetTopStaffReportQuery(
   params: AdminTopStaffReportQueryParams,
-  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminTopStaffReportRow>>, 'queryFn' | 'queryKey'>,
+  options?: Omit<UseQueryOptions<AdminReportPaginatedResponse<AdminTopStaffReportRow>>, 'queryFn' | 'queryKey'>,
 ) {
   return useQuery({
     queryKey: reportsKeys.topStaff(params),
@@ -93,7 +98,7 @@ export function useGetTopStaffReportQuery(
 
 export function useGetPaymentBreakdownReportQuery(
   params: AdminPaymentBreakdownReportQueryParams,
-  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminPaymentBreakdownReportRow>>, 'queryFn' | 'queryKey'>,
+  options?: Omit<UseQueryOptions<AdminReportPaginatedResponse<AdminPaymentBreakdownReportRow>>, 'queryFn' | 'queryKey'>,
 ) {
   return useQuery({
     queryKey: reportsKeys.paymentBreakdown(params),
@@ -104,7 +109,7 @@ export function useGetPaymentBreakdownReportQuery(
 
 export function useGetShiftReportQuery(
   params: AdminShiftReportQueryParams,
-  options?: Omit<UseQueryOptions<AdminPaginatedResponse<AdminShiftReportRow>>, 'queryFn' | 'queryKey'>,
+  options?: Omit<UseQueryOptions<AdminReportPaginatedResponse<AdminShiftReportRow>>, 'queryFn' | 'queryKey'>,
 ) {
   return useQuery({
     queryKey: reportsKeys.shifts(params),
@@ -115,7 +120,7 @@ export function useGetShiftReportQuery(
 
 export function useGetZReportsQuery(
   params: ZReportQueryParams,
-  options?: Omit<UseQueryOptions<AdminPaginatedResponse<ZReportRow>>, 'queryFn' | 'queryKey'>,
+  options?: Omit<UseQueryOptions<AdminReportPaginatedResponse<ZReportRow>>, 'queryFn' | 'queryKey'>,
 ) {
   return useQuery({
     queryKey: reportsKeys.zReports(params),

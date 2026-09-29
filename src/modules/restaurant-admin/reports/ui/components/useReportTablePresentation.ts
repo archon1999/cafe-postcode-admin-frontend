@@ -8,6 +8,7 @@ import type {
   AdminReceiptsReportRow,
   AdminSalesReportRow,
   AdminShiftReportRow,
+  AdminTopCategoryReportRow,
   AdminTopItemsReportRow,
   AdminTopStaffReportRow,
 } from 'shared/api/admin-types';
@@ -20,7 +21,7 @@ function castRowIdGetter<Row extends ReportTableRow>(getter: GridRowIdGetter<Row
   return getter as GridRowIdGetter<ReportTableRow>;
 }
 
-function getReportRowId(reportKey: TableReportKey): GridRowIdGetter<ReportTableRow> {
+function getReportRowId(reportKey: TableReportKey, groupBy: 'item' | 'category'): GridRowIdGetter<ReportTableRow> {
   switch (reportKey) {
     case 'zReports':
       return castRowIdGetter<ZReportRow>((row) => row.id);
@@ -33,6 +34,11 @@ function getReportRowId(reportKey: TableReportKey): GridRowIdGetter<ReportTableR
     case 'shifts':
       return castRowIdGetter<AdminShiftReportRow>((row) => row.id);
     case 'topItems':
+      if (groupBy === 'category') {
+        return castRowIdGetter<AdminTopCategoryReportRow>(
+          (row) => `${row.restaurantId ?? 'all'}-${row.categoryId ?? 'none'}`,
+        );
+      }
       return castRowIdGetter<AdminTopItemsReportRow>(
         (row) => `${row.restaurantId ?? 'all'}-${row.catalogItemId ?? row.catalogItemName}-${row.categoryId ?? 'none'}`,
       );
@@ -44,18 +50,21 @@ function getReportRowId(reportKey: TableReportKey): GridRowIdGetter<ReportTableR
   }
 }
 
-export function useReportTablePresentation(reportKey: TableReportKey) {
+export function useReportTablePresentation(reportKey: TableReportKey, groupBy: 'item' | 'category' = 'item') {
   const { t } = useTranslate('reports');
 
-  const baseColumns = useMemo(() => getReportTableColumns(reportKey, t), [reportKey, t]);
+  const baseColumns = useMemo(() => getReportTableColumns(reportKey, t, groupBy), [reportKey, t, groupBy]);
   const columns = useBranchScopeColumns(baseColumns);
 
   return useMemo(() => {
     const emptyStateKey = `empty.${reportKey}`;
     return {
       columns,
-      getRowId: getReportRowId(reportKey),
-      searchPlaceholder: t(`filters.search${reportKey[0].toUpperCase()}${reportKey.slice(1)}Placeholder`),
+      getRowId: getReportRowId(reportKey, groupBy),
+      searchPlaceholder:
+        groupBy === 'category' && reportKey === 'topItems'
+          ? t('filters.searchCategoriesPlaceholder')
+          : t(`filters.search${reportKey[0].toUpperCase()}${reportKey.slice(1)}Placeholder`),
       emptyState: {
         noData: {
           title: t(`${emptyStateKey}.noData.title`),
@@ -67,5 +76,5 @@ export function useReportTablePresentation(reportKey: TableReportKey) {
         },
       },
     };
-  }, [columns, reportKey, t]);
+  }, [columns, reportKey, groupBy, t]);
 }

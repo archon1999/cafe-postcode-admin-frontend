@@ -1,7 +1,7 @@
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import type { GridColDef, GridColumnVisibilityModel, GridPaginationModel, GridSortModel } from '@mui/x-data-grid';
-import { useMemo, type ReactNode } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 
 import { getDataGridLocaleText, useTranslate } from 'app/providers/locales';
 import { DEFAULT_COLUMN_VISIBILITY_MODEL } from 'shared/constants';
@@ -13,6 +13,7 @@ import type { ReportsDatePreset, ReportsFixedDatePreset } from './reportsDateRan
 import { ReportsToolbar } from './ReportsToolbar';
 import { ReportTableCard } from './ReportTableCard';
 import { parseReceiptStatus, type TableReportKey } from './reportTableColumns';
+import { getReportFooterMetrics } from './reportTableTotals';
 import { useReportExport } from './useReportExport';
 import { useReportsToolbarFilters } from './useReportsToolbarFilters';
 import { useReportTablePresentation } from './useReportTablePresentation';
@@ -84,6 +85,8 @@ export function ReportsTableSection({
   onColumnVisibilityModelChange,
 }: ReportsTableSectionProps) {
   const { t, currentLang } = useTranslate('reports');
+  const [itemsGroupBy, setItemsGroupBy] = useState<'item' | 'category'>('item');
+  const groupBy = report.key === 'topItems' ? itemsGroupBy : undefined;
 
   const localeText = useMemo(() => getDataGridLocaleText(currentLang.value), [currentLang.value]);
   const ordering = getOrderingFromSortModel(sortModel);
@@ -101,13 +104,15 @@ export function ReportsTableSection({
     receiptStatus,
     receiptKind: receiptKinds[0] as 'plain' | 'fiscal' | undefined,
     categoryId: categoryIds[0],
+    groupBy,
     cashDeskId: cashDeskIds[0],
     cashierId: cashierIds[0],
     shiftStatus: statuses[0],
     differenceOnly: differenceOnly.includes('difference-only'),
   });
 
-  const presentation = useReportTablePresentation(tableReportKey);
+  const presentation = useReportTablePresentation(tableReportKey, groupBy);
+  const footerMetrics = getReportFooterMetrics(tableReportKey, activeTableQuery.data?.totals, t, groupBy);
 
   const toolbarFilters = useReportsToolbarFilters({
     report,
@@ -139,6 +144,7 @@ export function ReportsTableSection({
     receiptStatus,
     receiptKind: receiptKinds[0] as 'plain' | 'fiscal' | undefined,
     categoryId: categoryIds[0],
+    groupBy,
     cashDeskId: cashDeskIds[0],
     cashierId: cashierIds[0],
     shiftStatus: statuses[0],
@@ -147,6 +153,12 @@ export function ReportsTableSection({
 
   const handleRefresh = () => {
     void activeTableQuery.refetch();
+  };
+
+  const handleGroupByChange = (value: 'item' | 'category') => {
+    setItemsGroupBy(value);
+    onPaginationModelChange({ ...paginationModel, page: 0 });
+    onSortModelChange([{ field: value === 'category' ? 'revenue' : 'quantity', sort: 'desc' }]);
   };
 
   return (
@@ -199,6 +211,8 @@ export function ReportsTableSection({
             defaultColumnVisibilityModel={{ ...DEFAULT_COLUMN_VISIBILITY_MODEL, ...report.defaultColumnVisibility }}
             onSaveColumns={onColumnVisibilityModelChange}
             showColumns
+            groupBy={groupBy}
+            onGroupByChange={groupBy ? handleGroupByChange : undefined}
           />
         }
         hasActiveFilters={Boolean(
@@ -212,6 +226,7 @@ export function ReportsTableSection({
             differenceOnly.length,
         )}
         emptyState={presentation.emptyState}
+        footerMetrics={footerMetrics}
       />
     </Box>
   );

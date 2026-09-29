@@ -1320,6 +1320,20 @@ export type AdminTopItemsReportRow = {
   revenue: number;
 };
 
+export type AdminTopCategoryReportRow = {
+  restaurantId?: string;
+  restaurantName?: string;
+  categoryId?: string | null;
+  categoryName?: string | null;
+  itemCount: number;
+  revenue: number;
+};
+
+export type AdminReportTableTotals = {
+  [field: string]: number | null | Partial<Record<SaleUnit, number>> | undefined;
+  quantityByUnit?: Partial<Record<SaleUnit, number>>;
+};
+
 export type AdminTopStaffReportRow = {
   restaurantId?: string;
   restaurantName?: string;
@@ -1421,6 +1435,10 @@ export type AdminPaginatedResponse<T> = {
   total: number;
   pagesCount: number;
   data: T[];
+};
+
+export type AdminReportPaginatedResponse<T> = AdminPaginatedResponse<T> & {
+  totals?: AdminReportTableTotals;
 };
 
 export type AdminCollectionResponse<T> = {
@@ -1571,6 +1589,7 @@ export type AdminReceiptsReportQueryParams = AdminListQueryParams &
 export type AdminTopItemsReportQueryParams = AdminListQueryParams &
   AdminReportPeriodQueryParams & {
     categoryId?: string;
+    groupBy?: 'item' | 'category';
   };
 
 export type AdminTopStaffReportQueryParams = AdminListQueryParams & AdminReportPeriodQueryParams;

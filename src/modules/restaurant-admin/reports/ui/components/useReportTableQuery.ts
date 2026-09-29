@@ -31,6 +31,7 @@ type UseReportTableQueryParams = {
   receiptKind?: 'plain' | 'fiscal';
   receiptStatus?: AdminReceiptsReportQueryParams['status'];
   categoryId?: string;
+  groupBy?: 'item' | 'category';
   cashDeskId?: string;
   cashierId?: string;
   shiftStatus?: string;
@@ -49,6 +50,7 @@ export function useReportTableQuery({
   receiptKind,
   receiptStatus,
   categoryId,
+  groupBy,
   cashDeskId,
   cashierId,
   shiftStatus,
@@ -84,6 +86,7 @@ export function useReportTableQuery({
       ...pagination,
       search,
       categoryId,
+      groupBy,
       ordering,
     } satisfies AdminTopItemsReportQueryParams,
     { enabled: reportKey === 'topItems' },

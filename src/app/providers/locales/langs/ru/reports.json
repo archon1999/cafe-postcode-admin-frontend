@@ -60,6 +60,7 @@
     "searchSalesPlaceholder": "Ищите по способу оплаты",
     "searchReceiptsPlaceholder": "Ищите по заказу, кассиру или кассе",
     "searchTopItemsPlaceholder": "Ищите по товару или категории",
+    "searchCategoriesPlaceholder": "Ищите по категории",
     "searchTopStaffPlaceholder": "Ищите по сотруднику",
     "searchPaymentBreakdownPlaceholder": "Ищите по способу оплаты",
     "searchShiftsPlaceholder": "Ищите по кассиру или кассе",
@@ -147,9 +148,13 @@
     "topItems": {
       "title": "Товары",
       "description": "Самые продаваемые товары и их выручка по закрытым заказам.",
+      "groupByLabel": "Группировка",
+      "groupByItem": "Товары",
+      "groupByCategory": "Категории",
       "fields": {
         "catalogItemName": "Товар",
         "categoryName": "Категория",
+        "itemCount": "Количество товаров",
         "quantity": "Количество",
         "revenue": "Выручка"
       }

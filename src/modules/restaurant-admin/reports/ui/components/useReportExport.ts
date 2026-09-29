@@ -19,6 +19,7 @@ type Options = {
   receiptStatus?: AdminReceiptStatus;
   receiptKind?: 'plain' | 'fiscal';
   categoryId?: string;
+  groupBy?: 'item' | 'category';
   cashDeskId?: string;
   cashierId?: string;
   shiftStatus?: string;
@@ -51,7 +52,11 @@ export function useReportExport(options: Options) {
                   receiptKind: options.receiptKind,
                 })
               : options.reportKey === 'topItems'
-                ? await reportsRepository.exportTopItems({ ...commonParams, categoryId: options.categoryId })
+                ? await reportsRepository.exportTopItems({
+                    ...commonParams,
+                    categoryId: options.categoryId,
+                    groupBy: options.groupBy,
+                  })
                 : options.reportKey === 'topStaff'
                   ? await reportsRepository.exportTopStaff(commonParams)
                   : options.reportKey === 'shifts'

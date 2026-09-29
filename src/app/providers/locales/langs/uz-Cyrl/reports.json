@@ -60,6 +60,7 @@
     "searchSalesPlaceholder": "Тўлов усули бўйича қидиринг",
     "searchReceiptsPlaceholder": "Буюртма, кассир ёки касса бўйича қидиринг",
     "searchTopItemsPlaceholder": "Маҳсулот ёки категория бўйича қидиринг",
+    "searchCategoriesPlaceholder": "Категория бўйича қидиринг",
     "searchTopStaffPlaceholder": "Ходим бўйича қидиринг",
     "searchPaymentBreakdownPlaceholder": "Тўлов усули бўйича қидиринг",
     "searchShiftsPlaceholder": "Кассир ёки касса бўйича қидиринг",
@@ -147,9 +148,13 @@
     "topItems": {
       "title": "Маҳсулотлар",
       "description": "Ёпилган буюртмалардаги энг кўп сотилган маҳсулотлар ва уларнинг тушуми.",
+      "groupByLabel": "Гуруҳлаш",
+      "groupByItem": "Маҳсулотлар",
+      "groupByCategory": "Категориялар",
       "fields": {
         "catalogItemName": "Маҳсулот",
         "categoryName": "Категория",
+        "itemCount": "Маҳсулотлар сони",
         "quantity": "Миқдор",
         "revenue": "Тушум"
       }

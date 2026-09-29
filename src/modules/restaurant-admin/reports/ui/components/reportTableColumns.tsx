@@ -11,6 +11,7 @@ import type {
   AdminReportKey,
   AdminSalesReportRow,
   AdminShiftReportRow,
+  AdminTopCategoryReportRow,
   AdminTopItemsReportRow,
   AdminTopStaffReportRow,
 } from 'shared/api/admin-types';
@@ -40,6 +41,7 @@ export type ReportTableRow =
   | AdminSalesReportRow
   | AdminReceiptsReportRow
   | AdminTopItemsReportRow
+  | AdminTopCategoryReportRow
   | AdminTopStaffReportRow
   | AdminPaymentBreakdownReportRow
   | AdminShiftReportRow;
@@ -63,7 +65,11 @@ function castColumns<Row extends ReportTableRow>(columns: GridColDef<Row>[]) {
   return columns as GridColDef<ReportTableRow>[];
 }
 
-export function getReportTableColumns(reportKey: TableReportKey, t: ReportsTranslate) {
+export function getReportTableColumns(
+  reportKey: TableReportKey,
+  t: ReportsTranslate,
+  groupBy: 'item' | 'category' = 'item',
+) {
   switch (reportKey) {
     case 'zReports':
       return castColumns<ZReportRow>(
@@ -191,6 +197,25 @@ export function getReportTableColumns(reportKey: TableReportKey, t: ReportsTrans
         },
       ]);
     case 'topItems':
+      if (groupBy === 'category') {
+        return castColumns<AdminTopCategoryReportRow>([
+          {
+            field: 'categoryName',
+            headerName: t('reports.topItems.fields.categoryName'),
+            minWidth: 220,
+            flex: 1,
+            valueGetter: (_value, row: AdminTopCategoryReportRow) => row.categoryName || '-',
+          },
+          { field: 'itemCount', headerName: t('reports.topItems.fields.itemCount'), minWidth: 150, flex: 0.5 },
+          {
+            field: 'revenue',
+            headerName: t('reports.topItems.fields.revenue'),
+            minWidth: 180,
+            flex: 0.6,
+            valueGetter: (_value, row: AdminTopCategoryReportRow) => formatMoney(row.revenue),
+          },
+        ]);
+      }
       return castColumns<AdminTopItemsReportRow>([
         {
           field: 'catalogItemName',

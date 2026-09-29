@@ -10,6 +10,8 @@ import MenuList from '@mui/material/MenuList';
 import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Tooltip from '@mui/material/Tooltip';
 import type { GridColDef, GridColumnVisibilityModel } from '@mui/x-data-grid';
 import { usePopover } from 'minimal-shared/hooks';
@@ -57,6 +59,8 @@ type ReportsToolbarProps = {
   exportLoading?: boolean;
   showSearch?: boolean;
   showColumns?: boolean;
+  groupBy?: 'item' | 'category';
+  onGroupByChange?: (value: 'item' | 'category') => void;
 };
 
 export function ReportsToolbar({
@@ -80,6 +84,8 @@ export function ReportsToolbar({
   exportLoading = false,
   showSearch = false,
   showColumns = false,
+  groupBy,
+  onGroupByChange,
 }: ReportsToolbarProps) {
   const { t } = useTranslate('reports');
   const menu = usePopover();
@@ -103,6 +109,20 @@ export function ReportsToolbar({
           flexDirection: { xs: 'column', md: 'row' },
           alignItems: { xs: 'flex-end', md: 'center' },
         }}>
+        {groupBy && onGroupByChange && (
+          <ToggleButtonGroup
+            exclusive
+            size="small"
+            value={groupBy}
+            aria-label={t('reports.topItems.groupByLabel')}
+            onChange={(_event, value: 'item' | 'category' | null) => {
+              if (value) onGroupByChange(value);
+            }}
+            sx={{ flexShrink: 0, width: { xs: 1, md: 'auto' }, '& .MuiToggleButton-root': { px: 2 } }}>
+            <ToggleButton value="item">{t('reports.topItems.groupByItem')}</ToggleButton>
+            <ToggleButton value="category">{t('reports.topItems.groupByCategory')}</ToggleButton>
+          </ToggleButtonGroup>
+        )}
         <ReportsDateRangePicker
           activePreset={activePreset}
           startDate={startDate}
