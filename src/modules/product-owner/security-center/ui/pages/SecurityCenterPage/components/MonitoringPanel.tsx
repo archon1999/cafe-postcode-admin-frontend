@@ -170,9 +170,11 @@ function SummaryCard({
 
 function SecurityActivityChart({
   activity,
+  repeatedRevokedAttempts = 0,
   onDateSelect,
 }: {
   activity: MonitoringSecurityActivity[];
+  repeatedRevokedAttempts?: number;
   onDateSelect?: (date: string) => void;
 }) {
   const { t } = useTranslate('security-center');
@@ -219,6 +221,11 @@ function SecurityActivityChart({
     <Card sx={{ height: 1 }}>
       <CardHeader
         title={t('monitoring.securityActivity.title')}
+        subheader={
+          repeatedRevokedAttempts > 0
+            ? t('monitoring.securityActivity.repeatedRevoked', { count: repeatedRevokedAttempts })
+            : undefined
+        }
         action={!eventCount && activity.length ? <Label>{t('monitoring.securityActivity.noEvents')}</Label> : null}
       />
       {activity.length ? (
@@ -895,6 +902,7 @@ export function MonitoringPanel({ businessPartnerId, onSecurityDateSelect }: Mon
         <Grid size={{ xs: 12, lg: 8 }}>
           <SecurityActivityChart
             activity={query.data?.insights?.securityActivity ?? []}
+            repeatedRevokedAttempts={query.data?.insights?.repeatedRevokedAttempts ?? 0}
             onDateSelect={onSecurityDateSelect}
           />
         </Grid>

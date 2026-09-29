@@ -177,6 +177,7 @@ beforeEach(() => {
         unacknowledgedCritical: 1,
       },
       insights: {
+        repeatedRevokedAttempts: 3500,
         securityActivity: [
           { date: '2026-08-16', medium: 0, high: 0, critical: 0 },
           { date: '2026-08-17', medium: 2, high: 1, critical: 0 },
@@ -214,6 +215,7 @@ describe('MonitoringPanel', () => {
     renderPanel();
 
     expect(screen.getAllByText('monitoring.metrics.totalBranches').length).toBeGreaterThan(0);
+    expect(screen.getByText('monitoring.securityActivity.repeatedRevoked:3500')).toBeVisible();
     expect(screen.getByText('monitoring.metrics.onlineAgents')).toBeVisible();
     expect(screen.getByText('monitoring.metrics.risks')).toBeVisible();
     expect(screen.getByText('monitoring.security.riskWindow:24', { exact: false })).toBeVisible();

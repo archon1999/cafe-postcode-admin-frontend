@@ -55,6 +55,7 @@ export type MonitoringOverviewDto = {
     unacknowledgedCritical: number;
   };
   insights?: {
+    repeatedRevokedAttempts?: number;
     securityActivity?: Array<{
       date: string;
       medium?: number;
@@ -125,6 +126,7 @@ export function mapMonitoringOverview(dto: MonitoringOverviewDto): MonitoringOve
       agentAttentionRequired: dto.summary.agentAttentionRequired ?? dto.summary.agentOffline,
     },
     insights: {
+      repeatedRevokedAttempts: dto.insights?.repeatedRevokedAttempts ?? 0,
       securityActivity: (dto.insights?.securityActivity ?? []).map((activity) => ({
         ...activity,
         medium: activity.medium ?? 0,
