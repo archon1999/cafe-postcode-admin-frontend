@@ -41,6 +41,7 @@ export type MonitoringDeviceTypeCounts = {
 };
 
 export type MonitoringOverviewInsights = {
+  repeatedRevokedAttempts?: number;
   securityActivity: MonitoringSecurityActivity[];
   agentVersions: MonitoringAgentVersion[];
   deviceTypes: MonitoringDeviceTypeCounts;

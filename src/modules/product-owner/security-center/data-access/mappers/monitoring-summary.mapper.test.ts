@@ -22,6 +22,7 @@ describe('mapMonitoringOverview', () => {
         unacknowledgedCritical: 0,
       },
       insights: {
+        repeatedRevokedAttempts: 12,
         securityActivity: [
           { date: '2026-08-21', medium: 3, high: 2, critical: 1 },
           { date: '2026-08-22', medium: 1, high: 1, critical: 0 },
@@ -77,6 +78,7 @@ describe('mapMonitoringOverview', () => {
     expect(mapped.summary.agentExpectedOffline).toBe(0);
     expect(mapped.summary.agentAttentionRequired).toBe(0);
     expect(mapped.insights).toEqual({
+      repeatedRevokedAttempts: 12,
       securityActivity: [
         { date: '2026-08-21', medium: 3, high: 2, critical: 1 },
         { date: '2026-08-22', medium: 1, high: 1, critical: 0 },
@@ -164,6 +166,7 @@ describe('mapMonitoringOverview', () => {
     expect(mapped.summary.agentExpectedOffline).toBe(0);
     expect(mapped.summary.agentAttentionRequired).toBe(0);
     expect(mapped.insights).toEqual({
+      repeatedRevokedAttempts: 0,
       securityActivity: [],
       agentVersions: [],
       deviceTypes: { localAgent: 0, pos: 0, tv: 0, telegram: 0 },

@@ -121,6 +121,7 @@
       "description": "Yangi texnik diagnostika asosida. Aloqa, smena va xavfsizlik hodisalari alohida hisoblanadi."
     },
     "securityActivity": {
+      "repeatedRevoked": "Bekor qilingan qurilma kuniga bir marta sanaladi. Takroriy urinishlar: {{count}}. Barcha urinishlar hodisalar jurnalida saqlanadi.",
       "title": "7 kunlik xavfsizlik faolligi",
       "description": "O‘rta, yuqori va kritik xavfsizlik hodisalari kunlar kesimida.",
       "chartLabel": "Oxirgi 7 kundagi o‘rta, yuqori va kritik xavfsizlik hodisalari diagrammasi",
