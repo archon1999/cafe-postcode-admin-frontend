@@ -48,6 +48,10 @@ export const catalogItemFormSchema = z
   .refine((values) => Boolean(values.nameUz.trim() || values.nameUzCrl.trim() || values.nameRu.trim()), {
     message: 'Kamida bitta tildagi nom talab qilinadi',
     path: ['nameUz'],
+  })
+  .refine((values) => values.itemType === 'service' || values.price > 0, {
+    message: 'Mahsulot narxi 0 dan katta bo‘lishi kerak',
+    path: ['price'],
   });
 
 export type CatalogItemFormInput = z.input<typeof catalogItemFormSchema>;
