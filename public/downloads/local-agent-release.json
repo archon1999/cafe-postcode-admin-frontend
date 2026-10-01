@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "version": "2.3.9",
+  "version": "2.3.10",
   "platform": "windows",
   "architecture": "amd64",
-  "downloadUrl": "https://admin.cafe-postcode.uz/downloads/CafePostcodeLocalAgent-2.3.9-windows-amd64.exe",
-  "sha256": "6a49b10abb7aa69a622c110e3b63d7fd56164bd84502b62e2df7416ef6eeb0bd",
-  "signature": "w9yZqHvP4HeGT4oFqGRUzNs9JLdKrv18G3vfqnUh+ljOcmfc9nSC5CKANCCXf538tRE/s4tb0EssfknHZTMbDA==",
-  "size": 17929728,
+  "downloadUrl": "https://admin.cafe-postcode.uz/downloads/CafePostcodeLocalAgent-2.3.10-windows-amd64.exe",
+  "sha256": "9a6b6be53d0752aa0304b78389afad33ddd1ed371b80e83e60319a5efda23cfa",
+  "signature": "tPqtXkjF6X7b9FdWtim3eaIlCQ63UZDng8dtNXylTekeAQ5JO9f8zJX1nt9mnkwTqPi9Nggadw7RS5PO1Ec9AA==",
+  "size": 17930240,
   "mandatory": false,
   "transport": {
     "encoding": "gzip",
-    "downloadUrl": "https://admin.cafe-postcode.uz/downloads/CafePostcodeLocalAgent-2.3.9-windows-amd64.exe.gz",
-    "sha256": "c9bcafa38b57e4db3a89afc0db5fa3b2640fa7e202ad0350a2e8db743a999bfd",
-    "size": 7422791,
-    "signature": "GlUMxLBY4yVXlsxrDSVe9HVxQXLpJZyOWjOPWZQaLBb+JJ4KVde6ENYk621Zu7BV76dK8GyNu+SJZegHGq0AAw=="
+    "downloadUrl": "https://admin.cafe-postcode.uz/downloads/CafePostcodeLocalAgent-2.3.10-windows-amd64.exe.gz",
+    "sha256": "018b52d9988dbb306ad1261a020ad4c98bf7d5f744f38955a5da0042cb9b0a5d",
+    "size": 7422836,
+    "signature": "50qi+IpM6kHJzeOsHzO/SKfQnIlJIXSavMj6JQhCeWgs95N3BNCu9jGhJPOlY1mG8CXza1DLuoZZUhqt5HRkCQ=="
   }
 }
