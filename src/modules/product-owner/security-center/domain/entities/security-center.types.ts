@@ -85,6 +85,7 @@ export type MonitoringAgent = {
 export type MonitoringDeviceCounts = {
   active: number;
   online: number;
+  onlinePOS: number;
   revoked: number;
   activeLocalAgent: number;
   activePOS: number;

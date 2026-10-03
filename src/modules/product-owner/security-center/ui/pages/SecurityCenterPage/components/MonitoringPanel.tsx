@@ -544,7 +544,7 @@ function DeviceCounts({ row }: { row: MonitoringRow }) {
   const { t } = useTranslate('security-center');
   const hasDevices = row.devices.active > 0;
   const online = Math.min(row.devices.online, row.devices.active);
-  const allOnline = hasDevices && online === row.devices.active;
+  const hasOnlineAgentAndPOS = row.agent?.online === true && row.devices.onlinePOS > 0;
   const deviceTypes: Array<{ key: string; label: string; count: number; icon: IconifyName }> = [
     {
       key: 'local-agent',
@@ -581,7 +581,7 @@ function DeviceCounts({ row }: { row: MonitoringRow }) {
             width: 8,
             height: 8,
             borderRadius: '50%',
-            bgcolor: !hasDevices ? 'text.disabled' : allOnline ? 'success.main' : 'warning.main',
+            bgcolor: !hasDevices ? 'text.disabled' : hasOnlineAgentAndPOS ? 'success.main' : 'warning.main',
           }}
         />
         <Typography variant="body2" fontWeight={600}>

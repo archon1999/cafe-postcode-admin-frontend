@@ -21,6 +21,7 @@ type MonitoringBranchDto = {
   devices: {
     active: number;
     online?: number;
+    onlinePOS?: number;
     revoked: number;
     activeLocalAgent?: number;
     activePOS: number;
@@ -107,6 +108,7 @@ function mapBranch(dto: MonitoringBranchDto): MonitoringBranch {
     devices: {
       ...dto.devices,
       online: dto.devices.online ?? 0,
+      onlinePOS: dto.devices.onlinePOS ?? 0,
       activeLocalAgent: dto.devices.activeLocalAgent ?? 0,
       telegramSubscriptions: dto.devices.telegramSubscriptions ?? 0,
     },

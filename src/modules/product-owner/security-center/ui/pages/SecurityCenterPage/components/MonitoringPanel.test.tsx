@@ -85,6 +85,7 @@ const branches = [
     devices: {
       active: 3,
       online: 3,
+      onlinePOS: 1,
       revoked: 0,
       activeLocalAgent: 1,
       activePOS: 1,
@@ -110,6 +111,7 @@ const branches = [
     devices: {
       active: 1,
       online: 0,
+      onlinePOS: 0,
       revoked: 1,
       activeLocalAgent: 1,
       activePOS: 1,
@@ -135,6 +137,7 @@ const branches = [
     devices: {
       active: 2,
       online: 1,
+      onlinePOS: 0,
       revoked: 0,
       activeLocalAgent: 1,
       activePOS: 1,
@@ -205,6 +208,33 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe('MonitoringPanel', () => {
+  it.each([
+    { agentOnline: true, onlinePOS: 1, color: 'success', scenario: 'an Agent and a POS are online' },
+    { agentOnline: true, onlinePOS: 0, color: 'warning', scenario: 'only the Agent and a TV are online' },
+    { agentOnline: false, onlinePOS: 1, color: 'warning', scenario: 'the Agent is offline' },
+  ])('colors partially online devices $color when $scenario', ({ agentOnline, onlinePOS, color }) => {
+    const query = mocks.query();
+    mocks.query.mockReturnValue({
+      ...query,
+      data: {
+        ...query.data,
+        branches: [
+          {
+            ...branches[0],
+            agent: { ...branches[0].agent, online: agentOnline },
+            devices: { ...branches[0].devices, active: 14, online: 2, onlinePOS },
+          },
+        ],
+      },
+    });
+
+    renderPanel();
+
+    expect(screen.getByText('2/14').previousElementSibling).toHaveStyle({
+      backgroundColor: `var(--mui-palette-${color}-main)`,
+    });
+  });
+
   it('loads the complete snapshot in the selected business partner scope', () => {
     renderPanel({ businessPartnerId: 'partner-1' });
 
@@ -337,6 +367,7 @@ describe('MonitoringPanel', () => {
             devices: {
               active: 0,
               online: 0,
+              onlinePOS: 0,
               revoked: 0,
               activeLocalAgent: 0,
               activePOS: 0,
