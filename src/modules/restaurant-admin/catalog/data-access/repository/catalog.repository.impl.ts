@@ -2,6 +2,7 @@ import { apiClient } from 'shared/api/http/apiClient';
 
 import type { CatalogRepository } from '../../domain';
 import { buildCatalogCategoryFormData, buildCatalogItemFormData } from '../catalogFormData';
+import { resolveCatalogMxikPayload } from '../catalogMxikPayload';
 import { searchMxikByBarcode } from '../mxikClient';
 
 export const catalogRepository: CatalogRepository = {
@@ -18,12 +19,14 @@ export const catalogRepository: CatalogRepository = {
     return apiClient.getAdminCatalogCategoryById(id);
   },
 
-  createCategory(payload) {
-    return apiClient.createAdminCatalogCategory(buildCatalogCategoryFormData(payload));
+  async createCategory(payload) {
+    const mxikPayload = await resolveCatalogMxikPayload(payload.mxikCode, payload.mxikPayload);
+    return apiClient.createAdminCatalogCategory(buildCatalogCategoryFormData({ ...payload, mxikPayload }));
   },
 
-  updateCategory(id, payload) {
-    return apiClient.updateAdminCatalogCategory(id, buildCatalogCategoryFormData(payload));
+  async updateCategory(id, payload) {
+    const mxikPayload = await resolveCatalogMxikPayload(payload.mxikCode, payload.mxikPayload);
+    return apiClient.updateAdminCatalogCategory(id, buildCatalogCategoryFormData({ ...payload, mxikPayload }));
   },
 
   updateCategorySortOrder(id, sortOrder) {
@@ -42,12 +45,14 @@ export const catalogRepository: CatalogRepository = {
     return apiClient.getAdminCatalogItemById(id);
   },
 
-  createItem(payload) {
-    return apiClient.createAdminCatalogItem(buildCatalogItemFormData(payload));
+  async createItem(payload) {
+    const mxikPayload = await resolveCatalogMxikPayload(payload.mxikCode, payload.mxikPayload);
+    return apiClient.createAdminCatalogItem(buildCatalogItemFormData({ ...payload, mxikPayload }));
   },
 
-  updateItem(id, payload) {
-    return apiClient.updateAdminCatalogItem(id, buildCatalogItemFormData(payload));
+  async updateItem(id, payload) {
+    const mxikPayload = await resolveCatalogMxikPayload(payload.mxikCode, payload.mxikPayload);
+    return apiClient.updateAdminCatalogItem(id, buildCatalogItemFormData({ ...payload, mxikPayload }));
   },
 
   updateItemSortOrder(id, sortOrder) {
