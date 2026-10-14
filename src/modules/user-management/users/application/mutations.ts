@@ -53,6 +53,12 @@ export function useUpdateEmployeeMutation(id: string) {
   });
 }
 
+export function useCreateEmployeeStaffInviteMutation(id: string) {
+  return useMutation({
+    mutationFn: () => usersRepository.createEmployeeStaffInvite(id),
+  });
+}
+
 export function useChangeEmployeePinMutation() {
   const queryClient = useQueryClient();
 

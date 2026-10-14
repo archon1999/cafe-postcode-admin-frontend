@@ -22,6 +22,7 @@ import { Iconify } from 'shared/ui/Iconify';
 import { Label } from 'shared/ui/Label';
 import { RouterLink } from 'shared/ui/RouterLink';
 
+import { EmployeeStaffInviteDialog } from './EmployeeStaffInviteDialog';
 import { resolveStatusColor, type UserEntry } from './UserDetailPrimitives';
 
 type ProfileTab = 'overview' | 'access';
@@ -84,6 +85,7 @@ export function EmployeeProfileView({
 }: EmployeeProfileViewProps) {
   const { t } = useTranslate('users');
   const [selectedTab, setSelectedTab] = useState<ProfileTab>('overview');
+  const [inviteOpen, setInviteOpen] = useState(false);
 
   return (
     <Content>
@@ -94,6 +96,15 @@ export function EmployeeProfileView({
           action={
             <Stack direction="row" spacing={1}>
               <BackToListButton href={RoutePath.employeeList} />
+              {canEdit && status === 'active' ? (
+                <Button
+                  variant="outlined"
+                  startIcon={<Iconify icon="solar:letter-bold" />}
+                  onClick={() => setInviteOpen(true)}
+                  data-testid="employee-staff-invite">
+                  {t('actions.staffInvite')}
+                </Button>
+              ) : null}
               {canEdit ? (
                 <Button
                   component={RouterLink}
@@ -276,6 +287,7 @@ export function EmployeeProfileView({
           </Grid>
         )}
       </Box>
+      <EmployeeStaffInviteDialog employeeId={id} open={inviteOpen} onClose={() => setInviteOpen(false)} />
     </Content>
   );
 }

@@ -6,12 +6,17 @@ const SCOPE_TRANSLATION_KEYS: Record<string, string> = {
   admin: 'permissionScopes.admin',
   pos: 'permissionScopes.pos',
   dashboard: 'permissionScopes.dashboard',
+  staff: 'permissionScopes.staff',
 };
 
 const ACTION_TRANSLATION_KEYS: Record<string, string> = {
   list: 'permissionActions.list',
   view: 'permissionActions.view',
   manage: 'permissionActions.manage',
+  schedule: 'permissionActions.schedule',
+  approve: 'permissionActions.approve',
+  config: 'permissionActions.config',
+  payout: 'permissionActions.payout',
   create: 'permissionActions.create',
   update: 'permissionActions.update',
   delete: 'permissionActions.delete',
@@ -53,6 +58,9 @@ function getTranslationOrUndefined(t: TFunction, key: string | undefined) {
 }
 
 export function getAdminPermissionScope(code: string) {
+  if (code.startsWith('workforce.') || code.startsWith('staff.payroll.')) {
+    return 'staff';
+  }
   if (code.startsWith('dashboard.')) {
     return 'dashboard';
   }

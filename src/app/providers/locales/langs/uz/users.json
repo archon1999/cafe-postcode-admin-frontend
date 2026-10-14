@@ -77,20 +77,12 @@
     "pnfl": "PNFL",
     "birthDate": "Tug'ilgan sana",
     "birthDateHint": "Ixtiyoriy. Xodim tug'ilgan sanasini kiriting.",
-    "employmentStatus": "Ish holati",
-    "salaryType": "Maosh turi",
-    "baseAmount": "Asosiy summa",
-    "kpiPercent": "KPI foizi"
+    "employmentStatus": "Ish holati"
   },
   "status": {
     "active": "Faol",
     "inactive": "Nofaol",
     "archived": "Arxivlangan"
-  },
-  "salaryType": {
-    "hourly": "Soatbay",
-    "daily": "Kunbay",
-    "monthly": "Oylik"
   },
   "labels": {
     "withoutRole": "Rol biriktirilmagan",
@@ -120,7 +112,7 @@
     "account": "Kirish va asosiy ma'lumotlar",
     "access": "Tizimga kirish va ruxsatlar",
     "assignment": "Zalga biriktirish",
-    "payroll": "Mehnat va maosh"
+    "personal": "Shaxsiy ma'lumotlar"
   },
   "profile": {
     "overview": "Umumiy",
@@ -132,12 +124,17 @@
   "permissionScopes": {
     "admin": "Admin",
     "pos": "POS",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "staff": "Xodimlar ilovasi"
   },
   "permissionActions": {
     "list": "Ro'yxatni ko'rish",
     "view": "Ko'rish",
     "manage": "Boshqarish",
+    "schedule": "Grafikni boshqarish",
+    "approve": "Tasdiqlash",
+    "config": "Sozlash",
+    "payout": "To‘lovni qayd etish",
     "create": "Yaratish",
     "update": "Yangilash",
     "delete": "O'chirish",
@@ -162,9 +159,23 @@
     "roleCreate": "Yangi rol",
     "roleCreateSubmit": "Rolni saqlash",
     "changePin": "PIN-kodni o'zgartirish",
-    "savePin": "PIN-kodni saqlash"
+    "savePin": "PIN-kodni saqlash",
+    "staffInvite": "Xodimlar ilovasiga taklif"
   },
   "dialogs": {
+    "staffInvite": {
+      "title": "Xodimlar ilovasiga taklif",
+      "description": "Bir martalik havola yarating va xodimga shaxsiy tarzda yuboring. Yangi havola oldingisini bekor qiladi.",
+      "create": "Taklif yaratish",
+      "ready": "Taklif tayyor. Havolani hozir nusxalang: oynani yopgach qayta ko‘rsatilmaydi.",
+      "link": "Taklif havolasi",
+      "linkHint": "Xodim havola orqali parol o‘rnatadi, keyin login bilan kiradi.",
+      "expires": "Amal qilish muddati",
+      "copy": "Havolani nusxalash",
+      "copied": "Havola nusxalandi",
+      "close": "Yopish",
+      "error": "Taklif yaratilmadi. Xodim holatini va huquqlaringizni tekshirib qayta urinib ko‘ring."
+    },
     "changePin": {
       "title": "PIN-kodni o'zgartirish"
     },

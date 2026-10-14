@@ -19,7 +19,6 @@ import { Label } from 'shared/ui/Label';
 import { LoadingScreen } from 'shared/ui/LoadingScreen';
 import { RouterLink } from 'shared/ui/RouterLink';
 import { formatHallDisplayName } from 'shared/utils/format-hall-display';
-import { formatMoney } from 'shared/utils/format-money';
 
 import {
   useEmployeeUpdateAccess,
@@ -101,10 +100,6 @@ export const UserDetailPageContent = ({ id, surface = 'user' }: UserDetailPageCo
   const birthDate = formatBirthDate(user.birthDate);
   const initials = getUserInitials(user.fullName);
   const permissionsCount = `${user.permissionCodes.length} ta`;
-  const salaryTypeLabel = user.salaryType ? t(`salaryType.${user.salaryType}`) : null;
-  const baseAmountLabel =
-    user.baseAmount !== null && user.baseAmount !== undefined ? formatMoney(user.baseAmount) : null;
-  const kpiLabel = user.kpiPercent !== null && user.kpiPercent !== undefined ? `${user.kpiPercent}%` : null;
   const restaurantAccessLabel =
     user.restaurantAccessActive === undefined ? null : user.restaurantAccessActive ? yesLabel : noLabel;
 
@@ -130,9 +125,6 @@ export const UserDetailPageContent = ({ id, surface = 'user' }: UserDetailPageCo
     { label: t('fields.passportSeries'), value: user.passportSeries, icon: 'solar:passport-bold-duotone' },
     { label: t('fields.pnfl'), value: user.pnfl, icon: 'solar:clipboard-text-bold-duotone' },
     { label: t('fields.birthDate'), value: birthDate, icon: 'solar:calendar-bold-duotone' },
-    { label: t('fields.salaryType'), value: salaryTypeLabel, icon: 'solar:wallet-money-bold-duotone' },
-    { label: t('fields.baseAmount'), value: baseAmountLabel, icon: 'solar:bill-list-bold-duotone' },
-    { label: t('fields.kpiPercent'), value: kpiLabel, icon: 'solar:chart-square-bold-duotone' },
   ];
   const filledPayrollEntries = payrollEntries.filter(
     (entry) => entry.value !== null && entry.value !== undefined && entry.value !== '',
@@ -249,11 +241,6 @@ export const UserDetailPageContent = ({ id, surface = 'user' }: UserDetailPageCo
                         {primaryHallName}
                       </SummaryChip>
                     ) : null}
-                    {salaryTypeLabel ? (
-                      <SummaryChip title={t('fields.salaryType')} icon="solar:wallet-money-bold-duotone">
-                        {salaryTypeLabel}
-                      </SummaryChip>
-                    ) : null}
                   </Stack>
                 </Stack>
               </Stack>
@@ -282,7 +269,7 @@ export const UserDetailPageContent = ({ id, surface = 'user' }: UserDetailPageCo
                 </SectionCard>
 
                 {filledPayrollEntries.length ? (
-                  <SectionCard title={t('sections.payroll')} icon="solar:wallet-money-bold-duotone">
+                  <SectionCard title={t('sections.personal')} icon="solar:user-id-bold-duotone">
                     <Grid container spacing={1.5}>
                       {filledPayrollEntries.map((item) => (
                         <Grid key={item.label} size={{ xs: 12, sm: 6 }}>

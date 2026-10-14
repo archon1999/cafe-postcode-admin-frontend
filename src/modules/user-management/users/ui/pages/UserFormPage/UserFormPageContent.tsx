@@ -73,8 +73,6 @@ export const UserFormPageContent = ({ id, surface = 'user' }: UserFormPageConten
 
   const { handleSubmit, reset, watch, setValue, formState } = methods;
   const selectedRoleId = watch('roleId');
-  const selectedSalaryType = watch('salaryType');
-  const baseAmount = watch('baseAmount');
   const selectedEmploymentStatus = watch('employmentStatus');
   const selectedPrimaryHallId = watch('primaryHallId');
   const selectedAllowedHallIds = watch('allowedHallIds');
@@ -116,15 +114,6 @@ export const UserFormPageContent = ({ id, surface = 'user' }: UserFormPageConten
 
     setValue('isActive', selectedEmploymentStatus === 'active');
   }, [selectedEmploymentStatus, setValue]);
-
-  useEffect(() => {
-    if (
-      selectedSalaryType &&
-      (baseAmount === null || baseAmount === undefined || (typeof baseAmount === 'number' && Number.isNaN(baseAmount)))
-    ) {
-      setValue('baseAmount', 0);
-    }
-  }, [baseAmount, selectedSalaryType, setValue]);
 
   useEffect(() => {
     const allowedHallIds = selectedAllowedHallIds ?? [];
@@ -210,7 +199,6 @@ export const UserFormPageContent = ({ id, surface = 'user' }: UserFormPageConten
               isHallsLoading={hallsQuery.isLoading}
               isRolesLoading={rolesQuery.isLoading}
               roles={roles}
-              selectedSalaryType={selectedSalaryType}
               t={t}
               tCommon={tCommon}
             />

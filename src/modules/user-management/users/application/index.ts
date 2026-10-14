@@ -1,5 +1,6 @@
 export { canManageEmployee, useEmployeeUpdateAccess } from './access';
 export {
+  useCreateEmployeeStaffInviteMutation,
   useArchiveEmployeeMutation,
   useArchiveUserMutation,
   useChangeEmployeePinMutation,

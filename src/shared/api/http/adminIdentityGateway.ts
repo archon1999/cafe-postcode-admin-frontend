@@ -1,5 +1,6 @@
 import type {
   AdminCollectionResponse,
+  AdminEmployeeStaffInvite,
   AdminLoginRequest,
   AdminLoginResponse,
   AdminPaginatedResponse,
@@ -83,6 +84,12 @@ export const adminIdentityGateway = {
 
   updateAdminEmployee(id: string, payload: AdminUserPayload) {
     return instance.put<AdminUser>(`/api/v1/admin/employees/${id}/`, payload).then((response) => response.data);
+  },
+
+  createAdminEmployeeStaffInvite(id: string) {
+    return instance
+      .post<AdminEmployeeStaffInvite>(`/api/v1/admin/employees/${id}/staff-invite/`, {})
+      .then((response) => response.data);
   },
 
   getAdminRoles() {

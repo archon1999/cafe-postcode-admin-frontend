@@ -2,12 +2,18 @@ import type { SaleUnit } from 'shared/domain/sale-units';
 export type AdminPermission = {
   id: string;
   code: string;
-  scope: 'admin' | 'pos' | 'dashboard';
+  scope: 'admin' | 'pos' | 'dashboard' | 'staff';
   name: string;
   description: string;
 };
 
 export type AdminPermissionSummary = Pick<AdminPermission, 'id' | 'code' | 'name'>;
+export type AdminEmployeeStaffInvite = {
+  username: string;
+  token: string;
+  inviteUrl: string;
+  expiresAt: string;
+};
 export type AdminRoleSummary = {
   id: string;
   code?: string;
@@ -1172,9 +1178,6 @@ export type AdminUser = {
   passportSeries?: string;
   pnfl?: string;
   birthDate?: string | null;
-  salaryType?: 'hourly' | 'daily' | 'monthly' | null;
-  baseAmount?: number | null;
-  kpiPercent?: number | null;
   isSuperuser?: boolean;
   role: AdminRole | null;
   businessPartnerId?: string | null;
@@ -1203,9 +1206,6 @@ export type AdminUserPayload = {
   passportSeries?: string;
   pnfl?: string;
   birthDate?: string | null;
-  salaryType?: 'hourly' | 'daily' | 'monthly' | null;
-  baseAmount?: number | null;
-  kpiPercent?: number | null;
   roleId: string;
   hallSwitchPermission?: boolean;
   primaryHallId?: string | null;

@@ -35,3 +35,7 @@ storybook-static
 .env
 .env.development
 .env.production
+
+# Local verification artifacts and disposable review checkouts
+/output/
+/.codex-security-retries/

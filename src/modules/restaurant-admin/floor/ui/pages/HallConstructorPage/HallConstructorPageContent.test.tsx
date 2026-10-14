@@ -2,6 +2,7 @@
 
 import '@testing-library/jest-dom/vitest';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -112,7 +113,11 @@ describe('HallConstructorPageContent render mode', () => {
   });
 
   it('controls the hall service fee with disabled, percentage, and formula options', async () => {
-    render(<HallConstructorPageContent id="hall-1" />);
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <HallConstructorPageContent id="hall-1" />
+      </QueryClientProvider>,
+    );
 
     await waitFor(() => {
       expect(screen.queryByTestId('loading-screen')).not.toBeInTheDocument();
@@ -127,11 +132,11 @@ describe('HallConstructorPageContent render mode', () => {
     expect(formulaOption).toBeInTheDocument();
 
     fireEvent.click(formulaOption);
-    expect(screen.getByRole('textbox', { name: 'fields.serviceFeeModeFormula' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'serviceFees.viewFormula' })).toBeInTheDocument();
 
     fireEvent.mouseDown(modeSelect);
     fireEvent.click(screen.getByRole('option', { name: 'fields.serviceFeeModeDisabled' }));
-    expect(screen.queryByRole('textbox', { name: 'fields.serviceFeeModeFormula' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'serviceFees.viewFormula' })).not.toBeInTheDocument();
   });
 
   it('uses the dark palette only for the exact dark mode', async () => {

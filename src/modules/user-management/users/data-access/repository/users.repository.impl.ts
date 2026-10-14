@@ -40,6 +40,10 @@ export const usersRepository: UsersRepository = {
     return apiClient.updateAdminEmployee(id, payload);
   },
 
+  createEmployeeStaffInvite(id: string) {
+    return apiClient.createAdminEmployeeStaffInvite(id);
+  },
+
   getRoles() {
     return apiClient.getAdminRoles();
   },

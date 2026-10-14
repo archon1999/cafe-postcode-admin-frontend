@@ -1,5 +1,6 @@
 import type {
   AdminHall,
+  AdminEmployeeStaffInvite,
   AdminPaginatedResponse,
   AdminPermission,
   AdminRole,
@@ -19,6 +20,7 @@ export interface UsersRepository {
   getEmployeeById(id: string): Promise<AdminUser>;
   createEmployee(payload: AdminUserPayload): Promise<AdminUser>;
   updateEmployee(id: string, payload: AdminUserPayload): Promise<AdminUser>;
+  createEmployeeStaffInvite(id: string): Promise<AdminEmployeeStaffInvite>;
   getRoles(): Promise<AdminRole[]>;
   getRoleById(id: string): Promise<AdminRole>;
   createRole(payload: AdminRolePayload): Promise<AdminRole>;

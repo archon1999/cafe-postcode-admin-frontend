@@ -30,7 +30,6 @@ type UserFormFieldsProps = {
   isHallsLoading: boolean;
   isRolesLoading: boolean;
   roles: RoleOption[];
-  selectedSalaryType: UserFormInput['salaryType'];
   t: TranslateFn;
   tCommon: TranslateFn;
 };
@@ -45,7 +44,6 @@ export const UserFormFields = ({
   isHallsLoading,
   isRolesLoading,
   roles,
-  selectedSalaryType,
   t,
   tCommon,
 }: UserFormFieldsProps) => (
@@ -173,7 +171,7 @@ export const UserFormFields = ({
     <Divider />
 
     <Stack spacing={2}>
-      <Typography variant="h6">{t('sections.payroll')}</Typography>
+      <Typography variant="h6">{t('sections.personal')}</Typography>
       <Box
         sx={{
           display: 'grid',
@@ -182,28 +180,6 @@ export const UserFormFields = ({
         }}>
         <RHFTextField<UserFormInput> name="passportSeries" label={t('fields.passportSeries')} />
         <RHFTextField<UserFormInput> name="pnfl" label={t('fields.pnfl')} />
-
-        <RHFSelect<UserFormInput> name="salaryType" label={t('fields.salaryType')}>
-          <MenuItem value="hourly">{t('salaryType.hourly')}</MenuItem>
-          <MenuItem value="daily">{t('salaryType.daily')}</MenuItem>
-          <MenuItem value="monthly">{t('salaryType.monthly')}</MenuItem>
-        </RHFSelect>
-
-        {selectedSalaryType && (
-          <RHFTextField<UserFormInput>
-            name="baseAmount"
-            label={t('fields.baseAmount')}
-            type="number"
-            inputProps={{ min: 0, step: 1000 }}
-          />
-        )}
-
-        <RHFTextField<UserFormInput>
-          name="kpiPercent"
-          label={t('fields.kpiPercent')}
-          type="number"
-          inputProps={{ min: 0, step: 1 }}
-        />
       </Box>
     </Stack>
   </>
