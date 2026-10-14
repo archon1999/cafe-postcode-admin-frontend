@@ -22,7 +22,6 @@ describe('CatalogItemForm price coercion', () => {
   it.each([
     { input: '32000', expected: 32000 },
     { input: 32000, expected: 32000 },
-    { input: '', expected: 0 },
   ])('parses $input as $expected', ({ input, expected }) => {
     const result = catalogItemFormSchema.parse({ ...validFormValues, price: input });
 
@@ -40,5 +39,18 @@ describe('CatalogItemForm price coercion', () => {
     const result = catalogItemFormSchema.parse({ ...validFormValues, itemType: undefined, price: 1000 });
 
     expect(result.itemType).toBe('product');
+  });
+
+  it.each([0, '0', '', null, undefined, -1])('rejects a product price of %s on create and edit', (price) => {
+    const result = catalogItemFormSchema.safeParse({ ...validFormValues, price });
+
+    expect(result.success).toBe(false);
+    if (!result.success) expect(result.error.issues.some((issue) => issue.path[0] === 'price')).toBe(true);
+  });
+
+  it('keeps dynamically priced services valid without a catalog price', () => {
+    const result = catalogItemFormSchema.parse({ ...validFormValues, itemType: 'service', price: '' });
+
+    expect(result.price).toBe(0);
   });
 });

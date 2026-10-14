@@ -21,6 +21,7 @@ type MonitoringBranchDto = {
   devices: {
     active: number;
     online?: number;
+    onlinePOS?: number;
     revoked: number;
     activeLocalAgent?: number;
     activePOS: number;
@@ -55,6 +56,7 @@ export type MonitoringOverviewDto = {
     unacknowledgedCritical: number;
   };
   insights?: {
+    repeatedRevokedAttempts?: number;
     securityActivity?: Array<{
       date: string;
       medium?: number;
@@ -106,6 +108,7 @@ function mapBranch(dto: MonitoringBranchDto): MonitoringBranch {
     devices: {
       ...dto.devices,
       online: dto.devices.online ?? 0,
+      onlinePOS: dto.devices.onlinePOS ?? 0,
       activeLocalAgent: dto.devices.activeLocalAgent ?? 0,
       telegramSubscriptions: dto.devices.telegramSubscriptions ?? 0,
     },
@@ -125,6 +128,7 @@ export function mapMonitoringOverview(dto: MonitoringOverviewDto): MonitoringOve
       agentAttentionRequired: dto.summary.agentAttentionRequired ?? dto.summary.agentOffline,
     },
     insights: {
+      repeatedRevokedAttempts: dto.insights?.repeatedRevokedAttempts ?? 0,
       securityActivity: (dto.insights?.securityActivity ?? []).map((activity) => ({
         ...activity,
         medium: activity.medium ?? 0,
