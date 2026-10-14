@@ -1,5 +1,7 @@
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
+import IconButton from '@mui/material/IconButton';
+import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import type { GridColDef } from '@mui/x-data-grid';
 
@@ -16,6 +18,7 @@ import type {
   AdminTopStaffReportRow,
 } from 'shared/api/admin-types';
 import { Iconify } from 'shared/ui/Iconify';
+import { formatOrderNumberCellValue, OrderNumberCell } from 'shared/ui/OrderNumberCell';
 import { formatMoney } from 'shared/utils/format-money';
 import { formatSaleQuantity } from 'shared/utils/format-quantity';
 import { formatDateTime } from 'shared/utils/format-time';
@@ -129,7 +132,9 @@ export function getReportTableColumns(
           headerName: t('reports.receipts.fields.orderNumber'),
           minWidth: 150,
           flex: 0.5,
-          valueGetter: (_value, row: AdminReceiptsReportRow) => `#${row.orderNumber}`,
+          valueGetter: (_value, row: AdminReceiptsReportRow) =>
+            formatOrderNumberCellValue(row.orderNumber, row.orderDisplayName),
+          renderCell: ({ row }) => <OrderNumberCell orderNumber={row.orderNumber} displayName={row.orderDisplayName} />,
         },
         {
           field: 'kind',
@@ -150,14 +155,35 @@ export function getReportTableColumns(
           headerName: t('reports.receipts.fields.status'),
           minWidth: 140,
           flex: 0.5,
-          renderCell: ({ row }) => (
-            <Chip
-              size="small"
-              label={t(`receiptStatuses.${row.status}`)}
-              color={row.status === 'failed' ? 'error' : row.status === 'sent' ? 'success' : 'warning'}
-              variant="soft"
-            />
-          ),
+          renderCell: ({ row, tabIndex }) => {
+            const qrUrl =
+              row.kind === 'fiscal' && /^https?:\/\//i.test(row.qrCodeUrl?.trim() ?? '') ? row.qrCodeUrl?.trim() : null;
+            return (
+              <Stack direction="row" spacing={0.5} alignItems="center">
+                <Chip
+                  size="small"
+                  label={t(`receiptStatuses.${row.status}`)}
+                  color={row.status === 'failed' ? 'error' : row.status === 'sent' ? 'success' : 'warning'}
+                  variant="soft"
+                />
+                {qrUrl ? (
+                  <Tooltip title={t('reports.receipts.openFiscalQr')}>
+                    <IconButton
+                      component="a"
+                      href={qrUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      size="small"
+                      tabIndex={tabIndex}
+                      aria-label={t('reports.receipts.openFiscalQr')}
+                      onClick={(event) => event.stopPropagation()}>
+                      <Iconify icon="eva:external-link-fill" width={18} />
+                    </IconButton>
+                  </Tooltip>
+                ) : null}
+              </Stack>
+            );
+          },
         },
         {
           field: 'amount',

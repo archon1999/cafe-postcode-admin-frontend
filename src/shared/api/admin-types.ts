@@ -1299,6 +1299,8 @@ export type AdminReceiptsReportRow = {
   restaurantName?: string;
   id: string;
   orderNumber: number;
+  orderDisplayName?: string | null;
+  qrCodeUrl?: string | null;
   kind: 'plain' | 'fiscal';
   status: AdminReceiptStatus;
   amount: number;
